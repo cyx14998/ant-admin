@@ -1,0 +1,73 @@
+@import '../common/common.less';
+html {
+    height: 100%;
+}
+
+#reactwrapper {
+    height: 100%;
+    .login {
+        height: 100%;
+        background: url('./assets/login-bg.png');
+        .login-top {
+            height: 82px;
+            font-size: 18px;
+            line-height: 82px;
+            margin-left: 225px;
+            color: #1ab394;
+        }
+        .login-main {
+            position: relative;
+            .login-form {
+                padding: 66px 42px;
+                position: absolute;
+                top: 114px;
+                right: 260px;
+                width: 404px;
+                height: 528px;
+                background-color: #fff;
+                .ant-form-item{
+                    margin-bottom: 18px;
+                    .has-success{
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        .remember{
+                            display: flex;
+                            justify-content: space-between;
+                            width: 100%;
+                            .login-form-forgot{
+                                color: #9b9b9b;
+                                float: right;
+                            }
+                            .ant-checkbox-checked .ant-checkbox-inner{
+                                border-color: #1ab394;
+                                background-color: #1ab394;
+                            }
+                            .ant-checkbox-inner{
+                                border-color: #9b9b9b;
+                            }
+                        }
+                        .ant-btn-lg{
+                            margin-top: 18px;
+                            background-color: #1ab394;
+                            border: none;
+                            border-radius: 0;
+                            width: 220px;
+                            height: 38px;
+                        }
+                    }
+                    .ant-input {
+                        height: 50px;
+                        border: 1px solid #cbc7c6;
+                        border-radius: 0;
+                        color: #9b9b9b;
+                        font-size: 18px;
+                    }   
+                    .anticon:before{
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}

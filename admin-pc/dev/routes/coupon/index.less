@@ -1,0 +1,92 @@
+@import '../../common/common.less';
+
+body{
+    background: #fff;
+}
+#reactwrapper{
+    height: 100%;
+    background: #f7feff;
+}
+.container{
+    max-width: 960px;
+    margin: 0 auto;
+    .am-navbar{
+        border-bottom: 1px solid #9dd7bf;
+        .right{
+            position: absolute;
+            right: 0.25rem;
+            top: .25rem;
+            height: .9rem;
+            width: @rem * 80;
+            text-align: right;
+        }
+    }
+    .content{
+        margin-top: @rem * 8;
+        padding: 0 @rem * 10;
+        .list{
+            .item{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: @rem * 72;
+                background: url('../../assets/jifen_bg.png') no-repeat;
+                background-size: 100% 100%; 
+                font-size: @rem * 14;
+                margin-top: @rem * 8;
+                &:first-child{
+                    margin-top: 0;
+                }
+                .intergral-money{
+                    text-align: center;
+                    width: @rem * 80;
+                    p{
+                        font-size: @rem * 46;
+                        color: #ff8095;
+                        position: relative;
+                        display: inline-block;
+                        &:after{
+                            content: '元';
+                            font-size: @rem * 12;
+                            position: absolute;
+                            right: -@rem * 12;
+                            bottom: 0;
+                            border: 2px solid #fbe0e0;
+                            border-radius: 50%;
+                            background: #ff8095;
+                            color: #fff;
+                            width: @rem * 18;
+                            height: @rem * 18;
+                            line-height: @rem * 18;
+                        }
+                    }
+                }
+                .intergral-detail{
+                    height: 100%;
+                    padding: @rem * 10 @rem * 20;
+                    border-left: @rem * 1 dashed #fff;
+                    color: #ff8095;
+                    flex: 1;
+                    .intergral-use{
+                        height: @rem * 22;
+                        font-size: @rem * 12;
+                    }
+                    p{
+                        margin-top: @rem * 10;
+                    }
+                }
+                .intergral-change{
+                    width: @rem * 85;
+                    p{
+                        display: inline-block;
+                        padding: @rem * 15 @rem * 10;
+                        background: #ff8095;
+                        color: #fff;
+                        margin-left: @rem * 8;
+                        box-shadow: 3px 3px 20px #333;
+                    }
+                }
+            }
+        }
+    }
+}

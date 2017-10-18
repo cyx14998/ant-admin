@@ -1,0 +1,77 @@
+body, ul, li, div, label, button, input[type=text]
+{
+    margin: 0;
+    padding: 0;
+    font-family: 微软雅黑;
+}
+input, button
+{
+    outline: none;
+}
+body
+{
+    font-size: 100%;
+}
+.clear {
+	zoom: 1;
+}
+.clear:after {
+    display: block;
+    clear: both;
+    content: "";
+    visibility: hidden;
+    height: 0;
+}
+
+.div_new_page
+{
+    margin: 13px 0px 28px 14px;
+    height: 400px;
+    width: 612px;
+    font-size: 14px;
+    color: White;
+}
+.div_new_page a
+{
+    text-decoration: none;
+    color: white;
+}
+.ui-body-c .ui-link:active,.ui-body-c .ui-link:hover,.ui-body-c .ui-link:visited
+{color:White;}
+
+.blockUI div.default{
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    cursor: default;
+}
+
+.blockUI div.confirm{
+    height: 120px;
+    padding: 10px;  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.blockUI div.confirm .btns{
+    padding: 10px 40px;
+}
+.blockUI div.confirm .btns > div{
+    float: left;
+}
+.blockUI div.confirm .btns .sure{
+    padding: 3px 10px;
+    border-radius: 5px;
+    background: #69c6d9;
+    color: #fff;
+}
+.blockUI div.confirm .btns .cancle{
+    padding: 3px 10px;
+    border-radius: 5px;
+    border: 1px solid #69c6d9;
+    color: #69c6d9;
+    margin-left: 35px;
+}

@@ -1,0 +1,83 @@
+@import '../../common/common.less';
+
+
+#reactwrapper{
+    width: 100%;
+    height: 100%;
+    max-width: 12.8rem;
+    margin: 0 auto;
+}
+.container{
+    max-width: 960px;
+    margin: 0 auto;
+    font-size: @rem * 14;
+    height: 100%;
+    background: #F7FEFF;
+    .am-navbar{
+        border-bottom: 1px solid #9dd7bf;
+    }
+    .top-time{
+        height: @rem * 40;
+        line-height: @rem * 40;
+        background: #fff;
+        padding-left: @rem * 15;
+        color: #5c5f66;
+    }
+    .content{
+        margin-top: @rem * 8;
+        font-size: @rem * 12;
+        .list{
+            .item{
+                padding: @rem * 8 @rem * 15;
+                height: @rem * 160;
+                background: url('../../assets/jifendetail_bg.png') no-repeat;
+                background-size: 100% 100%;
+                .inner-item{
+                    height: 100%;
+                    padding: @rem * 10 @rem * 8;
+                    border: 1px solid red;
+                    color: #5c5f60;
+                    position: relative;
+                    .hearder{
+                        text-align: center;
+                        p:first-child{
+                            font-size: @rem * 20;
+                        }
+                    }
+                    .price-tag{
+                        position: absolute;
+                        width: @rem * 52;
+                        height: @rem * 52;
+                        background: url('../../assets/price_tag.png') no-repeat;
+                        background-size: 100% 100%;
+                        right: @rem * 8;
+                        top: @rem * 8;
+                        text-align: center;
+                        color: #fff;
+                        .price{
+                            font-size: @rem * 24;
+                            margin-top: @rem * 8;
+                        }
+                        .value{
+                            font-size: @rem * 8;
+                        }
+                    }
+                    .detail{
+                        margin-top: @rem * 15;
+                        .detail-content{
+                            overflow:hidden; 
+                            text-overflow:ellipsis;
+                            display:-webkit-box; 
+                            -webkit-box-orient:vertical;
+                            -webkit-line-clamp:4; 
+                        }
+                        .detail-time{
+                            position: absolute;
+                            bottom: @rem * 10;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

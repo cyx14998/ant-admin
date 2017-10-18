@@ -1,0 +1,97 @@
+@import '../../common/common.less';
+#reactwrapper{
+    height: 100%;
+    background: #f7feff;
+}
+.container{
+    max-width: 1280px;
+    margin: 0 auto;
+    .top-img{
+        height: @rem * 130;
+        background: url('../../assets/intergral.png') no-repeat;
+        background-size: 100% 100%; 
+    }
+    .content{
+        margin-top: @rem * 8;
+        padding: 0 @rem * 10;
+        .list{
+            .item{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: @rem * 72;
+                background: url('../../assets/jifen_bg.png') no-repeat;
+                background-size: 100% 100%; 
+                font-size: @rem * 12;
+                margin-top: @rem * 8;
+                &:first-child{
+                    margin-top: 0;
+                }
+                .intergral-money{
+                    text-align: center;
+                    flex: 1;
+                    p{
+                        font-size: @rem * 42;
+                        color: #ff8095;
+                        position: relative;
+                        display: inline-block;
+                        span{
+                            font-size: @rem * 12;
+                            position: absolute;
+                            right: -@rem * 12;
+                            bottom: 0;
+                            border: 2px solid #fbe0e0;
+                            border-radius: 50%;
+                            background: #ff8095;
+                            color: #fff;
+                            width: @rem * 18;
+                            height: @rem * 18;
+                            line-height: @rem * 18;
+                        }
+                    }
+                }
+                .intergral-detail{
+                    height: 100%;
+                    width: 300px;
+                    padding: @rem * 10 @rem * 20;
+                    border-left: @rem * 1 dashed #fff;
+                    border-right: @rem * 1 dashed #fff;
+                    .intergral-use{
+                        background: #ff8095;
+                        color: #fff;
+                        height: @rem * 22;
+                        line-height: @rem * 22;
+                        padding: 0 @rem * 5;
+                        position: relative;
+                        &:before{
+                            content: '';
+                            display: inline-block;
+                            width: @rem * 12;
+                            height: @rem * 24;
+                            background: url('../../assets/jifen_leftIcon.png') no-repeat;
+                            background-size: 100% 100%;
+                            position: absolute;
+                            top: 0;
+                            left: -@rem * 8;
+                        }
+                    }
+                    p{
+                        color: #ff8095;
+                        margin-top: @rem * 10;
+                    }
+                }
+                .intergral-change{
+                    width: 180px;
+                    p{
+                        display: inline-block;
+                        padding: @rem * 15 @rem * 10;
+                        background: #ff8095;
+                        color: #fff;
+                        margin-left: @rem * 8;
+                        box-shadow: 3px 3px 20px #999;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,65 @@
+{
+  "private": true,
+  "entry": {
+    "index": "./index.js"
+  },
+  "dependencies": {
+    "antd": "^2.1.0",
+    "antd-mobile": "^1.4.2",
+    "array-tree-filter": "^1.0.1",
+    "axios": "^0.16.2",
+    "https-proxy-agent": "^2.1.0",
+    "koa": "^2.3.0",
+    "koa-body": "^2.3.0",
+    "koa-proxies": "^0.6.0",
+    "koa-proxy": "^0.8.0",
+    "koa-router": "^7.2.1",
+    "koa-session": "^5.4.0",
+    "koa-static": "^3.0.0",
+    "mysql": "^2.14.1",
+    "node-uuid": "^1.4.8",
+    "rc-form": "^1.4.3",
+    "rc-upload": "^2.4.0",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "redis": "^2.7.1",
+    "redux": "^3.7.2",
+    "sha1": "^1.1.1",
+    "xml2js": "^0.4.17"
+  },
+  "devDependencies": {
+    "atool-build": "^0.9.0",
+    "atool-test-mocha": "^0.1.4",
+    "babel-eslint": "^7.0.0",
+    "babel-plugin-import": "^1.0.1",
+    "babel-plugin-transform-runtime": "^6.8.0",
+    "babel-runtime": "^6.9.2",
+    "dora": "0.4.x",
+    "dora-plugin-webpack": "^0.8.1",
+    "eslint": "^3.8.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-plugin-import": "^2.0.1",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.4.1",
+    "expect": "^1.20.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-plumber": "^1.1.0",
+    "gulp-react": "^3.1.0",
+    "gulp-sass": "^3.1.0",
+    "postcss-pxtorem": "^3.3.1",
+    "pre-commit": "1.x",
+    "redbox-react": "^1.2.6",
+    "svg-sprite-loader": "^0.3.1"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "scripts": {
+    "build": "atool-build",
+    "dev": "gulp && atool-build --watch",
+    "lint": "eslint --ext .js,.jsx src/",
+    "start": "dora --plugins webpack",
+    "test": "atool-test-mocha ./**/__tests__/*-test.js"
+  }
+}

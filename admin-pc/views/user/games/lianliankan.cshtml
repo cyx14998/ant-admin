@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" id="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="apple-touch-fullscreen">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <title>水果连连看</title>
+</head>
+<link rel="stylesheet" type="text/css" href="/games/css/lianliankan/index.css">
+    <link rel="stylesheet" href="/games/util/base.css">
+<body>
+    <div class="gameWrapper">
+        <div class="header">
+            <div class="count" id="count">
+                <p>得分: <span>0</span></p>
+            </div>
+            <div class="time" id="time">
+                <p>倒计时: <span>60</span></p>
+            </div>
+        </div> 
+        <div class="over-header"></div> 
+        <div class="beforeGame">
+            <div class="start_bg">
+                <div class="start_bg2">
+                    <img src="/games/img/lianliankan/start.png" alt="" class="J-start">
+                </div>
+            </div>
+        </div>
+        <div class="startGame">
+            <table id="tbl" cellspacing="0" cellpadding="0" border="1"></table>
+        </div>
+        <div class="overGame">
+            <p class="title">分数</p>
+            <p class="toalGoal">fas</p>
+        </div>
+        <div class="playAgain J-again"></div>
+        <div class="gameBot"></div>
+
+        <!-- 下面是活动还没开始的一些提示 -->
+        <div class="mask none"></div>
+        <div class="no-openMsg none">
+            <div class="masgText">
+                <p class="warnMsg"></p>
+                <p class="closeMsg">轻触关闭该信息</p>
+            </div>
+        </div>
+    </div>                                                   
+    <!-- <p id='time'>倒计时: <span>30</span></p>
+    <p id='count'>得分: <span>0</span></p>
+    -->
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="/games/util/jquery.min.js"></script>
+    <script src="/games/util/rem.js"></script>
+    <script type="text/javascript" src="/games/util/base.js"></script>
+    <script src="/games/util/baseConfig.js"></script>
+    <script src="/games/util/jquery.blockUI.js"></script>
+    <script src="/games/js/lianliankan/index.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="/games/util/wxshare.js"></script>
+</body>
+<script>
+    (function(){
+        //微信分享
+        var obj = {
+            title: '水果连连看',
+            desc: '水果连连看，等你来挑战',
+            link: window.location.href,
+            imgUrl: 'http://demo.open.weixin.qq.com/jssdk/images/p2166127561.jpg',
+        }
+        wxShare.init(obj);
+        //wxShare.init(obj, func);
+    })()
+</script>
+
+</html>

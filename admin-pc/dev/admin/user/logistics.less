@@ -1,0 +1,64 @@
+@import "../common/common.less";
+
+#goodsreactwrapper {
+    padding: 50px;
+    margin: 0 auto;    
+    .ant-pagination {
+        float: right;
+    }
+    .ant-table-wrapper{
+        min-width: 1060px;
+        margin-top: 20px;
+        background-color: #fff;
+        .ant-table-thead{
+            &>tr > th{
+                border-bottom: 1px solid #eee;
+                background-color: #fff;
+            }
+        }
+    }
+    .img {
+        width: 20px;
+    }
+    .ant-pagination {
+        margin-top: 30px;
+        .ant-pagination-item{
+            background-color: #fff;
+            border-color: #d9d9d9;
+            a{
+                color: #aaa;
+            }
+        }
+    }
+    .search {
+        float: left;
+    }
+    .radio {
+        float: right;
+        margin-top: 20px;
+    }
+    .ant-table-wrapper {
+        margin-top: 0;
+    }
+}
+.modal {
+    min-width: 1280px;
+    .top {
+        min-width: 1080px;            
+        min-height: 550px;
+        padding: 50px;
+        // background-color: #eee;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;      
+            .submit {
+                position: absolute;
+                width: 66px;
+                height: 30px;
+                right: 88px;
+                bottom: 10px;
+            }
+    }
+    .ant-modal-footer button:last-of-type {
+        display: none;
+    }
+}
