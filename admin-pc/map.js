@@ -1,4 +1,5 @@
 module.exports = {
+<<<<<<< HEAD
     //demo
     // "muser/user/_index": "./dev/muser/user/_index",
 
@@ -65,4 +66,8 @@ module.exports = {
     // "assets/admin/game/activity":"./dev/admin/game/activity",                     
     "assets/admin/game/activitylist": "./dev/admin/game/activitylist",
 
+=======
+    //主页
+    "assets/admin/user/index":"./dev/admin/user/index", 
+>>>>>>> gjx003
 }
