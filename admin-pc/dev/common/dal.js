@@ -44,7 +44,7 @@ $db.getQuery = function (key) {
     return svalue ? svalue[1] : svalue;
 }
 //判断是否在微信浏览器
-$db.is_WX = function (){
+$db.is_WX = function () {
     var ua = navigator.userAgent.toLowerCase();
     if (ua.match(/MicroMessenger/i) == "micromessenger") {
         return true;
@@ -81,24 +81,27 @@ $db.getproductview = function (req, res) {
 }
 //管理员登录
 $db.getAdminLogin = function (req, res) {
-    var data = {
-        userName: "gjx",
-        password: "123456",
-    };
+    $fn.get("http://ythb.zhiqifu.com/MemberLogin.htm?InterfaceVersion=20171016&" + req, function (data) {
+        res(data);
+    });
+    // var data = {
+    //     userName: "gjx",
+    //     password: "123456",
+    // };
 
-    if (req.userName == data.userName && data.password == req.password) {
-        var result = {
-            code: 1,
-            message: "登录成功",
-        }
-        res(result);
-    } else {
-        var result = {
-            code: 2,
-            message: "用户名或密码错误",
-        }
-        res(result);
-    }
+    // if (req.userName == data.userName && data.password == req.password) {
+    //     var result = {
+    //         code: 1,
+    //         message: "登录成功",
+    //     }
+    //     res(result);
+    // } else {
+    //     var result = {
+    //         code: 2,
+    //         message: "用户名或密码错误",
+    //     }
+    //     res(result);
+    // }
 }
 
 //测试专用
@@ -418,25 +421,24 @@ $db.getAllWeCahtPay = function (req, res) {
 }
 //支付管理 删除接口
 $db.delWeCahtPay = function (req, res) {
-    $fn.get(baseUrl + "/emapi/WeChatPay/DelWeCahtPay?InnerId=" + req, function (data) {
-    })
+    $fn.get(baseUrl + "/emapi/WeChatPay/DelWeCahtPay?InnerId=" + req, function (data) {})
 }
 //公众号管理
 //录入
-$db.SetWeChatAccount = function(req,res) {
-    $fn.post(adminUrl + "/wechat/SetWeChatAccount", req, function(data){
+$db.SetWeChatAccount = function (req, res) {
+    $fn.post(adminUrl + "/wechat/SetWeChatAccount", req, function (data) {
         res(data);
     })
 }
 //查询
-$db.GetAllWeChatAccount = function(req,res) {
-    $fn.post(adminUrl + "/wechat/GetAllWeChatAccount", req, function(data){
+$db.GetAllWeChatAccount = function (req, res) {
+    $fn.post(adminUrl + "/wechat/GetAllWeChatAccount", req, function (data) {
         res(data);
     })
 }
 //公众号管理详情页获取数据(InnerID)
 $db.GetWeChatAccount = function (req, res) {
-    console.log("sss",req);
+    console.log("sss", req);
     $fn.get(adminUrl + "/wechat/GetWeChatAccount?innerID=" + req, function (data) {
         res(data);
     });
