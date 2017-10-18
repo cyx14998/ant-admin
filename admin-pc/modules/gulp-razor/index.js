@@ -3,6 +3,7 @@ var gutil = require('gulp-util');
 const _razor = require('../koa-razor/razor');
 
 module.exports = function precompile(options) {
+    console.log(options);
 
     return through.obj(function (file, enc, cb) {
 
@@ -13,7 +14,7 @@ module.exports = function precompile(options) {
         var self = this;
         _razor.view(file.path, function (template) {
             if (template) {
-                template({ ViewBag: { Title: "" } }, function (html) {
+                template(options, function (html) {
                     //res.writeHead(200, {'Content-Type': 'text/html'});
                     //res.end(html); 
                     // resolve(html);

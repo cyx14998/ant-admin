@@ -112,139 +112,11 @@ class GoodsList extends React.Component {
     }
   }
 
-  // componentWillMount() {
-  //   this.handleSearch(1);
-  // }
-  // //页面初始化页码搜索
-  // handleSearch(pageNumber) {
-  //   if (pageNumber == 1) {
-  //     store.dispatch({ value: 1, type: 'PAGENUMBER' })
-  //   }
-  //   this.setState({ loading: true});
-  //   var data = {
-  //     NickName: store.getState().NickName,
-  //     WechatID: store.getState().WechatID,
-  //     UnitID: store.getState().UnitID,
-  //     StatusCode: store.getState().StatusCode,
-  //     pageIndex: pageNumber,
-  //   }
-  //   $db.GetAllWeChatAccount(data, function (results) {
-  //     var result = results.result;
-  //     result.map((item, index) => {
-  //       item.Favicon = $db.imgUrl + item.Favicon;
-  //     })
-  //     store.dispatch({
-  //       count: results.count,
-  //       value: result,
-  //       type: 'DATAALL'
-  //     });
-  //     // store.dispatch({value: results.count, type: 'COUNT' });
-  //     this.setState({ loading: false, });
-  //   }.bind(this));
-  // }
-  // // 弹窗增加
-  // showModal = () => {
-  //   store.dispatch({ value: true, type: 'VISIBLE' });
-  // }
-  // //改变页码
-  // onChangeNum(pageNumber) {
-  //   // console.log(pageNumber)
-  //   store.dispatch({ value: pageNumber, type: 'PAGENUMBER' })
-  //   this.handleSearch(pageNumber);
-  // }
-  // //编辑弹出Modal
-  // editModal = (index) => {
-  //   var self = this;
-  //   var data = index.InnerID;
-  //   store.dispatch({ value: data, type: 'INNERID' });
-  //   $db.GetWeChatAccount(data, function (result) {
-  //     console.log(result);
-  //     if (result.code == 1) {
-  //       store.dispatch({ value: true, type: 'VISIBLE' });
-  //       var tmplId = result.result.Favicon;
-  //       console.log(tmplId);
-  //       result.result.Favicon = $db.imgUrl + tmplId;
-  //       store.dispatch({
-  //         tmplId: tmplId,
-  //         imgUrl: result.result.Favicon,
-  //         value: result.result,
-  //         type: 'EDIT_DATA'
-  //       });
-  //     } else {
-  //       message.info("详情页数据错误")
-  //     }
-  //   });
-  // }
-  // //Modal取消
-  // handleCancel = (e) => {
-  //   // console.log(e);
-  //   const form = this.form;
-  //   form.resetFields();
-  //   store.dispatch({ value: '', type: 'INNERID' });
-  //   store.dispatch({ type: 'EDIT_DATA' });
-  //   store.dispatch({ value: false, type: 'VISIBLE' });
-  //   store.dispatch({ type: 'EMPTYDATA' });
-  // }
-  // //modal确定
-  // handleCreate = (e) => {
-  //   const form = this.form;
-  //   e.preventDefault();
-  //   form.validateFields((err, values) => {
-  //     if (!err) {
-  //       const formData = form.getFieldsValue();
-  //       formData.Favicon = store.getState().Data.tmplId;
-  //       formData.InnerID = store.getState().InnerID;
-  //       console.log("sss", formData)
-  //       $db.SetWeChatAccount(formData, function (result) {
-  //         console.log(result);
-  //         if (result.code == 1) {
-  //           message.info('提交成功');
-  //           store.dispatch({ value: true, type: 'VISIBLE' });
-  //           //确定时清空数据
-  //           form.resetFields();
-  //           store.dispatch({ type: 'EMPTYDATA' });
-  //         } else {
-  //           message.info(result.result);
-  //         }
-  //       });
-  //     } else {
-  //       console.log('Received values of form: ', values);
-  //       return false;
-  //     }
-  //   });
-  // }
-  // saveFormRef = (form) => {
-  //   this.form = form;
-  // }
-  // //图片取消预览
-  // picModalCancel = () => {
-  //   store.dispatch({
-  //     previewImage: [],
-  //     previewVisible: false,
-  //     type: 'PICPREVIEW'
-  //   })
-  // }
-  // //图片预览
-  // handlePicPreview = (file) => {
-  //   store.dispatch({
-  //     previewImage: file.url || file.thumbUrl,
-  //     previewVisible: true,
-  //     type: 'PICPREVIEW'
-  //   })
-  // }
-  // //图片上传更改
-  // handlePicChange = ({ fileList }) => {
-  //   store.dispatch({
-  //     value: fileList,
-  //     type: 'FILELIST'
-  //   })
-  //   var index = fileList.length;
-  //   if (index > 0) {
-  //     if (fileList[index - 1].status === 'done') {
-  //       store.dispatch({ value: fileList[index - 1].response.result, type: 'PROPIC' })
-  //     }
-  //   }
-  // }
+  changeParentState() {
+    console.log('parent------------', parent.window.myPageRouter)
+  }
+
+  
   render() {
     const columns = [{
       title: '公众号名称',
@@ -262,7 +134,7 @@ class GoodsList extends React.Component {
       title: '编辑',
       key: 'action',
       render: (text, index) => <div key={index}>
-        <Button type="primary" onClick={() => this.setState({url:"/admin/customeredit"})}>编辑</Button>
+        <Button type="primary" onClick={this.changeParentState.bind(this)}>编辑</Button>
       </div>
     }];
     const rowSelection = {
