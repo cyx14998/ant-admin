@@ -8,12 +8,8 @@ const TabPane = Tabs.TabPane;
 
 
 const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
-}
-const formItemLayoutInner = {
-    labelCol: { span: 10 },
-    wrapperCol: { span: 14 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
 }
 class AM extends React.Component {
     constructor(props) {
@@ -126,8 +122,91 @@ const CustomerEditBaseinfo = ({
                         </FormItem>
                     </Col>
                 </Row>
+                <Row>
+                    <Col span={8}>
+                        <Row>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label="联系人">
+                                    {getFieldDecorator('Game21', {
+                                        initialValue: '邮政编码',
+                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        { pattern: /^[0-9]*$/, message: '编号为纯数字!' }
+                                        ],
+                                    })(
+                                        <Input size="small" />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label="电话">
+                                    {getFieldDecorator('Game22', {
+                                        initialValue: '邮政编码',
+                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        { pattern: /^[0-9]*$/, message: '编号为纯数字!' }
+                                        ],
+                                    })(
+                                        <Input size="small" />
+                                        )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem {...formItemLayout} label="传真">
+                            {getFieldDecorator('Game23', {
+                                initialValue: '传真',
+                                rules: [{ required: true, message: 'Please input your Game!' },
+                                { pattern: /^[0-9]*$/, message: '编号为纯数字!' }
+                                ],
+                            })(
+                                <Input size="small" />
+                                )}
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem {...formItemLayout} label="行业类别">
+                            {getFieldDecorator('Game24', {
+                                initialValue: '行业类别',
+                                rules: [{ required: true, message: 'Please input your Game!' },
+                                { pattern: /^[0-9]*$/, message: '编号为纯数字!' }
+                                ],
+                            })(
+                                <Input size="small" />
+                                )}
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={16}>
+                        <Row>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label="企业地址">
+                                    {getFieldDecorator('Game25', {
+                                        initialValue: '企业地址',
+                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        { pattern: /^[0-9]*$/, message: '编号为纯数字!' }
+                                        ],
+                                    })(
+                                        <Input size="small" />
+                                        )}
+                                </FormItem></Col>
+                        </Row>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem {...formItemLayout} label="企业规模">
+                            {getFieldDecorator('Game26', {
+                                initialValue: '企业规模',
+                                rules: [{ required: true, message: 'Please input your Game!' },
+                                { pattern: /^[0-9]*$/, message: '编号为纯数字!' }
+                                ],
+                            })(
+                                <Input size="small" />
+                                )}
+                        </FormItem>
+                    </Col>
+                </Row>
 
-                <Button type="submit" onClick={() => handle('handle form submit')}>submit</Button>
+                {/* <Button type="submit" onClick={() => handle('handle form submit')}>submit</Button> */}
             </Form>
         </div>
     );

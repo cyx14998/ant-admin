@@ -93,19 +93,19 @@ $db.getAdminLogin = function (req, res) {
         password: "123456",
     };
 
-    // if (req.userName == data.userName && data.password == req.password) {
-    //     var result = {
-    //         code: 1,
-    //         message: "登录成功",
-    //     }
-    //     res(result);
-    // } else {
-    //     var result = {
-    //         code: 2,
-    //         message: "用户名或密码错误",
-    //     }
-    //     res(result);
-    // }
+    if (req.userName == data.userName && data.password == req.password) {
+        var result = {
+            code: 1,
+            message: "登录成功",
+        }
+        res(result);
+    } else {
+        var result = {
+            code: 2,
+            message: "用户名或密码错误",
+        }
+        res(result);
+    }
 }
 
 //测试专用
