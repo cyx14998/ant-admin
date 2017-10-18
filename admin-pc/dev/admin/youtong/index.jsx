@@ -69,7 +69,7 @@ class Page extends React.Component {
     handleSelect(e) {
 
         if (e.key === '客户信息查询') {
-            this.setState({url: '/admin/customeredit'})
+            this.setState({url: '/admin/customer'})
         }
 
         this.setState({
