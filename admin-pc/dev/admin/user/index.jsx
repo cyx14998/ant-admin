@@ -54,12 +54,10 @@ class Page extends React.Component {
         // this.handleSelect('会员查询');
     }
     handleSelect(e) {
-        // console.log(e);
-        // if (e.key == "会员查询") {
-        //     this.setState({ url: "/admin/memberlist" })
-        // } else {
-        //     this.setState({ url: "/admin/memberlist" })
-        // }
+        if (e.key == "客户信息查询") {
+            this.setState({ url: "/admin/customerEdit" })
+        } else {
+        }
         this.setState({
             title: e.keyPath[e.keyPath.length - 1],
             secondTitle: e.keyPath[e.keyPath.length - 2],
@@ -218,27 +216,27 @@ class SiderMenu extends React.Component {
                 mode="inline">
                 {
                     arr.map((item, index) => {
-                        {/* if(item.smallMenu[0]!==""){  */}
-                            return  <SubMenu key={item.bigMenu} title={<span><Icon type={item.icon} /><span>{item.bigMenu}</span></span>}>
-                                {
-                                    item.smallMenu.map((o, i) => {
-                                        if (o instanceof Object) {
-                                            return <SubMenu key={o.bigMenu} title={<span>{o.bigMenu}</span>}>
-                                                {
-                                                    o.smallMenu.map((j, k) => {
-                                                        return <Menu.Item key={j}><a>{j}</a></Menu.Item>
-                                                    })
-                                                }
-                                            </SubMenu>
-                                        } else {
-                                            return <Menu.Item key={o}>
-                                                <a>{o}</a>
-                                            </Menu.Item>
-                                        }
-                                    })
-                                }
-                            </SubMenu>
-                         {/* }else{
+                        {/* if(item.smallMenu[0]!==""){  */ }
+                        return <SubMenu key={item.bigMenu} title={<span><Icon type={item.icon} /><span>{item.bigMenu}</span></span>}>
+                            {
+                                item.smallMenu.map((o, i) => {
+                                    if (o instanceof Object) {
+                                        return <SubMenu key={o.bigMenu} title={<span>{o.bigMenu}</span>}>
+                                            {
+                                                o.smallMenu.map((j, k) => {
+                                                    return <Menu.Item key={j}><a>{j}</a></Menu.Item>
+                                                })
+                                            }
+                                        </SubMenu>
+                                    } else {
+                                        return <Menu.Item key={o}>
+                                            <a>{o}</a>
+                                        </Menu.Item>
+                                    }
+                                })
+                            }
+                        </SubMenu>
+                        {/* }else{
                             return <Menu.Item key={item.bigMenu}>
                                 <a href="#">{item.bigMenu}</a>
                             </Menu.Item>
