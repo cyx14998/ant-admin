@@ -24,9 +24,9 @@ module.exports = {
 	},
 	pathConfig:{
 		dev:{
-			jsPath:"http://192.168.2.182:8000/public/",
-			cssPath:"http://192.168.2.182:8000/public/",
-			assetsPath:"http://192.168.2.182:8000/public/",
+			jsPath:"http://localhost:8000/public/", // 192.168.2.182
+			cssPath:"http://localhost:8000/public/",
+			assetsPath:"http://localhost:8000/public/",
 		}
 	}
 };

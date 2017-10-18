@@ -1,0 +1,245 @@
+@import "../common/common.less";
+@hoverColor: #1ab394; // 菜单hover背景颜色
+@selectedColor: #7ad2ae;// 菜单selected背景颜色
+@color: #0aa485;  // 菜单默认背景颜色
+@childColor: #2d9a6e; //子菜单默认背景颜色
+#reactwrapper {
+    height: 100%;
+    &>.ant-layout {
+        .ant-layout-sider {
+            background: @color;    
+            position: fixed;
+            height: 100%;
+            .ant-layout-sider-children{
+                .logo {
+                    .company_name{
+                        height: 50px;
+                        line-height: 50px;
+                        text-align: center;
+                        color: #FFF;
+                        font-size: 24px;
+                        background: @hoverColor;
+                        overflow: hidden;
+                    }
+                    .lefter {
+                        text-align: center;
+                        height: 100px;
+                        background: @color;    
+                        display: flex;
+                        align-items:center;
+                        & >span{
+                            margin-left: 20px;
+                        }                        
+                        .img-circle {
+                            width: 64px;
+                            height: 64px;
+                            border-radius: 50%;
+                            // background-color: #fff;
+                        }
+                        .dropdown {
+                            margin-left: 20px;
+                            color: #fff;
+                            text-align: left;
+                            span, .lb_username {
+                                font-size: 12px;
+                            }
+                            .ant-dropdown-link, a {
+                                color: #fff;
+                                font-size: 12px;
+                                text-decoration: none;
+
+                            }
+                        }
+                    }
+                }
+               .ant-menu{
+                    background: @color;                                                    
+                    border-right-width: 0;
+                    color: #fff;
+                    .ant-menu-submenu-inline > .ant-menu-submenu-title{
+                        img{
+                            // width: 20px;
+                            position: relative;
+                            right: 10px;
+                        }
+                        &:after{
+                            color: #fff;
+                            content: "\E606";
+                        }
+                    }
+                    .ant-menu-item a{
+                        color: #fff;
+                    }
+                    
+                    .ant-menu-sub.ant-menu-inline > .ant-menu-item, .ant-menu-sub.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title{
+                        background: @childColor;
+                        &:hover{
+                            background: @hoverColor;  
+                        }
+                    }
+                    .ant-menu-item:hover, .ant-menu-item-acitve, .ant-menu-submenu-active, .ant-menu-submenu-active .ant-menu-submenu-title:hover, .ant-menu-submenu-open .ant-menu-submenu-title:hover{
+                        color: #eee;
+                        background: @hoverColor;                                                                            
+                    }
+                    .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
+                        color: #eee;
+                        background: @selectedColor;     
+                        a:hover{
+                            color: #eee;
+                        }
+                    }
+                }
+                .ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title{
+                    padding: 0 16px!important;
+                    text-align: center;
+                }
+            }
+        }
+        .ant-layout-sider-collapsed {
+            &+.ant-layout{
+                .ant-layout-header{
+                    left: 64px;
+                    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+                }
+                .ant-layout-content{
+                    margin-left: 64px;
+                    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+                }
+            }
+            .anticon {
+                font-size: 12px;
+            }
+            .nav-text {
+                display: none;
+            }
+            .ant-menu-submenu-title{
+                &:after{
+                    display: none;
+                }
+                &>span>span{
+                    display: none;
+                }
+            }
+            .ant-layout-sider-children{
+                .logo {
+                    height: 64px;
+                    .company_name{
+                        display: none;
+                    }
+                    .lefter{
+                        .dropdown {
+                            display: none;
+                        }
+                        .img-circle{
+                            width: 50px;
+                            height: 50px;
+                            position: absolute;
+                            left: 7px;
+                            top: 7px;
+                        }
+                    }
+                }
+            }
+            
+        }
+        .ant-layout-header {
+            .ant-breadcrumb {
+                float: left;
+                padding-left: 20px;
+            }
+            a {
+                display: inline-block;
+                height: 40px;
+                font-size: 12px;
+                color: #aeaeae;
+                text-align: center;
+                vertical-align: middle;
+            }
+            .headnext {
+                border-top: 1px solid #d2d0d1;
+                border-bottom: 1px solid #d2d0d1;
+                .ant-dropdown-link{
+                    border-left: 1px solid;
+                    margin-right: 5;
+                }
+            }
+            .left {
+                float: left;
+            }
+            .right {
+                float: right;
+            }
+            .ant-dropdown-link {
+                float: right;
+                margin-right: 25px;
+                padding-left: 10px;
+                text-decoration: none;
+            }
+            .trigger {
+                font-size: 12px;
+                line-height: 64px;
+                padding: 0 16px;
+                width: 65px;
+                height: 65px;
+                border-right: 1px solid #c7c5c6;
+                &:hover {
+                    color: #108ee9;
+                }
+            }
+            .header-right {
+                display: inline;
+                text-align: left;
+                padding-left: 30px;
+                input {
+                    width: 450px;
+                    height: 32px;
+                    line-height: 32px;
+                    background-color: #f2f2f2;
+                    padding: 6px 12px;
+                    border: none;
+                    font-size: 12px;
+                    &:focus {
+                        outline: none;
+                    }
+                }
+                ul {
+                    float: right;
+                    margin-right: 25px;
+                    margin-top: 5px;
+                    li+li {
+                        padding-left: 40px;
+                    }
+                    li {
+                        display: inline-block;
+                        a {
+                            display: inline-block;
+                            padding-top: 10px;
+                            .icon {
+                                width: 20px;
+                                height: 20px;
+                                display: inline-block;
+                            }
+                            .icon-bell {
+                                background-image: url('assets/1.png');
+                                background-size: 100% 100%;
+                            }
+                            .icon-exit {
+                                background-image: url('assets/1.png');
+                                background-size: 100% 100%;                                
+                            }
+                            .icon-envelope {
+                                background-image: url('assets/1.png');
+                                background-size: 100% 100%;                                
+                            }
+                            span {
+                                position: relative;
+                                top: -10px;
+                                left: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
