@@ -27,6 +27,11 @@ module.exports = {
 			jsPath:"http://localhost:8000/public/", // 192.168.2.182
 			cssPath:"http://localhost:8000/public/",
 			assetsPath:"http://localhost:8000/public/",
+		},
+		pub:{
+			jsPath:"/", // 192.168.2.182
+			cssPath:"/",
+			assetsPath:"/",
 		}
 	}
 };
