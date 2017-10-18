@@ -87,7 +87,9 @@ class Page extends React.Component {
             this.setState({ url: "/admin/publicnumber" })
         } else if (e.key == "奖赏机制管理") {
             this.setState({ url: "/admin/reward" })
-        } else {
+        } else if (e.key == "客户信息查询") {
+            this.setState({ url: "/admin/customerEdit" })
+        }else {
             this.setState({ url: "/admin/memberlist" })
         }
         this.setState({
@@ -252,6 +254,11 @@ const arr = [
     {
         bigMenu: "奖赏机制",
         smallMenu: ["奖赏机制管理"],
+        icon: 'folder'
+    },
+     {
+        bigMenu: "客户管理",
+        smallMenu: ["客户信息查询"],
         icon: 'folder'
     },
 ];

@@ -36,7 +36,7 @@ module.exports = {
     "assets/admin/user/reward": "./dev/admin/user/reward", //公众号管理
 
     //环保
-    "assets/admin/youtong/customerinfo": "./dev/admin/youtong/customerinfo", //客户信息查询    
+    "assets/admin/youtong/customerEdit": "./dev/admin/youtong/customerEdit", //客户信息查询    
     //product产品界面
     //产品界面
     //
