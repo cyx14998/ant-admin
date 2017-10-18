@@ -6,6 +6,8 @@ const FormItem = Form.Item;
 import './login.less';
 import $db from '../../common/dal.js';
 
+import md5 from 'crypto-js/md5';
+
 class Login extends React.Component {
     constructor(props) {
         super(props);

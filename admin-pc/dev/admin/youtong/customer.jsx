@@ -261,7 +261,7 @@ class GoodsList extends React.Component {
     }, {
       title: '编辑',
       key: 'action',
-      render: (text, index) => <div>
+      render: (text, index) => <div key={index}>
         <Button type="primary" onClick={() => this.setState({url:"/admin/customeredit"})}>编辑</Button>
       </div>
     }];
@@ -288,7 +288,7 @@ class GoodsList extends React.Component {
           loading={this.state.loading}
         />
         <Pagination showQuickJumper defaultCurrent={1} current={1} total={11} />
-      </div >
+      </div>
     )
   }
 }

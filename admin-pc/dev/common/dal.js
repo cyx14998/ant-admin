@@ -79,8 +79,15 @@ $db.getproductview = function (req, res) {
         res(data);
     })
 }
+
+
 //管理员登录
 $db.getAdminLogin = function (req, res) {
+
+    return $fn.get("http://ythb.zhiqifu.com/MemberLogin.htm?InterfaceVersion=20171016&" + req, function (data) {
+            res(data);
+        });
+
     var data = {
         userName: "gjx",
         password: "123456",
