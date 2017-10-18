@@ -23,13 +23,15 @@ class AM extends React.Component {
 }
 
 const CustomerEditBaseinfo = ({
-  handle,
+  baseinfo,
+  handleChange,
+  handleSubmit,
   getFieldDecorator
 }) => (
   <div className=" pollutersBox">
-      <Form onSubmit={() => handle('CustomerEditBaseinfo')} hideRequiredMark>
+      <Form onSubmit={() => handleSubmit('CustomerEditBaseinfo')} hideRequiredMark>
           <div className="baseInfoBox">
-              <div className="baseInfoTitle">基本信息</div>
+              <div className="baseInfoTitle">基本信息 {baseinfo.info}</div>
           </div>
           <Row>
               <Col span={8}>
@@ -122,7 +124,7 @@ const CustomerEditBaseinfo = ({
 );
 
 
-export default Form.create()(CustomerEditBaseinfo);
+export default CustomerEditBaseinfo;
 
 
 

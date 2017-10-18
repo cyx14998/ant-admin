@@ -4,6 +4,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import './customer.less';
+
 class Page extends Component {
   constructor(props) {
     super(props)
@@ -11,7 +13,7 @@ class Page extends Component {
 
   render() {
     return (
-      <div class="customer-page">
+      <div className="customer-page">
         <h1>客户信息查询</h1>
       </div>
     )
@@ -24,4 +26,4 @@ const render = () => {
         <Page />, document.getElementById('customerreactwrapper'));
 }
 render();
-store.subscribe(render);
+// store.subscribe(render);

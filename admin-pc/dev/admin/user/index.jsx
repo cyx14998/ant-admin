@@ -1,6 +1,6 @@
 import React, { component } from 'react';
 import ReactDOM from 'react-dom';
-import './index.less';
+import "./index.less";
 import $db from '../../common/dal.js';
 import imgCircle from './assets/1.png';
 import user_icon from './assets/user_icon.png';
@@ -54,41 +54,9 @@ class Page extends React.Component {
         // this.handleSelect('会员查询');
     }
     handleSelect(e) {
-        // console.log(e);
-        if (e.key == "会员查询") {
-            this.setState({ url: "/admin/memberlist" })
-        } else if (e.key == "粉丝查询") {
-            this.setState({ url: "/admin/fanslist" })
-        } else if (e.key == "商品管理") {
-            this.setState({ url: "/admin/goodslist" })
-            // console.log("goodslistksklks");
-        } else if (e.key == "订单管理") {
-            this.setState({ url: "/admin/order" })
-            // console.log("goodslistksklks");
-        } else if (e.key == "活动配置") {
-            this.setState({ url: "/admin/exchange" })
-            // console.log("goodslistksklks");
-        } else if (e.key == "用户积分兑换详情") {
-            this.setState({ url: "/admin/exchangedetail" })
-            // console.log("goodslistksklks");
-        } else if (e.key == "游戏管理") {
-            this.setState({ url: "/admin/gamelist" })
-            // console.log("goodslistksklks");
-        } else if (e.key == "活动管理") {
-            this.setState({ url: "/admin/activitylist" })
-            // console.log("goodslistksklks");
-        } else if (e.key == '文章管理') {
-            this.setState({ url: "/admin/articleManager" })
-        } else if (e.key == '支付管理') {
-            this.setState({ url: "/admin/payManager" })
-        }else if(e.key == '自动回复管理'){
-            this.setState({ url: "/admin/autoReply" })
-        }else if (e.key == "公众号管理") {
-            this.setState({ url: "/admin/publicnumber" })
-        } else if (e.key == "奖赏机制管理") {
-            this.setState({ url: "/admin/reward" })
+        if (e.key == "客户信息查询") {
+            this.setState({ url: "/admin/customerEdit" })
         } else {
-            this.setState({ url: "/admin/memberlist" })
         }
         this.setState({
             title: e.keyPath[e.keyPath.length - 1],
@@ -106,7 +74,7 @@ class Page extends React.Component {
                     width={240}
                 >
                     <div className="logo">
-                        <div className='company_name'>友通环保后台系统</div>
+                        <div className='company_name'>友通环保CRM系统</div>
                         <MenuTop></MenuTop>
                     </div>
                     <SiderMenu handleSelect={this.handleSelect.bind(this)}></SiderMenu>
@@ -205,55 +173,10 @@ class MenuTop extends React.Component {
 }
 const arr = [
     {
-        bigMenu: "用户信息",
-        smallMenu: ["会员查询", "粉丝查询"],
+        bigMenu: "客户管理",
+        smallMenu: ["客户信息查询"],
         icon: 'user'
-    },
-    {
-        bigMenu: "商品信息",
-        smallMenu: ["商品管理"],
-        icon: 'folder'
-    },
-    {
-        bigMenu: "订单",
-        smallMenu: ["订单管理"],
-        icon: 'folder'
-    },
-    {
-        bigMenu: "积分兑换",
-        smallMenu: ["活动配置", "用户积分兑换详情"],
-        icon: 'folder'
-    },
-    {
-        bigMenu: "游戏 & 活动",
-        smallMenu: ["游戏管理", "活动管理"],
-        icon: 'folder'
-    },
-    {
-        bigMenu: "文章",
-        smallMenu: ["文章管理"],
-        icon: 'folder'
-    },
-    {
-        bigMenu: "支付",
-        smallMenu: ["支付管理"],
-        icon: 'folder'
-    },
-    {
-        bigMenu: "自动回复",
-        smallMenu: ["自动回复管理"],
-        icon: 'folder'
-    },
-    {
-        bigMenu: "系统管理",
-        smallMenu: ["公众号管理","菜单管理","日志管理"],
-        icon: 'folder'
-    },
-    {
-        bigMenu: "奖赏机制",
-        smallMenu: ["奖赏机制管理"],
-        icon: 'folder'
-    },
+    }
 ];
 //侧边栏导航菜单
 class SiderMenu extends React.Component {
@@ -293,27 +216,27 @@ class SiderMenu extends React.Component {
                 mode="inline">
                 {
                     arr.map((item, index) => {
-                        {/* if(item.smallMenu[0]!==""){  */}
-                            return  <SubMenu key={item.bigMenu} title={<span><Icon type={item.icon} /><span>{item.bigMenu}</span></span>}>
-                                {
-                                    item.smallMenu.map((o, i) => {
-                                        if (o instanceof Object) {
-                                            return <SubMenu key={o.bigMenu} title={<span>{o.bigMenu}</span>}>
-                                                {
-                                                    o.smallMenu.map((j, k) => {
-                                                        return <Menu.Item key={j}><a>{j}</a></Menu.Item>
-                                                    })
-                                                }
-                                            </SubMenu>
-                                        } else {
-                                            return <Menu.Item key={o}>
-                                                <a>{o}</a>
-                                            </Menu.Item>
-                                        }
-                                    })
-                                }
-                            </SubMenu>
-                         {/* }else{
+                        {/* if(item.smallMenu[0]!==""){  */ }
+                        return <SubMenu key={item.bigMenu} title={<span><Icon type={item.icon} /><span>{item.bigMenu}</span></span>}>
+                            {
+                                item.smallMenu.map((o, i) => {
+                                    if (o instanceof Object) {
+                                        return <SubMenu key={o.bigMenu} title={<span>{o.bigMenu}</span>}>
+                                            {
+                                                o.smallMenu.map((j, k) => {
+                                                    return <Menu.Item key={j}><a>{j}</a></Menu.Item>
+                                                })
+                                            }
+                                        </SubMenu>
+                                    } else {
+                                        return <Menu.Item key={o}>
+                                            <a>{o}</a>
+                                        </Menu.Item>
+                                    }
+                                })
+                            }
+                        </SubMenu>
+                        {/* }else{
                             return <Menu.Item key={item.bigMenu}>
                                 <a href="#">{item.bigMenu}</a>
                             </Menu.Item>

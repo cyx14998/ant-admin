@@ -13,49 +13,35 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 
-
-import CustomerEditBaseinfo from './customerEdit.baseinfo.jsx';
-const customerDefaultBaseinfo = {};
+import CustomerEditBaseinfo from './customerEdit.baseinfo';
 
 //列表页面//
 class Customerinfo extends React.Component {
     constructor(props) {
         super(props);
 
-        /**
-         * redex to state
-         */
         this.state = {
-            customerBaseinfo: customerDefaultBaseinfo,
-
-            otherMoudleinfo: {
-
+            customerBaseinfo: {
+                info: ''
             }
         }
     }
 
     componentDidMount() {
     }
-
     //总标签tab
-    bigTabCallback(key) {
+    bigTabCallback = (key) => {
         console.log(key);
         store.dispatch({ value: key, type: 'TABKEY' });
     }
-    
-    handleBaseinfoChange(data) {
-        this.setState(prev => ({
-            ...prev,
-            customerBaseinfo: {
-                ...data
-            }
-        }));
+    handleBaseinfoChange(changeInfo) {
+
     }
 
-    // 排污单位基本情况
     handleBaseinfoSubmit(data) {
-        // 调用接口保存数据
+
     }
+
     render() {
         const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
         const formItemLayout = {
@@ -88,41 +74,27 @@ class Customerinfo extends React.Component {
         };
         return (
             <div className="content">
-                <Tabs defaultActiveKey="1" onChange={this.bigTabCallback.bind(this)}>
-
-                    {/**    排污单位基本情况   **/}
+                <Tabs defaultActiveKey="1" onChange={this.bigTabCallback}>
                     <TabPane tab="排污单位基本情况" key="1">
-                        <CustomerEditBaseinfo 
-                            customerBaseinfo={this.state.customerBaseinfo}
-                            handle={this.handleBaseinfoChange.bind(this)}
+                        <CustomerEditBaseinfo
+                            baseinfo={this.state.customerBaseinfo}
+                            handleChange={this.handleBaseinfoChange.bind(this)}
+                            handleSubmit={this.handleBaseinfoSubmit.bind(this)}
                             getFieldDecorator={getFieldDecorator} />
                     </TabPane>
-
-
-                    {/**    废水污染物基本情况   **/}
                     <TabPane tab="废水污染物基本情况" key="2">
                     </TabPane>
-
-
                     <TabPane tab="废气污染物基本情况" key="3">
                         3
                     </TabPane>
-
-
                     <TabPane tab="固体废物基本情况" key="4">
                         4
                     </TabPane>
-
-
                     <TabPane tab="边界噪声基本情况" key="5">
                         4
                     </TabPane>
-
-
                     <TabPane tab="企业遵守法律法规情况" key="6">
                     </TabPane>
-
-
                     <TabPane tab="企业证照材料" key="7">
                         3
                     </TabPane>
@@ -133,14 +105,15 @@ class Customerinfo extends React.Component {
                         4
                     </TabPane>
                 </Tabs>
-            </div>
+            </div >
         )
     }
 }
+
 const CustomerinfoForm = Form.create()(Customerinfo);
 const render = () => {
     ReactDOM.render(
-        <CustomerinfoForm></CustomerinfoForm>, document.getElementById('customerinforeactwrapper'));
+        <CustomerinfoForm />, document.getElementById('customerinforeactwrapper'));
 }
 render();
 store.subscribe(render);
