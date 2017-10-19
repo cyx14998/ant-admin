@@ -34,7 +34,7 @@ const CustomerEditBaseinfo = ({
         <div className="baseInfoBox">
             <Form onSubmit={() => handleSubmit('CustomerEditBaseinfo')} hideRequiredMark>
                 <div className="baseInfoFormBox">
-                    <div className="baseInfoFormTitle">基本信息</div>
+                    <div className="baseInfoFormTitle">基本111信息</div>
                     <Row>
                         <Col span={8}>
                             <FormItem {...formItemLayout} label="企业名称">

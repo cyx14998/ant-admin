@@ -10,7 +10,7 @@ var Demo = {
         ctx.body = "not found";
     },
     admin: async (ctx, next) => {
-        await Razor({ root: '/admin/', path: './views/admin/' }, conf.pathConfig.pub)(ctx);
+        await Razor({ root: '/admin/', path: './views/admin/' }, conf.pathConfig.dev)(ctx);
     }
 };
 
