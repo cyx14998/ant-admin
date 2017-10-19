@@ -113,7 +113,8 @@ class GoodsList extends React.Component {
   }
 
   changeParentState() {
-    console.log('parent------------', parent.window.myPageRouter)
+    alert('changeParentState')
+    parent.window.modules.changePage();
   }
 
   
@@ -160,6 +161,7 @@ class GoodsList extends React.Component {
           loading={this.state.loading}
         />
         <Pagination showQuickJumper defaultCurrent={1} current={1} total={11} />
+        <Button type="primary" onClick={this.changeParentState.bind(this)}>编辑</Button>
       </div>
     )
   }

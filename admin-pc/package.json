@@ -4,13 +4,19 @@
     "index": "./index.js"
   },
   "dependencies": {
+    "antd": "^2.13.6",
+    "axios": "^0.16.2",
     "crypto-js": "^3.1.9-1",
     "koa": "^2.3.0",
     "koa-body": "^2.3.0",
     "koa-router": "^7.2.1",
-    "koa-static": "^3.0.0"
+    "koa-static": "^3.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "redux": "^3.7.2"
   },
   "devDependencies": {
+    "antd-mobile": "^1.7.0",
     "atool-build": "^0.9.0",
     "atool-test-mocha": "^0.1.4",
     "babel-eslint": "^7.0.0",
