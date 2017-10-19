@@ -22,7 +22,11 @@ const SubMenu = Menu.SubMenu;
  */
 import utils from '../../common/utils.youtong';
 
-console.log(utils.serialize({name: 'lucy', age: 20}))
+console.log(utils.serialize({name: 'lucy', age: 20}));
+
+window.myPageRouter = function () {
+    
+}
 
 // 面包屑
 class BreadcrumbMap extends React.Component {

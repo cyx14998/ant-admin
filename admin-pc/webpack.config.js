@@ -8,9 +8,9 @@ module.exports = function (webpackConfig) {
 	webpackConfig.entry = mypath;
 	webpackConfig.output = {
 		filename: '[name].js',
-		chunkFilename: '[id].chunk.js',
+		// chunkFilename: '[id].chunk.js',
 		path: path.join(__dirname, '/public/'),
-		publicPath: '/public/'
+		publicPath: '/'
 	};
 	// webpackConfig.externals = ['react', 'react-dom', 'jquery'];
 	const svgDirs = [
