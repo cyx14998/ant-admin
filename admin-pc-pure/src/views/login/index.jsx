@@ -7,6 +7,10 @@ import './index.less';
 
 import md5 from 'crypto-js/md5';
 
+import {
+    login
+} from '../../common/api/api.login';
+console.log('Icom---', <Icon type="user" style={{ fontSize: 20 }} />)
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -34,14 +38,13 @@ class Login extends React.Component {
 }
 
 
-class LoginForms extends React.Component {
+class LoginForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             phoneNumber: localStorage.getItem("phoneNumber") ? localStorage.getItem("phoneNumber") : null,
             password: '',
             remember: true,
-            visible: false,
         };
     }
     // 输入用户名
@@ -58,15 +61,27 @@ class LoginForms extends React.Component {
     remember() {
         this.setState({ remember: !this.state.remember })
     }
-    //提示框不可见
-    changeVisible() {
-        this.setState({ visible: false });
-    }
     handleSubmit() {
+        console.log('handlesubmit')
         var self = this;
         if (self.state.phoneNumber && self.state.password) {
             var data1 = "phoneNumber=" + self.state.phoneNumber + "&password=" + md5(self.state.password);
             console.log(data1)
+
+            var data = {
+                phoneNumber: self.state.phoneNumber,
+                password: md5(self.state.password)
+            }
+            login(data).then(res => {
+                console.log('get login res', res)
+                 if (self.state.remember == true) {
+                        localStorage.setItem("phoneNumber", self.state.phoneNumber);
+                    }
+                    console.log(result.message);
+                    window.location = "/admin/index"
+            }).catch(err => {
+                console.log(err)
+            })
             // $db.getAdminLogin(data1, function (result) {
             //     console.log(result);
             //     if (result.result == 'success') {
@@ -80,29 +95,20 @@ class LoginForms extends React.Component {
             //     }
             // });
         } else {
-            self.setState({ visible: true });
         }
     }
     render() {
         // console.log(phoneNumber);
         return (
             <div className="login-form">
-                <Input value={this.state.phoneNumber} addonAfter={<Icon type="user" style={{ fontSize: 20 }} />} onChange={this.changePhoneNum} />
-                <Input type="password" placeholder="请输入密码" addonAfter={<Icon type="lock" style={{ fontSize: 20, backgroundCor: '#000', }} />} onChange={this.changePsd} />
+                <Input value={this.state.phoneNumber} addonAfter={<Icon type="user" style={{ fontSize: 20 }} />} onChange={this.changePhoneNum.bind(this)} />
+                <Input type="password" placeholder="请输入密码" addonAfter={<Icon type="lock" style={{ fontSize: 20, backgroundCor: '#000', }} />} onChange={this.changePsd.bind(this)} />
                 <div className="remember">
-                    <Checkbox onChange={this.remember} checked={this.state.remember}>记住用户名</Checkbox>
+                    <Checkbox onChange={this.remember.bind(this)} checked={this.state.remember}>记住用户名</Checkbox>
                 </div>
-                <Button type="primary" htmlType="submit" onClick={this.handleSubmit} className="login-form-button">
+                <Button type="primary" htmlType="submit" onClick={this.handleSubmit.bind(this)} className="login-form-button">
                     登录
                 </Button>
-                <Modal
-                    title="错误提示"
-                    visible={this.state.visible}
-                    onOk={this.changeVisible}
-                    onCancel={this.changeVisible}
-                >
-                    <p>用户名或密码错误</p>
-                </Modal>
                 {/* <div className=" register">
             没有账号？<a href="#">立即注册</a>
           </div> */}
@@ -111,6 +117,4 @@ class LoginForms extends React.Component {
     }
 }
 
-const LoginForm = Form.create()(LoginForms);
-
-ReactDOM.render(<Login></Login>, document.getElementById('root'));
+ReactDOM.render(<Login />, document.getElementById('root'));

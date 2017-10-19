@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --config webpack.dev.js --progress --colors --inline --hot --history-api-fallback",
-    "build": "rm -rf build && webpack --config webpack.prod.js --progress --profile --colors"
+    "build": "webpack --config webpack.prod.js --progress --profile --colors"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "antd": "^2.13.6",
+    "axios": "^0.16.2",
     "crypto-js": "^3.1.9-1",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
