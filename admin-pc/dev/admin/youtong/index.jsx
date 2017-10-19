@@ -25,7 +25,7 @@ import utils from '../../common/utils.youtong';
 console.log(utils.serialize({name: 'lucy', age: 20}));
 
 window.myPageRouter = function () {
-    
+    alert('myPageRouter')
 }
 
 // 面包屑
@@ -52,16 +52,27 @@ class Page extends React.Component {
             thirdTitle: arr[0].smallMenu.bigMenu,
             url: "/admin/customer",
         }
+
+        alert('page')
     }
     toggle() {
         this.setState({
             collapsed: !this.state.collapsed,
         });
     }
+    componentDidMount() {
+        var self = this;
+        window.modules={
+            changePage: function () {
+                alert(self.state.url)
+            }
+        }
+    }
     componentWillMount() {
         if (localStorage.getItem("username") == '') {
             window.location = '/admin/login';
         }
+
         // this.handleSelect('会员查询');
     }
 
