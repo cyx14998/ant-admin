@@ -45,8 +45,11 @@ class Login extends React.Component {
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
+
+        var phoneNumber = localStorage.getItem('phoneNumber');
+
         this.state = {
-            phoneNumber: localStorage.getItem("phoneNumber") ? localStorage.getItem("phoneNumber") : null,
+            phoneNumber: phoneNumber ? phoneNumber : '',
             password: '',
             remember: true,
         };
@@ -64,42 +67,59 @@ class LoginForm extends React.Component {
         this.setState({ remember: !this.state.remember })
     }
     handleSubmit() {
-        var self = this;
-        if (self.state.phoneNumber && self.state.password) {
-            var pwd = '' + md5(self.state.password)
-            var data = {
-                phoneNumber: self.state.phoneNumber,
-                password: pwd
-            }
+        var phoneNumber = this.state.phoneNumber,
+            password = this.state.password;
 
-            login(data).then(res => {
-                console.log('get login res', res)
-                if (res.data.result !== 'success') {
-                    return
-                }
-                if (self.state.remember == true) {
-                    localStorage.setItem("phoneNumber", self.state.phoneNumber);
-                }
-                // set token
-                localStorage.setItem("token", res.data.token);
-                window.location = '/index.html';
-            }).catch(err => {
-                console.log(err)
-            })
-
-        } else {
+        if (!(/^1[0-9]{10}$/.test(phoneNumber))) {
+            alert('请输入正确的手机号码');
+            return;
         }
+
+        if (!password) {
+            alert('请输入密码');
+            return;
+        }
+
+        var pwd = '' + md5(password)
+        var data = {
+            phoneNumber: phoneNumber,
+            password: pwd
+        }
+
+        login(data).then(res => {
+            console.log('get login res', res)
+            if (res.data.result !== 'success') {
+                return
+            }
+            if (this.state.remember == true) {
+                localStorage.setItem("phoneNumber", phoneNumber);
+            }
+            // set token
+            localStorage.setItem("token", res.data.token);
+            window.location = '/index.html';
+        }).catch(err => {
+            console.log(err)
+        })
     }
     render() {
         // console.log(phoneNumber);
         return (
             <div className="login-form">
-                <Input value={this.state.phoneNumber} addonAfter={<Icon type="user" style={{ fontSize: 20 }} />} onChange={this.changePhoneNum.bind(this)} />
-                <Input type="password" placeholder="请输入密码" addonAfter={<Icon type="lock" style={{ fontSize: 20, backgroundCor: '#000', }} />} onChange={this.changePsd.bind(this)} />
+                <Input placeholder="请输入手机号码" value={this.state.phoneNumber} 
+                    addonAfter={<Icon type="user" 
+                    style={{ fontSize: 20 }} />} 
+                    onChange={this.changePhoneNum.bind(this)} />
+                <Input type="password" placeholder="请输入密码" 
+                    addonAfter={<Icon type="lock" 
+                    style={{ fontSize: 20, backgroundCor: '#000', }} />} 
+                    onChange={this.changePsd.bind(this)} />
                 <div className="remember">
-                    <Checkbox onChange={this.remember.bind(this)} checked={this.state.remember}>记住用户名</Checkbox>
+                    <Checkbox 
+                        onChange={this.remember.bind(this)} 
+                        checked={this.state.remember}>记住用户名</Checkbox>
                 </div>
-                <Button type="primary" htmlType="submit" onClick={this.handleSubmit.bind(this)} className="login-form-button">
+                <Button type="primary" htmlType="submit" 
+                    onClick={this.handleSubmit.bind(this)} className="login-form-button">
                     登录
                 </Button>
                 {/* <div className=" register">
