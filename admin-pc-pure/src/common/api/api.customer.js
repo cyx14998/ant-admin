@@ -1,16 +1,24 @@
 /**
  * 企业管理列表
  */
-import axios from './index';
+import axios, { getToken } from './index';
 
-var getToken = function () {
-  return localStorage.getItem('token');
-}
-
-export function getCustomerList() {
-  return axios.get('/', {
+// 获取企业列表
+export function getCustomerList({pageNumber=1, countPerPage=10}) {
+  return axios.get('/uCustomerList.uhtm?InterfaceVersion=20171018', {
     params: {
-      token: getToken()
+      token: getToken(),
+      pageNumber,
+      countPerPage
     }
   })
+}
+
+export function getCustomerInfoById(id) {
+  return axios.get('/uCustomerDetail.uhtm?InterfaceVersion=20171018', {
+    params: {
+      token: getToken(),
+      tableId: id
+    }
+  });
 }

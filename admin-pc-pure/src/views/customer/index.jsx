@@ -1,3 +1,7 @@
+/**
+ * 企业列表
+ */
+
 import React, { component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
@@ -5,6 +9,10 @@ import './index.less';
 import { Table, Icon, Form, Row, Col, Input, Button, Pagination, Modal, Select, Popconfirm, Upload, message, } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
+
+import {
+  getCustomerList
+} from '../../common/api/api.customer'
 
 //添加与编辑页面Modal
 
@@ -108,35 +116,63 @@ class GoodsList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
+      customerList: [],
     }
   }
 
-  changeParentState() {
-    alert('changeParentState')
-    parent.window.modules.changePage();
+  componentDidMount() {
+    getCustomerList({}).then(res => {
+      console.log('getCustomerList ---', res)
+      if (res.data.result !== 'success') {
+        alert(res.data.info || '接口失败')
+        return;
+      }
+
+      this.setState({
+        loading: false,
+        customerList: res.data.customerList.map((item, i) => {
+          item.key = i;
+          return item;
+        })
+      })
+    }).catch(err => {
+      alert(res.data.info || '接口失败')
+    })
+  }
+
+  changeParentState(id) {
+    parent.window.iframeHook.changePage('/customerEdit.html?id=' + id)
   }
 
   
   render() {
     const columns = [{
-      title: '公众号名称',
-      dataIndex: 'NickName',
-      key: 'NickName',
+      title: '组织机构代码',
+      dataIndex: 'postalCode',
+      key: 'postalCode',
     }, {
-      title: '公众号原始ID',
-      dataIndex: 'WechatID',
-      key: 'WechatID',
+      title: '企业名称',
+      dataIndex: 'customerName',
+      key: 'customerName',
     }, {
-      title: '地址',
-      dataIndex: 'Favicon',
-      key: 'Favicon',
+      title: '单位地址',
+      dataIndex: 'unitAddress',
+      key: 'unitAddress',
+    }, {
+      title: '联系人',
+      dataIndex: 'contactPerson',
+      key: 'contactPerson'
+    }, {
+      title: '联系人手机',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber'
     }, {
       title: '编辑',
       key: 'action',
-      render: (text, index) => <div key={index}>
-        <Button type="primary" onClick={this.changeParentState.bind(this)}>编辑</Button>
-      </div>
+      render: (text, record) => (<div>
+        <Button className="yzy-btn-primary" type="primary" onClick={this.changeParentState.bind(this, record.tableId)}>编辑</Button>
+      </div>)
     }];
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
@@ -155,8 +191,7 @@ class GoodsList extends React.Component {
           {/* <Button className="editable-add-btn f_right" onClick={this.showModal}>Add</Button> */}
         </div>
         <Table
-          rowKey='InnerID'
-          dataSource={dataSource}
+          dataSource={this.state.customerList}
           columns={columns}
           rowSelection={rowSelection}
           pagination={false}

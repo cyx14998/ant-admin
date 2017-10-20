@@ -13,6 +13,10 @@ const TabPane = Tabs.TabPane;
 
 import CustomerEditBaseinfo from './customerEdit.baseinfo';
 
+import {
+    getCustomerInfoById
+} from '../../common/api/api.customer';
+
 //省
 const provinceData = ['Zhejiang', 'Jiangsu'];
 // 市
@@ -77,24 +81,11 @@ class Customerinfo extends React.Component {
     }
 
     componentDidMount() {
-        console.log(localStorage.getItem('token'))
-        // getdata().then(res => {
-        //     this.setState(prev => ({
-
-        //     }))
-        // })
-        // this.setState(prev => ({
-
-        //     data: {
-        //         ...prev.data,
-        //         per: {
-        //             ...prev.data.per,
-        //             name: 'lily'
-        //         }
-        //     }
-        // }), function () {
-        //     console.log(this.state)
-        // })
+       var cusId = window.location.search.split('=')[1];
+       getCustomerInfoById(cusId).then(res => {
+           console.log('getCustomerInfoById res', res)
+       }).catch(err => console.log(err))
+        
     }
     //总标签tab
     bigTabCallback(key) {

@@ -28,7 +28,7 @@ const entries = getEntries('src/views/**/index.jsx');
 const htmlPlugins = Object.keys(entries).map(function (name) {
 	return new HtmlWebpackPlugin({
       // 生成出来的html文件名
-      filename: 'admin/' + name + '.html',
+      filename: name + '.html',
       // 每个html的模版，这里多个页面使用同一个模版
       template: './src/template.html',
       // 自动将引用插入html
