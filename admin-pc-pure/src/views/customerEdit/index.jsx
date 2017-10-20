@@ -39,53 +39,42 @@ const townData = {
     su: ['s'],
 }
 
-const blob = {
-    field1: '',
-    field2: ''
-}
-
-function changev() {
-    this.setState(prev => ({
-
-    }))
-}
-
 const initData = {
     customerBaseinfo: {
-        blob: blob,
-        baseinfo: {
-            name: '',
-            addr: '',
-        },
         cities: cityData[provinceData[0]],
         secondCity: cityData[provinceData[0]][0],
         thirdCounty: countyData[cityData[provinceData[0]][0]],
         forthTown: townData[countyData[cityData[provinceData[0]][0]][0]],
     },
-    data: {
-        girl: {
-            age: 20
-        },
-        per: {
-            name: 'lucy',
-            age: 18
-        }
-    }
 }
 //列表页面//
 class Customerinfo extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = initData;
+        this.state = {
+            customerBaseinfo: {
+                customer: {},
+                cities: cityData[provinceData[0]],
+                secondCity: cityData[provinceData[0]][0],
+                thirdCounty: countyData[cityData[provinceData[0]][0]],
+                forthTown: townData[countyData[cityData[provinceData[0]][0]][0]],
+            },
+        };
     }
 
     componentDidMount() {
-       var cusId = window.location.search.split('=')[1];
-       getCustomerInfoById(cusId).then(res => {
-           console.log('getCustomerInfoById res', res)
-       }).catch(err => console.log(err))
-        
+        var cusId = window.location.search.split('=')[1];
+        getCustomerInfoById(cusId).then(res => {
+            console.log('getCustomerInfoById res', res)
+            this.setState(prev => ({
+                customerBaseinfo: {
+                    ...prev.customerBaseinfo,
+                    customer: res.data.customer,
+                }
+            }));
+            console.log(this.state.customerBaseinfo.customer)
+        }).catch(err => console.log(err))
+
     }
     //总标签tab
     bigTabCallback(key) {
@@ -188,7 +177,7 @@ class Customerinfo extends React.Component {
                             cityOptions={cityOptions}
                             countyOptions={countyOptions}
                             townOptions={townOptions}
-                            baseinfo={this.state.customerBaseinfo}
+                            customerBaseinfo={this.state.customerBaseinfo}
                             handleProvinceChange={this.handleProvinceChange.bind(this)}
                             onSecondCityChange={this.onSecondCityChange.bind(this)}
                             onCountyChange={this.onCountyChange.bind(this)}

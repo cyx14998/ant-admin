@@ -1,4 +1,5 @@
-// @import "../common/common.less";
+@import "../../theme/common.less";
+
 #root {
     padding: 20px 25px;
     font-size: 14px;
@@ -42,6 +43,7 @@
             background: #fff;
             margin: 0 auto;
             font-size: 12px;
+            padding: 0 10px;            
             // title 样式
             .baseInfoFormTitle {
                 padding: 0 12px;
@@ -49,12 +51,19 @@
                 margin: 20px 0;
             }
             .baseInfoFormBox, .otherInfoFormBox {
-                padding: 0 10px;
                 .ant-form-item, .ant-form-item-with-help {
                     margin-bottom: 0;                   
                 }
-                .ant-select-sm .ant-select-selection--single {
-                    margin-right: 10px;
+                .ant-select-sm .ant-select-selection--single, .ant-input-group {
+                    margin-top: 5px;
+                }
+            }
+            .tableBox {
+                .tableItemBox {
+                    // height: 236px;
+                    .addBtn {
+                        margin: 4px 0;
+                    }
                 }
             }
         }
