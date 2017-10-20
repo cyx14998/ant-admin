@@ -1,1 +1,0 @@
-webpackJsonp([1],{548:function(e,t,n){"use strict";var s=function(){return React.createElement("div",null,"sssssssss")};ReactDOM.render(React.createElement(s,null),document.getElementById("root"))}},[548]);
