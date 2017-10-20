@@ -181,9 +181,9 @@ const CustomerEditBaseinfo = ({
                     </Row>
                     <Row>
                         <Col span={8}>
-                            <Col span={3}></Col>
-                            <Col span={9}>
-                                <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} label="联系人">
+                            <Col span={2}></Col>
+                            <Col span={10}>
+                                <FormItem labelCol={{ span: 9 }} wrapperCol={{ span: 15 }} label="联系人">
                                     {getFieldDecorator('contactPerson', {
                                         initialValue: customerBaseinfo.customer.contactPerson,
                                         rules: [{ required: true, message: 'Please input your Game!' },
@@ -395,9 +395,9 @@ const CustomerEditBaseinfo = ({
                     </Row>
                     <Row>
                         <Col span={8}>
-                            <Col span={2}></Col>
+                            <Col span={1}></Col>
                             <Col span={9}>
-                                <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 12 }} label="是否央企">
+                                <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 10 }} label="是否央企">
                                     {getFieldDecorator('isCentralEnterprises', {
                                         initialValue: (customerBaseinfo.customer.isCentralEnterprises + "") ? (customerBaseinfo.customer.isCentralEnterprises + "") : 'true',
                                         rules: [{ required: true, message: 'Please input your Game!' },
@@ -411,8 +411,8 @@ const CustomerEditBaseinfo = ({
                                         )}
                                 </FormItem>
                             </Col>
-                            <Col span={13}>
-                                <FormItem labelCol={{ span: 17 }} wrapperCol={{ span: 7 }} label="是否3千万千瓦以上电力">
+                            <Col span={14}>
+                                <FormItem labelCol={{ span: 18 }} wrapperCol={{ span: 6 }} label="是否3千万千瓦以上电力">
                                     {getFieldDecorator('isMoreThan30PowerEnterprise', {
                                         initialValue: (customerBaseinfo.customer.isMoreThan30PowerEnterprise + "") ? (customerBaseinfo.customer.isMoreThan30PowerEnterprise + "") : 'true',
                                         rules: [{ required: true, message: 'Please input your Game!' },
@@ -533,12 +533,12 @@ const CustomerEditBaseinfo = ({
                     <Row gutter={20}>
                         <Col className="tableItemBox clearfix" span={12}>
                                 <div className="baseInfoFormTitle">主要产品基本信息</div>
-                                <Button className="addBtn f_right" type="primary" onClick={handleChange}>新增</Button>
+                                <Button className="addBtnb f_right" type="primary" onClick={handleChange}>新增</Button>
                                 <Table columns={columns} dataSource={data} scroll={{ y: 180 }}/>
                         </Col>
                         <Col className="tableItemBox clearfix" span={12}>
                                 <div className="baseInfoFormTitle">主要产品基本信息</div>
-                                <Button className="addBtn f_right" type="primary" onClick={handleChange}>新增</Button>
+                                <Button className="addBtnb f_right" type="primary" onClick={handleChange}>新增</Button>
                                 <Table claName="table" columns={columns} dataSource={data} scroll={{ y: 180 }} />
                         </Col>
                     </Row>
