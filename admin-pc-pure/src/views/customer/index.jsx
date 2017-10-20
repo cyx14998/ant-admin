@@ -10,6 +10,36 @@ import { Table, Icon, Form, Row, Col, Input, Button, Pagination, Modal, Select, 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+import RcSearchForm from '../../components/rcsearchform';
+
+
+// RcSearchForm datablob
+const rcsearchformData = {
+  colspan: 2,
+  fields: [{
+    type: 'input',
+    label: '企业名称',
+    name: 'companyName',
+    rules: [{ required: true, message: '请输入企业名称' }],
+  }, {
+    type: 'input',
+    label: '社会信用代码',
+    name: 'socialCode',
+  }, {
+    type: 'input',
+    label: '单位类别',
+    name: 'companyType',
+  }, {
+    type: 'input',
+    label: '行业类别',
+    name: 'socialType',
+  }],
+  handleSearch: function (values) {
+    console.log('handleSearch ---------', values);
+    alert(values.companyName)
+  }
+}
+
 import {
   getCustomerList
 } from '../../common/api/api.customer'
@@ -185,11 +215,16 @@ class GoodsList extends React.Component {
     return (
         <div id="customerRoot">
 
+        <RcSearchForm {...rcsearchformData} />
+
       <div className="divBorder">
         <div className="divHeader">
-          <Searchs></Searchs>
+          
           {/* <Button className="editable-add-btn f_right" onClick={this.showModal}>Add</Button> */}
         </div>
+
+        <Button type="primary" onClick={this.changeParentState.bind(this)}>新增</Button>
+
         <Table
           dataSource={this.state.customerList}
           columns={columns}
@@ -198,7 +233,7 @@ class GoodsList extends React.Component {
           loading={this.state.loading}
         />
         <Pagination showQuickJumper defaultCurrent={1} current={1} total={11} />
-        <Button type="primary" onClick={this.changeParentState.bind(this)}>编辑</Button>
+        
       </div>
         </div>
     )
