@@ -51,12 +51,12 @@ const webpackConfig = {
 		rules: [
 			// First, run the linter.
 			// It's important to do this before Babel processes the JS.
-			// {
-			//   test: /\.jsx?$/,
-			//   enforce: 'pre',
-			//   include: path.resolve(__dirname, 'src'),
-			//   use: 'eslint-loader'
-			// },
+			{
+			  test: /\.jsx?$/,
+			  enforce: 'pre',
+			  include: path.resolve(__dirname, 'src'),
+			  use: 'eslint-loader'
+			},
 
 			// Process JS with Babel.
 			{
