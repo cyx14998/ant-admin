@@ -8,9 +8,13 @@ import './index.less';
 import md5 from 'crypto-js/md5';
 
 import {
+    setCookie
+} from '../../common/utils';
+
+import {
     login
 } from '../../common/api/api.login';
-console.log('Icom---', <Icon type="user" style={{ fontSize: 20 }} />)
+
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -60,39 +64,29 @@ class LoginForm extends React.Component {
         this.setState({ remember: !this.state.remember })
     }
     handleSubmit() {
-        console.log('handlesubmit')
         var self = this;
         if (self.state.phoneNumber && self.state.password) {
-            var data1 = "phoneNumber=" + self.state.phoneNumber + "&password=" + md5(self.state.password);
-            console.log(data1)
-
+            var pwd = '' + md5(self.state.password)
             var data = {
                 phoneNumber: self.state.phoneNumber,
-                password: md5(self.state.password)
+                password: pwd
             }
+
             login(data).then(res => {
                 console.log('get login res', res)
-                if (res.data.result == 'success') {
-                    if (self.state.remember == true) {
-                        localStorage.setItem("phoneNumber", self.state.phoneNumber);
-                    }
-                    window.location = "/index"
+                if (res.data.result !== 'success') {
+                    return
                 }
+                if (self.state.remember == true) {
+                    localStorage.setItem("phoneNumber", self.state.phoneNumber);
+                }
+                // set token
+                localStorage.setItem("token", res.data.token);
+                window.location = '/index.html';
             }).catch(err => {
                 console.log(err)
             })
-            // $db.getAdminLogin(data1, function (result) {
-            //     console.log(result);
-            //     if (result.result == 'success') {
-            //         if (self.state.remember == true) {
-            //             localStorage.setItem("phoneNumber", self.state.phoneNumber);
-            //         }
-            //         console.log(result.message);
-            //         window.location = "/admin/index";
-            //     } else {
-            //         console.log(result.message);
-            //     }
-            // });
+
         } else {
         }
     }

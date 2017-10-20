@@ -35,23 +35,66 @@ const townData = {
     su: ['s'],
 }
 
+const blob = {
+    field1: '',
+    field2: ''
+}
+
+function changev() {
+    this.setState(prev => ({
+
+    }))
+}
+
+const initData = {
+    customerBaseinfo: {
+        blob: blob,
+        baseinfo: {
+            name: '',
+            addr: '',
+        },
+        cities: cityData[provinceData[0]],
+        secondCity: cityData[provinceData[0]][0],
+        thirdCounty: countyData[cityData[provinceData[0]][0]],
+        forthTown: townData[countyData[cityData[provinceData[0]][0]][0]],
+    },
+    data: {
+        girl: {
+            age: 20
+        },
+        per: {
+            name: 'lucy',
+            age: 18
+        }
+    }
+}
 //列表页面//
 class Customerinfo extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            customerBaseinfo: {
-                info: 1,
-                cities: cityData[provinceData[0]],
-                secondCity: cityData[provinceData[0]][0],
-                thirdCounty: countyData[cityData[provinceData[0]][0]],
-                forthTown: townData[countyData[cityData[provinceData[0]][0]][0]],
-            }
-        }
+        this.state = initData;
     }
 
     componentDidMount() {
+        console.log(localStorage.getItem('token'))
+        // getdata().then(res => {
+        //     this.setState(prev => ({
+
+        //     }))
+        // })
+        // this.setState(prev => ({
+
+        //     data: {
+        //         ...prev.data,
+        //         per: {
+        //             ...prev.data.per,
+        //             name: 'lily'
+        //         }
+        //     }
+        // }), function () {
+        //     console.log(this.state)
+        // })
     }
     //总标签tab
     bigTabCallback(key) {
@@ -59,18 +102,19 @@ class Customerinfo extends React.Component {
         // store.dispatch({ value: key, type: 'TABKEY' });
     }
     //选择省
-    handleProvinceChange(value) {
-        this.setState({
-            cities: cityData[value],
-            secondCity: cityData[value][0],
-        });
+    handleProvinceChange(field, value) {
+        this.setState(prev => ({
+            customerBaseinfo: {
+                ...prev.customerBaseinfo,
+                city: {
+
+                }
+            }
+        }));
     }
     // 选择市
     onSecondCityChange(value) {
-        this.setState({
-            secondCity: value,
-            thirdCounty: countyData[value],
-        });
+        this.setState();
     }
     //选择区
     onCountyChange(value) {
@@ -85,20 +129,40 @@ class Customerinfo extends React.Component {
             town: value,
         });
     }
-    handleBaseinfoChange(changeInfo) {
-
+    handleBaseinfoChange(section, field, value) {
+        // this.setState(prev => ({
+        //     customerBaseinfo: {
+        //         ...prev.customerBaseinfo,
+        //         [section]: {
+        //             ...prev.customerBaseinfo[section],
+        //             [field]: value
+        //         }
+        //     }
+        // }))
     }
 
     handleBaseinfoSubmit(data) {
 
     }
+    handleFormSubmit(e) {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                const formData = this.props.form.getFieldsValue();
+                console.log(formData)
+            } else {
+                console.log('Received values of form: ', values);
+                return false;
+            }
+        });
+    }
 
     render() {
         const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 6 },
-            wrapperCol: { span: 18 },
-        }
+        const provinceOptions = provinceData.map(province => <Option key={province}>{province}</Option>);
+        const cityOptions = this.state.customerBaseinfo.cities.map(city => <Option key={city}>{city}</Option>);
+        const countyOptions = this.state.customerBaseinfo.thirdCounty.map(county => <Option key={county}>{county}</Option>);
+        const townOptions = this.state.customerBaseinfo.forthTown.map(town => <Option key={town}>{town}</Option>);
         //图片上传
         // const props = {
         //     name: 'file',
@@ -128,6 +192,11 @@ class Customerinfo extends React.Component {
                 <Tabs defaultActiveKey="1" onChange={this.bigTabCallback.bind(this)}>
                     <TabPane tab="排污单位基本情况" key="1">
                         <CustomerEditBaseinfo
+                            provinceData={provinceData}
+                            provinceOptions={provinceOptions}
+                            cityOptions={cityOptions}
+                            countyOptions={countyOptions}
+                            townOptions={townOptions}
                             baseinfo={this.state.customerBaseinfo}
                             handleProvinceChange={this.handleProvinceChange.bind(this)}
                             onSecondCityChange={this.onSecondCityChange.bind(this)}
@@ -135,6 +204,7 @@ class Customerinfo extends React.Component {
                             onTownChange={this.onTownChange.bind(this)}
                             handleChange={this.handleBaseinfoChange.bind(this)}
                             handleSubmit={this.handleBaseinfoSubmit.bind(this)}
+                            handleFormSubmit={this.handleFormSubmit.bind(this)}
                             getFieldDecorator={getFieldDecorator} />
                     </TabPane>
                     <TabPane tab="废水污染物基本情况" key="2">
