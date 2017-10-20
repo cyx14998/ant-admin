@@ -8,9 +8,13 @@ import './index.less';
 import md5 from 'crypto-js/md5';
 
 import {
+    setCookie
+} from '../../common/utils';
+
+import {
     login
 } from '../../common/api/api.login';
-console.log('Icom---', <Icon type="user" style={{ fontSize: 20 }} />)
+
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -49,12 +53,10 @@ class LoginForm extends React.Component {
     }
     // 输入用户名
     changePhoneNum(e) {
-        console.log(e.target.value);
-        this.setState({ phoneNumber: e.target.value });
+        this.setState({ phoneNumber: e.target.value.slice(0, 11) });
     }
     //输入密码
     changePsd(e) {
-        // console.log(e.target.value);
         this.setState({ password: e.target.value });
     }
     //记住用户名
@@ -65,35 +67,30 @@ class LoginForm extends React.Component {
         console.log('handlesubmit')
         var self = this;
         if (self.state.phoneNumber && self.state.password) {
-            var data1 = "phoneNumber=" + self.state.phoneNumber + "&password=" + md5(self.state.password);
-            console.log(data1)
-
+            var pwd = '' + md5(self.state.password)
             var data = {
                 phoneNumber: self.state.phoneNumber,
-                password: md5(self.state.password)
+                password: pwd
             }
+
+
             login(data).then(res => {
                 console.log('get login res', res)
-                 if (self.state.remember == true) {
-                        localStorage.setItem("phoneNumber", self.state.phoneNumber);
-                    }
-                    console.log(result.message);
-                    window.location = "/admin/index"
+                if (res.result !== 'success') {
+                    return 
+                }
+                
+                if (self.state.remember == true) {
+                    localStorage.setItem("phoneNumber", self.state.phoneNumber);
+                }
+                // set token
+                localStorage.setItem("token", res.data.token)
+
+                window.location = "/admin/index"
             }).catch(err => {
                 console.log(err)
             })
-            // $db.getAdminLogin(data1, function (result) {
-            //     console.log(result);
-            //     if (result.result == 'success') {
-            //         if (self.state.remember == true) {
-            //             localStorage.setItem("phoneNumber", self.state.phoneNumber);
-            //         }
-            //         console.log(result.message);
-            //         window.location = "/admin/index";
-            //     } else {
-            //         console.log(result.message);
-            //     }
-            // });
+            
         } else {
         }
     }
