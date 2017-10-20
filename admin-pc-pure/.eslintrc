@@ -7,7 +7,7 @@
     "react"
   ],
   "rules": {
-    "max-len": [1, 180, 2, {ignoreComments: true}],
+    "max-len": [1, 280, 2, {ignoreComments: true}],
     "prop-types": [0]
   }
 }

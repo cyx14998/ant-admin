@@ -76,17 +76,17 @@ class LoginForm extends React.Component {
 
             login(data).then(res => {
                 console.log('get login res', res)
-                if (res.result !== 'success') {
-                    return 
+                if (res.data.result !== 'success') {
+                    return;
                 }
-                
+
                 if (self.state.remember == true) {
                     localStorage.setItem("phoneNumber", self.state.phoneNumber);
                 }
                 // set token
                 localStorage.setItem("token", res.data.token)
 
-                window.location = "/admin/index"
+                window.location = "/index.html"
             }).catch(err => {
                 console.log(err)
             })
