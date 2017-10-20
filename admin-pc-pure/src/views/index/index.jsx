@@ -17,15 +17,9 @@ const SubMenu = Menu.SubMenu;
 
 
 /**
- * 通用数据处理方法
+ * iframe 调用钩子
  */
-// import utils from '../../common/utils.youtong';
-
-// console.log(utils.serialize({name: 'lucy', age: 20}));
-
-// window.myPageRouter = function () {
-//     alert('myPageRouter')
-// }
+window.iframeHook = {};
 
 // 面包屑
 class BreadcrumbMap extends React.Component {
@@ -61,11 +55,14 @@ class Page extends React.Component {
     }
     componentDidMount() {
         var self = this;
-        // window.modules={
-        //     changePage: function () {
-        //         alert(self.state.url)
-        //     }
-        // }
+
+        // change iframe url
+        window.iframeHook.changePage = function (url) {
+            console.log('changePage url -------', url)
+            self.setState({
+                url
+            })
+        }
     }
     componentWillMount() {
         if (localStorage.getItem("username") == '') {
