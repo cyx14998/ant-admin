@@ -64,6 +64,11 @@ class Customerinfo extends React.Component {
 
     componentDidMount() {
         var cusId = window.location.search.split('=')[1];
+        console.log(window.location.search)
+        console.log(cusId)
+
+        if (!cusId) return;
+
         getCustomerInfoById(cusId).then(res => {
             console.log('getCustomerInfoById res', res)
             this.setState(prev => ({

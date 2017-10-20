@@ -223,7 +223,7 @@ class GoodsList extends React.Component {
           {/* <Button className="editable-add-btn f_right" onClick={this.showModal}>Add</Button> */}
         </div>
 
-        <Button type="primary" onClick={this.changeParentState.bind(this)}>新增</Button>
+        <Button type="primary" onClick={this.changeParentState.bind(this, '')}>新增</Button>
 
         <Table
           dataSource={this.state.customerList}
