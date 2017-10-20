@@ -49,12 +49,10 @@ class LoginForm extends React.Component {
     }
     // 输入用户名
     changePhoneNum(e) {
-        console.log(e.target.value);
-        this.setState({ phoneNumber: e.target.value });
+        this.setState({ phoneNumber: e.target.value.slice(0, 11) });
     }
     //输入密码
     changePsd(e) {
-        // console.log(e.target.value);
         this.setState({ password: e.target.value });
     }
     //记住用户名
@@ -74,11 +72,12 @@ class LoginForm extends React.Component {
             }
             login(data).then(res => {
                 console.log('get login res', res)
-                 if (self.state.remember == true) {
+                if (res.data.result == 'success') {
+                    if (self.state.remember == true) {
                         localStorage.setItem("phoneNumber", self.state.phoneNumber);
                     }
-                    console.log(result.message);
-                    window.location = "/admin/index"
+                    window.location = "/index"
+                }
             }).catch(err => {
                 console.log(err)
             })
