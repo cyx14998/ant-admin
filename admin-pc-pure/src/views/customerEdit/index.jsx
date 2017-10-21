@@ -12,6 +12,7 @@ const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 
 import CustomerEditBaseinfo from './customerEdit.baseinfo';
+import CustomerEditWasteWater from './customerEdit.wastewater';
 
 import {
     getCustomerInfoById
@@ -173,7 +174,7 @@ class Customerinfo extends React.Component {
         //     },
         // };
         return (
-            <div className="content">
+            <div className="yzy-page">
                 <Tabs defaultActiveKey="1" onChange={this.bigTabCallback.bind(this)}>
                     <TabPane tab="排污单位基本情况" key="1">
                         <CustomerEditBaseinfo
@@ -193,6 +194,7 @@ class Customerinfo extends React.Component {
                             getFieldDecorator={getFieldDecorator} />
                     </TabPane>
                     <TabPane tab="废水污染物基本情况" key="2">
+                        <CustomerEditWasteWater />
                     </TabPane>
                     <TabPane tab="废气污染物基本情况" key="3">
                         3
@@ -215,7 +217,7 @@ class Customerinfo extends React.Component {
                         4
                     </TabPane>
                 </Tabs>
-            </div >
+            </div>
         )
     }
 }

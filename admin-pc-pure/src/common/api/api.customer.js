@@ -4,7 +4,7 @@
 import axios, { getToken } from './index';
 
 // 获取企业列表
-export function getCustomerList({pageNumber=1, countPerPage=10}) {
+export function getCustomerList({pageNumber=1, countPerPage=1000}) {
   return axios.get('/uCustomerList.uhtm?InterfaceVersion=20171018', {
     params: {
       token: getToken(),

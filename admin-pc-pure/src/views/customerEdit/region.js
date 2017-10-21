@@ -2,6 +2,16 @@
  * 区域联动选择
  */
 
+const province = {
+  '001': "beijing",
+  '002': 'Jiangsu'
+}
+
+const city = {
+  '002': {
+    '002-002': 'Suzhou'
+  }
+}
 
 //省
 const provinceData = ['Zhejiang', 'Jiangsu'];
@@ -32,3 +42,4 @@ const townData = {
       }
     }
 }
+

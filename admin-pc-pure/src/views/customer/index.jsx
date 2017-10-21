@@ -12,7 +12,6 @@ const Option = Select.Option;
 
 import RcSearchForm from '../../components/rcsearchform';
 
-
 // RcSearchForm datablob
 const rcsearchformData = {
   colspan: 2,
@@ -33,126 +32,79 @@ const rcsearchformData = {
     type: 'input',
     label: '行业类别',
     name: 'socialType',
-  }],
-  handleSearch: function (values) {
-    console.log('handleSearch ---------', values);
-    alert(values.companyName)
-  }
+  }]
 }
 
 import {
   getCustomerList
-} from '../../common/api/api.customer'
+} from '../../common/api/api.customer';
 
-//添加与编辑页面Modal
-
-const dataSource = [{
-  key: '1',
-  NickName: '胡彦斌',
-  WechatID: 32,
-  Favicon: '西湖区湖底公园1号'
-}, {
-  key: '2',
-  NickName: '胡彦斌',
-  WechatID: 32,
-  Favicon: '西湖区湖底公园1号'
-}];
-
-
-class Search extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      expand: false,
-    }
+const columns = [
+  {
+    title: '组织机构代码',
+    dataIndex: 'postalCode',
+    key: 'postalCode',
+    width: '10%'
+  }, {
+    title: '企业名称',
+    dataIndex: 'customerName',
+    key: 'customerName',
+    width: '50%'
+  }, {
+    title: '单位地址',
+    dataIndex: 'unitAddress',
+    key: 'unitAddress',
+    width: '10%'
+  }, {
+    title: '联系人',
+    dataIndex: 'contactPerson',
+    key: 'contactPerson',
+    width: '10%'
+  }, {
+    title: '联系人手机',
+    dataIndex: 'phoneNumber',
+    key: 'phoneNumber',
+    width: '10%'
+  }, {
+    title: '编辑',
+    key: 'action',
+    width: '10%',
+    render: (text, record) => (<div>
+      <Button type="primary" onClick={() => changeParentState(record.tableId)}>编辑</Button>
+    </div>)
   }
-  // handleSearch(e) {
-  //   e.preventDefault();
-  //   this.props.form.validateFields((err, values) => {
-  //     store.dispatch({
-  //       NickName: values.NickName,
-  //       StatusCode: values.StatusCode,
-  //       UnitID: values.UnitID,
-  //       WechatID: values.WechatID,
-  //       type: "SEARCH"
-  //     });
-  //     this.props.handleSearch(1);
-  //   });
-  // }
-  // handleReset() {
-  //   this.props.form.resetFields();
-  // }
-  // toggle() {
-  //   const { expand } = this.state;
-  //   this.setState({ expand: !expand });
-  // }
-  getFields() {
-    const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 5 },
-      wrapperCol: { span: 19 },
-    };
-    const titles = [{
-      title: "公众号名称",
-      eng: "NickName"
-    }, {
-      title: "公众号原始id",
-      eng: "WechatID"
-    }, {
-      title: "所属单位编号",
-      eng: "UnitID"
-    }, {
-      title: "状态",
-      eng: "StatusCode"
-    }]
-    const children = [];
-    for (let i = 0; i < titles.length; i++) {
-      children.push(
-        <Col span={12} key={i}>
-          <FormItem {...formItemLayout} label={titles[i].title}>
-            {getFieldDecorator(titles[i].eng)(
-              <Input placeholder="placeholder" />
-            )}
-          </FormItem>
-        </Col>
-      );
-    }
-    return children;
-  }
+];
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  },
+  getCheckboxProps: record => ({
+    disabled: record.name === 'Disabled User',    // Column configuration not to be checked
+  }),
+};
 
-  render() {
-    return (
-      <Form
-        className="ant-advanced-search-form"
-      >
-        <Row gutter={40}>{this.getFields()}</Row>
-        <Row>
-          <Col span={24} style={{ textAlign: 'right' }}>
-            <Button type="primary" htmlType="submit">搜索</Button>
-            <Button style={{ marginLeft: 8 }}>
-              清除
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
+function changeParentState(id) {
+  parent.window.iframeHook.changePage('/customerEdit.html?id=' + id)
 }
 
-const Searchs = Form.create()(Search);
-
 //列表页面
-class GoodsList extends React.Component {
+class CustomerList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
       customerList: [],
     }
+
+    this.getData = this.getData.bind(this);
   }
 
   componentDidMount() {
-    getCustomerList({}).then(res => {
+    this.getData({})
+  }
+
+  getData(params) {
+    getCustomerList(params).then(res => {
       console.log('getCustomerList ---', res)
       if (res.data.result !== 'success') {
         alert(res.data.info || '接口失败')
@@ -171,73 +123,34 @@ class GoodsList extends React.Component {
     })
   }
 
-  changeParentState(id) {
-    parent.window.iframeHook.changePage('/customerEdit.html?id=' + id)
+  handleFormSearch(values) {
+    console.log('handleSearch ---------', values);
+    this.getData({})
   }
 
-  
   render() {
-    const columns = [{
-      title: '组织机构代码',
-      dataIndex: 'postalCode',
-      key: 'postalCode',
-    }, {
-      title: '企业名称',
-      dataIndex: 'customerName',
-      key: 'customerName',
-    }, {
-      title: '单位地址',
-      dataIndex: 'unitAddress',
-      key: 'unitAddress',
-    }, {
-      title: '联系人',
-      dataIndex: 'contactPerson',
-      key: 'contactPerson'
-    }, {
-      title: '联系人手机',
-      dataIndex: 'phoneNumber',
-      key: 'phoneNumber'
-    }, {
-      title: '编辑',
-      key: 'action',
-      render: (text, record) => (<div>
-        <Button className="yzy-btn-primary" type="primary" onClick={this.changeParentState.bind(this, record.tableId)}>编辑</Button>
-      </div>)
-    }];
-    const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-      },
-      getCheckboxProps: record => ({
-        disabled: record.name === 'Disabled User',    // Column configuration not to be checked
-      }),
-    };
+
     return (
-        <div id="customerRoot">
-
-        <RcSearchForm {...rcsearchformData} />
-
-      <div className="divBorder">
-        <div className="divHeader">
-          
-          {/* <Button className="editable-add-btn f_right" onClick={this.showModal}>Add</Button> */}
+      <div className="yzy-page" id="yzy-page">
+        <div className="yzy-search-form-wrap">
+          <RcSearchForm {...rcsearchformData} 
+            handleSearch={this.handleFormSearch.bind(this)} />
         </div>
-
-        <Button type="primary" onClick={this.changeParentState.bind(this, '')}>新增</Button>
-
-        <Table
-          dataSource={this.state.customerList}
-          columns={columns}
-          rowSelection={rowSelection}
-          pagination={false}
-          loading={this.state.loading}
-        />
-        <Pagination showQuickJumper defaultCurrent={1} current={1} total={11} />
-        
+        <div className="yzy-list-wrap">
+          <div className="yzy-list-btns-wrap">
+            <Button type="primary">导出excel</Button>
+            <Button type="primary" style={{marginLeft: 8}}
+              onClick={() => changeParentState('')}>新增</Button>
+          </div>
+          <Table
+            columns={columns} 
+            dataSource={this.state.customerList}
+            rowSelection={rowSelection}
+            loading={this.state.loading} />
+        </div>
       </div>
-        </div>
     )
   }
 }
 
-ReactDOM.render(<GoodsList/>, document.getElementById('root'));
+ReactDOM.render(<CustomerList />, document.getElementById('root'));

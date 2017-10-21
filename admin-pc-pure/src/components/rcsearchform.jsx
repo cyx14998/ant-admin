@@ -9,9 +9,11 @@ import {
   Row, 
   Col, 
   Input,
+  Select,
   Form,
 } from 'antd';
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 
 class SearchForm extends Component {
@@ -33,7 +35,6 @@ class SearchForm extends Component {
     })
   }
 
-
   render() {
     const {
       colspan=2,
@@ -47,23 +48,44 @@ class SearchForm extends Component {
       resetFields
     } = form;
 
+    let labelColWidth = 24 / (colspan * 2);
     const formItemLayout =  {
-      labelCol: { span: 24 / (colspan * 2) },
-      wrapperCol: { span: (24 - (24 / (colspan * 2))) },
+      labelCol: { span: labelColWidth },
+      wrapperCol: { span: (24 - labelColWidth) },
     };
 
+    let itemWidth = parseInt(24 / colspan)
     var items = fields.map((item, i) => {
-      return (
-        <Col span={parseInt(24 / colspan)} key={i}>
-          <FormItem label={item.label} {...formItemLayout}>
-            {getFieldDecorator(item.name, {
-              rules: item.rules || [],
-            })(
-              <Input placeholder={item.placeholder || item.label} />
-            )}
-          </FormItem>
-        </Col>
-      )
+      if (item.type === 'input') {
+        return (
+          <Col span={itemWidth} key={i}>
+            <FormItem label={item.label} {...formItemLayout}>
+              {getFieldDecorator(item.name)(
+                <Input placeholder={item.placeholder || item.label} />
+              )}
+            </FormItem>
+          </Col>
+        )
+      }
+
+      if (item.type === 'select') {
+        return (
+          <Col span={itemWidth} key={i}>
+            <FormItem label={item.label} {...formItemLayout}>
+              {getFieldDecorator(item.name)(
+                <Select>
+                  {
+                    item.options.map((opt, i) => (
+                      <Option key={i} value={opt.value}>{opt.label}</Option>
+                    ))
+                  }
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+        )
+      }
+      
     });
 
 
@@ -75,7 +97,7 @@ class SearchForm extends Component {
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
             <Button type="primary" htmlType="submit">搜索</Button>
-            <Button style={{ marginLeft: 8 }}>
+            <Button style={{ marginLeft: 8 }} onClick={() => resetFields()}>
               清除
             </Button>
           </Col>

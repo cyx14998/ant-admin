@@ -10,6 +10,7 @@ import {
   Col, 
   Input,
   Form,
+  Table,
 } from 'antd';
 const FormItem = Form.Item;
 
@@ -25,107 +26,130 @@ const dataBlob = {
     type: 'input',
     label: '企业名称',
     name: 'companyName',
-    rules: [{ required: true, message: 'Please input your note!' }],
   }, {
     type: 'input',
     label: '社会信用代码',
     name: 'socialCode',
-  }],
-  handleSearch: function (values) {
-    console.log('handleSearch ---------', values)
-  }
+  }, {
+    type: 'select',
+    label: '单位类别',
+    name: 'companyType',
+    options: [{
+      label: '国企',
+      value: 'gq'
+    }, {
+      label: '私企',
+      value: 'sq'
+    }]
+  }, {
+    type: 'select',
+    label: '行业类别',
+    name: 'socialType',
+    options: [{
+      label: '服务业',
+      value: 'fwy'
+    }, {
+      label: '诈骗业',
+      value: 'zpy'
+    }]
+  }]
 }
 
-class SearchForm extends Component {
-  constructor(props) {
-    super(props)
-  }
+import RcSearchForm from '../../components/rcsearchform';
 
-  onFormSubmit(e) {
-    e.preventDefault();
-    const {
-      form,
-      handleSearch
-    } = this.props;
+const columns = [{
+  title: 'Name',
+  dataIndex: 'name',
+  render: text => <a href="#">{text}</a>,
+}, {
+  title: 'Age',
+  dataIndex: 'age',
+}, {
+  title: 'Address',
+  dataIndex: 'address',
+}, {
+  title: 'Edit',
+  dataIndex: 'edit',
+  render: (text, record) => (
+    <div>
+      <Button type="primary" onClick={() => alert(record.name)}>编辑</Button>
+    </div>)
+}];
+// const data = [{
+//   key: '1',
+//   name: 'John Brown',
+//   age: 32,
+//   address: 'New York No. 1 Lake Park',
+// }, {
+//   key: '2',
+//   name: 'Jim Green',
+//   age: 42,
+//   address: 'London No. 1 Lake Park',
+// }, {
+//   key: '3',
+//   name: 'Joe Black',
+//   age: 32,
+//   address: 'Sidney No. 1 Lake Park',
+// }, {
+//   key: '4',
+//   name: 'Disabled User',
+//   age: 99,
+//   address: 'Sidney No. 1 Lake Park',
+// }];
 
-    form.validateFields((err, values) => {
-      if (err) return;
-
-      handleSearch(values);
-    })
-  }
-
-
-  render() {
-    const {
-      colspan=2,
-      fields,
-      handleSearch,
-      form,
-    } = this.props;
-
-    const {
-      getFieldDecorator,
-      resetFields
-    } = form;
-
-    const formItemLayout =  {
-      labelCol: { span: 24 / (colspan * 2) },
-      wrapperCol: { span: (24 - (24 / (colspan * 2))) },
-    };
-
-    var items = fields.map((item, i) => {
-      return (
-        <Col span={parseInt(24 / colspan)} key={i}>
-          <FormItem label={item.label} {...formItemLayout}>
-            {getFieldDecorator(item.name, {
-              rules: item.rules || [],
-            })(
-              <Input placeholder={item.placeholder || item.label} />
-            )}
-          </FormItem>
-        </Col>
-      )
-    });
-
-
-    return (
-      <Form
-        className="ant-advanced-search-form"
-        onSubmit={this.onFormSubmit.bind(this)}>
-        <Row gutter={40} style={{textAlign: 'right'}}>{items}</Row>
-        <Row>
-          <Col span={24} style={{ textAlign: 'right' }}>
-            <Button type="primary" htmlType="submit">搜索</Button>
-            <Button style={{ marginLeft: 8 }}>
-              清除
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    )
-
-  }
+const data = [];
+for (let i = 0; i < 46; i++) {
+  data.push({
+    key: i,
+    name: `Edward King ${i}`,
+    age: 32,
+    address: `London, Park Lane no. ${i}`,
+  });
 }
 
-const RcSearchForm = Form.create()(SearchForm);
+// rowSelection object indicates the need for row selection
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  },
+  getCheckboxProps: record => ({
+    disabled: record.name === 'Disabled User', // Column configuration not to be checked
+  }),
+};
+
 
 
 class Demo extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      loading: false,
+      customerList: []
+    }
   }
+
+  handleSearch(values) {
+    console.log('handleSearch ---------', values)
+  }
+
 
   render() {
     return (
-      <div className="yzy-page">
+      <div className="yzy-page" id="yzy-page">
         <div className="yzy-search-form-wrap">
-          <RcSearchForm {...dataBlob} />
+          <RcSearchForm {...dataBlob} 
+            handleSearch={this.handleSearch.bind(this)} />
         </div>
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
-
+            <Button type="primary">导出excel</Button>
+            <Button type="primary" style={{marginLeft: 8}}>新增</Button>
           </div>
+          <Table
+            columns={columns} 
+            dataSource={data}
+            rowSelection={rowSelection} />
         </div>
       </div>
     )
