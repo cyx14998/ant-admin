@@ -19,5 +19,28 @@ export function getLocQueryByLabel (label) {
   return qsJson[label];
 }
 
+/**
+ * Toast
+ */
+export function MyToast (info, timeout=1000) {
+  var toast = document.createElement('div');
+  toast.setAttribute('class', 'yzy-toast');
+
+  var p = document.createElement('p');
+  p.setAttribute('class', 'yzy-toast-info');
+
+  var text = document.createTextNode(info);
+
+  p.appendChild(text);
+  toast.appendChild(p);
+
+  document.body.appendChild(toast);
+
+  setTimeout(function () {
+    toast.remove();
+  }, timeout)
+
+}
+
 
 

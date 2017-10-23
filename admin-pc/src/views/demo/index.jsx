@@ -15,6 +15,8 @@ import {
 } from 'antd';
 const FormItem = Form.Item;
 
+import { MyToast } from '../../common/utils';
+
 import {
   getCustomerList
 } from '../../common/api/api.customer';
@@ -135,7 +137,7 @@ class Demo extends Component {
   }
 
   tAlert() {
-    
+    MyToast('toast info')
   }
 
 

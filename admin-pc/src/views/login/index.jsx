@@ -8,7 +8,8 @@ import './index.less';
 import md5 from 'crypto-js/md5';
 
 import {
-    setCookie
+    setCookie,
+    MyToast
 } from '../../common/utils';
 
 import {
@@ -71,12 +72,12 @@ class LoginForm extends React.Component {
             password = this.state.password;
 
         if (!(/^1[0-9]{10}$/.test(phoneNumber))) {
-            alert('请输入正确的手机号码');
+            MyToast('请输入正确的手机号码');
             return;
         }
 
         if (!password) {
-            alert('请输入密码');
+            MyToast('请输入密码');
             return;
         }
 
@@ -89,7 +90,8 @@ class LoginForm extends React.Component {
         login(data).then(res => {
             console.log('get login res', res)
             if (res.data.result !== 'success') {
-                return
+                MyToast(res.data.info || '接口失败')
+                return;
             }
             if (this.state.remember == true) {
                 localStorage.setItem("phoneNumber", phoneNumber);
@@ -98,6 +100,7 @@ class LoginForm extends React.Component {
             localStorage.setItem("token", res.data.token);
             window.location = '/index.html';
         }).catch(err => {
+            MyToast('服务器繁忙')
             console.log(err)
         })
     }
