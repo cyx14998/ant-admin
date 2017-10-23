@@ -91,7 +91,7 @@ class WasteWaterPaifang extends Component {
               item[dataIndex] = value;
             }
             // select
-            if (Object.prototype.toString.call(field) === '[object Array]') {
+            if (field && Object.prototype.toString.call(field.options) === '[object Array]') {
               item[dataIndex].value = value;
             }
           }

@@ -3,8 +3,8 @@
  */
 import React, { Component } from 'react';
 
-import WasteWaterPaifang from './customerEdit.wastewater.paifang';
-import WasteWaterZhili from './customerEdit.wastewater.zhili';
+
+import WasteWaterDemoSection from './customerEdit.wastewater.demosection';
 
 /**
  * 废水污染物基本情况
@@ -22,8 +22,7 @@ class WasteWater extends Component {
 
     return (
       <div className="yzy-tab-content-wrap">
-        <WasteWaterPaifang />
-        <WasteWaterZhili />
+        <WasteWaterDemoSection />
       </div>
     )
   }

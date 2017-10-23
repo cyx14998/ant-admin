@@ -16,6 +16,11 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 
+/**
+ * @params colspan
+ * @params fields
+ * @params handleSearch
+ */
 class SearchForm extends Component {
   constructor(props) {
     super(props)

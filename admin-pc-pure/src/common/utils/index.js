@@ -2,20 +2,22 @@
  * utils for app
  */
 
+export function getLocQueryByLabel (label) {
+  var searchstr = window.location.search.slice(1);
+  var qsArr = searchstr.split('&');
+  var qsJson = {};
 
-const uiWidthPx = 750;
-const width = window.innerWidth;
+  var len = qsArr.length,
+      i = 0,
+      item = [];
 
+  for (i; i<len; i++) {
+    item = qsArr[i].split('=');
+    qsJson[item[0]] = item[1]; 
+  }
 
-
-// UI缩放比例
-export function scale(uiElementPx) {
-  return (uiElementPx * width / uiWidthPx) + 'px';
+  return qsJson[label];
 }
 
-export function setCookie(name,value) { 
-    var Days = 7; 
-    var exp = new Date(); 
-    exp.setTime(exp.getTime() + Days*24*60*60*1000); 
-    document.cookie = name + "="+ value + ";expires=" + exp.toGMTString(); 
-} 
+
+

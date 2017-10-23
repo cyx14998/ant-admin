@@ -1,94 +1,69 @@
 /**
- * 废水排放基本情况
+ * HOC 高阶组件
+ * 以接口为标准的可编辑区域
  */
 import React, { Component } from 'react';
 import {
+  Button,
+  Icon,
+  Row, 
+  Col, 
+  Input,
+  Select,
   Form,
-  Button
+  Table,
+  Popconfirm
 } from 'antd';
+const FormItem = Form.Item;
+const Option = Select.Option;
 
-import EditableTable from '../../components/editable.table';
+import EditableTable from './editable.table';
 
-
-const columns = [{
-  title: 'name',
-  dataIndex: 'name',
-  width: '10%',
-}, {
-  title: 'age',
-  dataIndex: 'age',
-  width: '20%',
-}, {
-  title: 'company',
-  dataIndex: 'company',
-  width: '50%',
-}, {
-  title: 'address',
-  dataIndex: 'address',
-  width: '10%',
-}, {
-  title: 'operation',
-  dataIndex: 'operation',
-  width: '10%'
-}];
-
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
-
-const dataSource = [{
-  key: '0',
-  name: 'Edward King 0',
-  age: '32',
-  company: {
-    value: '',
-    options: options
-  },
-  address: 'London, Park Lane no. 0'
-}, {
-  key: '1',
-  name: 'Edward King 1',
-  age: '32',
-  company: {
-    value: 'qy',
-    options: options
-  },
-  address: 'London, Park Lane no. 1'
-}];
-
-const itemDataModel = {
-  name: '',
-  age: '',
-  company: {
-    value: '',
-    options: options
-  },
-  address: ''
-};
-
-class WasteWaterZhili extends Component {
+/**
+ * 
+ * @params columns
+ * @params apiLoader
+ * @params apiSave
+ * @params apiDel
+ * @params secTitle
+ * @return <Component />
+ */
+class EditableSection extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      dataSource
+      loading: true,
+      dataSource: []
     }
   }
 
+  componentDidMount() {
+    this.props.apiLoader().then(res => {
+      // success
+      this.setState(prev =>({
+        loading: false,
+        dataSource: res.data
+      }));
+    }).catch(err => {
+      alert('fetch api err', err)
+    })
+
+    // apiLoader();
+  }
+
   onCellChange(key, dataIndex, value) {
+    console.log('onCellChange ---', value)
     this.setState(prev => {
       return {
         dataSource: prev.dataSource.map(item => {
           if (item.key === key) {
             let field = item[dataIndex];
-            // input
+            // input && datepicker '2017-11-11'
             if (typeof field === 'number' || typeof field === 'string') {
               item[dataIndex] = value;
             }
+
             // select
             if (field && Object.prototype.toString.call(field.options) === '[object Array]') {
               item[dataIndex].value = value;
@@ -105,24 +80,32 @@ class WasteWaterZhili extends Component {
     this.setState(prev => {
 
       return {
-        dataSource: [...prev.dataSource, {...itemDataModel, key: prev.dataSource.length}]
+        dataSource: [...prev.dataSource, {...this.props.itemDataModel, key: prev.dataSource.length}]
       }
     })
   }
 
   onDelete(key) {
-    alert(key)
+    // alert(key);
+    this.props.apiDel(key);
   }
 
   saveTable() {
-    alert('saveTable')
-    console.log('on saveTable data', this.state.dataSource)
+    // alert('saveTable')
+    console.log('on saveTable data', this.state.dataSource);
+
+    this.props.apiSave();
   }
 
   render() {
+    let {
+      secTitle,
+      columns
+    } = this.props;
+
     return (
       <div className="yzy-tab-content-item-wrap">
-        <h2 className="yzy-tab-content-title">废水治理基本情况</h2>
+        <h2 className="yzy-tab-content-title">{secTitle}</h2>
         <div className="yzy-block-right">
           <Button type="primary" onClick={this.addItem.bind(this)}>新增</Button>
         </div>
@@ -130,7 +113,8 @@ class WasteWaterZhili extends Component {
           columns={columns}
           dataSource={this.state.dataSource}
           onCellChange={this.onCellChange.bind(this)}
-          onDelete={this.onDelete.bind(this)} />
+          onDelete={this.onDelete.bind(this)}
+          loading={this.state.loading} />
 
         <div className="yzy-block-center">
           <Button type="primary" style={{padding: '0 40px'}} onClick={this.saveTable.bind(this)}>保存</Button>
@@ -140,4 +124,4 @@ class WasteWaterZhili extends Component {
   }
 }
 
-export default WasteWaterZhili;
+export default EditableSection;

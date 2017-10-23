@@ -7,6 +7,7 @@ axios.defaults.baseURL = 'http://ythb.zhiqifu.com';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
+export const apiVer = '20171018';
 
 export function getToken () {
   var token = localStorage.getItem('token');
