@@ -57,7 +57,7 @@ class EditableTable extends Component {
           if (text && Object.prototype.toString.call(text.options) === '[object Array]') {
             return (
               <EditableCell 
-                index={record.key}
+                tableId={record.tableId}
                 dataIndex={columns[i].dataIndex}
                 cellType="select"
                 value={text.value}
@@ -70,7 +70,7 @@ class EditableTable extends Component {
           if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(text)) {
             return (
               <EditableCell 
-                index={record.key}
+                tableId={record.tableId}
                 dataIndex={columns[i].dataIndex}
                 cellType="datepicker"
                 value={text}
@@ -83,7 +83,7 @@ class EditableTable extends Component {
             // input
             return (
               <EditableCell 
-                index={record.key}
+                tableId={record.tableId}
                 dataIndex={columns[i].dataIndex}
                 cellType="input"
                 value={text}

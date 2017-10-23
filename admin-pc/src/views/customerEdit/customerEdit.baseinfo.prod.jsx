@@ -10,20 +10,6 @@ import {
   getProductBaseInfoDelete,
 } from '../../common/api/api.customer';
 
-const prodDataSourth = (function () {
-  var cusId = getLocQueryByLabel('id');
-
-  if (!cusId) return;
-
-  // 获取产品信息列表
-  getProductBaseInfoList({ id: cusId }).then(res => {
-    if (res.data.result !== 'success') {
-      return
-    }
-    console.log(res)
-    return res.data.customer
-  }).catch(err => console.log(err))
-})();
 /**
  * table head
  */
@@ -73,10 +59,9 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
     return new Promise((resolve, reject) => {
       // 获取产品信息列表
       var cusId = getLocQueryByLabel('id');
-
       if (!cusId) return;
-
-      getProductBaseInfoList({ id: cusId }).then(res => {
+      
+      getProductBaseInfoList().then(res => {
         if (res.data.result !== 'success') {
           return
         }

@@ -3,6 +3,7 @@
  */
 import axios, {
   getToken,
+  getCustomerId,
   apiVer
 } from './index';
 
@@ -50,7 +51,7 @@ export function getCustomerInfoById(id) {
   return axios.get('/uCustomerDetail.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      tableId: id
+      tableId: getCustomerId()
     }
   });
 }
@@ -60,6 +61,7 @@ export function saveCustomerInfoById(data) {
   return axios.get('uCustomerUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      tableId: etCustomerId(),
       ...data
     }
   });
@@ -70,15 +72,14 @@ export function getProductBaseInfoList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword = '',
-  id
 }) {
   return axios.get('uMainProductBaseInfoList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      customerId: getCustomerId(),      
       pageNumber,
       countPerPage,
       keyword,
-      customerId: id
     }
   });
 }
@@ -91,24 +92,7 @@ export function getProductBaseInfoAdd({
   return axios.get('uMainProductBaseInfoAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      customerId: cusId,
-      theName,
-      unitOfMeasurement,
-      designAnnualOutput,
-    }
-  });
-}
-//编辑页---首页-产品基本信息编辑
-export function getProductBaseInfoEdit({
-  tableId,
-  theName,
-  unitOfMeasurement,
-  designAnnualOutput
-}) {
-  return axios.get('uMainProductBaseInfoUpdate.uhtm?InterfaceVersion=' + apiVer, {
-    params: {
-      token: getToken(),
-      tableId,
+      customerId: getCustomerId(),
       theName,
       unitOfMeasurement,
       designAnnualOutput,
@@ -137,10 +121,10 @@ export function getMaterialBaseInfoList({
   return axios.get('uAuxiliaryMaterialsBaseInfoList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      customerId: getCustomerId(),      
       pageNumber,
       countPerPage,
       keyword,
-      customerId: id
     }
   });
 }
@@ -153,7 +137,7 @@ export function getMaterialBaseInfoAdd({
   return axios.get(' uAuxiliaryMaterialsBaseInfoAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      customerId: cusId,
+      customerId: getCustomerId(),      
       theName,
       unitOfMeasurement,
       designAnnualOutput,
@@ -170,7 +154,7 @@ export function getMaterialBaseInfoEdit({
   return axios.get('uAuxiliaryMaterialsBaseInfoUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      customerId: cusId,      
+      customerId: getCustomerId(),           
       tableId,
       theName,
       unitOfMeasurement,

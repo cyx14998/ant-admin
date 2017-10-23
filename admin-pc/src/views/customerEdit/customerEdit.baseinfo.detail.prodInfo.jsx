@@ -25,8 +25,9 @@ import {
     saveCustomerInfoById,
     getProductBaseInfoList
 } from '../../common/api/api.customer';
-
+CustomerEditBaseinfoMaterial
 import CustomerEditBaseinfoProd from './customerEdit.baseinfo.prod';
+import CustomerEditBaseinfoMaterial from './customerEdit.baseinfo.material';
 
 class CustomerEditBaseinfoDetailProd extends React.Component {
     constructor(props) {
@@ -61,6 +62,7 @@ class CustomerEditBaseinfoDetailProd extends React.Component {
         return (
             <div className="yzy-tab-content-item-wrap">
                 <CustomerEditBaseinfoProd />
+                <CustomerEditBaseinfoMaterial/>
             </div >
         )
     }

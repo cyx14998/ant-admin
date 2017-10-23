@@ -29,7 +29,7 @@ class EditableCell extends Component {
 
   renderInput() {
     let {
-      index,
+      tableId,
       dataIndex,
       value,
       onCellChange
@@ -38,13 +38,13 @@ class EditableCell extends Component {
     return (
       <Input
         value={value}
-        onChange={(e) => onCellChange(index, dataIndex, e.target.value)} />
+        onChange={(e) => onCellChange(tableId, dataIndex, e.target.value)} />
     )
   }
 
   renderSelect() {
     let {
-      index,
+      tableId,
       dataIndex,
       value,
       options,
@@ -52,7 +52,7 @@ class EditableCell extends Component {
     } = this.props;
 
     return (
-      <Select style={{width: '100%'}} onChange={(v) => onCellChange(index, dataIndex, v)} value={value || ''}>
+      <Select style={{width: '100%'}} onChange={(v) => onCellChange(tableId, dataIndex, v)} value={value || ''}>
         {
           options.map((opt, i) => (
             <Option key={i} value={opt.value}>{opt.label}</Option>
@@ -64,7 +64,7 @@ class EditableCell extends Component {
 
   renderDatepicker() {
     let {
-      index,
+      tableId,
       dataIndex,
       value,
       onCellChange
@@ -73,7 +73,7 @@ class EditableCell extends Component {
     return (
       <DatePicker 
         value={moment(value, dateFormat)}
-        onChange={(date, dateString) => onCellChange(index, dataIndex, dateString)} />
+        onChange={(date, dateString) => onCellChange(tableId, dataIndex, dateString)} />
     )
   }
 

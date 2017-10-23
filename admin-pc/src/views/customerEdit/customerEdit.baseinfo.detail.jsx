@@ -79,7 +79,6 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
         form.validateFields((err, values) => {
             if (err) return;
-            values.tableId = getLocQueryByLabel('id');
             console.log('when saveDetail ---', values);
 
             // address
