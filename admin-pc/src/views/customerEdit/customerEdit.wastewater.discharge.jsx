@@ -105,9 +105,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        console.log(res);
+        console.log(res.data.wasteWaterDischargePortList);
         return {
-          data: res.data
+          data: res.data.wasteWaterDischargePortList
         }
       }).catch(err => {
         alert(res.data.info || '接口失败')

@@ -24,7 +24,6 @@ class WasteWater extends Component {
 
   componentDidMount() {
     var cusId = getLocQueryByLabel('id');
-    console.log("cusId==================",cusId);
     if (!cusId) return;
     //新增
     // const data = {

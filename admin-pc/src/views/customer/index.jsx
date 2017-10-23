@@ -99,15 +99,6 @@ const columns = [
   }
 ];
 
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  },
-  getCheckboxProps: record => ({
-    disabled: record.name === 'Disabled User',    // Column configuration not to be checked
-  }),
-};
-
 function changeParentState(id) {
   parent.window.iframeHook.changePage('/customerEdit.html?id=' + id)
 }
@@ -129,6 +120,7 @@ class CustomerList extends React.Component {
   }
 
   getData(params) {
+    //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
     getCustomerList(params).then(res => {
       console.log('getCustomerList ---', res)
       if (res.data.result !== 'success') {
@@ -174,7 +166,6 @@ class CustomerList extends React.Component {
               onClick={() => changeParentState('')}>新增</Button>
           </div>
           <Table
-            rowSelection={rowSelection}
             columns={columns} 
             dataSource={this.state.customerList}
             loading={this.state.loading}
