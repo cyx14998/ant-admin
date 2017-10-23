@@ -11,6 +11,7 @@ import {
   Input,
   Form,
   Table,
+  Alert,
 } from 'antd';
 const FormItem = Form.Item;
 
@@ -133,10 +134,15 @@ class Demo extends Component {
     console.log('handleSearch ---------', values)
   }
 
+  tAlert() {
+    
+  }
+
 
   render() {
     return (
       <div className="yzy-page" id="yzy-page">
+        <Button type="primary" onClick={this.tAlert.bind(this)}>Alert</Button>
         <div className="yzy-search-form-wrap">
           <RcSearchForm {...dataBlob} 
             handleSearch={this.handleSearch.bind(this)} />
