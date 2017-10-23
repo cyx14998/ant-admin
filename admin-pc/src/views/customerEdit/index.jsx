@@ -12,6 +12,9 @@ const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 
 import CustomerEditBaseinfo from './customerEdit.baseinfo';
+
+import CustomerEditBaseinfoDetailProd from './customerEdit.baseinfo.detail.prodInfo';
+
 import CustomerEditWasteWater from './customerEdit.wastewater';
 
 
@@ -39,27 +42,30 @@ class Customerinfo extends React.Component {
                     <TabPane tab="排污单位基本情况" key="1">
                         <CustomerEditBaseinfo />
                     </TabPane>
-                    <TabPane tab="废水污染物基本情况" key="2">
+                     <TabPane tab="排污单位基本情况-产品" key="2">
+                        <CustomerEditBaseinfoDetailProd />
+                    </TabPane>
+                    <TabPane tab="废水污染物基本情况" key="3">
                         <CustomerEditWasteWater />
                     </TabPane>
-                    <TabPane tab="废气污染物基本情况" key="3">
+                    <TabPane tab="废气污染物基本情况" key="4">
                         3
                     </TabPane>
-                    <TabPane tab="固体废物基本情况" key="4">
+                    <TabPane tab="固体废物基本情况" key="5">
                         4
                     </TabPane>
-                    <TabPane tab="边界噪声基本情况" key="5">
+                    <TabPane tab="边界噪声基本情况" key="6">
                         4
                     </TabPane>
-                    <TabPane tab="企业遵守法律法规情况" key="6">
+                    <TabPane tab="企业遵守法律法规情况" key="7">
                     </TabPane>
-                    <TabPane tab="企业证照材料" key="7">
+                    <TabPane tab="企业证照材料" key="8">
                         3
                     </TabPane>
-                    <TabPane tab="企业内部环保管理制度" key="8">
+                    <TabPane tab="企业内部环保管理制度" key="9">
                         4
                     </TabPane>
-                    <TabPane tab="现场检查,监管信息" key="9">
+                    <TabPane tab="现场检查,监管信息" key="10">
                         4
                     </TabPane>
                 </Tabs>
