@@ -4,12 +4,16 @@
 import axios, { getToken, apiVer } from './index';
 
 // 获取企业列表
-export function getCustomerList({pageNumber=1, countPerPage=1000}) {
+export function getCustomerList({pageNumber=1, countPerPage=1000, companyName='',industryCategory='',uniformSocialCreditCode='',unitCategory=''}) {
   return axios.get('/uCustomerList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
-      countPerPage
+      countPerPage,
+      companyName,
+      industryCategory,
+      uniformSocialCreditCode,
+      unitCategory,
     }
   })
 }

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "react boilerplate with webpack",
   "main": "index.js",
-  "theme": {"primary-color": "#1ab394"},
+  "theme": {
+    "primary-color": "#1ab394"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --config webpack.dev.js --progress --colors --inline --hot --history-api-fallback",
