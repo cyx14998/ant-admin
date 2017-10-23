@@ -1,54 +1,61 @@
 {
-  "private": true,
-  "entry": {
-    "index": "./index.js"
+  "name": "react-webpack-boilerplate",
+  "version": "1.0.0",
+  "description": "react boilerplate with webpack",
+  "main": "index.js",
+  "theme": {"primary-color": "#1ab394"},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --config webpack.dev.js --progress --colors --inline --hot --history-api-fallback",
+    "build": "webpack --config webpack.prod.js --progress --profile --colors"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiankui/react-webpack-boilerplate.git"
+  },
+  "keywords": [
+    "react",
+    "webpack"
+  ],
+  "author": "xiankui",
+  "license": "ISC",
   "dependencies": {
     "antd": "^2.13.6",
     "axios": "^0.16.2",
     "crypto-js": "^3.1.9-1",
     "koa": "^2.3.0",
-    "koa-body": "^2.3.0",
     "koa-router": "^7.2.1",
-    "koa-static": "^3.0.0",
+    "koa-static": "^4.0.1",
+    "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
     "redux": "^3.7.2"
   },
   "devDependencies": {
-    "antd-mobile": "^1.7.0",
-    "atool-build": "^0.9.0",
-    "atool-test-mocha": "^0.1.4",
-    "babel-eslint": "^7.0.0",
-    "babel-plugin-import": "^1.0.1",
-    "babel-plugin-transform-runtime": "^6.8.0",
-    "babel-runtime": "^6.9.2",
-    "dora": "0.4.x",
-    "dora-plugin-webpack": "^0.8.1",
-    "eslint": "^3.8.1",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-plugin-import": "^2.0.1",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.4.1",
-    "expect": "^1.20.1",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
-    "gulp-plumber": "^1.1.0",
-    "gulp-react": "^3.1.0",
-    "gulp-sass": "^3.1.0",
-    "postcss-pxtorem": "^3.3.1",
-    "pre-commit": "1.x",
-    "redbox-react": "^1.2.6",
-    "svg-sprite-loader": "^0.3.1"
-  },
-  "pre-commit": [
-    "lint"
-  ],
-  "scripts": {
-    "build": "atool-build",
-    "dev": "gulp && atool-build --watch",
-    "lint": "eslint --ext .js,.jsx src/",
-    "start": "dora --plugins webpack",
-    "test": "atool-test-mocha ./**/__tests__/*-test.js"
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-import": "^1.6.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "copy-webpack-plugin": "^4.1.1",
+    "css-loader": "^0.28.7",
+    "eslint": "^4.9.0",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-react": "^7.4.0",
+    "extract-text-webpack-plugin": "^2.1.2",
+    "file-loader": "^1.1.5",
+    "html-webpack-plugin": "^2.30.1",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.5",
+    "postcss-flexbugs-fixes": "^3.2.0",
+    "postcss-loader": "^2.0.8",
+    "style-loader": "^0.19.0",
+    "url-loader": "^0.6.2",
+    "webpack": "^2.7.0",
+    "webpack-dev-server": "^2.9.2"
   }
 }
