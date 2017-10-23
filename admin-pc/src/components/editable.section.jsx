@@ -52,13 +52,18 @@ class EditableSection extends Component {
 
   getDataSource() {
     this.props.apiLoader().then(res => {
+      if (res.code !== 0) {
+        MyToast(res.info)
+        return;
+      }
+
       // success
       this.setState(prev =>({
         loading: false,
         dataSource: res.data
       }));
     }).catch(err => {
-      alert('fetch api err', err)
+      MyToast('接口调用失败')
     })
   }
 
@@ -132,13 +137,16 @@ class EditableSection extends Component {
 
     // 删除
     this.props.apiDel(tableId).then(res => {
-      if (res.code === 0) {
-        MyToast('删除成功');
-
-        setTimeout(() => {
-          this.getDataSource();
-        }, 500)
+      if (res.code !== 0) {
+        MyToast(res.info);
+        return;
       }
+
+      MyToast('删除成功');
+
+      setTimeout(() => {
+        this.getDataSource();
+      }, 500);
     }).catch(err => {
       MyToast('接口调用失败');
     })
@@ -147,13 +155,19 @@ class EditableSection extends Component {
   // 
   saveItem(record) {
     this.props.apiSave(record).then(res => {
-      if (res.code === 0) {
-        MyToast('删除成功');
+      if (res.code !== 0) {
+        MyToast(res.info);
+        return;
+      }
 
+      MyToast('保存成功');
+
+      // 新增刷新，为了获取 tableId
+      if (record.tableId === '') {
         setTimeout(() => {
           this.getDataSource();
-        }, 500)
-      }
+        }, 500);
+      }      
     }).catch(err => {
       MyToast('接口调用失败');
     })

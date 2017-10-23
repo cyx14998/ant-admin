@@ -59,14 +59,23 @@ const WasteWaterDemoSection = connectEditableSectionApi({
 
     return new Promise((resolve, reject) => {
       getProductBaseInfoList({id: 1}).then(res => {
-        console.log('getProductBaseInfoList res ---', res)
-        var data = res.data.mainProductBaseInfoList;
+        console.log('getProductBaseInfoList res ---', res);
 
+        if (res.data.result !== 'success') {
+          resolve({
+            code: -1,
+            info: res.data.info,
+          })
+          return;
+        }
+
+        var data = res.data.mainProductBaseInfoList;
         resolve({
+          code: 0,
           data,
         })
       }).catch(err => {
-        MyToast('接口调用失败')
+        reject(err)
       })
     })
     // return Promise.resolve({
@@ -83,16 +92,17 @@ const WasteWaterDemoSection = connectEditableSectionApi({
         getProductBaseInfoAdd({
           ...record,
         }).then(res => {
-          if (res.data.result === 'success') {
-            resolve({
-              code: 0 // success
-            })
-          } else {
+          if (res.data.result !== 'success') {
             resolve({
               code: 1,
               info: res.data.info,
-            })
+            });
+            return;
           }
+
+          resolve({
+            code: 0 // success
+          })
         }).catch(err => {
           reject(err)
         });
@@ -106,16 +116,17 @@ const WasteWaterDemoSection = connectEditableSectionApi({
 
     return new Promise((resolve, reject) => {
       getProductBaseInfoDelete(tableId).then(res => {
-        if (res.data.result === 'success') {
-          resolve({
-            code: 0 // success
-          })
-        } else {
+        if (res.data.result !== 'success') {
           resolve({
             code: 1,
             info: res.data.info,
-          })
+          });
+          return;
         }
+
+        resolve({
+          code: 0 // success
+        });
       }).catch(err => {
         reject(err)
       });
