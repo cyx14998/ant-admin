@@ -2,7 +2,7 @@
  * 主要产品基本信息
  */
 import connectEditableSectionApi from '../../components/hoc.editable.section';
-import { getLocQueryByLabel } from '../../common/utils';
+import { MyToast, getLocQueryByLabel } from '../../common/utils';
 
 import {
   getProductBaseInfoList,
@@ -46,26 +46,12 @@ const columns = [{
 }];
 
 /**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
-
-/**
  * 新数据默认值
  */
 const itemDataModel = {
+  tableId: '',
   theName: '',
   unitOfMeasurement: '',
-  company: {
-    value: '',
-    options: options
-  },
   designAnnualOutput: ''
 };
 
@@ -73,26 +59,12 @@ const itemDataModel = {
  * 接口返回的数据
  */
 const dataSource = [{
-  key: '0',
-  theName: '名称',
+  tableId: 'id-001',
+  theName: '本地名称',
   unitOfMeasurement: 'kg',
   designAnnualOutput: '22.33',
-  // pany: {
-  //   value: '',
-  //   options: options
-  // },
-},
-  //  {
-  //   key: '1',
-  //   theName: 'Edward King 1',
-  //   unitOfMeasurement: '32',
-  //   company: {
-  //     value: 'qy',
-  //     options: options
-  //   },
-  //   designAnnualOutput: 'London, Park Lane no. 1'
-  // }
-];
+
+}];
 
 export const CustomerEditBaseinfoProd = connectEditableSectionApi({
   secTitle: '主要产品基本信息',
@@ -103,44 +75,52 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       var cusId = getLocQueryByLabel('id');
 
       if (!cusId) return;
-      
+
       getProductBaseInfoList({ id: cusId }).then(res => {
         if (res.data.result !== 'success') {
           return
         }
         console.log(res)
         // return res.data.
-        return {
-          data: res.data
-        }
+        resolve({
+          data: res.data.mainProductBaseInfoList
+        })
       }).catch(err => console.log(err))
     })
-    // return Promise.resolve({
-    //   data: dataSource
-    // })
   },
-  apiSave: function () {
-    var cusId = getLocQueryByLabel('id');
-    var data = dataSource[0];
-    data.customerId = cusId;
-    console.log(data);
-    getProductBaseInfoAdd(data).then(res => {
-      console.log('AddProd res', res);
-      if (res.data.result !== 'success') {
-        return
-        console.log('success');
-      }
-    }).catch(err => console.log(err))
+  apiSave: function (record) {
+    if (record.tableId === '') {
+    // 新增
+      getProductBaseInfoAdd(record).then(res => {
+        console.log('AddProd res', res);
+        if (res.data.result !== 'success') {
+          MyToast('保存失败');
+          return
+        }
+        MyToast('保存成功');
+      }).catch(err => console.log(err))
+    } else {
+      // 编辑
+      getProductBaseInfoAdd(record).then(res => {
+        console.log('AddProd res', res);
+        if (res.data.result !== 'success') {
+          MyToast('编辑保存失败');
+          return
+        }
+        MyToast('编辑保存成功');
+      }).catch(err => console.log(err))
+    }
   },
   apiDel: function (key) {
     var tableId = key;
-    // console.log(tableId)
+    console.log(tableId)
     getProductBaseInfoDelete(tableId).then(res => {
       console.log('DeleteProd res', res);
       if (res.data.result !== 'success') {
+        MyToast('删除失败');
         return
-        console.log('success');
       }
+      MyToast(删除成功);
     }).catch(err => console.log(err))
   },
   itemDataModel: itemDataModel
