@@ -6,9 +6,11 @@ import React, { component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
 
-import { Table, Icon, Form, Row, Col, Input, Button, Pagination, Modal, Select, Popconfirm, Upload, message, } from 'antd';
-const FormItem = Form.Item;
-const Option = Select.Option;
+import { 
+  Table,
+  Button, 
+  Pagination 
+} from 'antd';
 
 import RcSearchForm from '../../components/rcsearchform';
 
@@ -22,16 +24,28 @@ const rcsearchformData = {
     rules: [{ required: true, message: '请输入企业名称' }],
   }, {
     type: 'input',
-    label: '社会信用代码',
-    name: 'socialCode',
+    label: '统一社会信用代码',
+    name: 'uniformSocialCreditCode',
   }, {
-    type: 'input',
+    type: 'select',
     label: '单位类别',
-    name: 'companyType',
+    name: 'unitCategory',
+    options:[
+      {
+        value: "我是value1",
+        label: "我是label1"
+      },
+    ]
   }, {
-    type: 'input',
+    type: 'select',
     label: '行业类别',
-    name: 'socialType',
+    name: 'industryCategory',
+    options:[
+      {
+        value: "我是value2",
+        label: "我是label2"
+      },
+    ]
   }]
 }
 
@@ -41,29 +55,39 @@ import {
 
 const columns = [
   {
-    title: '组织机构代码',
-    dataIndex: 'postalCode',
-    key: 'postalCode',
+    title: '统一社会信用代码',
+    dataIndex: 'uniformSocialCreditCode',
+    key: 'uniformSocialCreditCode',
     width: '10%'
   }, {
     title: '企业名称',
     dataIndex: 'customerName',
     key: 'customerName',
-    width: '50%'
+    width: '10%'
   }, {
     title: '单位地址',
     dataIndex: 'unitAddress',
     key: 'unitAddress',
-    width: '10%'
+    width: '20%'
   }, {
     title: '联系人',
     dataIndex: 'contactPerson',
     key: 'contactPerson',
     width: '10%'
   }, {
-    title: '联系人手机',
+    title: '电话',
     dataIndex: 'phoneNumber',
     key: 'phoneNumber',
+    width: '10%'
+  }, {
+    title: '传真',
+    dataIndex: 'fax',
+    key: 'fax',
+    width: '10%'
+  }, {
+    title: '邮政编码',
+    dataIndex: 'postalCode',
+    key: 'postalCode',
     width: '10%'
   }, {
     title: '编辑',
@@ -74,6 +98,7 @@ const columns = [
     </div>)
   }
 ];
+
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -114,6 +139,7 @@ class CustomerList extends React.Component {
       this.setState({
         loading: false,
         customerList: res.data.customerList.map((item, i) => {
+
           item.key = i;
           return item;
         })
@@ -125,7 +151,12 @@ class CustomerList extends React.Component {
 
   handleFormSearch(values) {
     console.log('handleSearch ---------', values);
-    this.getData({})
+    this.getData({
+      companyName: values.companyName,
+      industryCategory: values.industryCategory,
+      uniformSocialCreditCode: values.uniformSocialCreditCode,
+      unitCategory: values.unitCategory
+    });
   }
 
   render() {
@@ -143,10 +174,12 @@ class CustomerList extends React.Component {
               onClick={() => changeParentState('')}>新增</Button>
           </div>
           <Table
+            rowSelection={rowSelection}
             columns={columns} 
             dataSource={this.state.customerList}
-            rowSelection={rowSelection}
-            loading={this.state.loading} />
+            loading={this.state.loading}
+            pagination={false}/>
+          {/* <Pagination></Pagination> */}
         </div>
       </div>
     )
