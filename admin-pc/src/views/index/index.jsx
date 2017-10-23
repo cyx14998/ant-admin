@@ -1,6 +1,6 @@
 import React, { component } from 'react';
 import ReactDOM from 'react-dom';
-import './index.less';
+
 import imgCircle from './../../media/1.png';
 import user_icon from './../../media/1.png';
 import pro_icon from './../../media/1.png';
@@ -15,6 +15,7 @@ import { Menu, Icon, Layout, Dropdown, Tabs, Button, TabPane, Breadcrumb } from 
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 
+import './index.less';
 
 /**
  * iframe 调用钩子
@@ -53,23 +54,16 @@ class Page extends React.Component {
             collapsed: !this.state.collapsed,
         });
     }
+
     componentDidMount() {
         var self = this;
 
         // change iframe url
         window.iframeHook.changePage = function (url) {
-            console.log('changePage url -------', url)
             self.setState({
                 url
             })
         }
-    }
-    componentWillMount() {
-        if (localStorage.getItem("username") == '') {
-            window.location = '/customer.html';
-        }
-
-        // this.handleSelect('会员查询');
     }
 
     /**
@@ -89,6 +83,7 @@ class Page extends React.Component {
             thirdTitle: e.keyPath[e.keyPath.length - 3],
         })
     }
+
     render() {
         return (
             <Layout>
@@ -99,7 +94,7 @@ class Page extends React.Component {
                     width={240}
                 >
                     <div className="logo">
-                        <div className='company_name'>友通环保后台系统</div>
+                        <div className='company_name'>友通环保CRM管理系统</div>
                         <MenuTop></MenuTop>
                     </div>
                     <SiderMenu handleSelect={this.handleSelect.bind(this)}></SiderMenu>

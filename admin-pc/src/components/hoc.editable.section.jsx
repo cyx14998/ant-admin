@@ -1,15 +1,20 @@
 /**
  * HOC 高阶组件
  * 以接口为标准的可编辑区域
- * @columns
- * @promiseLoader
- * @save
- * @delete
  */
 import React, { Component } from 'react';
 
 import EditableSection from './editable.section';
 
+/**
+ * options
+ * @params secTitle
+ * @params columns
+ * @params apiLoader
+ * @params apiSave
+ * @params apiDel
+ * @params itemDataModel
+ */
 function connectEditableSectionApi(options) {
   // return function(Comp) {
     return class extends Component {

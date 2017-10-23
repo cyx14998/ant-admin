@@ -1,12 +1,16 @@
 /**
  * antd样式修复
  */
+@import './theme.less';
 
-#yzy-page {
-  .ant-form-item-with-help {
-    margin-bottom: 0;
-  }
-  .ant-input-group {
-    margin-top: 5px;
-  }
+.ant-layout {
+  background-color: @color-bg-gray;
+}
+
+.ant-layout-header {
+  background-color: transparent;
+}
+
+.ant-layout-sider {
+  background-color: @primary-color;
 }
