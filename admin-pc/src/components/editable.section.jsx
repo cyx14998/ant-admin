@@ -160,11 +160,14 @@ class EditableSection extends Component {
         return;
       }
 
-      MyToast('删除成功');
+      MyToast('保存成功');
 
-      setTimeout(() => {
-        this.getDataSource();
-      }, 500);
+      // 新增刷新，为了获取 tableId
+      if (record.tableId === '') {
+        setTimeout(() => {
+          this.getDataSource();
+        }, 500);
+      }      
     }).catch(err => {
       MyToast('接口调用失败');
     })
