@@ -1,7 +1,9 @@
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import {
-  getProductBaseInfoList
+  getProductBaseInfoList,
+  getProductBaseInfoDelete,
+  getProductBaseInfoAdd
 } from '../../common/api/api.customer';
 
 import {
@@ -12,72 +14,42 @@ import {
  * table head
  */
 const columns = [{
-  title: 'name',
-  dataIndex: 'name',
+  title: '主要产品名称',
+  dataIndex: 'theName',
   width: '10%'
 }, {
-  title: 'age',
-  dataIndex: 'age',
+  title: '计量单位',
+  dataIndex: 'unitOfMeasurement',
   width: '10%'
 }, {
-  title: 'company',
-  dataIndex: 'company',
+  title: '设计年产量',
+  dataIndex: 'designAnnualOutput',
   width: '10%'
 }, {
-  title: 'address',
-  dataIndex: 'address',
-  width: '60%'
-}, {
-  title: 'operation',
+  title: '操作',
   dataIndex: 'operation',
   width: '10%'
-}];
-
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
 }];
 
 /**
  * 新数据默认值
  */
 const itemDataModel = {
-  name: '',
-  age: '',
-  company: {
-    value: '',
-    options: options
-  },
-  address: ''
+  tableId: '',
+  theName: '',
+  unitOfMeasurement: '',
+  designAnnualOutput: ''
 };
 
 /**
  * 接口返回的数据
  */
 const dataSource = [{
-  tableId: 'tableId-001',
-  name: 'Edward King 0',
-  age: '2017-11-11',
-  company: {
-    value: '',
-    options: options
-  },
-  address: 'London, Park Lane no. 0'
-}, {
-  tableId: 'tableId-002',
-  name: 'Edward King 1',
-  age: '32',
-  company: {
-    value: 'qy',
-    options: options
-  },
-  address: 'London, Park Lane no. 1'
+  tableId: 'id-001',
+  theName: '名称--',
+  unitOfMeasurement: 'kg',
+  designAnnualOutput: '22.33',
+
 }];
 
 const WasteWaterDemoSection = connectEditableSectionApi({
@@ -91,7 +63,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
         var data = res.data.mainProductBaseInfoList;
 
         resolve({
-          data: dataSource,
+          data,
         })
       }).catch(err => {
         MyToast('接口调用失败')
@@ -103,16 +75,51 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiSave: function (record) {
     console.log('apiSave record ----', record);
+    var self = this;
 
     // 新增
     if (record.tableId === '') {
-
+      return new Promise((resolve, reject) => {
+        getProductBaseInfoAdd({
+          ...record,
+        }).then(res => {
+          if (res.data.result === 'success') {
+            resolve({
+              code: 0 // success
+            })
+          } else {
+            resolve({
+              code: 1,
+              info: res.data.info,
+            })
+          }
+        }).catch(err => {
+          reject(err)
+        });
+      });
     } else {
       // 编辑
     }
   },
   apiDel: function (tableId) {
-    console.log(`apiDel ${tableId}`)
+    console.log(`apiDel ${tableId}`);
+
+    return new Promise((resolve, reject) => {
+      getProductBaseInfoDelete(tableId).then(res => {
+        if (res.data.result === 'success') {
+          resolve({
+            code: 0 // success
+          })
+        } else {
+          resolve({
+            code: 1,
+            info: res.data.info,
+          })
+        }
+      }).catch(err => {
+        reject(err)
+      });
+    });
   },
   itemDataModel: itemDataModel
 })

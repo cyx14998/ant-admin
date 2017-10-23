@@ -38,6 +38,8 @@ class EditableSection extends Component {
       loading: true,
       dataSource: []
     }
+
+    this.getDataSource = this.getDataSource.bind(this);
   }
 
   /**
@@ -45,6 +47,10 @@ class EditableSection extends Component {
    * 注意接口的数据格式！！！
    */
   componentDidMount() {
+    this.getDataSource();
+  }
+
+  getDataSource() {
     this.props.apiLoader().then(res => {
       // success
       this.setState(prev =>({
@@ -57,16 +63,16 @@ class EditableSection extends Component {
   }
 
   /**
-   * @key         第几条数据
+   * @tableId     数据标识
    * @dataIndex   数据字段名称
    * @value       数据赋值
    */
-  onCellChange(key, dataIndex, value) {
+  onCellChange(tableId, dataIndex, value) {
     console.log('onCellChange ---', value)
     this.setState(prev => {
       return {
         dataSource: prev.dataSource.map(item => {
-          if (item.key === key) {
+          if (item.tableId === tableId) {
             let field = item[dataIndex];
             // input && datepicker '2017-11-11'
             if (typeof field === 'number' || typeof field === 'string') {
@@ -125,12 +131,32 @@ class EditableSection extends Component {
     }
 
     // 删除
-    this.props.apiDel(tableId);
+    this.props.apiDel(tableId).then(res => {
+      if (res.code === 0) {
+        MyToast('删除成功');
+
+        setTimeout(() => {
+          this.getDataSource();
+        }, 500)
+      }
+    }).catch(err => {
+      MyToast('接口调用失败');
+    })
   }
 
   // 
   saveItem(record) {
-    this.props.apiSave(record);
+    this.props.apiSave(record).then(res => {
+      if (res.code === 0) {
+        MyToast('删除成功');
+
+        setTimeout(() => {
+          this.getDataSource();
+        }, 500)
+      }
+    }).catch(err => {
+      MyToast('接口调用失败');
+    })
   }
 
   render() {

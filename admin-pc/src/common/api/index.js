@@ -3,6 +3,10 @@
  ************************/
 import axios from 'axios';
 
+import {
+  getLocQueryByLabel
+} from '../utils';
+
 axios.defaults.baseURL = 'http://ythb.zhiqifu.com';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
@@ -20,6 +24,16 @@ export function getToken () {
   }
 
   return token;
+}
+
+export function getCustomerId() {
+  var cusId = getLocQueryByLabel('id');
+
+  if (cusId) return cusId;
+
+  cusId = localStorage.getItem('yt-customerId');
+
+  return cusId;
 }
 
 

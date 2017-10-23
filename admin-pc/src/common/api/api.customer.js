@@ -3,6 +3,7 @@
  */
 import axios, {
   getToken,
+  getCustomerId,
   apiVer
 } from './index';
 
@@ -65,7 +66,6 @@ export function getProductBaseInfoList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword = '',
-  id
 }) {
   return axios.get('uMainProductBaseInfoList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -73,13 +73,12 @@ export function getProductBaseInfoList({
       pageNumber,
       countPerPage,
       keyword,
-      customerId: id
+      customerId: getCustomerId()
     }
   });
 }
 //编辑页---首页-产品基本信息新增
 export function getProductBaseInfoAdd({
-  customerId,
   theName,
   unitOfMeasurement,
   designAnnualOutput
@@ -87,7 +86,7 @@ export function getProductBaseInfoAdd({
   return axios.get('uMainProductBaseInfoAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      customerId,
+      customerId: getCustomerId(),
       theName,
       unitOfMeasurement,
       designAnnualOutput,
@@ -96,7 +95,7 @@ export function getProductBaseInfoAdd({
 }
 //编辑页---首页-产品基本信息删除
 export function getProductBaseInfoDelete(id) {
-  return axios.get('uMainProductBaseInfoUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('uMainProductBaseInfoDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId: id,
