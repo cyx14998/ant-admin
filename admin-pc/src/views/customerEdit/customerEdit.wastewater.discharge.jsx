@@ -10,6 +10,10 @@ import {
   addWastewaterPort
 } from '../../common/api/api.customer.plus.js';
 
+import {
+  MyToast
+} from '../../common/utils';
+
 /**
  * table head
  */
@@ -100,13 +104,14 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
-      getWastewaterList().then(res => {
+      getWastewaterList({}).then(res => {
         if (res.data.result !== 'success') {
           MyToast(res.data.result);
           return;
         }
         var datas = res.data.wasteWaterDischargePortList;
         console.log("=======================",datas);
+        //后端因为字段为undefined就不返回该字段，导致出现bug，因为不太好处理该数据
         resolve({
           data: datas,
         })
@@ -119,21 +124,21 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     // 新增
     console.log(record);
     if (record.tableId === '') {
-      // return new Promise((resolve,reject) => {
-      //   addWastewaterPort({customerId:cusId}).then(res => {
-      //     if (res.data.result !== 'success') {
-      //       MyToast(res.data.result);
-      //       return;
-      //     }
-      //     var datas = res.data.wasteWaterDischargePortList;
-      //     console.log("=======================",datas);
-      //     resolve({
-      //       data: datas,
-      //     })
-      //   }).catch(err => {
-      //     MyToast('接口调用失败')
-      //   })
-      // })
+      return new Promise((resolve,reject) => {
+        addWastewaterPort(record).then(res => {
+          if (res.data.result !== 'success') {
+            MyToast(res.data.result);
+            return;
+          }
+          // var datas = res.data.wasteWaterDischargePortList;
+          // console.log("=======================",datas);
+          // resolve({
+          //   data: datas,
+          // })
+        }).catch(err => {
+          MyToast('接口调用失败')
+        })
+      })
     } else {
       // 编辑
     }

@@ -1,23 +1,19 @@
 /**
  * 企业管理列表
  */
-import axios, { getToken, apiVer } from './index';
-
-import { getLocQueryByLabel } from './../utils';
+import axios, { getToken, apiVer, getCustomerId } from './index';
 
 // 获取废水污染物基本情况
 export function getWastewaterList({
   pageNumber=1, 
   countPerPage=1000,
-  customerId
 }){
   return axios.get('/uWasteWaterDischargePortList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      customerId: getLocQueryByLabel('id'),
+      customerId: getCustomerId(),
       pageNumber,
       countPerPage,
-      customerId,
     }
   })
 }
