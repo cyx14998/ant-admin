@@ -19,13 +19,15 @@ const Option = Select.Option;
 
 import EditableTable from './editable.table';
 
+import { MyToast } from '../common/utils';
+
 /**
- * 
+ * @params secTitle
  * @params columns
  * @params apiLoader
  * @params apiSave
  * @params apiDel
- * @params secTitle
+ * @params itemDataModel
  * @return <Component />
  */
 class EditableSection extends Component {
@@ -38,6 +40,10 @@ class EditableSection extends Component {
     }
   }
 
+  /**
+   * 调用接口，加载数据
+   * 注意接口的数据格式！！！
+   */
   componentDidMount() {
     this.props.apiLoader().then(res => {
       // success
@@ -48,10 +54,13 @@ class EditableSection extends Component {
     }).catch(err => {
       alert('fetch api err', err)
     })
-
-    // apiLoader();
   }
 
+  /**
+   * @key         第几条数据
+   * @dataIndex   数据字段名称
+   * @value       数据赋值
+   */
   onCellChange(key, dataIndex, value) {
     console.log('onCellChange ---', value)
     this.setState(prev => {
@@ -77,24 +86,51 @@ class EditableSection extends Component {
   }
 
   addItem() {
-    this.setState(prev => {
+    // 如果有未保存项，提示
+    var hasNewItem = false;
+    var dataSource = this.state.dataSource,
+        len = dataSource.length,
+        i = 0;
 
+    for (i; i<len; i++) {
+      if (dataSource[i].tableId === '') {
+        hasNewItem = true;
+        break;
+      }
+    }
+
+    if (hasNewItem) {
+      MyToast('请保存新增项！');
+      return false;
+    }
+
+    // 新增项 tableId: ''
+    this.setState(prev => {
       return {
-        dataSource: [...prev.dataSource, {...this.props.itemDataModel, key: prev.dataSource.length}]
+        dataSource: [...prev.dataSource, {...this.props.itemDataModel, tableId: ''}]
       }
     })
   }
 
-  onDelete(key) {
-    // alert(key);
-    this.props.apiDel(key);
+  deleteItem(tableId) {
+    // 删除未保存的新增项
+    if (tableId === '') {
+      this.setState(prev => {
+        return {
+          dataSource: prev.dataSource.slice(0, -1)
+        }
+      });
+
+      return false;
+    }
+
+    // 删除
+    this.props.apiDel(tableId);
   }
 
-  saveTable() {
-    // alert('saveTable')
-    console.log('on saveTable data', this.state.dataSource);
-
-    this.props.apiSave();
+  // 
+  saveItem(record) {
+    this.props.apiSave(record);
   }
 
   render() {
@@ -113,12 +149,15 @@ class EditableSection extends Component {
           columns={columns}
           dataSource={this.state.dataSource}
           onCellChange={this.onCellChange.bind(this)}
-          onDelete={this.onDelete.bind(this)}
+          onDelete={this.deleteItem.bind(this)}
+          onSave={this.saveItem.bind(this)}
           loading={this.state.loading} />
 
-        <div className="yzy-block-center">
-          <Button type="primary" style={{padding: '0 40px'}} onClick={this.saveTable.bind(this)}>保存</Button>
-        </div>
+        {/** 
+          <div className="yzy-block-center">
+            <Button type="primary" style={{padding: '0 40px'}} onClick={this.saveTable.bind(this)}>保存</Button>
+          </div>
+        **/}
       </div>
     )
   }

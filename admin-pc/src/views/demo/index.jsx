@@ -12,15 +12,24 @@ import {
   Form,
   Table,
   Alert,
+  Layout,
 } from 'antd';
 const FormItem = Form.Item;
+
+const { Header, Sider, Content, Footer } = Layout;
+
+import WasteWaterDemoSection from '../customerEdit/customerEdit.wastewater.demosection';
+
 
 import { MyToast } from '../../common/utils';
 
 import {
-  getCustomerList
+  getCustomerList,
+  postTest,
+  postTest2
 } from '../../common/api/api.customer';
 
+import '../../theme/antd.fix.less';
 import './index.less';
 
 const dataBlob = {
@@ -132,6 +141,15 @@ class Demo extends Component {
     }
   }
 
+  componentDidMount() {
+    // postTest().then(res => {
+    //   console.log('postTest-----', res);
+    // }).catch(err => {
+    //   console.log('postTest err -----', err)
+    // });
+
+  }
+
   handleSearch(values) {
     console.log('handleSearch ---------', values)
   }
@@ -142,6 +160,17 @@ class Demo extends Component {
 
 
   render() {
+    // return (
+    //   <Layout>
+    //     <Sider>left sidebar</Sider>
+    //     <Content>main content</Content>
+    //   </Layout>
+    // );
+
+    return (
+      <WasteWaterDemoSection />
+    )
+
     return (
       <div className="yzy-page" id="yzy-page">
         <Button type="primary" onClick={this.tAlert.bind(this)}>Alert</Button>

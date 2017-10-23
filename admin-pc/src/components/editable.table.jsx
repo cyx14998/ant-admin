@@ -18,6 +18,13 @@ const Option = Select.Option;
 
 import EditableCell from './editable.cell';
 
+/**
+ * @params columns
+ * @params dataSource
+ * @params onCellChange
+ * @params onDelete
+ * @params onSave
+ */
 class EditableTable extends Component {
   constructor(props) {
     super(props);
@@ -33,7 +40,8 @@ class EditableTable extends Component {
     let { 
       columns,
       onCellChange,
-      onDelete
+      onDelete,
+      onSave
     } = this.props;
 
     let len = columns.length,
@@ -86,9 +94,13 @@ class EditableTable extends Component {
           // 编辑/删除
           if (!text) {
             return (
-              <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.key)}>
-                <a href="#">Delete</a>
-              </Popconfirm>
+              <div>
+                <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
+                  <a href="#">删除</a>
+                </Popconfirm>
+
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}>保存</a>
+              </div>
             )
           }
         }
@@ -106,7 +118,8 @@ class EditableTable extends Component {
       <Table
         pagination={false}
         columns={this.renderColumns()}
-        dataSource={this.props.dataSource} />
+        dataSource={this.props.dataSource}
+        rowKey="tableId" />
     )
   }
 }
