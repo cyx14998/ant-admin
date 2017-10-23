@@ -8,7 +8,6 @@ import {
 } from 'antd';
 
 import CustomerEditBaseinfoDetail from './customerEdit.baseinfo.detail';
-import CustomerEditBaseinfoProd from './customerEdit.baseinfo.prod';
 
 class CustomerEditBaseinfo extends React.Component {
   constructor(props) {
@@ -19,11 +18,6 @@ class CustomerEditBaseinfo extends React.Component {
     return (
       <div className="yzy-tab-content-wrap">
         <CustomerEditBaseinfoDetail />
-        <Row>
-          <Col span={12}>
-            <CustomerEditBaseinfoProd />
-          </Col>
-        </Row>
       </div>
     )
   }
