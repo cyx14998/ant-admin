@@ -19,6 +19,9 @@ export function getCustomerList({
     }
   })
 }
+
+// 编辑页---产品
+
 //编辑页---首页-基本信息获取
 export function getCustomerInfoById(id) {
   return axios.get('/uCustomerDetail.uhtm?InterfaceVersion=' + apiVer, {
@@ -73,6 +76,50 @@ export function getProductBaseInfoAdd({
 }
 //编辑页---首页-产品基本信息删除
 export function getProductBaseInfoDelete(id) {
+  return axios.get('uMainProductBaseInfoUpdate.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId: id,
+    }
+  });
+}
+
+//编辑页---首页-原辅材料获取
+export function getMaterialBaseInfoList({
+  pageNumber = 1,
+  countPerPage = 1000,
+  keyword = '',
+  id
+}) {
+  return axios.get('uMainProductBaseInfoList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber,
+      countPerPage,
+      keyword,
+      customerId: id
+    }
+  });
+}
+//编辑页---首页-产品基本信息新增
+export function getMaterialBaseInfoAdd({
+  customerId,
+  theName,
+  unitOfMeasurement,
+  designAnnualOutput
+}) {
+  return axios.get('uMainProductBaseInfoAdd.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      customerId,
+      theName,
+      unitOfMeasurement,
+      designAnnualOutput,
+    }
+  });
+}
+//编辑页---首页-产品基本信息删除
+export function getMaterialBaseInfoDelete(id) {
   return axios.get('uMainProductBaseInfoUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
