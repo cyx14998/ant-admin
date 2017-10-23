@@ -3,11 +3,18 @@
  */
 import axios, { getToken, apiVer } from './index';
 
+import { getLocQueryByLabel } from './../utils';
+
 // 获取废水污染物基本情况
-export function getWastewaterList({pageNumber=1, countPerPage=1000,customerId=''}){
+export function getWastewaterList({
+  pageNumber=1, 
+  countPerPage=1000,
+  customerId
+}){
   return axios.get('/uWasteWaterDischargePortList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      customerId: getLocQueryByLabel('id'),
       pageNumber,
       countPerPage,
       customerId,

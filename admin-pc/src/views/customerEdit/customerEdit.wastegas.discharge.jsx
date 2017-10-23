@@ -1,5 +1,5 @@
 /**
- * 废水污染物排放情况
+ * 废气污染物排放情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
