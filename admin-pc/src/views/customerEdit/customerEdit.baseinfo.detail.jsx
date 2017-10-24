@@ -13,6 +13,7 @@ import {
     Upload,
     Menu,
     Alert,
+    DatePicker,
     message, Tabs, Dropdown, Checkbox, Pagination, Radio, Row, Col
 } from 'antd';
 const FormItem = Form.Item;
@@ -22,8 +23,13 @@ import { getLocQueryByLabel } from '../../common/utils';
 
 import {
     getCustomerInfoById,
-    saveCustomerInfoById,
-    getProductBaseInfoList
+    saveAddCustomerInfoById,
+    saveEditCustomerInfoById,
+    getProductBaseInfoList,
+    getProvinceList,
+    getCityList,
+    getAreaList,
+    getTownList
 } from '../../common/api/api.customer';
 
 const formItemLayout = {
@@ -39,7 +45,15 @@ class CustomerEditBaseinfoDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
-            customer: {}
+            customer: {},
+            provinceList: [],
+            cityList: [],
+            areaList: [],
+            townList: [],
+            provinceId: 1,
+            cityId: 1,
+            areaId: 1,
+            townId: 1,
         })
     }
 
@@ -49,7 +63,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
         if (!cusId) return;
         //获取基本信息
-        getCustomerInfoById(cusId).then(res => {
+        getCustomerInfoById().then(res => {
             console.log('getCustomerInfoById res', res);
             if (res.data.result !== 'success') {
                 return
@@ -59,16 +73,92 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 customer: res.data.customer
             })
         }).catch(err => console.log(err));
-        // 获取产品信息列表
-        getProductBaseInfoList({ id: cusId }).then(res => {
-            if (res.data.result !== 'success') {
-                return
-            }
-            console.log(res)
-            //  this.setState({
-            //     productInfo: res.data.customer
-            // })
-        }).catch(err => console.log(err))
+        //获取省份
+        return new Promise((resolve, reject) => {
+            getProvinceList({}).then(res => {
+                console.log('getProvinceList res', res);
+                if (res.data.result !== 'success') {
+                    return
+                }
+                // console.log(res.data.customer)
+                this.setState({
+                    provinceList: res.data.provinceList
+                })
+            }).catch(err => console.log(err));
+        })
+    }
+    //投产日期
+    onChange(date, dateString) {
+        console.log(date, dateString);
+    }
+    //更改省份
+    changeProvince(key) {
+        this.setState({
+            provinceId: key,
+        })
+        console.log('provinceId', key);
+
+        //获取城市列表
+        return new Promise((resolve, reject) => {
+            getCityList({ id: key }).then(res => {
+                console.log('getCityList res', res);
+                if (res.data.result !== 'success') {
+                    return
+                }
+                console.log(res.data.cityList)
+                this.setState({
+                    cityList: res.data.cityList
+                })
+            }).catch(err => console.log(err));
+        })
+    }
+    //改变城市
+    changeCity(key) {
+        this.setState({
+            cityId: key,
+        })
+        console.log('cityId', key);
+
+        //获取区列表        
+        return new Promise((resolve, reject) => {
+            getAreaList({ id: key }).then(res => {
+                console.log('getAreaList res', res);
+                if (res.data.result !== 'success') {
+                    return
+                }
+                // console.log(res.data.customer)
+                this.setState({
+                    areaList: res.data.areaList
+                })
+            }).catch(err => console.log(err));
+        })
+    }
+    //改变区
+    changeArea(key) {
+        this.setState({
+            areaId: key,
+        })
+        console.log('areaId', key);
+
+        //获取镇列表        
+        return new Promise((resolve, reject) => {
+            getTownList({ id: key }).then(res => {
+                console.log('getTownList res', res);
+                if (res.data.result !== 'success') {
+                    return
+                }
+                // console.log(res.data.customer)
+                this.setState({
+                    townList: res.data.townList
+                })
+            }).catch(err => console.log(err));
+        })
+    }
+    //改变镇
+    changeTown(key) {
+        // this.setState({
+        //     townId: key,
+        // })
     }
     // 基本信息保存
     saveDetail(e) {
@@ -80,25 +170,51 @@ class CustomerEditBaseinfoDetail extends React.Component {
         form.validateFields((err, values) => {
             if (err) return;
             console.log('when saveDetail ---', values);
+            var cusId = getLocQueryByLabel('id');
 
             // address
             var data = { ...values };
-
-            saveCustomerInfoById(data).then(res => {
-                console.log('saveCustomerInfoById res', res);
-                if (res.data.result !== 'success') {
-                    return
-                    console.log('success');
-                }
-            }).catch(err => console.log(err))
+            if (cusId === '') {
+                saveAddCustomerInfoById(data).then(res => {
+                    console.log('saveCustomerInfoById res', res);
+                    if (res.data.result !== 'success') {
+                        return
+                        console.log('success');
+                    }
+                }).catch(err => console.log(err))
+            } else {
+                saveEditCustomerInfoById(data).then(res => {
+                    console.log('saveCustomerInfoById res', res);
+                    if (res.data.result !== 'success') {
+                        return
+                        console.log('success');
+                    }
+                }).catch(err => console.log(err))
+            }
         })
     }
-
     render() {
-        let {
-      getFieldDecorator
-    } = this.props.form;
+        let { getFieldDecorator } = this.props.form;
         var customer = this.state.customer;
+
+        //省option
+        var provinceOptions = this.state.provinceList.map((item, index) => {
+            return <Option key={item.tableId}>{item.theName}</Option>
+        });
+        // 市option
+        var cityOptions = this.state.provinceId ? this.state.cityList.map((item, index) => {
+            return <Option key={item.tableId}>{item.theName}</Option>
+        }) : '';
+        // 区option
+        var areaOptions = this.state.cityId ? this.state.areaList.map((item, index) => {
+            return <Option key={item.tableId}>{item.theName}</Option>
+        }) : '';
+        // 镇option
+        var townOptions = this.state.areaId ? this.state.townList.map((item, index) => {
+            return <Option key={item.tableId}>{item.theName}</Option>
+        }) : '';
+        // console.log('sss',provinceOptions);
+
         return (
             <div className="yzy-tab-content-item-wrap">
                 <Form onSubmit={this.saveDetail.bind(this)}>
@@ -121,7 +237,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="社会信用代码">
                                     {getFieldDecorator('uniformSocialCreditCode', {
                                         initialValue: customer.uniformSocialCreditCode,
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        rules: [{ required: true, message: 'Please input your uniformSocialCreditCode!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -132,17 +248,12 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="单位类别">
                                     {getFieldDecorator('unitCategory', {
-                                        initialValue: customer.unitCategory ? customer.unitCategory : '单位类别',
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        initialValue: customer.unitCategory,
+                                        rules: [{ required: true, message: 'Please input your unitCategory!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
-                                        </Select>
+                                        <Input placeholder="单位类别" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -153,7 +264,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="中心纬度">
                                     {getFieldDecorator('latitude', {
                                         initialValue: customer.latitude ? customer.latitude + "" : '',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        rules: [{ required: true, message: 'Please input your latitude!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -165,7 +276,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="中心经度">
                                     {getFieldDecorator('longitude', {
                                         initialValue: customer.longitude ? customer.longitude + "" : '',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        rules: [{ required: true, message: 'Please input your longitude!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -177,7 +288,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="邮政编码">
                                     {getFieldDecorator('postalCode', {
                                         initialValue: customer.postalCode ? customer.postalCode + "" : '',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        rules: [{ required: true, message: 'Please input your postalCode!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -192,7 +303,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="联系人">
                                     {getFieldDecorator('contactPerson', {
                                         initialValue: customer.contactPerson,
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        rules: [{ required: true, message: 'Please input your contactPerson!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -204,7 +315,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="电话">
                                     {getFieldDecorator('phoneNumber', {
                                         initialValue: customer.phoneNumber,
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        rules: [{ required: true, message: 'Please input your phoneNumber!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -216,7 +327,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="传真">
                                     {getFieldDecorator('fax', {
                                         initialValue: customer.fax,
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        rules: [{ required: true, message: 'Please input your fax!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -230,34 +341,36 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="行业类别">
                                     {getFieldDecorator('industryCategory', {
-                                        initialValue: customer.industryCategory ? customer.industryCategory : '行业类别',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        initialValue: customer.industryCategory,
+                                        rules: [{ required: true, message: 'Please input your industryCategory!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
-                                        </Select>
+                                        <Input placeholder="行业类别" />
                                         )}
                                 </FormItem>
                             </Col>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="企业规模">
                                     {getFieldDecorator('enterpriseScale', {
-                                        initialValue: customer.enterpriseScale ? customer.enterpriseScale : '企业规模',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        initialValue: customer.enterpriseScale,
+                                        rules: [{ required: true, message: 'Please input your enterpriseScale!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
-                                        </Select>
+                                        <Input placeholder="企业规模" />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="管辖归属">
+                                    {getFieldDecorator('jurisdictionAscriptionId', {
+                                        initialValue: customer.jurisdictionAscriptionId + "",
+                                        rules: [{ required: true, message: 'Please input your jurisdictionAscriptionId!' },
+                                        {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
+                                        ],
+                                    })(
+                                        <Input placeholder="管辖归属" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -266,77 +379,69 @@ class CustomerEditBaseinfoDetail extends React.Component {
                         <Row>
                             <Col span={5} style={{ marginRight: '10px' }}>
                                 <FormItem labelCol={{ span: 13 }} wrapperCol={{ span: 11 }} label="企业地址">
-                                    {getFieldDecorator('address', {
-                                        initialValue: '123',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                    {getFieldDecorator('provinceId', {
+                                        //initialValue: this.state.provinceList[0] ? this.state.provinceList[0].tableId : '',
+                                        initialValue: customer.provinceId ? customer.provinceId : '',
+                                        rules: [{ required: true, message: 'Please input your provinceId!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
+                                        <Select onChange={this.changeProvince.bind(this)}>
+                                            {provinceOptions}
                                         </Select>
                                         )}
                                 </FormItem>
                             </Col>
                             <Col span={3} style={{ marginRight: '10px' }}>
                                 <FormItem>
-                                    {getFieldDecorator('address2', {
-                                        initialValue: '123',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                    {getFieldDecorator('cityId', {
+                                        //initialValue: this.state.cityList[0].tableId ? this.state.cityList[0].tableId : '',
+                                        initialValue: customer.cityId ? customer.cityId : '',
+                                        rules: [{ required: true, message: 'Please input your cityId!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
+                                        <Select onChange={this.changeCity.bind(this)}>
+                                            {cityOptions}
                                         </Select>
                                         )}
                                 </FormItem>
                             </Col>
                             <Col span={3} style={{ marginRight: '10px' }}>
                                 <FormItem>
-                                    {getFieldDecorator('address3', {
-                                        initialValue: '123',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                    {getFieldDecorator('areaId', {
+                                        //initialValue: this.state.areaList[0].tableId ? this.state.areaList[0].tableId : '',
+                                        initialValue: customer.areaId ? customer.areaId : '',
+                                        rules: [{ required: true, message: 'Please input your areaId!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
+                                        <Select onChange={this.changeArea.bind(this)}>
+                                            {areaOptions}
                                         </Select>
                                         )}
                                 </FormItem>
                             </Col>
                             <Col span={3} style={{ marginRight: '10px' }}>
                                 <FormItem>
-                                    {getFieldDecorator('address4', {
-                                        initialValue: '12',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                    {getFieldDecorator('townId', {
+                                        //initialValue: this.state.townList[0].tableId ? this.state.provinceList[0].tableId : '',
+                                        initialValue: customer.townId ? customer.townId : '',
+                                        rules: [{ required: true, message: 'Please input your townId!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
+                                        <Select onChange={this.changeTown.bind(this)}>
+                                            {townOptions}
                                         </Select>
                                         )}
                                 </FormItem>
                             </Col>
                             <Col span={8}>
                                 <FormItem>
-                                    {getFieldDecorator('addr', {
-                                        initialValue: 'addr',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                    {getFieldDecorator('address', {
+                                        initialValue: '详细地址',
+                                        rules: [{ required: true, message: 'Please input your address!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -353,45 +458,38 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="行业类别">
                                     {getFieldDecorator('industryCategory', {
-                                        initialValue: customer.industryCategory ? customer.industryCategory : '行业类别',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        initialValue: customer.industryCategory,
+                                        rules: [{ required: true, message: 'Please input your industryCategory!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
-                                        </Select>
+                                        <Input placeholder="行业类别" />
                                         )}
                                 </FormItem>
                             </Col>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="企业规模">
                                     {getFieldDecorator('enterpriseScale', {
-                                        initialValue: customer.enterpriseScale ? customer.enterpriseScale : '企业规模',
-                                        rules: [{ required: true, message: 'Please input your Game!' },
+                                        initialValue: customer.enterpriseScale,
+                                        rules: [{ required: true, message: 'Please input your enterpriseScale!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
-                                        </Select>
+                                        <Input placeholder="企业规模" />
                                         )}
                                 </FormItem>
                             </Col>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="投产日期">
                                     {getFieldDecorator('openingDate', {
-                                        initialValue: customer.openingDate,
-                                        rules: [{ required: true },
+                                        //initialValue: customer.openingDate,
+                                        initialValue: new Date() + "",
+                                        rules: [{ required: true, message: 'Please input your openingDate!' },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
+                                        //<DatePicker value={store.getState().Data.EndDate ? moment(store.getState().Data.EndDate, 'YYYY/MM/DD') : moment(new Date(), 'YYYY/MM/DD')} onChange={this.props.endDate} />
+                                        //<DatePicker onChange={this.onChange.bind(this)} /> 
                                         <Input placeholder="投产日期" />
                                         )}
                                 </FormItem>
@@ -401,17 +499,12 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="隶属关系">
                                     {getFieldDecorator('affiliation', {
-                                        initialValue: customer.affiliation ? customer.affiliation : '隶属关系',
+                                        initialValue: customer.affiliation,
                                         rules: [{ required: true },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
-                                        </Select>
+                                        <Input placeholder="隶属关系" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -419,7 +512,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="重点级别">
                                     {getFieldDecorator('priorityLevel', {
                                         initialValue: customer.priorityLevel,
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        rules: [{ required: true, message: 'Please input your priorityLevel!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -430,17 +523,12 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="重点类型">
                                     {getFieldDecorator('unitCategory', {
-                                        initialValue: customer.unitCategory ? customer.unitCategory : '重点类型',
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        initialValue: customer.unitCategory,
+                                        rules: [{ required: true, message: 'Please input your unitCategory!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
-                                        <Select>
-                                            <Option value="jack">Jack</Option>
-                                            <Option value="lucy">Lucy</Option>
-                                            <Option value="disabled" disabled>Disabled</Option>
-                                            <Option value="Yiminghe">yiminghe</Option>
-                                        </Select>
+                                        <Input placeholder="重点类型" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -462,7 +550,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="废水排放口数量">
                                     {getFieldDecorator('wastewaterDischargePorts', {
                                         initialValue: customer.wastewaterDischargePorts ? customer.wastewaterDischargePorts + "" : '',
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        rules: [{ required: true, message: 'Please input your wastewaterDischargePorts!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -474,7 +562,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     <FormItem {...formItemLayoutInner} label="是否燃气电厂">
                                         {getFieldDecorator('isGasPowerPlant', {
                                             initialValue: (customer.isGasPowerPlant + "") ? (customer.isGasPowerPlant + "") : 'true',
-                                            rules: [{ required: true, message: 'Please input your GameCode!' },
+                                            rules: [{ required: true, message: 'Please input your isGasPowerPlant!' },
                                             {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                             ],
                                         })(
@@ -489,7 +577,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     <FormItem {...formItemLayoutInner} label="是否央企">
                                         {getFieldDecorator('isCentralEnterprises', {
                                             initialValue: (customer.isCentralEnterprises + "") ? (customer.isCentralEnterprises + "") : 'true',
-                                            rules: [{ required: true, message: 'Please input your GameCode!' },
+                                            rules: [{ required: true, message: 'Please input your isCentralEnterprises!' },
                                             {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                             ],
                                         })(
@@ -507,7 +595,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} label="是否30万千瓦以上电力">
                                     {getFieldDecorator('isMoreThan30PowerEnterprise', {
                                         initialValue: (customer.isMoreThan30PowerEnterprise + "") ? (customer.isMoreThan30PowerEnterprise + "") : 'true',
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        rules: [{ required: true, message: 'Please input your isMoreThan30PowerEnterprise!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -534,7 +622,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="氮氧">
                                     {getFieldDecorator('aiAmmoniaNitrogen', {
                                         initialValue: customer.aiAmmoniaNitrogen ? customer.aiAmmoniaNitrogen + "" : '',
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        rules: [{ required: true, message: 'Please input your aiAmmoniaNitrogen!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -548,7 +636,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="氮氧化物">
                                     {getFieldDecorator('aiNitrogenOxide', {
                                         initialValue: customer.aiNitrogenOxide ? customer.aiNitrogenOxide + "" : '',
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        rules: [{ required: true, message: 'Please input your aiNitrogenOxide!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -571,8 +659,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="二氧化硫">
                                     {getFieldDecorator('aiSulfurDioxide', {
-                                        initialValue: customer.aiSulfurDioxide?customer.aiSulfurDioxide + "":'',
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        initialValue: customer.aiSulfurDioxide ? customer.aiSulfurDioxide + "" : '',
+                                        rules: [{ required: true, message: 'Please input your aiSulfurDioxide!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -586,7 +674,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="悬浮物">
                                     {getFieldDecorator('aiSuspendedSolids', {
                                         initialValue: customer.aiSuspendedSolids ? customer.aiSuspendedSolids + "" : '',
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        rules: [{ required: true, message: 'Please input your aiSuspendedSolids!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -598,7 +686,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="其他">
                                     {getFieldDecorator('aiOther', {
                                         initialValue: customer.aiOther,
-                                        rules: [{ required: true, message: 'Please input your GameCode!' },
+                                        rules: [{ required: true, message: 'Please input your aiOther!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(

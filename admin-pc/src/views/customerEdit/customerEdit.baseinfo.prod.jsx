@@ -7,6 +7,7 @@ import { MyToast, getLocQueryByLabel } from '../../common/utils';
 import {
   getProductBaseInfoList,
   getProductBaseInfoAdd,
+  getProductBaseInfoEdit,
   getProductBaseInfoDelete,
 } from '../../common/api/api.customer';
 
@@ -61,7 +62,8 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       var cusId = getLocQueryByLabel('id');
       if (!cusId) return;
 
-      getProductBaseInfoList({ id: 1 }).then(res => {
+      getProductBaseInfoList({}).then(res => {
+        console.log('prolist res',res)        
         if (res.data.result !== 'success') {
           resolve({
             code: -1,
@@ -69,7 +71,6 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
           })
           return;
         }
-        console.log(res)
         var data = res.data.mainProductBaseInfoList;
         resolve({
           code: 0,
@@ -83,14 +84,13 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
   apiSave: function (record) {
     // var self = this;
     if (record.tableId === '') {
+      // 新增      
       return new Promise((resolve, reject) => {
-        // 新增
-        getProductBaseInfoAdd(...record).then(res => {
+        getProductBaseInfoAdd(record).then(res => {
           console.log('AddProd res', res);
           if (res.data.result !== 'success') {
-            // MyToast('保存失败');
             resolve({
-              code: 1,
+              code: -1,
               info: res.data.info,
             });
             return
@@ -98,21 +98,29 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
           resolve({
             code: 0 // success
           })
-          // MyToast('保存成功');
         }).catch(err => {
           reject(err)
         });
       })
     } else {
       // 编辑
-      getProductBaseInfoAdd(record).then(res => {
-        console.log('AddProd res', res);
-        if (res.data.result !== 'success') {
-          MyToast('编辑保存失败');
-          return
-        }
-        MyToast('编辑保存成功');
-      }).catch(err => console.log(err))
+      return new Promise((resolve, reject) => {
+        getProductBaseInfoEdit(record).then(res => {
+          console.log('AddProd res', res);
+          if (res.data.result !== 'success') {
+            resolve({
+              code: -1,
+              info: res.data.info,
+            });
+            return
+          }
+          resolve({
+            code: 0 // success
+          })
+        }).catch(err => {
+          reject(err)
+        });
+      })
     }
   },
   apiDel: function (tableId) {
@@ -121,10 +129,15 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       getProductBaseInfoDelete(tableId).then(res => {
         console.log('DeleteProd res', res);
         if (res.data.result !== 'success') {
-          MyToast('删除失败');
-          return
-        }
-        MyToast(删除成功);
+            resolve({
+              code: -1,
+              info: res.data.info,
+            });
+            return
+          }
+          resolve({
+            code: 0 // success
+          })
       }).catch(err => {
         reject(err)
       });
