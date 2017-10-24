@@ -58,17 +58,17 @@ const columns = [
     title: '统一社会信用代码',
     dataIndex: 'uniformSocialCreditCode',
     key: 'uniformSocialCreditCode',
-    width: '10%'
+    width: '15%'
   }, {
     title: '企业名称',
     dataIndex: 'customerName',
     key: 'customerName',
-    width: '10%'
+    width: '15%'
   }, {
     title: '单位地址',
     dataIndex: 'unitAddress',
     key: 'unitAddress',
-    width: '20%'
+    width: '25%'
   }, {
     title: '联系人',
     dataIndex: 'contactPerson',
@@ -83,12 +83,12 @@ const columns = [
     title: '传真',
     dataIndex: 'fax',
     key: 'fax',
-    width: '10%'
+    width: '5%'
   }, {
     title: '邮政编码',
     dataIndex: 'postalCode',
     key: 'postalCode',
-    width: '10%'
+    width: '5%'
   }, {
     title: '编辑',
     key: 'action',
