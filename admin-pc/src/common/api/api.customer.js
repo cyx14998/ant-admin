@@ -180,11 +180,7 @@ export function getProductBaseInfoList({
       customerId: getCustomerId(),
       pageNumber,
       countPerPage,
-<<<<<<< HEAD
-      keyword
-=======
       keyword,
->>>>>>> yxc004
     }
   });
 }

@@ -381,7 +381,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem labelCol={{ span: 13 }} wrapperCol={{ span: 11 }} label="企业地址">
                                     {getFieldDecorator('provinceId', {
                                         //initialValue: this.state.provinceList[0] ? this.state.provinceList[0].tableId : '',
-                                        initialValue: customer.provinceId ? customer.provinceId : '',
+                                        initialValue: (customer.provinceId ? customer.provinceId : '') + "",
                                         rules: [{ required: true, message: 'Please input your provinceId!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
@@ -396,10 +396,10 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('cityId', {
                                         //initialValue: this.state.cityList[0].tableId ? this.state.cityList[0].tableId : '',
-                                        initialValue: customer.cityId ? customer.cityId : '',
-                                        rules: [{ required: true, message: 'Please input your cityId!' },
-                                        {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
-                                        ],
+                                        initialValue: (customer.cityId ? customer.cityId : '')+"",
+                                        //rules: [{ required: true, message: 'Please input your cityId!' },
+                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' }
+                                        //],
                                     })(
                                         <Select onChange={this.changeCity.bind(this)}>
                                             {cityOptions}
@@ -411,7 +411,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('areaId', {
                                         //initialValue: this.state.areaList[0].tableId ? this.state.areaList[0].tableId : '',
-                                        initialValue: customer.areaId ? customer.areaId : '',
+                                       initialValue: (customer.areaId ? customer.areaId : '') + "",
                                         rules: [{ required: true, message: 'Please input your areaId!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
@@ -426,7 +426,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('townId', {
                                         //initialValue: this.state.townList[0].tableId ? this.state.provinceList[0].tableId : '',
-                                        initialValue: customer.townId ? customer.townId : '',
+                                        initialValue: (customer.townId ? customer.townId : '') + "",
                                         rules: [{ required: true, message: 'Please input your townId!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
@@ -561,7 +561,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayoutInner} label="是否燃气电厂">
                                         {getFieldDecorator('isGasPowerPlant', {
-                                            initialValue: (customer.isGasPowerPlant + "") ? (customer.isGasPowerPlant + "") : 'true',
+                                            initialValue: (customer.isGasPowerPlant ? customer.isGasPowerPlant : 'true') + "",
                                             rules: [{ required: true, message: 'Please input your isGasPowerPlant!' },
                                             {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                             ],
@@ -576,7 +576,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayoutInner} label="是否央企">
                                         {getFieldDecorator('isCentralEnterprises', {
-                                            initialValue: (customer.isCentralEnterprises + "") ? (customer.isCentralEnterprises + "") : 'true',
+                                            initialValue: (customer.isCentralEnterprises ? customer.isCentralEnterprises : 'true') + "",
                                             rules: [{ required: true, message: 'Please input your isCentralEnterprises!' },
                                             {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                             ],
@@ -594,7 +594,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} label="是否30万千瓦以上电力">
                                     {getFieldDecorator('isMoreThan30PowerEnterprise', {
-                                        initialValue: (customer.isMoreThan30PowerEnterprise + "") ? (customer.isMoreThan30PowerEnterprise + "") : 'true',
+                                        initialValue: (customer.isMoreThan30PowerEnterprise ? customer.isMoreThan30PowerEnterprise : 'true') + "",
                                         rules: [{ required: true, message: 'Please input your isMoreThan30PowerEnterprise!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
