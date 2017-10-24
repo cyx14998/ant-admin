@@ -15,9 +15,13 @@ class CustomerEditBaseinfo extends React.Component {
   }
 
   render() {
+    let {
+      onBaseinfoSave
+    } = this.props;
+
     return (
       <div className="yzy-tab-content-wrap">
-        <CustomerEditBaseinfoDetail />
+        <CustomerEditBaseinfoDetail onBaseinfoSave={onBaseinfoSave} />
       </div>
     )
   }
