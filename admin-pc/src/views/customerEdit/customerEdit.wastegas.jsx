@@ -1,9 +1,18 @@
 /**
- * 废水污染物基本情况
+ * 废气污染物基本情况
  */
 import React, { Component } from 'react';
 
-import WasteWaterDischarge from './customerEdit.wastewater.discharge';
+
+import WasteGasDischarge from './customerEdit.wastegas.discharge';
+
+import { getLocQueryByLabel } from '../../common/utils';
+
+import { 
+  getWastewaterList,
+  deleteWastewaterPort,
+  addWastewaterPort
+} from '../../common/api/api.customer.plus.js';
 
 /**
  * 废水污染物基本情况
@@ -14,6 +23,8 @@ class WasteWater extends Component {
   }
 
   componentDidMount() {
+    var cusId = getLocQueryByLabel('id');
+    if (!cusId) return;
     //新增
     // const data = {
     //   customerId: cusId,
@@ -40,11 +51,12 @@ class WasteWater extends Component {
     // })
 
   }
-  
+
   render() {
+
     return (
       <div className="yzy-tab-content-wrap">
-        <WasteWaterDischarge />
+        <WasteGasDischarge />
       </div>
     )
   }

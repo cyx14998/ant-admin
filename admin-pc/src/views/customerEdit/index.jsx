@@ -17,6 +17,8 @@ import CustomerEditBaseinfoDetailProd from './customerEdit.baseinfo.detail.prodI
 
 import CustomerEditWasteWater from './customerEdit.wastewater';
 
+import CustomerEditWasteGas from './customerEdit.wastegas';
+
 
 //列表页面//
 class Customerinfo extends React.Component {
@@ -49,7 +51,7 @@ class Customerinfo extends React.Component {
                         <CustomerEditWasteWater />
                     </TabPane>
                     <TabPane tab="废气污染物基本情况" key="4">
-                        3
+                        <CustomerEditWasteGas />
                     </TabPane>
                     <TabPane tab="固体废物基本情况" key="5">
                         4

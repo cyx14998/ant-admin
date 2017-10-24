@@ -1,5 +1,5 @@
 /**
- * 企业管理列表
+ * 企业管理主模块
  */
 import axios, {
   getToken,
@@ -67,7 +67,13 @@ export function saveCustomerInfoById(data) {
   });
 }
 
-//编辑页---首页-产品基本信息获取
+/**************************** 编辑页---首页-产品基本信息模块 ***********************/
+
+/**
+ * 编辑页---首页-产品基本信息获取
+ * @QA：
+ *   设计年产量字段缺失（未返回全部字段）
+ */
 export function getProductBaseInfoList({
   pageNumber = 1,
   countPerPage = 1000,
@@ -76,14 +82,19 @@ export function getProductBaseInfoList({
   return axios.get('uMainProductBaseInfoList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      customerId: getCustomerId(),      
+      customerId: getCustomerId(),
       pageNumber,
       countPerPage,
-      keyword,
+      keyword
     }
   });
 }
-//编辑页---首页-产品基本信息新增
+/**
+ * 编辑页---首页-产品基本信息新增
+ * @QA:
+ *   400 Bad Request
+ *   
+ */
 export function getProductBaseInfoAdd({
   theName,
   unitOfMeasurement,
@@ -99,6 +110,8 @@ export function getProductBaseInfoAdd({
     }
   });
 }
+
+
 //编辑页---首页-产品基本信息删除
 export function getProductBaseInfoDelete(id) {
   return axios.get('uMainProductBaseInfoDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -109,7 +122,8 @@ export function getProductBaseInfoDelete(id) {
   });
 }
 
-//编辑页 *********原辅材料
+
+/*************************** 编辑页---首页-原辅材料获取模块 ***********************/
 
 //编辑页---首页-原辅材料获取
 export function getMaterialBaseInfoList({

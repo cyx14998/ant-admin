@@ -1,18 +1,14 @@
 /**
- * 废水污染物排放情况
+ * 废气污染物排放情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getWastewaterBaseInfoList,
+  getWastewaterList,
   deleteWastewaterPort,
   addWastewaterPort
 } from '../../common/api/api.customer.plus.js';
-
-import {
-  MyToast
-} from '../../common/utils';
 
 /**
  * table head
@@ -85,27 +81,34 @@ const itemDataModel = {
   createDatetime: '',
 };
 
+/**
+ * 接口返回的数据
+ */
+const dataSource = [{
+  key: '0',
+  name: 'Edward King 0',
+  age: '2017-11-11',
+  company: {
+    value: '',
+    options: options
+  },
+  address: 'London, Park Lane no. 0'
+}];
+
 const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '测试模块',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
-      //获取数据
-      getWastewaterBaseInfoList({}).then(res => {
-        console.log('getWastewaterList res ---', res);
-
+      getWastewaterList().then(res => {
         if (res.data.result !== 'success') {
-          resolve({
-            code: -1,
-            info: res.data.info,
-          })
+          MyToast(res.data.result);
           return;
         }
-
-        var data = res.data.wasteWaterDischargePortList;
+        var datas = res.data.wasteWaterDischargePortList;
+        console.log("=======================",datas);
         resolve({
-          code: 0,
-          data,
+          data: datas,
         })
       }).catch(err => {
         MyToast('接口调用失败')
@@ -114,33 +117,27 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record ----', record);
-    var self = this;
-
+    console.log(record);
     if (record.tableId === '') {
-      return new Promise((resolve, reject) => {
-        // 新增
-        getProductBaseInfoAdd({
-          ...record,
-        }).then(res => {
-          if (res.data.result !== 'success') {
-            resolve({
-              code: 1,
-              info: res.data.info,
-            });
-            return;
-          }
-
-          resolve({
-            code: 0 // success
-          })
-        }).catch(err => {
-          reject(err)
-        });
-      });
+      // return new Promise((resolve,reject) => {
+      //   addWastewaterPort({customerId:cusId}).then(res => {
+      //     if (res.data.result !== 'success') {
+      //       MyToast(res.data.result);
+      //       return;
+      //     }
+      //     var datas = res.data.wasteWaterDischargePortList;
+      //     console.log("=======================",datas);
+      //     resolve({
+      //       data: datas,
+      //     })
+      //   }).catch(err => {
+      //     MyToast('接口调用失败')
+      //   })
+      // })
     } else {
       // 编辑
     }
+    
   },
   apiDel: function (tableId) {
     return new Promise((resolve,reject) => {
