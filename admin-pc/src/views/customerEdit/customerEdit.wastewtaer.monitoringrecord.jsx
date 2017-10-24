@@ -1,15 +1,19 @@
 /**
- * 边界噪声情况
+ * 废水排放检测记录基本情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getBoundaryNoiseList,
-  getBoundaryNoiseAdd,
-  getBoundaryNoiseUpdate,
-  getBoundaryNoiseDelete,
+  getWastewaterMonitoringRecordList,
+  getWastewaterMonitoringRecordAdd,
+  getWastewaterMonitoringRecordDelete,
+  getWastewaterMonitoringRecordUpdate,
 } from '../../common/api/api.customer.plus.js';
+
+import {
+  MyToast
+} from '../../common/utils';
 
 /**
  * table head
@@ -19,24 +23,20 @@ const columns = [{
   dataIndex: 'serialNumber',
   width: '10%'
 }, {
-  title: '测点名称',
-  dataIndex: 'measuringPointName',
+  title: '监测时间',
+  dataIndex: 'monitoringDatetime',
   width: '10%'
 }, {
-  title: '测点位置',
-  dataIndex: 'measuringPointPosition',
+  title: '监测部门',
+  dataIndex: 'monitoringDepart',
   width: '10%'
 }, {
-  title: '噪声源名称',
-  dataIndex: 'noiseSourceName',
+  title: '监测结果',
+  dataIndex: 'monitoringResult',
   width: '10%'
 }, {
-  title: '噪声源性质',
-  dataIndex: 'noiseSourcePropertyId',
-  width: '10%'
-}, {
-  title: '功能区类型',
-  dataIndex: 'functionalAreaTypeId',
+  title: '监测报告',
+  dataIndex: 'monitoringReportURL',
   width: '10%'
 }, {
   title: '操作',
@@ -60,21 +60,20 @@ const options = [{
  */
 const itemDataModel = {
   serialNumber: '',
-  measuringPointName: '',
-  measuringPointPosition: '',
-  noiseSourceName: '',
-  noiseSourcePropertyId: '',
-  functionalAreaTypeId: '',
+  monitoringDatetime: '',
+  monitoringDepart: '',
+  monitoringResult: '',
+  monitoringReportURL: '',
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '边界噪声基本情况',
+  secTitle: '废水排放检测记录基本情况',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      getBoundaryNoiseList({}).then(res => {
-        console.log('getBoundaryNoiseList res ---', res);
+      getWastewaterMonitoringRecordList({}).then(res => {
+        console.log('getWastewaterMonitoringRecordList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -84,7 +83,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.boundaryNoiseList;
+        var data = res.data.wasteWaterMonitoringRecordList;
         resolve({
           code: 0,
           data,
@@ -102,10 +101,10 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        getBoundaryNoiseAdd({
+        console.log("sssssssss")
+        getWastewaterMonitoringRecordAdd({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseAdd res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -124,11 +123,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        console.log(record)
-        getBoundaryNoiseUpdate({
+        getWastewaterMonitoringRecordUpdate({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseUpdate res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -151,7 +148,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getBoundaryNoiseDelete(tableId).then(res => {
+      getWastewaterMonitoringRecordDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,
