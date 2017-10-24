@@ -7,6 +7,7 @@ import { MyToast, getLocQueryByLabel } from '../../common/utils';
 import {
   getProductBaseInfoList,
   getProductBaseInfoAdd,
+  getProductBaseInfoEdit,
   getProductBaseInfoDelete,
 } from '../../common/api/api.customer';
 
@@ -60,53 +61,87 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       // 获取产品信息列表
       var cusId = getLocQueryByLabel('id');
       if (!cusId) return;
-      
-      getProductBaseInfoList().then(res => {
+
+      getProductBaseInfoList({}).then(res => {
+        console.log('prolist res',res)        
         if (res.data.result !== 'success') {
-          return
+          resolve({
+            code: -1,
+            info: res.data.info,
+          })
+          return;
         }
-        console.log(res)
-        // return res.data.
+        var data = res.data.mainProductBaseInfoList;
         resolve({
-          data: res.data.mainProductBaseInfoList
+          code: 0,
+          data,
         })
-      }).catch(err => console.log(err))
+      }).catch(err => {
+        reject(err)
+      })
     })
   },
   apiSave: function (record) {
+    // var self = this;
     if (record.tableId === '') {
-    // 新增
-      getProductBaseInfoAdd(record).then(res => {
-        console.log('AddProd res', res);
-        if (res.data.result !== 'success') {
-          MyToast('保存失败');
-          return
-        }
-        MyToast('保存成功');
-      }).catch(err => console.log(err))
+      // 新增      
+      return new Promise((resolve, reject) => {
+        getProductBaseInfoAdd(record).then(res => {
+          console.log('AddProd res', res);
+          if (res.data.result !== 'success') {
+            resolve({
+              code: -1,
+              info: res.data.info,
+            });
+            return
+          }
+          resolve({
+            code: 0 // success
+          })
+        }).catch(err => {
+          reject(err)
+        });
+      })
     } else {
       // 编辑
-      getProductBaseInfoAdd(record).then(res => {
-        console.log('AddProd res', res);
-        if (res.data.result !== 'success') {
-          MyToast('编辑保存失败');
-          return
-        }
-        MyToast('编辑保存成功');
-      }).catch(err => console.log(err))
+      return new Promise((resolve, reject) => {
+        getProductBaseInfoEdit(record).then(res => {
+          console.log('AddProd res', res);
+          if (res.data.result !== 'success') {
+            resolve({
+              code: -1,
+              info: res.data.info,
+            });
+            return
+          }
+          resolve({
+            code: 0 // success
+          })
+        }).catch(err => {
+          reject(err)
+        });
+      })
     }
   },
-  apiDel: function (key) {
-    var tableId = key;
+  apiDel: function (tableId) {
     console.log(tableId)
-    getProductBaseInfoDelete(tableId).then(res => {
-      console.log('DeleteProd res', res);
-      if (res.data.result !== 'success') {
-        MyToast('删除失败');
-        return
-      }
-      MyToast(删除成功);
-    }).catch(err => console.log(err))
+    return new Promise((resolve, reject) => {
+      getProductBaseInfoDelete(tableId).then(res => {
+        console.log('DeleteProd res', res);
+        if (res.data.result !== 'success') {
+            resolve({
+              code: -1,
+              info: res.data.info,
+            });
+            return
+          }
+          resolve({
+            code: 0 // success
+          })
+      }).catch(err => {
+        reject(err)
+      });
+    });
   },
   itemDataModel: itemDataModel
 })

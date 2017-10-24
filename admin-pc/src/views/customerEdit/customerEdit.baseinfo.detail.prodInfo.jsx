@@ -25,9 +25,12 @@ import {
     saveCustomerInfoById,
     getProductBaseInfoList
 } from '../../common/api/api.customer';
-CustomerEditBaseinfoMaterial
+
 import CustomerEditBaseinfoProd from './customerEdit.baseinfo.prod';
 import CustomerEditBaseinfoMaterial from './customerEdit.baseinfo.material';
+import CustomerEditBaseinfoEnergy from './customerEdit.baseinfo.energy';
+import CustomerEditBaseinfoWater from './customerEdit.baseinfo.water';
+import CustomerEditBaseinfoDevice from './customerEdit.baseinfo.device';
 
 class CustomerEditBaseinfoDetailProd extends React.Component {
     constructor(props) {
@@ -39,20 +42,6 @@ class CustomerEditBaseinfoDetailProd extends React.Component {
 
     componentDidMount() {
         // fetch data from api for FormItem initialValue
-        var cusId = getLocQueryByLabel('id');
-
-        if (!cusId) return;
-        
-        // // 获取产品信息列表
-        // getProductBaseInfoList({ id: cusId }).then(res => {
-        //     if (res.data.result !== 'success') {
-        //         return
-        //     }
-        //     console.log(res)
-        //      this.setState({
-        //         productInfo: res.data.customer
-        //     })
-        // }).catch(err => console.log(err))
     }
     render() {
         let {
@@ -61,8 +50,11 @@ class CustomerEditBaseinfoDetailProd extends React.Component {
         var customer = this.state.customer;
         return (
             <div className="yzy-tab-content-item-wrap">
-                <CustomerEditBaseinfoProd />
-                <CustomerEditBaseinfoMaterial/>
+                 {/* <CustomerEditBaseinfoProd /> */}
+                {/* <CustomerEditBaseinfoMaterial /> */}
+                {/* <CustomerEditBaseinfoEnergy /> */}
+                <CustomerEditBaseinfoWater /> 
+                <CustomerEditBaseinfoDevice />
             </div >
         )
     }
