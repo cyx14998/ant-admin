@@ -14,12 +14,16 @@ const TabPane = Tabs.TabPane;
 import CustomerEditBaseinfo from './customerEdit.baseinfo';
 
 import CustomerEditBaseinfoDetailProd from './customerEdit.baseinfo.detail.prodInfo';
-
+//废水排放基本情况
 import CustomerEditWasteWater from './customerEdit.wastewater';
-
+//废气排放基本情况
 import CustomerEditWasteGas from './customerEdit.wastegas';
-
-
+//固体污染物基本情况
+import CustomerEditWasteSolid from './customerEdit.wastesolid';
+//边界噪声基本情况
+import CustomerEditBoundaryNoise from './customerEdit.boundarynoise';
+//企业遵守法律法规情况
+import CustomerEditEIA from './customerEdit.EIA';
 //列表页面//
 class Customerinfo extends React.Component {
     constructor(props) {
@@ -54,15 +58,15 @@ class Customerinfo extends React.Component {
                         <CustomerEditWasteGas />
                     </TabPane>
                     <TabPane tab="固体废物基本情况" key="5">
-                        4
+                        <CustomerEditWasteSolid />
                     </TabPane>
                     <TabPane tab="边界噪声基本情况" key="6">
-                        4
+                        <CustomerEditBoundaryNoise />
                     </TabPane>
                     <TabPane tab="企业遵守法律法规情况" key="7">
+                        <CustomerEditEIA />
                     </TabPane>
                     <TabPane tab="企业证照材料" key="8">
-                        3
                     </TabPane>
                     <TabPane tab="企业内部环保管理制度" key="9">
                         4
