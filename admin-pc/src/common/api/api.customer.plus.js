@@ -1,5 +1,5 @@
 /**
- * 企业管理列表
+ * 企业管理辅助模块
  */
 import axios, { getToken, apiVer } from './index';
 
