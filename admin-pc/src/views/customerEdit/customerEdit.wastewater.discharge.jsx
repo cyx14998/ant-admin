@@ -5,7 +5,7 @@
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getWastewaterList,
+  getWastewaterBaseInfoList,
   deleteWastewaterPort,
   addWastewaterPort
 } from '../../common/api/api.customer.plus.js';
@@ -85,35 +85,27 @@ const itemDataModel = {
   createDatetime: '',
 };
 
-/**
- * 接口返回的数据
- */
-const dataSource = [{
-  key: '0',
-  name: 'Edward King 0',
-  age: '2017-11-11',
-  company: {
-    value: '',
-    options: options
-  },
-  address: 'London, Park Lane no. 0'
-}];
-
 const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '测试模块',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
-      getWastewaterList({}).then(res => {
+      //获取数据
+      getWastewaterBaseInfoList({}).then(res => {
+        console.log('getWastewaterList res ---', res);
+
         if (res.data.result !== 'success') {
-          MyToast(res.data.result);
+          resolve({
+            code: -1,
+            info: res.data.info,
+          })
           return;
         }
-        var datas = res.data.wasteWaterDischargePortList;
-        console.log("=======================",datas);
-        //后端因为字段为undefined就不返回该字段，导致出现bug，因为不太好处理该数据
+
+        var data = res.data.wasteWaterDischargePortList;
         resolve({
-          data: datas,
+          code: 0,
+          data,
         })
       }).catch(err => {
         MyToast('接口调用失败')
@@ -122,27 +114,33 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    console.log(record);
+    console.log('apiSave record ----', record);
+    var self = this;
+
     if (record.tableId === '') {
-      return new Promise((resolve,reject) => {
-        addWastewaterPort(record).then(res => {
+      return new Promise((resolve, reject) => {
+        // 新增
+        getProductBaseInfoAdd({
+          ...record,
+        }).then(res => {
           if (res.data.result !== 'success') {
-            MyToast(res.data.result);
+            resolve({
+              code: 1,
+              info: res.data.info,
+            });
             return;
           }
-          // var datas = res.data.wasteWaterDischargePortList;
-          // console.log("=======================",datas);
-          // resolve({
-          //   data: datas,
-          // })
+
+          resolve({
+            code: 0 // success
+          })
         }).catch(err => {
-          MyToast('接口调用失败')
-        })
-      })
+          reject(err)
+        });
+      });
     } else {
       // 编辑
     }
-    
   },
   apiDel: function (tableId) {
     return new Promise((resolve,reject) => {
