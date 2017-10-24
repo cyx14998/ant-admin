@@ -36,10 +36,15 @@ const MenuTop = () => (
 );
 
 // 面包屑
-const BreadcrumbMap = () => (
+const BreadcrumbMap = ({
+    breads
+}) => (
   <Breadcrumb>
-    <Breadcrumb.Item>客户管理</Breadcrumb.Item>
-    <Breadcrumb.Item>客户信息</Breadcrumb.Item>
+    {
+        breads.map(bread => (
+            <Breadcrumb.Item key={bread}>{bread}</Breadcrumb.Item>
+        ))
+    }
   </Breadcrumb>
 );
 
@@ -54,6 +59,7 @@ class Page extends React.Component {
         this.state = {
             collapsed: false,
             url: "/customer.html",
+            breads: ['客户管理', '客户信息']
         }
     }
 
@@ -73,7 +79,10 @@ class Page extends React.Component {
     }
 
     onMenuChange(menu) {
-      console.log('onMenuChange----', menu)
+      console.log('onMenuChange----', menu);
+      this.setState({
+        breads: menu.keyPath.reverse()
+      })
     }
 
     render() {
@@ -91,10 +100,20 @@ class Page extends React.Component {
                     </div>
                     <SiderMenu onMenuChange={this.onMenuChange.bind(this)} />
                 </Sider>
-                <Content>
-                    <BreadcrumbMap className="yzy-breadcrumb" />
-                    <iframe id='innerFrame' src={this.state.url} frameBorder="0" style={{ width: '100%', height: '100%', borderLeft: '1px solid #e9e9e9' }}></iframe>
-                </Content>
+                <Layout>
+                    <Header>
+                        <BreadcrumbMap 
+                            breads={this.state.breads}
+                            className="yzy-breadcrumb" />
+                    </Header>
+                    <Content style={{width: '100%', height: '100%', overflow: 'hidden'}}>
+                        <iframe 
+                            id='innerFrame' 
+                            src={this.state.url} 
+                            frameBorder="0" 
+                            style={{ width: '100%', height: '100%', borderLeft: '1px solid #e9e9e9' }}></iframe>
+                    </Content>
+                </Layout>
             </Layout>
         );
 
