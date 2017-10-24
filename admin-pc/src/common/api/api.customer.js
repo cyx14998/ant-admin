@@ -467,14 +467,15 @@ export function getDeviceBaseInfoList({
 /**
  * 编辑页---首页-生产装置新增
  * @QA:
- *   
+ *   接口完全无反应
  */
 export function getDeviceBaseInfoAdd({
   consumption,
   theType,
   annualConsumption
 }) {
-  return axios.get('uMainProductionDeviceAdd.uhtm?InterfaceVersion=' + apiVer, {
+
+  return axios.get('/uMainProductionDeviceAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),

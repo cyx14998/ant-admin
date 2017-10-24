@@ -1,7 +1,3 @@
-/**
- * 企业列表
- */
-
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
@@ -103,6 +99,7 @@ const columns = [
 ];
 
 function changeIframeToEdit(id) {
+  console.log('chanageiframe', parent.window.iframeHook)
   parent.window.iframeHook.changePage('/customerEdit.html?id=' + id + '#' + Math.random())
 }
 

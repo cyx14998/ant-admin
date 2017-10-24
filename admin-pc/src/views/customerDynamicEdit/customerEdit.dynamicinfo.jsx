@@ -26,13 +26,10 @@ import {
     getProductBaseInfoList
 } from '../../common/api/api.customer';
 
-import CustomerEditBaseinfoProd from './customerEdit.baseinfo.prod';
-import CustomerEditBaseinfoMaterial from './customerEdit.baseinfo.material';
-import CustomerEditBaseinfoEnergy from './customerEdit.baseinfo.energy';
-import CustomerEditBaseinfoWater from './customerEdit.baseinfo.water';
-import CustomerEditBaseinfoDevice from './customerEdit.baseinfo.device';
+import CustomerEditDynamicinfoProd from './customerEdit.dynamicinfo.prod';
+import CustomerEditDynamicinfoMaterial from './customerEdit.dynamicinfo.material';
 
-class CustomerEditBaseinfoDetailProd extends React.Component {
+class CustomerEditBaseinfoDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
@@ -50,14 +47,11 @@ class CustomerEditBaseinfoDetailProd extends React.Component {
         var customer = this.state.customer;
         return (
             <div className="yzy-tab-content-item-wrap">
-                 {/* <CustomerEditBaseinfoProd /> */}
-                {/* <CustomerEditBaseinfoMaterial /> */}
-                {/* <CustomerEditBaseinfoEnergy /> */}
-                <CustomerEditBaseinfoWater /> 
-                <CustomerEditBaseinfoDevice />
+                <CustomerEditDynamicinfoProd />
+                <CustomerEditDynamicinfoMaterial />
             </div >
         )
     }
 }
 
-export default Form.create()(CustomerEditBaseinfoDetailProd);
+export default Form.create()(CustomerEditBaseinfoDetail);
