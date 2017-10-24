@@ -2,7 +2,7 @@
  * 企业列表
  */
 
-import React, { component } from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
 
@@ -68,7 +68,7 @@ const columns = [
     title: '单位地址',
     dataIndex: 'unitAddress',
     key: 'unitAddress',
-    width: '25%'
+    width: '20%'
   }, {
     title: '联系人',
     dataIndex: 'contactPerson',
@@ -92,15 +92,22 @@ const columns = [
   }, {
     title: '编辑',
     key: 'action',
-    width: '10%',
-    render: (text, record) => (<div>
-      <Button type="primary" onClick={() => changeParentState(record.tableId)}>编辑</Button>
-    </div>)
+    width: '15%',
+    render: (text, record) => (
+      <div>
+        <Button type="primary" onClick={() => changeIframeToEdit(record.tableId)}>编辑</Button>
+        <Button type="primary" onClick={() => changeIframeToDynamic(record.tableId)}>查看动态</Button>
+      </div>
+    )
   }
 ];
 
-function changeParentState(id) {
-  parent.window.iframeHook.changePage('/customerEdit.html?id=' + id)
+function changeIframeToEdit(id) {
+  parent.window.iframeHook.changePage('/customerEdit.html?id=' + id + '#' + Math.random())
+}
+
+function changeIframeToDynamic(id) {
+  parent.window.iframeHook.changePage('/customerDynamic.html?id=' + id)
 }
 
 //列表页面
@@ -163,7 +170,10 @@ class CustomerList extends React.Component {
           <div className="yzy-list-btns-wrap">
             <Button type="primary">导出excel</Button>
             <Button type="primary" style={{marginLeft: 8}}
-              onClick={() => changeParentState('')}>新增</Button>
+              onClick={() => {
+                console.log('-=========------- onClick');
+                return changeIframeToEdit('');
+              }}>新增</Button>
           </div>
           <Table
             columns={columns} 

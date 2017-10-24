@@ -3,11 +3,9 @@
  */
 import React, { Component } from 'react';
 //废水排放基本信息列表
-import WasteWaterDischargeList from './customerEdit.wastewater.dischargelist';
+import EIAList from './customerEdit.EIA.LIst';
 //废水排放基本信息详情
-import WasteWaterDischargeDetail from './customerEdit.wasterwater.dischargeDetail';
-//废水治理基本情况
-import WasteWaterTreatment from './customerEdit.wastewater.treatment';
+import EIADetail from './customerEdit.EIA.Detail';
 
 /**
  * 废水污染物基本情况
@@ -20,9 +18,7 @@ class WasteWater extends Component {
   render() {
     return (
       <div className="yzy-tab-content-wrap">
-        <WasteWaterDischargeList />
-        <WasteWaterDischargeDetail />
-        <WasteWaterTreatment />
+        <EIADetail />
       </div>
     )
   }

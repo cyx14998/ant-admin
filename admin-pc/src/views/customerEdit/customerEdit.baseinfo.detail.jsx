@@ -41,6 +41,12 @@ const formItemLayoutInner = {
     wrapperCol: { span: 8 },
 }
 
+/**
+ * 当新增基本信息保存时，
+ * 要保存返回的 tableId -> localStorage.setItem('yt-customerId', tableId)
+ * 同时，调用 onBaseinfoSave 启动 TabPane 切换功能
+ * @props onBaseinfoSave
+ */
 class CustomerEditBaseinfoDetail extends React.Component {
     constructor(props) {
         super(props);
@@ -164,8 +170,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
     saveDetail(e) {
         e.preventDefault();
         const {
-      form
-    } = this.props;
+          form
+        } = this.props;
 
         form.validateFields((err, values) => {
             if (err) return;

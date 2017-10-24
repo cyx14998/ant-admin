@@ -5,7 +5,7 @@
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getWastewaterList,
+  getWastegasDischargeList,
   deleteWastewaterPort,
   addWastewaterPort
 } from '../../common/api/api.customer.plus.js';
@@ -14,7 +14,7 @@ import {
  * table head
  */
 const columns = [{
-  title: '排水口编号',
+  title: '排放口编号',
   dataIndex: 'serialNumber',
   width: '10%'
 }, {
@@ -28,17 +28,13 @@ const columns = [{
 }, {
   title: '经度',
   dataIndex: 'longitude',
-  width: '5%'
+  width: '10%'
 }, {
   title: '纬度',
   dataIndex: 'latitude',
-  width: '5%'
-}, {
-  title: '排放去向',
-  dataIndex: 'emissionDestination',
   width: '10%'
 }, {
-  title: '污水排放规律',
+  title: '排放规律',
   dataIndex: 'dischargeLaw',
   width: '10%'
 }, {
@@ -46,8 +42,12 @@ const columns = [{
   dataIndex: 'functionalAreaCategory',
   width: '10%'
 }, {
-  title: '创建时间',
-  dataIndex: 'createDatetime',
+  title: '排放方式',
+  dataIndex: 'dischargeMode',
+  width: '10%'
+}, {
+  title: '排放口类型',
+  dataIndex: 'dischargePortType',
   width: '10%'
 }, {
   title: '操作',
@@ -75,10 +75,10 @@ const itemDataModel = {
   outletLocation: '',
   longitude: '',
   latitude: '',
-  emissionDestination: '',
   dischargeLaw: '',
   functionalAreaCategory: '',
-  createDatetime: '',
+  dischargeMode: '',
+  dischargePortType: '',
 };
 
 /**
@@ -100,18 +100,24 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
-      getWastewaterList().then(res => {
+       getWastegasDischargeList({}).then(res => {
+        console.log('getProductBaseInfoList res ---', res);
+
         if (res.data.result !== 'success') {
-          MyToast(res.data.result);
+          resolve({
+            code: -1,
+            info: res.data.info,
+          })
           return;
         }
-        var datas = res.data.wasteWaterDischargePortList;
-        console.log("=======================",datas);
+
+        var data = res.data.mainProductBaseInfoList;
         resolve({
-          data: datas,
+          code: 0,
+          data,
         })
       }).catch(err => {
-        MyToast('接口调用失败')
+        reject(err)
       })
     })
   },
