@@ -65,6 +65,8 @@ export function saveCustomerInfoById(data) {
 
 /**
  * 编辑页---首页-产品基本信息获取
+ * @QA：
+ *   设计年产量字段缺失（未返回全部字段）
  */
 export function getProductBaseInfoList({
   pageNumber = 1,
@@ -74,16 +76,18 @@ export function getProductBaseInfoList({
   return axios.get('uMainProductBaseInfoList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      customerId: getCustomerId()
+      customerId: getCustomerId(),
       pageNumber,
       countPerPage,
-      keyword    }
+      keyword
+    }
   });
 }
 /**
  * 编辑页---首页-产品基本信息新增
  * @QA:
  *   400 Bad Request
+ *   
  */
 export function getProductBaseInfoAdd({
   theName,
