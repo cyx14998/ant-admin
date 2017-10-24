@@ -60,30 +60,49 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       // 获取产品信息列表
       var cusId = getLocQueryByLabel('id');
       if (!cusId) return;
-      
-      getProductBaseInfoList().then(res => {
+
+      getProductBaseInfoList({ id: 1 }).then(res => {
         if (res.data.result !== 'success') {
-          return
+          resolve({
+            code: -1,
+            info: res.data.info,
+          })
+          return;
         }
         console.log(res)
-        // return res.data.
+        var data = res.data.mainProductBaseInfoList;
         resolve({
-          data: res.data.mainProductBaseInfoList
+          code: 0,
+          data,
         })
-      }).catch(err => console.log(err))
+      }).catch(err => {
+        reject(err)
+      })
     })
   },
   apiSave: function (record) {
+    // var self = this;
     if (record.tableId === '') {
-    // 新增
-      getProductBaseInfoAdd(record).then(res => {
-        console.log('AddProd res', res);
-        if (res.data.result !== 'success') {
-          MyToast('保存失败');
-          return
-        }
-        MyToast('保存成功');
-      }).catch(err => console.log(err))
+      return new Promise((resolve, reject) => {
+        // 新增
+        getProductBaseInfoAdd(...record).then(res => {
+          console.log('AddProd res', res);
+          if (res.data.result !== 'success') {
+            // MyToast('保存失败');
+            resolve({
+              code: 1,
+              info: res.data.info,
+            });
+            return
+          }
+          resolve({
+            code: 0 // success
+          })
+          // MyToast('保存成功');
+        }).catch(err => {
+          reject(err)
+        });
+      })
     } else {
       // 编辑
       getProductBaseInfoAdd(record).then(res => {
@@ -96,17 +115,20 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       }).catch(err => console.log(err))
     }
   },
-  apiDel: function (key) {
-    var tableId = key;
+  apiDel: function (tableId) {
     console.log(tableId)
-    getProductBaseInfoDelete(tableId).then(res => {
-      console.log('DeleteProd res', res);
-      if (res.data.result !== 'success') {
-        MyToast('删除失败');
-        return
-      }
-      MyToast(删除成功);
-    }).catch(err => console.log(err))
+    return new Promise((resolve, reject) => {
+      getProductBaseInfoDelete(tableId).then(res => {
+        console.log('DeleteProd res', res);
+        if (res.data.result !== 'success') {
+          MyToast('删除失败');
+          return
+        }
+        MyToast(删除成功);
+      }).catch(err => {
+        reject(err)
+      });
+    });
   },
   itemDataModel: itemDataModel
 })
