@@ -1,7 +1,6 @@
 /**
- * 企业列表
+ * 企业信息动态列表
  */
-
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
@@ -12,46 +11,13 @@ import {
   Pagination 
 } from 'antd';
 
-import RcSearchForm from '../../components/rcsearchform';
-
-// RcSearchForm datablob
-const rcsearchformData = {
-  colspan: 2,
-  fields: [{
-    type: 'input',
-    label: '企业名称',
-    name: 'companyName',
-    rules: [{ required: true, message: '请输入企业名称' }],
-  }, {
-    type: 'input',
-    label: '统一社会信用代码',
-    name: 'uniformSocialCreditCode',
-  }, {
-    type: 'select',
-    label: '单位类别',
-    name: 'unitCategory',
-    options:[
-      {
-        value: "我是value1",
-        label: "我是label1"
-      },
-    ]
-  }, {
-    type: 'select',
-    label: '行业类别',
-    name: 'industryCategory',
-    options:[
-      {
-        value: "我是value2",
-        label: "我是label2"
-      },
-    ]
-  }]
-}
-
 import {
-  getCustomerList
-} from '../../common/api/api.customer';
+  getCustomerDynamicList
+} from '../../common/api/api.customer.dynamic';
+
+function changeParentState(id) {
+  parent.window.iframeHook.changePage('/customerDynamicEdit.html?id=' + id)
+}
 
 const columns = [
   {
@@ -93,27 +59,16 @@ const columns = [
     title: '编辑',
     key: 'action',
     width: '10%',
-    render: (text, record) => (
-      <div>
-        <Button type="primary" onClick={() => changeIframeToEdit(record.tableId)}>编辑</Button>
-        <Button type="primary" onClick={() => changeIframeToDynamic(record.tableId)}>查看动态</Button>
-      </div>
-    )
+    render: (text, record) => (<div>
+      <Button type="primary" onClick={() => changeParentState(record.tableId)}>编辑</Button>
+    </div>)
   }
 ];
 
-function changeIframeToEdit(id) {
-  parent.window.iframeHook.changePage('/customerEdit.html?id=' + id)
-}
-
-function changeIframeToDynamic(id) {
-  parent.window.iframeHook.changePage('/customerDynamic.html?id=' + id)
-}
-
-//列表页面
-class CustomerList extends React.Component {
+class CustomerDynamicList extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       loading: true,
       customerList: [],
@@ -128,8 +83,8 @@ class CustomerList extends React.Component {
 
   getData(params) {
     //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
-    getCustomerList(params).then(res => {
-      console.log('getCustomerList ---', res)
+    getCustomerDynamicList(params).then(res => {
+      console.log('getCustomerDynamicList ---', res)
       if (res.data.result !== 'success') {
         alert(res.data.info || '接口失败')
         return;
@@ -137,7 +92,7 @@ class CustomerList extends React.Component {
 
       this.setState({
         loading: false,
-        customerList: res.data.customerList.map((item, i) => {
+        customerList: res.data.customerMonthDclarationList.map((item, i) => {
 
           item.key = i;
           return item;
@@ -148,24 +103,9 @@ class CustomerList extends React.Component {
     })
   }
 
-  handleFormSearch(values) {
-    console.log('handleSearch ---------', values);
-    this.getData({
-      companyName: values.companyName,
-      industryCategory: values.industryCategory,
-      uniformSocialCreditCode: values.uniformSocialCreditCode,
-      unitCategory: values.unitCategory
-    });
-  }
-
   render() {
-
     return (
-      <div className="yzy-page" id="yzy-page">
-        <div className="yzy-search-form-wrap">
-          <RcSearchForm {...rcsearchformData} 
-            handleSearch={this.handleFormSearch.bind(this)} />
-        </div>
+      <div className="yzy-page">
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
             <Button type="primary">导出excel</Button>
@@ -184,4 +124,4 @@ class CustomerList extends React.Component {
   }
 }
 
-ReactDOM.render(<CustomerList />, document.getElementById('root'));
+ReactDOM.render(<CustomerDynamicList />, document.getElementById('root'));

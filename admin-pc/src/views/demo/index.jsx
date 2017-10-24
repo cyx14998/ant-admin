@@ -5,21 +5,21 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import {
   Button,
-  Icon,
   Row, 
   Col, 
   Input,
   Form,
   Table,
   Alert,
-  Layout,
+  Layout, Menu, Breadcrumb, Icon
 } from 'antd';
 const FormItem = Form.Item;
-
 const { Header, Sider, Content, Footer } = Layout;
+
 
 import WasteWaterDemoSection from '../customerEdit/customerEdit.wastewater.demosection';
 
+import SiderMenu from './sidermenu';
 
 import { MyToast } from '../../common/utils';
 
@@ -28,6 +28,8 @@ import {
   postTest,
   postTest2
 } from '../../common/api/api.customer';
+
+import imgCircle from './../../media/1.png';
 
 import '../../theme/antd.fix.less';
 import './index.less';
@@ -87,27 +89,6 @@ const columns = [{
       <Button type="primary" onClick={() => alert(record.name)}>编辑</Button>
     </div>)
 }];
-// const data = [{
-//   key: '1',
-//   name: 'John Brown',
-//   age: 32,
-//   address: 'New York No. 1 Lake Park',
-// }, {
-//   key: '2',
-//   name: 'Jim Green',
-//   age: 42,
-//   address: 'London No. 1 Lake Park',
-// }, {
-//   key: '3',
-//   name: 'Joe Black',
-//   age: 32,
-//   address: 'Sidney No. 1 Lake Park',
-// }, {
-//   key: '4',
-//   name: 'Disabled User',
-//   age: 99,
-//   address: 'Sidney No. 1 Lake Park',
-// }];
 
 const data = [];
 for (let i = 0; i < 46; i++) {
@@ -137,35 +118,48 @@ class Demo extends Component {
 
     this.state = {
       loading: false,
-      customerList: []
+      customerList: [],
+
+      collapsed: false
     }
   }
 
-  componentDidMount() {
-    // postTest().then(res => {
-    //   console.log('postTest-----', res);
-    // }).catch(err => {
-    //   console.log('postTest err -----', err)
-    // });
+  onCollapse(collapsed) {
+    this.setState({ collapsed });
+  }
 
+  onMenuChange(menu) {
+    console.log('onMenuChange----', menu)
   }
 
   handleSearch(values) {
     console.log('handleSearch ---------', values)
   }
 
-  tAlert() {
-    MyToast('toast info')
-  }
-
 
   render() {
-    // return (
-    //   <Layout>
-    //     <Sider>left sidebar</Sider>
-    //     <Content>main content</Content>
-    //   </Layout>
-    // );
+    return (
+      <Layout>
+        <Sider
+          collapsible
+          collapsed={this.state.collapsed}
+          onCollapse={this.onCollapse.bind(this)}
+          width={240}
+          className="yzy-menu-wrap">
+          <div className="yzy-menu-top-wrap">
+              <div className='title'>友通环保CRM管理系统</div>
+              <MenuTop></MenuTop>
+          </div>
+          <SiderMenu onMenuChange={this.onMenuChange.bind(this)} />
+        </Sider>
+        <Content>
+          <BreadcrumbMap className="yzy-breadcrumb" />
+          <div className="yzy-page">
+            hello world
+          </div>
+        </Content>
+      </Layout>
+    );
 
     return (
       <WasteWaterDemoSection />
@@ -173,7 +167,6 @@ class Demo extends Component {
 
     return (
       <div className="yzy-page" id="yzy-page">
-        <Button type="primary" onClick={this.tAlert.bind(this)}>Alert</Button>
         <div className="yzy-search-form-wrap">
           <RcSearchForm {...dataBlob} 
             handleSearch={this.handleSearch.bind(this)} />
@@ -193,6 +186,32 @@ class Demo extends Component {
   }
 }
 
-const RcDemo = Form.create()(Demo);
+const BreadcrumbMap = () => (
+  <Breadcrumb>
+    <Breadcrumb.Item>客户管理</Breadcrumb.Item>
+    <Breadcrumb.Item>客户管理编辑</Breadcrumb.Item>
+  </Breadcrumb>
+);
 
-ReactDOM.render(<RcDemo />, document.getElementById('root'));
+//头像
+class MenuTop extends React.Component {
+    render() {
+        return (
+            <div className="yzy-avatar-wrap">
+                <img src={imgCircle} alt="" className="avatar" />
+                <div className="avatar-info">
+                    <span>友通管理员</span>
+                    <div className="controls">
+                      <span className="username">游客</span>
+                      <span className="split">|</span>
+                      <a className="logout">退出</a>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
+
+// const RcDemo = Form.create()(Demo);
+
+ReactDOM.render(<Demo />, document.getElementById('root'));
