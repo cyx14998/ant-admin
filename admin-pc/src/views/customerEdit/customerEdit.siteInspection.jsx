@@ -1,14 +1,14 @@
 /**
- * 边界噪声情况
+ * 现场检查、监督信息
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getBoundaryNoiseList,
-  getBoundaryNoiseAdd,
-  getBoundaryNoiseUpdate,
-  getBoundaryNoiseDelete,
+  getSiteInspectionList,
+  getSiteInspectionAdd,
+  getSiteInspectionUpdate,
+  getSiteInspectionDelete,
 } from '../../common/api/api.customer.plus.js';
 
 /**
@@ -19,24 +19,36 @@ const columns = [{
   dataIndex: 'serialNumber',
   width: '10%'
 }, {
-  title: '测点名称',
-  dataIndex: 'measuringPointName',
+  title: '监管日期',
+  dataIndex: 'InspectionDate',
   width: '10%'
 }, {
-  title: '测点位置',
-  dataIndex: 'measuringPointPosition',
+  title: '监管记录',
+  dataIndex: 'recordURL',
   width: '10%'
 }, {
-  title: '噪声源名称',
-  dataIndex: 'noiseSourceName',
+  title: '反馈单',
+  dataIndex: 'feedBackRecordURL',
   width: '10%'
 }, {
-  title: '噪声源性质',
-  dataIndex: 'noiseSourcePropertyId',
+  title: '整改报告',
+  dataIndex: 'correctionReportURL',
   width: '10%'
 }, {
-  title: '功能区类型',
-  dataIndex: 'functionalAreaTypeId',
+  title: '约谈记录',
+  dataIndex: 'interviewRecordURL',
+  width: '10%'
+}, {
+  title: '检查支队处理情况',
+  dataIndex: 'supervisionProcessing',
+  width: '10%'
+}, {
+  title: '行政处罚',
+  dataIndex: 'administrativePenaltiesURL',
+  width: '10%'
+}, {
+  title: '信访记录',
+  dataIndex: 'petitionRecordURL',
   width: '10%'
 }, {
   title: '操作',
@@ -60,21 +72,24 @@ const options = [{
  */
 const itemDataModel = {
   serialNumber: '',
-  measuringPointName: '',
-  measuringPointPosition: '',
-  noiseSourceName: '',
-  noiseSourcePropertyId: '',
-  functionalAreaTypeId: '',
+  InspectionDate: '',
+  recordURL: '',
+  feedBackRecordURL: '',
+  correctionReportURL: '',
+  interviewRecordURL: '',
+  supervisionProcessing: '',
+  administrativePenaltiesURL: '',
+  petitionRecordURL: '',
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '边界噪声基本情况',
+  secTitle: '现场检查、监督信息',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      getBoundaryNoiseList({}).then(res => {
-        console.log('getBoundaryNoiseList res ---', res);
+      getSiteInspectionList({}).then(res => {
+        console.log('getSiteInspectionList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -84,7 +99,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.boundaryNoiseList;
+        var data = res.data.customerSiteInspectionList;
         resolve({
           code: 0,
           data,
@@ -102,10 +117,10 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        getBoundaryNoiseAdd({
+        getSiteInspectionAdd({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseAdd res",res)
+          console.log("getSiteInspectionAdd res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -125,10 +140,10 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       // 编辑
       return new Promise((resolve, reject) => {
         console.log(record)
-        getBoundaryNoiseUpdate({
+        getSiteInspectionUpdate({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseUpdate res",res)
+          console.log("getSiteInspectionUpdate res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -151,7 +166,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getBoundaryNoiseDelete(tableId).then(res => {
+      getSiteInspectionDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,

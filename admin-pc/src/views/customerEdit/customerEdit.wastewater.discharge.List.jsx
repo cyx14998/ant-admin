@@ -6,7 +6,6 @@ import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
   getWastewaterDischargeList,
-  getWastewaterDischargeDelete,
   // getWastewaterDischargeUpdate,
   // getWastewaterDischargeAdd
 } from '../../common/api/api.customer.plus.js';
@@ -157,28 +156,28 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   //     });
   //   }
   // },
-  apiDel: function (tableId) {
-    //删除
-    console.log(`apiDel ${tableId}`);
+  // apiDel: function (tableId) {
+  //   //删除
+  //   console.log(`apiDel ${tableId}`);
 
-    return new Promise((resolve, reject) => {
-      getWastewaterDischargeDelete(tableId).then(res => {
-        if (res.data.result !== 'success') {
-          resolve({
-            code: 1,
-            info: res.data.info,
-          });
-          return;
-        }
+  //   return new Promise((resolve, reject) => {
+  //     getWastewaterDischargeDelete(tableId).then(res => {
+  //       if (res.data.result !== 'success') {
+  //         resolve({
+  //           code: 1,
+  //           info: res.data.info,
+  //         });
+  //         return;
+  //       }
 
-        resolve({
-          code: 0 // success
-        });
-      }).catch(err => {
-        reject(err)
-      });
-    });
-  },
+  //       resolve({
+  //         code: 0 // success
+  //       });
+  //     }).catch(err => {
+  //       reject(err)
+  //     });
+  //   });
+  // },
   itemDataModel: itemDataModel
 })
 
