@@ -9,7 +9,7 @@ import {
     getWaterDynamicInfoAdd,
     getWaterDynamicInfoEdit,
     getWaterDynamicInfoDelete,
-} from '../../common/api/api.customer';
+} from '../../common/api/api.customer.dynamic';
 
 /**
  * table head
@@ -19,12 +19,12 @@ const columns = [{
     dataIndex: 'useWaterType',
     width: '10%'
 }, {
-    title: '企业用水量',
-    dataIndex: 'repeatedWaterConsumption',
+    title: '用水总量',
+    dataIndex: 'totalWaterConsumption',
     width: '10%'
 }, {
     title: '重复用水量',
-    dataIndex: 'totalWaterConsumption',
+    dataIndex: 'repeatedWaterConsumption',
     width: '10%'
 }, {
     title: '用水来源',

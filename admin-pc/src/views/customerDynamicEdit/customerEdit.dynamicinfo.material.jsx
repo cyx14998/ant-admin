@@ -9,7 +9,7 @@ import {
   getMaterialDynamicInfoAdd,
   getMaterialDynamicInfoEdit,
   getMaterialDynamicInfoDelete,
-} from '../../common/api/api.customer';
+} from '../../common/api/api.customer.dynamic';
 
 /**
  * table head
@@ -70,7 +70,7 @@ export const CustomerEditDynamicinfoMaterial = connectEditableSectionApi({
           })
           return;
         }
-        var data = res.data.auxiliaryMaterialsConsumptionLis;
+        var data = res.data.auxiliaryMaterialsConsumptionList;
         resolve({
           code: 0,
           data,

@@ -44,57 +44,31 @@ export function getCustomerList({
   })
 }
 //获取省份列表
-export function getProvinceList({
-  pageNumber = 1,
-  countPerPage = 1000,
-  keyword = '',
-}) {
-  return axios.get('uProvinceList.uhtm?InterfaceVersion=' + apiVer, {
+export function getProvinceList({}) {
+  return axios.get('/uProvinceList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      pageNumber,
-      countPerPage,
-      keyword,
     }
   });
 }
 
 //获取市列表
-export function getCityList({
-  pageNumber = 1,
-  countPerPage = 1000,
-  keyword = '',
-  id
-}) {
-  return axios.get('uCityList.uhtm?InterfaceVersion=' + apiVer, {
+export function getCityList({id}) {
+  return axios.get('/uCityList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      pageNumber,
-      countPerPage,
-      keyword,
       provinceId: id,
     }
   });
 }
 
-/**
- * 获取区列表
- * @QA：
- *    数据错误同一数据
- */
-export function getAreaList({
-  pageNumber = 1,
-  countPerPage = 1000,
-  keyword = '',
-  id,
-}) {
-  return axios.get('uAreaList.uhtm?InterfaceVersion=' + apiVer, {
+
+// 获取区列表
+export function getAreaList({id}) {
+  return axios.get('/uAreaList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      pageNumber,
-      countPerPage,
-      keyword,
-      cityId: id
+      cityId: id,
     }
   });
 }
@@ -104,19 +78,11 @@ export function getAreaList({
  * @QA：
  *    服务器内部错误
  */
-export function getTownList({
-  pageNumber = 1,
-  countPerPage = 1000,
-  keyword = '',
-  id,
-}) {
-  return axios.get('uTownList.uhtm?InterfaceVersion=' + apiVer, {
+export function getTownList({id}) {
+  return axios.get('/uTownList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      pageNumber,
-      countPerPage,
-      keyword,
-      areaId: id
+      areaId: id,
     }
   });
 }
@@ -139,7 +105,7 @@ export function getCustomerInfoById() {
  */
 
 export function saveAddCustomerInfoById(data) {
-  return axios.get('uCustomerAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uCustomerAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       ...data
@@ -153,7 +119,7 @@ export function saveAddCustomerInfoById(data) {
  */
 
 export function saveEditCustomerInfoById(data) {
-  return axios.get('uCustomerUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uCustomerUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId: getCustomerId(),
@@ -164,14 +130,14 @@ export function saveEditCustomerInfoById(data) {
 
 /**************************** 编辑页---首页-产品基本信息模块 ***********************/
 
-  // 编辑页---首页-产品基本信息获取
+// 编辑页---首页-产品基本信息获取
 
 export function getProductBaseInfoList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword = '',
 }) {
-  return axios.get('uMainProductBaseInfoList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uMainProductBaseInfoList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -182,13 +148,13 @@ export function getProductBaseInfoList({
   });
 }
 
-  // 编辑页---首页-产品基本信息新增
+// 编辑页---首页-产品基本信息新增
 export function getProductBaseInfoAdd({
   theName,
   unitOfMeasurement,
   designAnnualOutput
 }) {
-  return axios.get('uMainProductBaseInfoAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uMainProductBaseInfoAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -206,7 +172,7 @@ export function getProductBaseInfoEdit({
   unitOfMeasurement,
   designAnnualOutput
 }) {
-  return axios.get('uMainProductBaseInfoUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uMainProductBaseInfoUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -221,7 +187,7 @@ export function getProductBaseInfoEdit({
 
 //编辑页---首页-产品基本信息删除
 export function getProductBaseInfoDelete(id) {
-  return axios.get('uMainProductBaseInfoDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uMainProductBaseInfoDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId: id,
@@ -244,7 +210,7 @@ export function getMaterialBaseInfoList({
   countPerPage = 1000,
   keyword = '',
 }) {
-  return axios.get('uAuxiliaryMaterialsBaseInfoList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uAuxiliaryMaterialsBaseInfoList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -264,7 +230,7 @@ export function getMaterialBaseInfoAdd({
   unitOfMeasurement,
   designConsumption
 }) {
-  return axios.get('uAuxiliaryMaterialsBaseInfoAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uAuxiliaryMaterialsBaseInfoAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -285,7 +251,7 @@ export function getMaterialBaseInfoEdit({
   unitOfMeasurement,
   designConsumption
 }) {
-  return axios.get('uAuxiliaryMaterialsBaseInfoUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uAuxiliaryMaterialsBaseInfoUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -298,7 +264,7 @@ export function getMaterialBaseInfoEdit({
 }
 //编辑页---首页-原辅材料删除
 export function getMaterialBaseInfoDelete(id) {
-  return axios.get('uAuxiliaryMaterialsBaseInfoDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uAuxiliaryMaterialsBaseInfoDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId: id,
@@ -319,7 +285,7 @@ export function getEnergyBaseInfoList({
   countPerPage = 1000,
   keyword = '',
 }) {
-  return axios.get('uUseInfoEnergyList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uUseInfoEnergyList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -340,7 +306,7 @@ export function getEnergyBaseInfoAdd({
   theType,
   annualConsumption
 }) {
-  return axios.get('uUseInfoEnergyAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uUseInfoEnergyAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -363,7 +329,7 @@ export function getEnergyBaseInfoEdit({
   theType,
   annualConsumption
 }) {
-  return axios.get('uUseInfoEnergyUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uUseInfoEnergyUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -376,7 +342,7 @@ export function getEnergyBaseInfoEdit({
 }
 //编辑页---首页-能源删除
 export function getEnergyBaseInfoDelete(id) {
-  return axios.get('uUseInfoEnergyDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uUseInfoEnergyDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId: id,
@@ -396,7 +362,7 @@ export function getWaterBaseInfoList({
   countPerPage = 1000,
   keyword = '',
 }) {
-  return axios.get('uUseInfoWaterList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uUseInfoWaterList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -416,7 +382,7 @@ export function getWaterBaseInfoAdd({
   theType,
   annualConsumption
 }) {
-  return axios.get('uUseInfoWaterAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uUseInfoWaterAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -436,7 +402,7 @@ export function getWaterBaseInfoEdit({
   theType,
   annualConsumption
 }) {
-  return axios.get('uUseInfoWaterUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uUseInfoWaterUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -448,7 +414,7 @@ export function getWaterBaseInfoEdit({
 }
 //编辑页---首页-用水删除
 export function getWaterBaseInfoDelete(id) {
-  return axios.get('uUseInfoWaterDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uUseInfoWaterDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId: id,
@@ -467,7 +433,7 @@ export function getDeviceBaseInfoList({
   countPerPage = 1000,
   keyword = '',
 }) {
-  return axios.get('uMainProductionDeviceList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uMainProductionDeviceList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -477,17 +443,19 @@ export function getDeviceBaseInfoList({
     }
   });
 }
-/**
- * 编辑页---首页-生产装置新增
- * @QA:
- *   接口完全无反应
- */
-export function getDeviceBaseInfoAdd({
-  consumption,
-  theType,
-  annualConsumption
-}) {
 
+// 编辑页---首页-生产装置新增
+
+export function getDeviceBaseInfoAdd({
+  serialNumber,
+  theName,
+  theModel,
+  theQuantity,
+  processing,
+  useEnergy,
+  pollutantName,
+  facilitiesName,
+}) {
   return axios.get('/uMainProductionDeviceAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
@@ -506,29 +474,34 @@ export function getDeviceBaseInfoAdd({
 //编辑页---首页-生产装置编辑
 export function getDeviceBaseInfoEdit({
   tableId,
-  consumption,
-  theType,
-  annualConsumption
+  theName,
+  serialNumber,
+  theModel,
+  theQuantity,
+  processing,
+  useEnergy,
+  pollutantName,
+  facilitiesName,
 }) {
-  return axios.get('uMainProductionDeviceUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uMainProductionDeviceUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
       tableId,
-      serialNumber: '',
-      theName: '',
-      theModel: '',
-      theQuantity: '',
-      processing: '',
-      useEnergy: '',
-      pollutantName: '',
-      facilitiesName: '',
+      theName,
+      serialNumber,
+      theModel,
+      theQuantity,
+      processing,
+      useEnergy,
+      pollutantName,
+      facilitiesName,
     }
   });
 }
 //编辑页---首页-生产装置删除
 export function getDeviceBaseInfoDelete(id) {
-  return axios.get('uMainProductionDeviceDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uMainProductionDeviceDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId: id,

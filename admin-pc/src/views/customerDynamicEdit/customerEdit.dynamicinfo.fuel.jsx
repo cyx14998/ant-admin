@@ -93,7 +93,7 @@ export const CustomerEditDynamicinfoFuel = connectEditableSectionApi({
             if (!cusId) return;
 
             getFuelDynamicInfoList({}).then(res => {
-                console.log('prolist res', res)
+                console.log('fuellist res', res)
                 if (res.data.result !== 'success') {
                     resolve({
                         code: -1,

@@ -85,7 +85,6 @@ export const CustomerEditBaseinfoDevice = connectEditableSectionApi({
             // 获取生产装置信息列表
             var cusId = getLocQueryByLabel('id');
             if (!cusId) return;
-
             getDeviceBaseInfoList({}).then(res => {
                 console.log('Devicelist res', res)
                 if (res.data.result !== 'success') {
