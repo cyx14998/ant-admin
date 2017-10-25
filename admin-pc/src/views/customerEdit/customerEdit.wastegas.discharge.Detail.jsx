@@ -1,42 +1,58 @@
 /**
- * 边界噪声情况
+ * 废气污染物排放情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getBoundaryNoiseList,
-  getBoundaryNoiseAdd,
-  getBoundaryNoiseUpdate,
-  getBoundaryNoiseDelete,
+  getWasteGasDischargeDetail,
+  getWasteGasDischargeDelete,
+  getWasteGasDischargeUpdate,
+  getWasteGasDischargeAdd
 } from '../../common/api/api.customer.plus.js';
+
+import {
+  MyToast
+} from '../../common/utils';
 
 /**
  * table head
  */
 const columns = [{
-  title: '编号',
+  title: '排水口编号',
   dataIndex: 'serialNumber',
   width: '10%'
 }, {
-  title: '测点名称',
-  dataIndex: 'measuringPointName',
+  title: '排放口名称',
+  dataIndex: 'theName',
   width: '10%'
 }, {
-  title: '测点位置',
-  dataIndex: 'measuringPointPosition',
+  title: '排放口位置',
+  dataIndex: 'outletLocation',
   width: '10%'
 }, {
-  title: '噪声源名称',
-  dataIndex: 'noiseSourceName',
+  title: '经度',
+  dataIndex: 'longitude',
   width: '10%'
 }, {
-  title: '噪声源性质',
-  dataIndex: 'noiseSourcePropertyId',
+  title: '维度',
+  dataIndex: 'latitude',
   width: '10%'
 }, {
-  title: '功能区类型',
-  dataIndex: 'functionalAreaTypeId',
+  title: '污水排放规律',
+  dataIndex: 'dischargeLaw',
+  width: '10%'
+}, {
+  title: '功能区类别',
+  dataIndex: 'functionalAreaCategory',
+  width: '10%'
+}, {
+  title: '排放方式',
+  dataIndex: 'dischargeMode',
+  width: '10%'
+}, {
+  title: '排放口类型',
+  dataIndex: 'dischargePortType',
   width: '10%'
 }, {
   title: '操作',
@@ -60,21 +76,25 @@ const options = [{
  */
 const itemDataModel = {
   serialNumber: '',
-  measuringPointName: '',
-  measuringPointPosition: '',
-  noiseSourceName: '',
-  noiseSourcePropertyId: '',
-  functionalAreaTypeId: '',
+  theName: '',
+  outletLocation: '',
+  longitude: '',
+  latitude: '',
+  dischargeMode: '',
+  dischargePortType: '',
+  dischargeLaw: '',
+  functionalAreaCategory: '',
 };
 
-const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '边界噪声基本情况',
+const WasteGasDemoSection = connectEditableSectionApi({
+  secTitle: '废气排放基本信息详情',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      getBoundaryNoiseList({}).then(res => {
-        console.log('getBoundaryNoiseList res ---', res);
+      console.log("ssssssss");
+      getWasteGasDischargeDetail({id:1}).then(res => {
+        console.log('getWasteGasDischargeDetail res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -84,7 +104,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.boundaryNoiseList;
+        var data = [res.data.wasteGasDischargePort];
         resolve({
           code: 0,
           data,
@@ -102,10 +122,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        getBoundaryNoiseAdd({
+        getWasteGasDischargeAdd({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseAdd res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -124,11 +143,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        console.log(record)
-        getBoundaryNoiseUpdate({
+        getWasteGasDischargeUpdate({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseUpdate res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -151,7 +168,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getBoundaryNoiseDelete(tableId).then(res => {
+      getWasteGasDischargeDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,
@@ -171,4 +188,4 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   itemDataModel: itemDataModel
 })
 
-export default WasteWaterDemoSection;
+export default WasteGasDemoSection;

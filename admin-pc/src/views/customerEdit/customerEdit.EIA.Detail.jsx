@@ -1,11 +1,11 @@
 /**
- * 废气污染物排放情况
+ * 企业遵守法律法规情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getEIAList,
+  getEIADetail,
   getEIAAdd,
   getEIAUpdate,
   getEIADelete,
@@ -102,27 +102,27 @@ const dataSource = [{
 }];
 
 const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '环评信息',
+  secTitle: '环评信息详情',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      getBoundaryNoiseList({}).then(res => {
-        console.log('getBoundaryNoiseList res ---', res);
+      getEIADetail({}).then(res => {
+        console.log('getEIADetail res ---', res);
 
-        // if (res.data.result !== 'success') {
-        //   resolve({
-        //     code: -1,
-        //     info: res.data.info,
-        //   })
-        //   return;
-        // }
+        if (res.data.result !== 'success') {
+          resolve({
+            code: -1,
+            info: res.data.info,
+          })
+          return;
+        }
 
-        // var data = res.data.boundaryNoiseList;
-        // resolve({
-        //   code: 0,
-        //   data,
-        // })
+        var data = [res.data.customerEIA];
+        resolve({
+          code: 0,
+          data,
+        })
       }).catch(err => {
         MyToast('接口调用失败')
       })
@@ -136,7 +136,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        getBoundaryNoiseAdd({
+        getEIAAdd({
           ...record,
         }).then(res => {
           console.log("getBoundaryNoiseAdd res",res)
@@ -158,11 +158,10 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        console.log(record)
-        getBoundaryNoiseUpdate({
+        getEIAUpdate({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseUpdate res",res)
+          console.log("getEIAUpdate res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -185,7 +184,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getBoundaryNoiseDelete(tableId).then(res => {
+      getEIADelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,

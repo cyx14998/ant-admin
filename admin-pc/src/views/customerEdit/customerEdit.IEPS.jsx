@@ -1,42 +1,30 @@
 /**
- * 边界噪声情况
+ * 企业内部环保管理制度
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getBoundaryNoiseList,
-  getBoundaryNoiseAdd,
-  getBoundaryNoiseUpdate,
-  getBoundaryNoiseDelete,
+  getIEPSList,
+  getIEPSAdd,
+  getIEPSUpdate,
+  getIEPSDelete,
 } from '../../common/api/api.customer.plus.js';
 
 /**
  * table head
  */
 const columns = [{
-  title: '编号',
-  dataIndex: 'serialNumber',
+  title: '制度名称',
+  dataIndex: 'theName',
   width: '10%'
 }, {
-  title: '测点名称',
-  dataIndex: 'measuringPointName',
+  title: '执行情况',
+  dataIndex: 'implementation',
   width: '10%'
 }, {
-  title: '测点位置',
-  dataIndex: 'measuringPointPosition',
-  width: '10%'
-}, {
-  title: '噪声源名称',
-  dataIndex: 'noiseSourceName',
-  width: '10%'
-}, {
-  title: '噪声源性质',
-  dataIndex: 'noiseSourcePropertyId',
-  width: '10%'
-}, {
-  title: '功能区类型',
-  dataIndex: 'functionalAreaTypeId',
+  title: '下载路径',
+  dataIndex: 'filePath',
   width: '10%'
 }, {
   title: '操作',
@@ -59,22 +47,19 @@ const options = [{
  * 新数据默认值
  */
 const itemDataModel = {
-  serialNumber: '',
-  measuringPointName: '',
-  measuringPointPosition: '',
-  noiseSourceName: '',
-  noiseSourcePropertyId: '',
-  functionalAreaTypeId: '',
+  theName: '',
+  implementation: '',
+  filePath: '',
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '边界噪声基本情况',
+  secTitle: '证照材料信息',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      getBoundaryNoiseList({}).then(res => {
-        console.log('getBoundaryNoiseList res ---', res);
+      getIEPSList({}).then(res => {
+        console.log('getIEPSList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -84,7 +69,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.boundaryNoiseList;
+        var data = res.data.customerIEPSList;
         resolve({
           code: 0,
           data,
@@ -102,10 +87,10 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        getBoundaryNoiseAdd({
+        getIEPSAdd({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseAdd res",res)
+          console.log("getIEPSAdd res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -125,10 +110,10 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       // 编辑
       return new Promise((resolve, reject) => {
         console.log(record)
-        getBoundaryNoiseUpdate({
+        getIEPSUpdate({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseUpdate res",res)
+          console.log("getIEPSUpdate res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -151,7 +136,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getBoundaryNoiseDelete(tableId).then(res => {
+      getIEPSDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,

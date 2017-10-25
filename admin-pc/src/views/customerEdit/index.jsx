@@ -24,7 +24,12 @@ import CustomerEditWasteSolid from './customerEdit.wastesolid';
 import CustomerEditBoundaryNoise from './customerEdit.boundarynoise';
 //企业遵守法律法规情况
 import CustomerEditEIA from './customerEdit.EIA';
-
+//企业证照资料情况
+import CustomerEditCertification from './customerEdit.certification';
+// 企业内部环保管理制度
+import CustomerIEPS from './customerEdit.IEPS';
+// 现场检查、监管信息
+import CustomerSiteInspection from './customerEdit.siteInspection';
 
 import {
     getCustomerId
@@ -78,22 +83,23 @@ class Customerinfo extends React.Component {
                     <TabPane tab="废气污染物基本情况" disabled={this.state.tabPaneDisabled} key="4">
                         <CustomerEditWasteGas />
                     </TabPane>
-                    <TabPane tab="固体废物基本情况" disabled={this.setTabPaneActive.bind(this)} key="5">
+                    <TabPane tab="固体废物基本情况" disabled={this.state.tabPaneDisabled} key="5">
                         <CustomerEditWasteSolid />
                     </TabPane>
-                    <TabPane tab="边界噪声基本情况" disabled={this.setTabPaneActive.bind(this)} key="6">
+                    <TabPane tab="边界噪声基本情况" disabled={this.state.tabPaneDisabled} key="6">
                         <CustomerEditBoundaryNoise />
                     </TabPane>
-                    <TabPane tab="企业遵守法律法规情况" disabled={this.setTabPaneActive.bind(this)} key="7">
+                    <TabPane tab="企业遵守法律法规情况" disabled={this.state.tabPaneDisabled} key="7">
                         <CustomerEditEIA />
                     </TabPane>
-                    <TabPane tab="企业证照材料" disabled={this.setTabPaneActive.bind(this)} key="8">
+                    <TabPane tab="企业证照材料" disabled={this.state.tabPaneDisabled} key="8">
+                        <CustomerEditCertification />
                     </TabPane>
                     <TabPane tab="企业内部环保管理制度" disabled={this.state.tabPaneDisabled} key="9">
-                        4
+                        <CustomerIEPS />
                     </TabPane>
                     <TabPane tab="现场检查,监管信息" disabled={this.state.tabPaneDisabled} key="10">
-                        4
+                        <CustomerSiteInspection />
                     </TabPane>
                 </Tabs>
             </div>
