@@ -17,7 +17,10 @@ const FormItem = Form.Item;
 const { Header, Sider, Content, Footer } = Layout;
 
 
-import WasteWaterDemoSection from '../customerEdit/customerEdit.wastewater.demosection';
+import {
+  EditableDemoSection,
+  UneditableDemoSection
+} from '../customerEdit/customerEdit.wastewater.demosection';
 
 import SiderMenu from './sidermenu';
 
@@ -138,6 +141,11 @@ class Demo extends Component {
 
 
   render() {
+    
+    return (
+      <UneditableDemoSection />
+    )
+
     return (
       <Layout>
         <Sider
@@ -160,10 +168,6 @@ class Demo extends Component {
         </Content>
       </Layout>
     );
-
-    return (
-      <WasteWaterDemoSection />
-    )
 
     return (
       <div className="yzy-page" id="yzy-page">

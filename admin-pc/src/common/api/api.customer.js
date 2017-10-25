@@ -7,12 +7,6 @@ import axios, {
   apiVer
 } from './index';
 
-import {
-  getLocQueryByLabel
-} from '../utils';
-
-var cusId = getLocQueryByLabel('id');
-
 // post 接口有问题，全部使用get
 export function postTest() {
   return axios.post('http://ythb.zhiqifu.com/MemberLogin.htm', {
