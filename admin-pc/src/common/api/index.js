@@ -8,6 +8,7 @@ import {
 } from '../utils';
 
 axios.defaults.baseURL = 'http://ythb.zhiqifu.com';
+axios.defaults.timeout = 1000 * 10;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
