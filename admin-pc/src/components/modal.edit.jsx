@@ -25,8 +25,6 @@ class ModalEdit extends React.Component {
       closeModalEdit
     } = this.props;
 
-    console.log('component--------', InnerComponent)
-
     if (!modalShow) return null;
 
     return (

@@ -24,7 +24,8 @@ import {
     getCustomerId
 } from '../../common/api/index';
 import {
-    MyToast
+    MyToast,
+    getLocQueryByLabel
 } from '../../common/utils';
 
 
@@ -41,6 +42,10 @@ class Dynamicinfo extends React.Component {
     }
 
     componentDidMount() {
+        var cusId = getLocQueryByLabel('id');
+        var dynamicId = getLocQueryByLabel('dynamicId');
+
+        console.log('Dynamicinfo cusId dynamicId ------', cusId, dynamicId)
         var cusId = getCustomerId();
         if (!cusId) {
             this.setState({

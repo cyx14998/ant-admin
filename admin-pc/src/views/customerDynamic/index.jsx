@@ -8,60 +8,40 @@ import './index.less';
 import { 
   Table,
   Button, 
-  Pagination 
+  Popconfirm
 } from 'antd';
 
 import {
   getCustomerDynamicList
 } from '../../common/api/api.customer.dynamic';
 
+import {
+  getLocQueryByLabel
+} from '../../common/utils';
+
 function changeParentState(id) {
-  parent.window.iframeHook.changePage('/customerDynamicEdit.html?id=' + id)
+  var cusId = getLocQueryByLabel('id');
+  parent.window.iframeHook.changePage('/customerDynamicEdit.html?id='+ cusId +'&dynamicId=' + id)
 }
 
 const columns = [
   {
-    title: '统一社会信用代码',
-    dataIndex: 'uniformSocialCreditCode',
+    title: '年',
+    dataIndex: 'theYear',
     key: 'uniformSocialCreditCode',
-    width: '10%'
+    width: '25%'
   }, {
-    title: '企业名称',
-    dataIndex: 'customerName',
+    title: '季度',
+    dataIndex: 'theQuarter',
     key: 'customerName',
-    width: '10%'
+    width: '25%'
   }, {
-    title: '单位地址',
-    dataIndex: 'unitAddress',
-    key: 'unitAddress',
-    width: '20%'
-  }, {
-    title: '联系人',
-    dataIndex: 'contactPerson',
-    key: 'contactPerson',
-    width: '10%'
-  }, {
-    title: '电话',
-    dataIndex: 'phoneNumber',
-    key: 'phoneNumber',
-    width: '10%'
-  }, {
-    title: '传真',
-    dataIndex: 'fax',
-    key: 'fax',
-    width: '10%'
-  }, {
-    title: '邮政编码',
-    dataIndex: 'postalCode',
-    key: 'postalCode',
-    width: '10%'
+    title: '月',
+    dataIndex: 'theMonth',
+    width: '25%'
   }, {
     title: '编辑',
-    key: 'action',
-    width: '10%',
-    render: (text, record) => (<div>
-      <Button type="primary" onClick={() => changeParentState(record.tableId)}>编辑</Button>
-    </div>)
+    width: '25%'
   }
 ];
 
@@ -75,10 +55,23 @@ class CustomerDynamicList extends Component {
     }
 
     this.getData = this.getData.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
+
+    columns[3].render = (text, record) => {
+      return (
+        <div>
+          <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteItem(record.tableId)}>
+            <a href="#">删除</a>
+          </Popconfirm>
+          <a style={{marginLeft: '10px'}} onClick={() => changeParentState(record.tableId)}>查看</a>
+        </div>
+      )
+    } 
   }
 
   componentDidMount() {
-    this.getData({})
+    this.getData({});
+
   }
 
   getData(params) {
@@ -103,12 +96,17 @@ class CustomerDynamicList extends Component {
     })
   }
 
+  deleteItem(tableId) {
+    alert(tableId)
+  }
+
+
+
   render() {
     return (
       <div className="yzy-page">
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
-            <Button type="primary">导出excel</Button>
             <Button type="primary" style={{marginLeft: 8}}
               onClick={() => changeParentState('')}>新增</Button>
           </div>

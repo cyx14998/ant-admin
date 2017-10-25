@@ -59,7 +59,7 @@ class Page extends React.Component {
         this.state = {
             collapsed: false,
             url: "/customer.html",
-            breads: ['客户管理', '客户信息']
+            breads: ['客户管理']
         }
     }
 
@@ -82,7 +82,7 @@ class Page extends React.Component {
       console.log('onMenuChange----', menu);
       this.setState({
         breads: menu.keyPath.reverse()
-      })
+      });
     }
 
     render() {
