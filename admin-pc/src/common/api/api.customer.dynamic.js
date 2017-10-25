@@ -189,14 +189,20 @@ export function getWaterBaseInfoList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword = '',
+  theYear = '2017',
+  theMonth = '01',
+  customerMonthDclarationId = 1
 }) {
-  return axios.get('uUseInfoWaterList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('uElectricityAndWaterConsumptionList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
       pageNumber,
       countPerPage,
       keyword,
+      theYear,
+      theMonth,
+      customerMonthDclarationId,
     }
   });
 }
@@ -205,39 +211,158 @@ export function getWaterBaseInfoList({
  * @QA:
  */
 export function getWaterBaseInfoAdd({
-  consumption,
-  theType,
-  annualConsumption
+  customerMonthDclarationId = 1,
+  useWaterType,
+  repeatedWaterConsumption,
+  totalWaterConsumption,
+  waterSource,
+  electricityConsumption,
 }) {
-  return axios.get('uUseInfoWaterAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get(' uElectricityAndWaterConsumptionAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
-      consumption,
-      annualConsumption,
+      customerMonthDclarationId,
+      useWaterType,
+      repeatedWaterConsumption,
+      totalWaterConsumption,
+      waterSource,
+      electricityConsumption,
     }
   });
 }
 //编辑页---首页-用水编辑
 export function getWaterBaseInfoEdit({
+  theMonth='01',
   tableId,
-  consumption,
-  theType,
-  annualConsumption
+  useWaterType,
+  repeatedWaterConsumption,
+  totalWaterConsumption,
+  waterSource,
+  electricityConsumption,
 }) {
-  return axios.get('uUseInfoWaterUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('uElectricityAndWaterConsumptionUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      customerId: getCustomerId(),
+      // customerId: getCustomerId(),
+      theMonth,
       tableId,
-      consumption,
-      annualConsumption,
+      useWaterType,
+      repeatedWaterConsumption,
+      totalWaterConsumption,
+      waterSource,
+      electricityConsumption,
     }
   });
 }
 //编辑页---首页-用水删除
 export function getWaterBaseInfoDelete(id) {
-  return axios.get('uUseInfoWaterDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('uElectricityAndWaterConsumptionDelete.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId: id,
+    }
+  });
+}
+
+/*************************** 编辑页---首页-燃料获取模块 ***********************/
+
+/**
+ * 编辑页---首页-燃料动态信息获取
+ * @QA：
+ */
+export function getFuelDynamicInfoList({
+  pageNumber = 1,
+  countPerPage = 1000,
+  keyword = '',
+  theYear = '2017',
+  theMonth = '01',
+  customerMonthDclarationId=1,
+}) {
+  return axios.get('uFuelConsumptionList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      // customerId: getCustomerId(),
+      pageNumber,
+      countPerPage,
+      keyword,
+      theYear,
+      theMonth,
+      customerMonthDclarationId,
+    }
+  });
+}
+/**
+ * 编辑页---首页-燃料动态信息新增
+ * @QA:
+ *    {result: "fail", info: "请输入产量"}
+ *   
+ */
+export function getFuelDynamicInfoAdd({
+customerMonthDclarationId=1,
+theName,
+placeOfOrigin,
+consumption,
+theUnit,
+sulfurContent,
+ashContent,
+calorificValue,
+calorificValueUnit,
+unitOfMeasurement,
+}) {
+  return axios.get('uFuelConsumptionAdd.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      // customerId: getCustomerId(),
+      customerMonthDclarationId,
+theName,
+placeOfOrigin,
+consumption,
+theUnit,
+sulfurContent,
+ashContent,
+calorificValue,
+calorificValueUnit,
+unitOfMeasurement,
+    }
+  });
+}
+
+//编辑页---首页-燃料动态信息编辑
+export function getFuelDynamicInfoEdit({
+  tableId,
+theName,
+placeOfOrigin,
+consumption,
+theUnit,
+sulfurContent,
+ashContent,
+calorificValue,
+calorificValueUnit,
+unitOfMeasurement,
+}) {
+  return axios.get('uFuelConsumptionUpdate.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      // customerId: getCustomerId(),
+      tableId,
+theName,
+placeOfOrigin,
+consumption,
+theUnit,
+sulfurContent,
+ashContent,
+calorificValue,
+calorificValueUnit,
+unitOfMeasurement,
+    }
+  });
+}
+
+
+//编辑页---首页-燃料动态信息删除
+export function getFuelDynamicInfoDelete(id) {
+  return axios.get('uFuelConsumptionDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId: id,

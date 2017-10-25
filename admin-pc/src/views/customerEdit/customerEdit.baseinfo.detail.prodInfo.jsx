@@ -49,10 +49,10 @@ class CustomerEditBaseinfoDetailProd extends React.Component {
     } = this.props.form;
         var customer = this.state.customer;
         return (
-            <div className="yzy-tab-content-item-wrap">
-                 {/* <CustomerEditBaseinfoProd /> */}
-                {/* <CustomerEditBaseinfoMaterial /> */}
-                {/* <CustomerEditBaseinfoEnergy /> */}
+            <div className="yzy-tab-content-item-wrap" style={{paddingBottom:50}}>
+                  <CustomerEditBaseinfoProd /> 
+                 <CustomerEditBaseinfoMaterial /> 
+                 <CustomerEditBaseinfoEnergy /> 
                 <CustomerEditBaseinfoWater /> 
                 <CustomerEditBaseinfoDevice />
             </div >

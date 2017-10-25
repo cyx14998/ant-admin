@@ -164,11 +164,8 @@ export function saveEditCustomerInfoById(data) {
 
 /**************************** 编辑页---首页-产品基本信息模块 ***********************/
 
-/**
- * 编辑页---首页-产品基本信息获取
- * @QA：
- *   设计年产量字段缺失（未返回全部字段）
- */
+  // 编辑页---首页-产品基本信息获取
+
 export function getProductBaseInfoList({
   pageNumber = 1,
   countPerPage = 1000,
@@ -184,13 +181,8 @@ export function getProductBaseInfoList({
     }
   });
 }
-/**
- * 编辑页---首页-产品基本信息新增
- * @QA:
- *   400 Bad Request
- *    数据新增两遍
- *   
- */
+
+  // 编辑页---首页-产品基本信息新增
 export function getProductBaseInfoAdd({
   theName,
   unitOfMeasurement,
@@ -240,7 +232,13 @@ export function getProductBaseInfoDelete(id) {
 
 /*************************** 编辑页---首页-原辅材料获取模块 ***********************/
 
-//编辑页---首页-原辅材料获取
+/**
+ * 编辑页---首页-原辅材料获取
+ * @QA:
+ *   设计用耗量DesignConsumption字段错误
+ *   
+ */
+
 export function getMaterialBaseInfoList({
   pageNumber = 1,
   countPerPage = 1000,
@@ -258,8 +256,7 @@ export function getMaterialBaseInfoList({
 }
 /**
  * 编辑页---首页-原辅材料新增
- * @QA:
- *   设计用耗量DesignConsumption字段错误
+ * @QA: 
  *   
  */
 export function getMaterialBaseInfoAdd({
@@ -277,7 +274,11 @@ export function getMaterialBaseInfoAdd({
     }
   });
 }
-//编辑页---首页-原辅材料编辑
+/**
+ * 编辑页---首页-原辅材料编辑
+ * @QA:   
+ *   {result: "fail", info: "请输入设计用耗量"}: 设计用耗量DesignConsumption字段错误
+ */
 export function getMaterialBaseInfoEdit({
   tableId,
   theName,
@@ -307,7 +308,12 @@ export function getMaterialBaseInfoDelete(id) {
 
 /*************************** 编辑页---首页-能源获取模块 ***********************/
 
-//编辑页---首页-能源获取
+/**
+ * 编辑页---首页-能源获取
+ * @QA:
+ *  年耗量annualConsumption字段错误
+ *   
+ */
 export function getEnergyBaseInfoList({
   pageNumber = 1,
   countPerPage = 1000,
@@ -344,7 +350,13 @@ export function getEnergyBaseInfoAdd({
     }
   });
 }
-//编辑页---首页-能源编辑
+
+/**
+ * 编辑页---首页-能源编辑
+ * @QA:
+ *  年耗量annualConsumption字段错误
+ *   
+ */
 export function getEnergyBaseInfoEdit({
   tableId,
   theContent,
@@ -377,8 +389,7 @@ export function getEnergyBaseInfoDelete(id) {
 /**
  * 编辑页---首页-用水获取
  * @QA:
- *    列表只返回tableId,无其他数据
- *   
+ *    AnnualConsumption字段错误
  */
 export function getWaterBaseInfoList({
   pageNumber = 1,
@@ -398,7 +409,7 @@ export function getWaterBaseInfoList({
 /**
  * 编辑页---首页-用水新增
  * @QA:
- *   保存接口成功后，接口列表没有数据
+ *    AnnualConsumption字段错误
  */
 export function getWaterBaseInfoAdd({
   consumption,
@@ -414,7 +425,11 @@ export function getWaterBaseInfoAdd({
     }
   });
 }
-//编辑页---首页-用水编辑
+/**
+ * 编辑页---首页-用水编辑
+ * @QA:
+ *    AnnualConsumption字段错误
+ */
 export function getWaterBaseInfoEdit({
   tableId,
   consumption,
@@ -445,8 +460,6 @@ export function getWaterBaseInfoDelete(id) {
 /**
  * 编辑页---首页-生产装置获取
  * @QA:
- *    404错误
- *  http://ythb.zhiqifu.com/uMainProductionDeviceList.uhtm?InterfaceVersion=20171018&token=Z9ygxnbEKTLgIYG5LLs1yHEoxTJadZOrNRFYbtwaLJA%3D&customerId=1&pageNumber=1&countPerPage=1000&keyword=
  *   
  */
 export function getDeviceBaseInfoList({
