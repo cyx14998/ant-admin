@@ -28,6 +28,9 @@ import {
 
 import CustomerEditDynamicinfoProd from './customerEdit.dynamicinfo.prod';
 import CustomerEditDynamicinfoMaterial from './customerEdit.dynamicinfo.material';
+import CustomerEditDynamicinfoWater from './customerEdit.dynamicinfo.water';
+import CustomerEditDynamicinfoFuel from './customerEdit.dynamicinfo.fuel';
+
 
 class CustomerEditBaseinfoDetail extends React.Component {
     constructor(props) {
@@ -46,9 +49,11 @@ class CustomerEditBaseinfoDetail extends React.Component {
     } = this.props.form;
         var customer = this.state.customer;
         return (
-            <div className="yzy-tab-content-item-wrap">
+            <div className="yzy-tab-content-item-wrap" style={{paddingBottom: 50}}>
                 <CustomerEditDynamicinfoProd />
                 <CustomerEditDynamicinfoMaterial />
+                <CustomerEditDynamicinfoWater />
+                <CustomerEditDynamicinfoFuel />
             </div >
         )
     }

@@ -16,6 +16,7 @@ import CustomerEditBaseinfo from './customerEdit.baseinfo';
 import CustomerEditBaseinfoDetailProd from './customerEdit.baseinfo.detail.prodInfo';
 //废水排放基本情况
 import CustomerEditWasteWater from './customerEdit.wastewater';
+// import CustomerEditWasteWater from './customerEdit.wastewater.dischargedetail';
 //废气排放基本情况
 import CustomerEditWasteGas from './customerEdit.wastegas';
 //固体污染物基本情况

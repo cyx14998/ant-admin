@@ -6,7 +6,7 @@ import axios, { getToken, apiVer, getCustomerId } from './index';
 /********************** 编辑-首页-废水排放基本情况 **********************/
 
 /* 
-* 获取废水排放基本信息列表
+* 获取废水排放基本信息列表    OK
 */
 export function getWastewaterDischargeList({
   pageNumber=1, 
@@ -23,13 +23,10 @@ export function getWastewaterDischargeList({
 }
 
 /* 
-* 获取废水排放基本信息详情
-* @QA
-*   后端未返回经度纬度字段
-*   应该是点击按钮传tableId，现在只能给个默认值
+* 获取废水排放基本信息详情    OK
 */
 export function getWastewaterDischargeDetail({
-  tableId=1,
+  tableId,
 }){
   return axios.get('/uWasteWaterDischargePortDetail.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -38,6 +35,7 @@ export function getWastewaterDischargeDetail({
     }
   })
 }
+
 /* 
 * 新增废水排放口
 */
@@ -514,6 +512,187 @@ export function getWasteGasDischargeUpdate({
 */
 export function getWasteGasDischargeDelete(id){
   return axios.get('/uWasteGasDischargePortDelete.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId:id,
+    }
+  })
+}
+
+/********************** 编辑-首页-废气排放因子基本情况 **********************/
+/**
+ * @QA
+ *  所有接口都未对接
+ */
+
+/* 
+* 获取废气排放因子基本信息
+* @QA
+*   WasteGasDischargePortId为排放口id，应该是传过来的tableId
+*   服务器内部异常
+*/
+export function getWasteGasDischargeFactorList({
+  pageNumber=1, 
+  countPerPage=1000,
+  WasteGasDischargePortId=1,
+}){
+  return axios.get('/uWasteGasDischargeFactorList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber,
+      countPerPage,
+      WasteGasDischargePortId,
+    }
+  })
+}
+
+/* 
+* 新增废气排放因子
+* @QA
+*   保存成功后服务器内部异常。。
+*/
+export function getWasteGasDischargeFactorAdd({
+  wasteGasDischargePortId=1,
+  pollutantName,
+  executeStandardNumber,
+  standardValue,
+  isAutoMOPS,
+}){
+  return axios.get('/uWasteGasDischargeFactorAdd.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      customerId: getCustomerId(),
+      wasteGasDischargePortId,
+      pollutantName,
+      executeStandardNumber,
+      standardValue,
+      isAutoMOPS,
+    }
+  })
+}
+
+/* 
+* 编辑废气排放因子
+* @QA
+*   由于获取时没有数据，所以不能测试删除接口是否正确
+*/
+export function getWasteGasDischargeFactorUpdate({
+  tableId,
+  pollutantName,
+  executeStandardNumber,
+  standardValue,
+  isAutoMOPS,
+}){
+  return axios.get('/uWasteGasDischargeFactorUpdate.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+      pollutantName,
+      executeStandardNumber,
+      standardValue,
+      isAutoMOPS,
+    }
+  })
+}
+
+/* 
+* 删除废气排放因子
+* @QA
+*   由于获取时没有数据，所以不能测试删除接口是否正确
+*/
+export function getWasteGasDischargeFactorDelete(id){
+  return axios.get('/uWasteGasDischargeFactorDelete.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId:id,
+    }
+  })
+}
+
+/********************** 编辑-首页-废气排放检测记录 **********************/
+/**
+ * @QA
+ *  所有接口都未对接
+ */
+
+/* 
+* 获取废气排放检测记录
+* @QA
+*   wasteWaterDischargePortId为排放口id，应该是传过来的tableId
+*/
+export function getWasteGasMonitoringRecordList({
+  pageNumber=1, 
+  countPerPage=1000,
+  wasteGasDischargePortId=1,
+}){
+  return axios.get('/uWasteGasMonitoringRecordList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber,
+      countPerPage,
+      wasteGasDischargePortId,
+    }
+  })
+}
+
+/* 
+* 新增废气排放检测记录
+* @QA
+*   400(Bad Request)
+*/
+export function getWasteGasMonitoringRecordAdd({
+  wasteGasDischargePortId=1,
+  serialNumber,
+  monitoringDatetime,
+  monitoringDepart,
+  monitoringResult,
+  monitoringReportURL,
+}){
+  return axios.get('/uWasteGasMonitoringRecordAdd.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      customerId: getCustomerId(),
+      wasteGasDischargePortId,
+      serialNumber,
+      monitoringDatetime,
+      monitoringDepart,
+      monitoringResult,
+      monitoringReportURL,
+    }
+  })
+}
+
+/* 
+* 编辑废气排放检测记录
+* @QA
+*   由于获取时没有数据，新增数据400错误，所以不能测试删除接口是否正确
+*/
+export function getWasteGasMonitoringRecordUpdate({
+  tableId,
+  pollutantName,
+  executeStandardNumber,
+  standardValue,
+  isAutoMOPS,
+}){
+  return axios.get('/uWasteGasMonitoringRecordUpdate.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+      pollutantName,
+      executeStandardNumber,
+      standardValue,
+      isAutoMOPS,
+    }
+  })
+}
+
+/* 
+* 删除废气排放检测记录
+* @QA
+*   由于获取时没有数据，新增数据400错误，所以不能测试删除接口是否正确
+*/
+export function getWasteGasMonitoringRecordDelete(id){
+  return axios.get('/uWasteGasMonitoringRecordDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId:id,

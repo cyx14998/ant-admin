@@ -14,12 +14,17 @@ import {
     Menu,
     Alert,
     DatePicker,
-    message, Tabs, Dropdown, Checkbox, Pagination, Radio, Row, Col
+    message, Tabs, Dropdown, Checkbox, Pagination, Radio, Row, Col, Modal,
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
 
+
+import EditableCell from '../../components/editable.cell';
 import { getLocQueryByLabel } from '../../common/utils';
+import { getToken, } from '../../common/api/index';
 
 import {
     getCustomerInfoById,
@@ -32,6 +37,9 @@ import {
     getTownList
 } from '../../common/api/api.customer';
 
+const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com';
+const uploadUrl = downloadUrl + '&token=' + getToken();
+
 const formItemLayout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -40,17 +48,18 @@ const formItemLayoutInner = {
     labelCol: { span: 16 },
     wrapperCol: { span: 8 },
 }
-
-/**
- * 当新增基本信息保存时，
- * 要保存返回的 tableId -> localStorage.setItem('yt-customerId', tableId)
- * 同时，调用 onBaseinfoSave 启动 TabPane 切换功能
- * @props onBaseinfoSave
- */
+const uploadButton = (
+    <div>
+        <Icon type="plus" />
+        <div className="ant-upload-text">Upload</div>
+    </div>
+);
 class CustomerEditBaseinfoDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
+            prodImgUrl: '',
+            prodFileList: [], //生产工艺流程图
             customer: {},
             provinceList: [],
             cityList: [],
@@ -65,9 +74,6 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
     componentDidMount() {
         // fetch data from api for FormItem initialValue
-        var cusId = getLocQueryByLabel('id');
-
-        if (!cusId) return;
         //获取基本信息
         getCustomerInfoById().then(res => {
             console.log('getCustomerInfoById res', res);
@@ -94,7 +100,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
         })
     }
     //投产日期
-    onChange(date, dateString) {
+    onCellChange(date, dateString) {
         console.log(date, dateString);
     }
     //更改省份
@@ -127,7 +133,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
         //获取区列表        
         return new Promise((resolve, reject) => {
-            getAreaList({ id: key }).then(res => {
+            getAreaList({ id: key, provinceId: this.state.provinceId, }).then(res => {
                 console.log('getAreaList res', res);
                 if (res.data.result !== 'success') {
                     return
@@ -148,7 +154,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
         //获取镇列表        
         return new Promise((resolve, reject) => {
-            getTownList({ id: key }).then(res => {
+            getTownList({ id: key, provinceId: this.state.provinceId, cityId: this.state.cityId}).then(res => {
                 console.log('getTownList res', res);
                 if (res.data.result !== 'success') {
                     return
@@ -164,6 +170,39 @@ class CustomerEditBaseinfoDetail extends React.Component {
     changeTown(key) {
         // this.setState({
         //     townId: key,
+        // })
+    }
+    //图片上传
+    handlePicChange({ fileList }) {
+        this.setState({
+            prodFileList: fileList,
+        });
+        console.log(this.state.prodFileList);
+        var index = fileList.length;
+        if (index > 0) {
+            if (fileList[index - 1].status === 'done') {
+                console.log(fileList[index - 1].response);
+                // console.log(fileList[index - 1].response.result)
+                this.setState({
+                    prodImgUrl: DownloadUrl + fileList[index - 1].response.result,
+                });
+            }
+        }
+    }
+    //图片取消预览
+    picModalCancel() {
+        // store.dispatch({
+        //     previewImage: [],
+        //     previewVisible: false,
+        //     type: 'PICPREVIEW'
+        // })
+    }
+    //图片预览
+    handlePicPreview(file) {
+        // store.dispatch({
+        //     previewImage: file.url || file.thumbUrl,
+        //     previewVisible: true,
+        //     type: 'PICPREVIEW'
         // })
     }
     // 基本信息保存
@@ -200,6 +239,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
         })
     }
     render() {
+        console.log(uploadUrl);
+
         let { getFieldDecorator } = this.props.form;
         var customer = this.state.customer;
 
@@ -371,7 +412,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="管辖归属">
                                     {getFieldDecorator('jurisdictionAscriptionId', {
-                                        initialValue: customer.jurisdictionAscriptionId + "",
+                                        initialValue: customer.jurisdictionAscriptionId ? customer.jurisdictionAscriptionId+"": '',
                                         rules: [{ required: true, message: 'Please input your jurisdictionAscriptionId!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
@@ -402,10 +443,10 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('cityId', {
                                         //initialValue: this.state.cityList[0].tableId ? this.state.cityList[0].tableId : '',
-                                        initialValue: (customer.cityId ? customer.cityId : '')+"",
-                                        //rules: [{ required: true, message: 'Please input your cityId!' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' }
-                                        //],
+                                        initialValue: (customer.cityId ? customer.cityId : '') + "",
+                                        rules: [{ required: true, message: 'Please input your cityId!' },
+                                            //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' }
+                                        ],
                                     })(
                                         <Select onChange={this.changeCity.bind(this)}>
                                             {cityOptions}
@@ -417,10 +458,10 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('areaId', {
                                         //initialValue: this.state.areaList[0].tableId ? this.state.areaList[0].tableId : '',
-                                       initialValue: (customer.areaId ? customer.areaId : '') + "",
-                                        rules: [{ required: true, message: 'Please input your areaId!' },
-                                        {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
-                                        ],
+                                        initialValue: (customer.areaId ? customer.areaId : '') + "",
+                                        //rules: [{ required: true, message: 'Please input your areaId!' },
+                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
+                                        //],
                                     })(
                                         <Select onChange={this.changeArea.bind(this)}>
                                             {areaOptions}
@@ -433,9 +474,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('townId', {
                                         //initialValue: this.state.townList[0].tableId ? this.state.provinceList[0].tableId : '',
                                         initialValue: (customer.townId ? customer.townId : '') + "",
-                                        rules: [{ required: true, message: 'Please input your townId!' },
-                                        {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
-                                        ],
+                                        //rules: [{ required: true, message: 'Please input your townId!' },
+                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
+                                        // ],
                                     })(
                                         <Select onChange={this.changeTown.bind(this)}>
                                             {townOptions}
@@ -446,7 +487,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem>
                                     {getFieldDecorator('address', {
-                                        initialValue: '详细地址',
+                                        initialValue: customer.address,
                                         rules: [{ required: true, message: 'Please input your address!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
@@ -488,15 +529,11 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="投产日期">
                                     {getFieldDecorator('openingDate', {
-                                        //initialValue: customer.openingDate,
-                                        initialValue: new Date() + "",
-                                        rules: [{ required: true, message: 'Please input your openingDate!' },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
+                                        initialValue: moment(customer.openingDate || new Date(), 'YYYY-MM-DD'), 
                                     })(
-                                        //<DatePicker value={store.getState().Data.EndDate ? moment(store.getState().Data.EndDate, 'YYYY/MM/DD') : moment(new Date(), 'YYYY/MM/DD')} onChange={this.props.endDate} />
-                                        //<DatePicker onChange={this.onChange.bind(this)} /> 
-                                        <Input placeholder="投产日期" />
+                                        //<DatePicker value={customer.openingDate ? moment(customer.openingDate, 'YYYY/MM/DD') : moment(new Date(), 'YYYY/MM/DD')} onChange={this.onChange.bind(this)} />
+                                        //<Input placeholder="投产日期" />
+                                        <DatePicker  value="2017-10-10" onChange={(data,dataString)=> console.log(data,'sss',dataString)}/>
                                         )}
                                 </FormItem>
                             </Col>
@@ -702,7 +739,31 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             </Col>
                         </Row>
                     </div>
+                    <Row>
+                        <Col span={12}>
+                            <div className="baseinfo-section">
+                                <h2 className="yzy-tab-content-title">生产工艺流程图及排污环节</h2>
+                                <Upload
+                                    action={downloadUrl}
+                                    listType="picture-card"
+                                    fileList={this.state.prodFileList}
+                                    onPreview={this.handlePicPreview.bind(this)}
+                                    onChange={this.handlePicChange.bind(this)}
+                                >
+                                    {this.state.prodFileList.length >= 1 ? null : uploadButton}
+                                </Upload>
+                                <Modal visible={this.state.previewVisible} footer={null} onCancel={this.picModalCancel.bind(this)}>
+                                    <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
+                                </Modal>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div className="baseinfo-section">
+                                <h2 className="yzy-tab-content-title">企业地理位置图和厂区平面布局图</h2>
 
+                            </div>
+                        </Col>
+                    </Row>
                     <div className="yzy-block-center">
                         <Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
                     </div>

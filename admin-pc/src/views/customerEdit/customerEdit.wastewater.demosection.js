@@ -1,4 +1,10 @@
+import React from 'react';
+/**
+ * 模块测试
+ */
 import connectEditableSectionApi from '../../components/hoc.editable.section';
+
+import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
 
 import {
   getProductBaseInfoList,
@@ -52,13 +58,25 @@ const dataSource = [{
 
 }];
 
-const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '测试模块',
+/**
+ * ModalEdit component
+ */
+const InnerComponent = ({
+  editId
+}) => (
+  <div>
+    待编辑数据的id是--{editId}
+  </div>
+);
+
+
+const EditableDemoSection = connectEditableSectionApi({
+  secTitle: '可编辑table测试模块',
   columns: columns,
   apiLoader: function () {
 
     return new Promise((resolve, reject) => {
-      getProductBaseInfoList({id: 1}).then(res => {
+      getProductBaseInfoList({}).then(res => {
         console.log('getProductBaseInfoList res ---', res);
 
         if (res.data.result !== 'success') {
@@ -133,6 +151,70 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     });
   },
   itemDataModel: itemDataModel
-})
+});
 
-export default WasteWaterDemoSection;
+const UneditableDemoSection = connectUneditableSectionApi({
+  secTitle: '不可编辑table测试模块',
+  columns: columns,
+  apiLoader: function () {
+
+    return new Promise((resolve, reject) => {
+      getProductBaseInfoList({}).then(res => {
+        console.log('getProductBaseInfoList res ---', res);
+
+        if (res.data.result !== 'success') {
+          resolve({
+            code: -1,
+            info: res.data.info,
+          })
+          return;
+        }
+
+        var data = res.data.mainProductBaseInfoList;
+        resolve({
+          code: 0,
+          data,
+        })
+      }).catch(err => {
+        reject(err)
+      })
+    })
+    // return Promise.resolve({
+    //   data: dataSource
+    // })    
+  },
+  
+  apiDel: function (tableId) {
+    console.log(`apiDel ${tableId}`);
+
+    return new Promise((resolve, reject) => {
+      getProductBaseInfoDelete(tableId).then(res => {
+        if (res.data.result !== 'success') {
+          resolve({
+            code: 1,
+            info: res.data.info,
+          });
+          return;
+        }
+
+        resolve({
+          code: 0 // success
+        });
+      }).catch(err => {
+        reject(err)
+      });
+    });
+  },
+  // 弹窗组件
+  modalTitle: '某某模块',
+  modalComponent: InnerComponent
+
+});
+
+
+
+export {
+  EditableDemoSection,
+  UneditableDemoSection
+}
+

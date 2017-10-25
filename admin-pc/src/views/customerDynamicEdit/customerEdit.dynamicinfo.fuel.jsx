@@ -1,53 +1,56 @@
 /**
- * 生产装置基本信息
+ * 燃料基本信息
  */
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 import { MyToast, getLocQueryByLabel } from '../../common/utils';
 
 import {
-    getDeviceBaseInfoList,
-    getDeviceBaseInfoAdd,
-    getDeviceBaseInfoEdit,
-    getDeviceBaseInfoDelete,
-} from '../../common/api/api.customer';
+    getFuelDynamicInfoList,
+    getFuelDynamicInfoAdd,
+    getFuelDynamicInfoEdit,
+    getFuelDynamicInfoDelete,
+} from '../../common/api/api.customer.dynamic';
 
 /**
  * table head
  */
 const columns = [{
-    title: '编号',
-    dataIndex: 'serialNumber',
-    width: '10%'
-}, {
-    title: '名称',
+    title: '燃料名称',
     dataIndex: 'theName',
     width: '10%'
 }, {
-    title: '型号',
-    dataIndex: 'theModel',
+    title: '产地',
+    dataIndex: 'placeOfOrigin',
     width: '10%'
 }, {
-    title: '台套数',
-    dataIndex: 'theQuantity',
+    title: '用量',
+    dataIndex: 'consumption',
     width: '10%'
 }, {
-    title: '对应工艺',
-    dataIndex: 'processing',
+    title: '单位',
+    dataIndex: 'theUnit',
+    width: '10%'
+},{
+    title: '硫含量（%）',
+    dataIndex: 'sulfurContent',
     width: '10%'
 }, {
-    title: '使用能源',
-    dataIndex: 'useEnergy',
+    title: '灰分（%）',
+    dataIndex: 'ashContent',
     width: '10%'
 }, {
-    title: '生产污染物名称',
-    dataIndex: 'pollutantName',
+    title: '热值',
+    dataIndex: 'calorificValue',
+    width: '10%'
+},{
+    title: '热值单位',
+    dataIndex: 'calorificValueUnit',
+    width: '10%'
+},{
+    title: '计量单位',
+    dataIndex: 'unitOfMeasurement',
     width: '10%'
 }, {
-    title: '对应处理设施名称',
-    dataIndex: 'facilitiesName',
-    width: '10%'
-},
-{
     title: '操作',
     dataIndex: 'operation',
     width: '10%'
@@ -58,14 +61,16 @@ const columns = [{
  */
 const itemDataModel = {
     tableId: '',
-    serialNumber: '',
     theName: '',
-    theModel: '',
-    theQuantity: '',
-    processing: '',
-    useEnergy: '',
-    pollutantName: '',
-    facilitiesName: '',
+    placeOfOrigin: '',
+    consumption: '',
+    theUnit: '',
+    sulfurContent: '',
+    ashContent: '',
+    calorificValue: '',
+    calorificValueUnit: '',
+    unitOfMeasurement: '',
+
 };
 
 /**
@@ -73,29 +78,30 @@ const itemDataModel = {
  */
 const dataSource = [{
     tableId: 'id-001',
-    serialNumber: '本地名称',
-    theModel: '22.33',
+    theName: '本地名称',
+    unitOfMeasurement: 'kg',
+    yield: '20'
 }];
 
-export const CustomerEditBaseinfoDevice = connectEditableSectionApi({
-    secTitle: '企业主要生产装置一览表',
+export const CustomerEditDynamicinfoFuel = connectEditableSectionApi({
+    secTitle: '燃料基本信息',
     columns: columns,
     apiLoader: function () {
         return new Promise((resolve, reject) => {
-            // 获取生产装置信息列表
+            // 获取产品信息列表
             var cusId = getLocQueryByLabel('id');
             if (!cusId) return;
-            getDeviceBaseInfoList({}).then(res => {
-                console.log('Devicelist res', res)
+
+            getFuelDynamicInfoList({}).then(res => {
+                console.log('fuellist res', res)
                 if (res.data.result !== 'success') {
-                    console.log(res.data.info)
                     resolve({
                         code: -1,
                         info: res.data.info,
                     })
                     return;
                 }
-                var data = res.data.mainProductionDeviceList;
+                var data = res.data.fuelConsumptionList;
                 resolve({
                     code: 0,
                     data,
@@ -106,13 +112,13 @@ export const CustomerEditBaseinfoDevice = connectEditableSectionApi({
         })
     },
     apiSave: function (record) {
-        console.log(record)
+        console.log('record--------------------', record)
         // var self = this;
         if (record.tableId === '') {
             // 新增      
             return new Promise((resolve, reject) => {
-                getDeviceBaseInfoAdd(record).then(res => {
-                    console.log('AddDevice res', res);
+                getFuelDynamicInfoAdd(record).then(res => {
+                    console.log('AddFuel res', res);
                     if (res.data.result !== 'success') {
                         resolve({
                             code: -1,
@@ -124,15 +130,14 @@ export const CustomerEditBaseinfoDevice = connectEditableSectionApi({
                         code: 0 // success
                     })
                 }).catch(err => {
-                    console.log('AddDevice err', err);
                     reject(err)
                 });
             })
         } else {
             // 编辑
             return new Promise((resolve, reject) => {
-                getDeviceBaseInfoEdit(record).then(res => {
-                    console.log('AddDevice res', res);
+                getFuelDynamicInfoEdit(record).then(res => {
+                    console.log('AddFuel res', res);
                     if (res.data.result !== 'success') {
                         resolve({
                             code: -1,
@@ -152,8 +157,8 @@ export const CustomerEditBaseinfoDevice = connectEditableSectionApi({
     apiDel: function (tableId) {
         console.log(tableId)
         return new Promise((resolve, reject) => {
-            getDeviceBaseInfoDelete(tableId).then(res => {
-                console.log('DeleteDevice res', res);
+            getFuelDynamicInfoDelete(tableId).then(res => {
+                console.log('DeleteFuel res', res);
                 if (res.data.result !== 'success') {
                     resolve({
                         code: -1,
@@ -172,4 +177,4 @@ export const CustomerEditBaseinfoDevice = connectEditableSectionApi({
     itemDataModel: itemDataModel
 })
 
-export default CustomerEditBaseinfoDevice;
+export default CustomerEditDynamicinfoFuel;
