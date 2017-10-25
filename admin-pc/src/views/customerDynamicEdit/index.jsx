@@ -10,9 +10,15 @@ const FormItem = Form.Item;
 
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
-
 import CustomerEditBaseinfoDetail from './customerEdit.dynamicinfo';
-
+//废水污染物基本情况
+import CustomerEditDynamicinfoWasteWater from './customerEdit.dynamicinfo.wastewater';
+//废气污染物基本情况
+import CustomerEditDynamicinfoWasteGas from './customerEdit.dynamicinfo.wastegas';
+//固体废物产生与处置基本情况
+import CustomerEditDynamicinfoWasteSolidRecord from './customerEdit.dynamicinfo.wastesolid.record';
+//边界噪声基本情况
+import CustomerEditDynamicinfoBoundaryNoise from './customerEdit.dynamicinfo.boundarynoise';
 
 import {
     getCustomerId
@@ -61,21 +67,16 @@ class Dynamicinfo extends React.Component {
                          1
                     </TabPane>
                     <TabPane tab="废水污染物基本情况" disabled={this.state.tabPaneDisabled} key="3">
-                        2
+                        <CustomerEditDynamicinfoWasteWater />
                     </TabPane>
                     <TabPane tab="废气污染物基本情况" disabled={this.state.tabPaneDisabled} key="4">
+                        <CustomerEditDynamicinfoWasteGas />
                     </TabPane>
-                    <TabPane tab="固体废物基本情况" disabled={this.setTabPaneActive.bind(this)} key="5">
+                    <TabPane tab="固体废物基本情况" disabled={this.state.tabPaneDisabled} key="5">
+                        <CustomerEditDynamicinfoWasteSolidRecord />
                     </TabPane>
-                    <TabPane tab="边界噪声基本情况" disabled={this.setTabPaneActive.bind(this)} key="6">
-                    </TabPane>
-                    <TabPane tab="企业遵守法律法规情况" disabled={this.setTabPaneActive.bind(this)} key="7">
-                    </TabPane>
-                    <TabPane tab="企业证照材料" disabled={this.setTabPaneActive.bind(this)} key="8">
-                    </TabPane>
-                    <TabPane tab="企业内部环保管理制度" disabled={this.state.tabPaneDisabled} key="9">
-                    </TabPane>
-                    <TabPane tab="现场检查,监管信息" disabled={this.state.tabPaneDisabled} key="10">
+                    <TabPane tab="边界噪声基本情况" disabled={this.state.tabPaneDisabled} key="6">
+                        <CustomerEditDynamicinfoBoundaryNoise />
                     </TabPane>
                 </Tabs>
             </div>

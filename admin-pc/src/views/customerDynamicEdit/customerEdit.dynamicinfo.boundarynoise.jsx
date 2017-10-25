@@ -1,58 +1,50 @@
 /**
- * 废水排放口基本情况详情
+ * 边界噪声情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getWastewaterDischargeDetail,
-  getWastewaterDischargeDelete,
-  getWastewaterDischargeUpdate,
-  getWastewaterDischargeAdd
-} from '../../common/api/api.customer.plus.js';
-
-import {
-  MyToast
-} from '../../common/utils';
+  getBoundaryNoiseRecordList,
+  getBoundaryNoiseRecordAdd,
+  getBoundaryNoiseRecordUpdate,
+  getBoundaryNoiseRecordDelete,
+} from '../../common/api/api.customer.dynamic.plus.js';
 
 /**
  * table head
  */
 const columns = [{
-  title: '排水口编号',
-  dataIndex: 'serialNumber',
+  title: '执行标准',
+  dataIndex: 'implementationStandards',
   width: '10%'
 }, {
-  title: '排放口名称',
-  dataIndex: 'theName',
+  title: '等效声级',
+  dataIndex: 'equivalentSoundLevel',
   width: '10%'
 }, {
-  title: '排放口位置',
-  dataIndex: 'outletLocation',
+  title: '峰值声级',
+  dataIndex: 'peakSoundLevel',
   width: '10%'
 }, {
-  title: '经度',
-  dataIndex: 'longitude',
+  title: '超标分贝数',
+  dataIndex: 'exceedingDecibels',
   width: '10%'
 }, {
-  title: '维度',
-  dataIndex: 'latitude',
+  title: '超标天数',
+  dataIndex: 'exceedingStandardDays',
   width: '10%'
 }, {
-  title: '排放口去向',
-  dataIndex: 'emissionDestination',
+  title: '噪声时段 开始时刻（时）',
+  dataIndex: 'noisePeriodStart',
   width: '10%'
 }, {
-  title: '水体名称',
-  dataIndex: 'nameOfWaterBody',
+  title: '噪声时段 结束时刻（时）',
+  dataIndex: 'noisePeriodEnd',
   width: '10%'
 }, {
-  title: '污水排放规律',
-  dataIndex: 'dischargeLaw',
-  width: '10%'
-}, {
-  title: '功能区类别',
-  dataIndex: 'functionalAreaCategory',
+  title: '边界超标长度是否超过100米',
+  dataIndex: 'IsBoundaryExceeding100',
   width: '10%'
 }, {
   title: '操作',
@@ -75,26 +67,24 @@ const options = [{
  * 新数据默认值
  */
 const itemDataModel = {
-  serialNumber: '',
-  theName: '',
-  outletLocation: '',
-  longitude: '',
-  latitude: '',
-  emissionDestination: '',
-  nameOfWaterBody: '',
-  dischargeLaw: '',
-  functionalAreaCategory: '',
-  createDatetime: '',
+  implementationStandards: '',
+  equivalentSoundLevel: '',
+  peakSoundLevel: '',
+  exceedingDecibels: '',
+  exceedingStandardDays: '',
+  noisePeriodStart: '',
+  noisePeriodEnd: '',
+  IsBoundaryExceeding100: '',
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '废水排放口基本情况详情',
+  secTitle: '边界噪声基本情况',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      getWastewaterDischargeDetail({tableId:5}).then(res => {
-        console.log('getWastewaterDischargeDetail res ---', res);
+      getBoundaryNoiseRecordList({customerMonthDclarationId:1}).then(res => {
+        console.log('getBoundaryNoiseRecordList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -104,13 +94,13 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = [res.data.wasteWaterDischargePort];
+        var data = res.data.boundaryNoiseRecordList;
         resolve({
           code: 0,
           data,
         })
       }).catch(err => {
-        reject(err)
+        MyToast('接口调用失败')
       })
     })
   },
@@ -122,9 +112,12 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        getWastewaterDischargeAdd({
+        getBoundaryNoiseRecordAdd({
           ...record,
+          customerMonthDclarationId:1,
+          boundaryNoiseId:1,
         }).then(res => {
+          console.log("getBoundaryNoiseRecordAdd res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -143,9 +136,12 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        getWastewaterDischargeUpdate({
+        console.log(record)
+        getBoundaryNoiseRecordUpdate({
           ...record,
+          boundaryNoiseId:1,
         }).then(res => {
+          console.log("getBoundaryNoiseRecordUpdate res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -168,7 +164,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getWastewaterDischargeDelete(tableId).then(res => {
+      getBoundaryNoiseRecordDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,

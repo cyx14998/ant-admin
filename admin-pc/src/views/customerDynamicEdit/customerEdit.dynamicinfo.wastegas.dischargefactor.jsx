@@ -1,15 +1,15 @@
 /**
- * 废水排放口基本情况详情
+ * 废气排放因子基本情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getWastewaterDischargeDetail,
-  getWastewaterDischargeDelete,
-  getWastewaterDischargeUpdate,
-  getWastewaterDischargeAdd
-} from '../../common/api/api.customer.plus.js';
+  getWasteGasDischargeFactorRecordList,
+  getWasteGasDischargeFactorRecordAdd,
+  getWasteGasDischargeFactorRecordDelete,
+  getWasteGasDischargeFactorRecordUpdate,
+} from '../../common/api/api.customer.dynamic.plus.js';
 
 import {
   MyToast
@@ -19,45 +19,49 @@ import {
  * table head
  */
 const columns = [{
-  title: '排水口编号',
-  dataIndex: 'serialNumber',
+  title: '污染物名称',
+  dataIndex: 'pollutantName',
   width: '10%'
 }, {
-  title: '排放口名称',
-  dataIndex: 'theName',
+  title: '标准值',
+  dataIndex: 'standardValue',
+  width: '5%'
+}, {
+  title: '特别排放限值',
+  dataIndex: 'specialEmissionLimits',
+  width: '5%'
+}, {
+  title: '实测浓度-排放浓度',
+  dataIndex: 'measuredConcentration',
   width: '10%'
 }, {
-  title: '排放口位置',
-  dataIndex: 'outletLocation',
+  title: '折算浓度-排放浓度',
+  dataIndex: 'conversionConcentration',
   width: '10%'
 }, {
-  title: '经度',
-  dataIndex: 'longitude',
+  title: '排放速率标准值-排放速率',
+  dataIndex: 'emissionRateStandardValue',
   width: '10%'
 }, {
-  title: '维度',
-  dataIndex: 'latitude',
+  title: '实际排放速率-排放速率',
+  dataIndex: 'emissionRateActual',
   width: '10%'
 }, {
-  title: '排放口去向',
-  dataIndex: 'emissionDestination',
-  width: '10%'
+  title: '数据来源',
+  dataIndex: 'dataSources',
+  width: '5%'
 }, {
-  title: '水体名称',
-  dataIndex: 'nameOfWaterBody',
-  width: '10%'
+  title: '排放量(千克)',
+  dataIndex: 'emissionAmount',
+  width: '5%'
 }, {
-  title: '污水排放规律',
-  dataIndex: 'dischargeLaw',
-  width: '10%'
-}, {
-  title: '功能区类别',
-  dataIndex: 'functionalAreaCategory',
+  title: '是否存在某一天超标',
+  dataIndex: 'isOverproof',
   width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: '5%'
 }];
 
 /**
@@ -75,26 +79,26 @@ const options = [{
  * 新数据默认值
  */
 const itemDataModel = {
-  serialNumber: '',
-  theName: '',
-  outletLocation: '',
-  longitude: '',
-  latitude: '',
-  emissionDestination: '',
-  nameOfWaterBody: '',
-  dischargeLaw: '',
-  functionalAreaCategory: '',
-  createDatetime: '',
+  pollutantName: '',
+  standardValue: '',
+  specialEmissionLimits: '',
+  measuredConcentration: '',
+  conversionConcentration: '',
+  emissionRateStandardValue: '',
+  emissionRateActual: '',
+  dataSources: '',
+  emissionAmount: '',
+  isOverproof: '',
 };
 
-const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '废水排放口基本情况详情',
+const WasteGasDemoSection = connectEditableSectionApi({
+  secTitle: '废气排放因子基本情况',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      getWastewaterDischargeDetail({tableId:5}).then(res => {
-        console.log('getWastewaterDischargeDetail res ---', res);
+      getWasteGasDischargeFactorRecordList({wasteGasDischargeRecordId:1}).then(res => {
+        console.log('getWasteGasDischargeFactorRecordList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -104,13 +108,13 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = [res.data.wasteWaterDischargePort];
+        var data = res.data.wasteGasDischargeFactorRecordList;
         resolve({
           code: 0,
           data,
         })
       }).catch(err => {
-        reject(err)
+        MyToast('接口调用失败')
       })
     })
   },
@@ -122,8 +126,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        getWastewaterDischargeAdd({
+        getWasteGasDischargeFactorRecordAdd({
           ...record,
+          wasteGasDischargeRecordId:1,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -143,7 +148,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        getWastewaterDischargeUpdate({
+        getWasteGasDischargeFactorRecordUpdate({
           ...record,
         }).then(res => {
           if (res.data.result !== 'success') {
@@ -168,7 +173,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getWastewaterDischargeDelete(tableId).then(res => {
+      getWasteGasDischargeFactorRecordDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,
@@ -188,4 +193,4 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   itemDataModel: itemDataModel
 })
 
-export default WasteWaterDemoSection;
+export default WasteGasDemoSection;

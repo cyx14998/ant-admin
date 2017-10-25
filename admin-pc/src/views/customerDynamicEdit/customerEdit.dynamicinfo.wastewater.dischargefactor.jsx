@@ -1,15 +1,15 @@
 /**
- * 废水排放口基本情况详情
+ * 废水排放因子基本情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getWastewaterDischargeDetail,
-  getWastewaterDischargeDelete,
-  getWastewaterDischargeUpdate,
-  getWastewaterDischargeAdd
-} from '../../common/api/api.customer.plus.js';
+  getWasteWaterDischargeFactorRecordList,
+  getWasteWaterDischargeFactorRecordAdd,
+  getWasteWaterDischargeFactorRecordDelete,
+  getWasteWaterDischargeFactorRecordUpdate,
+} from '../../common/api/api.customer.dynamic.plus.js';
 
 import {
   MyToast
@@ -19,40 +19,32 @@ import {
  * table head
  */
 const columns = [{
-  title: '排水口编号',
-  dataIndex: 'serialNumber',
+  title: '污染物名称',
+  dataIndex: 'pollutantName',
   width: '10%'
 }, {
-  title: '排放口名称',
-  dataIndex: 'theName',
+  title: '标准值',
+  dataIndex: 'standardValue',
   width: '10%'
 }, {
-  title: '排放口位置',
-  dataIndex: 'outletLocation',
+  title: '特别排放限值',
+  dataIndex: 'specialEmissionLimits',
   width: '10%'
 }, {
-  title: '经度',
-  dataIndex: 'longitude',
+  title: '排放浓度',
+  dataIndex: 'emissionConcentration',
   width: '10%'
 }, {
-  title: '维度',
-  dataIndex: 'latitude',
+  title: '数据来源',
+  dataIndex: 'dataSources',
   width: '10%'
 }, {
-  title: '排放口去向',
-  dataIndex: 'emissionDestination',
+  title: '排放量(千克)',
+  dataIndex: 'emissionAmount',
   width: '10%'
 }, {
-  title: '水体名称',
-  dataIndex: 'nameOfWaterBody',
-  width: '10%'
-}, {
-  title: '污水排放规律',
-  dataIndex: 'dischargeLaw',
-  width: '10%'
-}, {
-  title: '功能区类别',
-  dataIndex: 'functionalAreaCategory',
+  title: '是否存在某一天超标',
+  dataIndex: 'isOverproof',
   width: '10%'
 }, {
   title: '操作',
@@ -75,26 +67,23 @@ const options = [{
  * 新数据默认值
  */
 const itemDataModel = {
-  serialNumber: '',
-  theName: '',
-  outletLocation: '',
-  longitude: '',
-  latitude: '',
-  emissionDestination: '',
-  nameOfWaterBody: '',
-  dischargeLaw: '',
-  functionalAreaCategory: '',
-  createDatetime: '',
+  pollutantName: '',
+  standardValue: '',
+  specialEmissionLimits: '',
+  emissionConcentration: '',
+  dataSources: '',
+  emissionAmount: '',
+  isOverproof: '',
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '废水排放口基本情况详情',
+  secTitle: '废水排放因子基本情况',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      getWastewaterDischargeDetail({tableId:5}).then(res => {
-        console.log('getWastewaterDischargeDetail res ---', res);
+      getWasteWaterDischargeFactorRecordList({wasteWaterDischargeRecordId:1}).then(res => {
+        console.log('getWasteWaterDischargeFactorRecordList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -104,13 +93,13 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = [res.data.wasteWaterDischargePort];
+        var data = res.data.controlFacilitiesList;
         resolve({
           code: 0,
           data,
         })
       }).catch(err => {
-        reject(err)
+        MyToast('接口调用失败')
       })
     })
   },
@@ -122,8 +111,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        getWastewaterDischargeAdd({
+        getWasteWaterDischargeFactorRecordAdd({
           ...record,
+          wasteWaterDischargeRecordId:1,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -143,7 +133,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        getWastewaterDischargeUpdate({
+        getWasteWaterDischargeFactorRecordUpdate({
           ...record,
         }).then(res => {
           if (res.data.result !== 'success') {
@@ -168,7 +158,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getWastewaterDischargeDelete(tableId).then(res => {
+      getWasteWaterDischargeFactorRecordDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,

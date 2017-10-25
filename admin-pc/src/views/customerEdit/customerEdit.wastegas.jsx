@@ -9,9 +9,9 @@ import WasteGasDischargeDetail from './customerEdit.wastegas.discharge.Detail';
 //废水治理基本情况
 import WasteWaterTreatment from './customerEdit.wastewater.treatment';
 // //废水因子基本情况
-// import WasteWaterDischargeFactor from './customerEdit.wastewater.dischargefactor';
+import WasteGasDischargeFactor from './customerEdit.wastegas.dischargefactor';
 // //废水排放检测记录
-// import WasteWaterMonitoringRecord from './customerEdit.wastewtaer.monitoringrecord';
+import WasteGasMonitoringRecord from './customerEdit.wastegas.monitoringrecord';
 
 /**
  * 废水污染物基本情况
@@ -27,8 +27,8 @@ class WasteWater extends Component {
         <WasteGasDischargeList />
         <WasteGasDischargeDetail />
          <WasteWaterTreatment />
-        {/* <WasteWaterDischargeFactor />
-        <WasteWaterMonitoringRecord />  */}
+         <WasteGasDischargeFactor />
+         <WasteGasMonitoringRecord />   
       </div>
     )
   }

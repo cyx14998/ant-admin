@@ -1,13 +1,11 @@
 /**
- * 废水污染物排放情况
+ *  废水排放口基本信息列表
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
   getWastewaterDischargeList,
-  // getWastewaterDischargeUpdate,
-  // getWastewaterDischargeAdd
 } from '../../common/api/api.customer.plus.js';
 
 import {
@@ -81,7 +79,7 @@ const itemDataModel = {
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '废水排放基本信息列表',
+  secTitle: '废水排放口基本信息列表',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
@@ -107,77 +105,6 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       })
     })
   },
-  // apiSave: function (record) {
-  //   // 新增
-  //   console.log('apiSave record ----', record);
-  //   var self = this;
-
-  //   if (record.tableId === '') {
-  //     return new Promise((resolve, reject) => {
-  //       // 新增
-  //       getWastewaterDischargeAdd({
-  //         ...record,
-  //       }).then(res => {
-  //         if (res.data.result !== 'success') {
-  //           resolve({
-  //             code: 1,
-  //             info: res.data.info,
-  //           });
-  //           return;
-  //         }
-
-  //         resolve({
-  //           code: 0 // success
-  //         })
-  //       }).catch(err => {
-  //         reject(err)
-  //       });
-  //     });
-  //   } else {
-  //     // 编辑
-  //     return new Promise((resolve, reject) => {
-  //       getWastewaterDischargeUpdate({
-  //         ...record,
-  //       }).then(res => {
-  //         if (res.data.result !== 'success') {
-  //           resolve({
-  //             code: 1,
-  //             info: res.data.info,
-  //           });
-  //           return;
-  //         }
-
-  //         resolve({
-  //           code: 0 // success
-  //         })
-  //       }).catch(err => {
-  //         reject(err)
-  //       });
-  //     });
-  //   }
-  // },
-  // apiDel: function (tableId) {
-  //   //删除
-  //   console.log(`apiDel ${tableId}`);
-
-  //   return new Promise((resolve, reject) => {
-  //     getWastewaterDischargeDelete(tableId).then(res => {
-  //       if (res.data.result !== 'success') {
-  //         resolve({
-  //           code: 1,
-  //           info: res.data.info,
-  //         });
-  //         return;
-  //       }
-
-  //       resolve({
-  //         code: 0 // success
-  //       });
-  //     }).catch(err => {
-  //       reject(err)
-  //     });
-  //   });
-  // },
   itemDataModel: itemDataModel
 })
 
