@@ -9,18 +9,30 @@ import {
     getWaterDynamicInfoAdd,
     getWaterDynamicInfoEdit,
     getWaterDynamicInfoDelete,
-} from '../../common/api/api.customer';
+} from '../../common/api/api.customer.dynamic';
 
 /**
  * table head
  */
 const columns = [{
-    title: '企业用水量',
-    dataIndex: 'consumption',
+    title: '用水类型',
+    dataIndex: 'useWaterType',
     width: '10%'
 }, {
-    title: '年耗量',
-    dataIndex: 'annualConsumption',
+    title: '用水总量',
+    dataIndex: 'totalWaterConsumption',
+    width: '10%'
+}, {
+    title: '重复用水量',
+    dataIndex: 'repeatedWaterConsumption',
+    width: '10%'
+}, {
+    title: '用水来源',
+    dataIndex: 'waterSource',
+    width: '10%'
+}, {
+    title: '用电量',
+    dataIndex: 'electricityConsumption',
     width: '10%'
 }, {
     title: '操作',
@@ -33,8 +45,11 @@ const columns = [{
  */
 const itemDataModel = {
     tableId: '',
-    consumption: '',
-    annualConsumption: ''
+    useWaterType: '',
+    repeatedWaterConsumption: '',
+    totalWaterConsumption: '',
+    waterSource: '',
+    electricityConsumption: '',
 };
 
 /**
@@ -42,8 +57,11 @@ const itemDataModel = {
  */
 const dataSource = [{
     tableId: 'id-001',
-    consumption: '本地名称',
-    annualConsumption: '22.33',
+    useWaterType: '11',
+    repeatedWaterConsumption: '11',
+    totalWaterConsumption: '11',
+    waterSource: '11',
+    electricityConsumption: '11',
 }];
 
 export const CustomerEditDynamicinfoWater = connectEditableSectionApi({
@@ -65,7 +83,7 @@ export const CustomerEditDynamicinfoWater = connectEditableSectionApi({
                     })
                     return;
                 }
-                var data = res.data.useInfoWaterList;
+                var data = res.data.electricityAndWaterConsumptionList;
                 resolve({
                     code: 0,
                     data,
