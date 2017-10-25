@@ -529,6 +529,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="投产日期">
                                     {getFieldDecorator('openingDate', {
+                                        initialValue: moment(customer.openingDate || new Date(), 'YYYY-MM-DD'), 
                                     })(
                                         //<DatePicker value={customer.openingDate ? moment(customer.openingDate, 'YYYY/MM/DD') : moment(new Date(), 'YYYY/MM/DD')} onChange={this.onChange.bind(this)} />
                                         //<Input placeholder="投产日期" />
