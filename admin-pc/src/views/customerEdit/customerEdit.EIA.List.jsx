@@ -1,8 +1,9 @@
 /**
  * 废水污染物排放情况
  */
+import React from 'react';
 
-import connectEditableSectionApi from '../../components/hoc.editable.section';
+import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
 
 import { 
   getEIAList,
@@ -13,13 +14,17 @@ import {
   MyToast
 } from '../../common/utils';
 
+//废水排放基本信息详情
+import EIADetail from './customerEdit.EIA.Detail';
+
+
 /**
  * table head
  */
 const columns = [{
   title: '环评建设项目名称',
   dataIndex: 'theName',
-  width: '10%'
+  width: '8%'
 }, {
   title: '环评等级',
   dataIndex: 'theLevel',
@@ -27,7 +32,7 @@ const columns = [{
 }, {
   title: '编制日期',
   dataIndex: 'editDatetime',
-  width: '5%'
+  width: '7%'
 }, {
   title: '试生产批复-环保部门审批文号',
   dataIndex: 'DocumentNumberTPA',
@@ -35,7 +40,7 @@ const columns = [{
 }, {
   title: '试生产批复-审批时间',
   dataIndex: 'approvalTimeTPA',
-  width: '10%'
+  width: '8%'
 }, {
   title: '环评批复-环保部门审批文号',
   dataIndex: 'DocumentNumberEIA',
@@ -59,7 +64,7 @@ const columns = [{
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '5%'
+  width: '6%'
 }];
 
 /**
@@ -89,7 +94,15 @@ const itemDataModel = {
   SelfAcceptanceURL: '',
 };
 
-const WasteWaterDemoSection = connectEditableSectionApi({
+const InnerComponent = ({
+  editId
+}) => (
+  <div>
+      <EIADetail editId={editId} />
+  </div>
+);
+
+const WasteWaterDemoSection = connectUneditableSectionApi({
   secTitle: '环评信息列表',
   columns: columns,
   apiLoader: function () {
@@ -116,55 +129,6 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       })
     })
   },
-  apiSave: function (record) {
-    // // 新增
-    // console.log('apiSave record ----', record);
-    // var self = this;
-
-    // if (record.tableId === '') {
-    //   return new Promise((resolve, reject) => {
-    //     // 新增
-    //     getWastewaterDischargeAdd({
-    //       ...record,
-    //     }).then(res => {
-    //       if (res.data.result !== 'success') {
-    //         resolve({
-    //           code: 1,
-    //           info: res.data.info,
-    //         });
-    //         return;
-    //       }
-
-    //       resolve({
-    //         code: 0 // success
-    //       })
-    //     }).catch(err => {
-    //       reject(err)
-    //     });
-    //   });
-    // } else {
-    //   // 编辑
-    //   return new Promise((resolve, reject) => {
-    //     getWastewaterDischargeUpdate({
-    //       ...record,
-    //     }).then(res => {
-    //       if (res.data.result !== 'success') {
-    //         resolve({
-    //           code: 1,
-    //           info: res.data.info,
-    //         });
-    //         return;
-    //       }
-
-    //       resolve({
-    //         code: 0 // success
-    //       })
-    //     }).catch(err => {
-    //       reject(err)
-    //     });
-    //   });
-    // }
-  },
   apiDel: function (tableId) {
     //删除
     console.log(`apiDel ${tableId}`);
@@ -187,7 +151,8 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       });
     });
   },
-  itemDataModel: itemDataModel
+  modalTitle: '环评信息详情',
+  modalComponent: InnerComponent
 })
 
 export default WasteWaterDemoSection;

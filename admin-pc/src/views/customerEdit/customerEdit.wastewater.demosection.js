@@ -57,8 +57,13 @@ const dataSource = [{
   tableId: 'id-001',
   theName: '名称--',
   unitOfMeasurement: 'kg',
-  designAnnualOutput: '22.33',
-
+  designAnnualOutput: {
+    value: 'so',
+    options: [{
+      label: 'sosososo',
+      value: 'so'
+    }]
+  }
 }];
 
 
@@ -96,6 +101,12 @@ const EditableDemoSection = connectEditableSectionApi({
   apiLoader: function () {
 
     return new Promise((resolve, reject) => {
+      resolve({
+        code: 0,
+        data: dataSource
+      });
+      return;
+      
       getProductBaseInfoList({}).then(res => {
         console.log('getProductBaseInfoList res ---', res);
 
