@@ -24,7 +24,7 @@ const columns = [{
   width: '10%'
 }, {
   title: '产量',
-  dataIndex: 'yield',
+  dataIndex: 'theYield',
   width: '10%'
 }, {
   title: '操作',
@@ -39,7 +39,7 @@ const itemDataModel = {
   tableId: '',
   theName: '',
   unitOfMeasurement: '',
-  yield: '',
+  theYield: '',
 };
 
 /**
@@ -49,7 +49,7 @@ const dataSource = [{
   tableId: 'id-001',
   theName: '本地名称',
   unitOfMeasurement: 'kg',
-  yield: '20'
+  theYield: '20'
 }];
 
 export const CustomerEditDynamicinfoProd = connectEditableSectionApi({

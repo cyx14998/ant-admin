@@ -19,10 +19,7 @@ import {
 const FormItem = Form.Item;
 const Option = Select.Option;
 import moment from 'moment';
-const dateFormat = 'YYYY-MM-DD';
 
-
-import EditableCell from '../../components/editable.cell';
 import { getLocQueryByLabel } from '../../common/utils';
 import { getToken, } from '../../common/api/index';
 
@@ -34,11 +31,9 @@ import {
     getProvinceList,
     getCityList,
     getAreaList,
-    getTownList
+    getTownList,
+    getQiNiuToken
 } from '../../common/api/api.customer';
-
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com';
-const uploadUrl = downloadUrl + '&token=' + getToken();
 
 const formItemLayout = {
     labelCol: { span: 8 },
@@ -58,6 +53,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
+            previewImage: [],
+            previewVisible: false,
             prodImgUrl: '',
             prodFileList: [], //生产工艺流程图
             customer: {},
@@ -65,16 +62,27 @@ class CustomerEditBaseinfoDetail extends React.Component {
             cityList: [],
             areaList: [],
             townList: [],
-            provinceId: 1,
-            cityId: 1,
-            areaId: 1,
-            townId: 1,
-        })
+            provinceId: '',
+            cityId: '',
+            areaId: '',
+            townId: '',
+            uptoken: '',
+        });
+        
+        this.beforeUpload = this.beforeUpload.bind(this);
+
+        this.qiniuyunData = {
+            // token: '',
+            token: 'xozWSPMxkMjIVoHg2JyXq4-7-oJaEADLOKHVR0vU:1AreAaaS0j5_bjgQsHSshM0zTZI=:eyJkZWxldGVBZnRlckRheXMiOjcsInNjb3BlIjoianNzZGsiLCJkZWFkbGluZSI6MTUwOTAxNTA3Mn0=',
+            //token: "W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:AuMz5nKqsSrEQ6Y6mb-gBpJunIQ=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDEzMTkxfQ=="
+            // token:"W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:wxacrkBBNB8Pjby5ZJaQQd4NGLs=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDE1OTM2fQ==",
+        };
     }
 
     componentDidMount() {
         // fetch data from api for FormItem initialValue
         //获取基本信息
+        var self = this;
         getCustomerInfoById().then(res => {
             console.log('getCustomerInfoById res', res);
             if (res.data.result !== 'success') {
@@ -84,9 +92,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             this.setState({
                 customer: res.data.customer
             })
-        }).catch(err => console.log(err));
-        //获取省份
-        return new Promise((resolve, reject) => {
+            //获取省份
             getProvinceList({}).then(res => {
                 console.log('getProvinceList res', res);
                 if (res.data.result !== 'success') {
@@ -94,21 +100,33 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 }
                 // console.log(res.data.customer)
                 this.setState({
-                    provinceList: res.data.provinceList
+                    provinceList: res.data.provinceList,
                 })
             }).catch(err => console.log(err));
-        })
-    }
-    //投产日期
-    onCellChange(date, dateString) {
-        console.log(date, dateString);
+
+            console.log(111, this.state.customer.cityId);
+            if (res.data.customer.cityId) {
+                self.changeProvince(res.data.customer.provinceId)
+            }
+            if (res.data.customer.areaId) {
+                self.changeCity(res.data.customer.cityId)
+            }
+            if (res.data.customer.townId) {
+                self.changeTown(res.data.customer.townId)
+            }
+        }).catch(err => console.log(err));
+
+
+        this.beforeUpload();
     }
     //更改省份
     changeProvince(key) {
         this.setState({
             provinceId: key,
+            cityList: [],
+            cityId: '',
         })
-        console.log('provinceId', key);
+        console.log('provinceId');
 
         //获取城市列表
         return new Promise((resolve, reject) => {
@@ -119,7 +137,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 }
                 console.log(res.data.cityList)
                 this.setState({
-                    cityList: res.data.cityList
+                    cityList: res.data.cityList,
+                    cityId: res.data.cityList[0].tableId,
                 })
             }).catch(err => console.log(err));
         })
@@ -128,19 +147,23 @@ class CustomerEditBaseinfoDetail extends React.Component {
     changeCity(key) {
         this.setState({
             cityId: key,
+            areaList: [],
+            areaId: '',
+
         })
         console.log('cityId', key);
 
         //获取区列表        
         return new Promise((resolve, reject) => {
-            getAreaList({ id: key, provinceId: this.state.provinceId, }).then(res => {
+            getAreaList({ id: key }).then(res => {
                 console.log('getAreaList res', res);
                 if (res.data.result !== 'success') {
                     return
                 }
                 // console.log(res.data.customer)
                 this.setState({
-                    areaList: res.data.areaList
+                    areaList: res.data.areaList,
+                    areaId: res.data.areaList[0].tableId,
                 })
             }).catch(err => console.log(err));
         })
@@ -149,19 +172,22 @@ class CustomerEditBaseinfoDetail extends React.Component {
     changeArea(key) {
         this.setState({
             areaId: key,
+            townList: [],
+            townId: '',
         })
         console.log('areaId', key);
 
         //获取镇列表        
         return new Promise((resolve, reject) => {
-            getTownList({ id: key, provinceId: this.state.provinceId, cityId: this.state.cityId}).then(res => {
+            getTownList({ id: key }).then(res => {
                 console.log('getTownList res', res);
                 if (res.data.result !== 'success') {
                     return
                 }
                 // console.log(res.data.customer)
                 this.setState({
-                    townList: res.data.townList
+                    townList: res.data.townList,
+                    townId: res.data.areaList[0].townId,
                 })
             }).catch(err => console.log(err));
         })
@@ -174,10 +200,11 @@ class CustomerEditBaseinfoDetail extends React.Component {
     }
     //图片上传
     handlePicChange({ fileList }) {
+         console.log('handlepicchange -----------------', fileList);
         this.setState({
             prodFileList: fileList,
         });
-        console.log(this.state.prodFileList);
+       
         var index = fileList.length;
         if (index > 0) {
             if (fileList[index - 1].status === 'done') {
@@ -188,22 +215,43 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 });
             }
         }
+        // console.log(this.state.prodImgUrl);
     }
+    beforeUpload(file) {
+        console.log(file)
+        //获取uptoken
+        // if (this.state.uptoken == '') {
+            getQiNiuToken({}).then(res => {
+                console.log('uptoken res------------------------', res);
+
+                if (!res.data || !res.data.uptoken) {
+                    console.error('getqiniuyun uptoken error');
+                    return;
+                }
+
+                // this.setState({
+                //     uptoken: res.data.uptoken
+                // })
+                
+                this.qiniuyunData.token = res.data.uptoken;
+
+            }).catch(err => console.log(err));
+        // }
+    }
+
     //图片取消预览
     picModalCancel() {
-        // store.dispatch({
-        //     previewImage: [],
-        //     previewVisible: false,
-        //     type: 'PICPREVIEW'
-        // })
+        this.setState({
+            previewImage: [],
+            previewVisible: false,
+        })
     }
     //图片预览
     handlePicPreview(file) {
-        // store.dispatch({
-        //     previewImage: file.url || file.thumbUrl,
-        //     previewVisible: true,
-        //     type: 'PICPREVIEW'
-        // })
+        this.setState({
+            previewImage: file.url || file.thumbUrl,
+            previewVisible: true,
+        })
     }
     // 基本信息保存
     saveDetail(e) {
@@ -214,11 +262,35 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
         form.validateFields((err, values) => {
             if (err) return;
-            console.log('when saveDetail ---', values);
-            var cusId = getLocQueryByLabel('id');
 
-            // address
             var data = { ...values };
+            // 地址
+            var provinceName = this.state.provinceId ? this.state.provinceList[data.provinceId - 1].theName : '';
+            var cityName = '';
+            this.state.cityId ?
+                this.state.cityList.map((item) => {
+                    if (item.tableId == data.cityId)
+                        cityName = item.theName;
+                }) : '';
+            var areaName = '';
+            this.state.areaId ?
+                this.state.areaList.map((item) => {
+                    if (item.tableId == data.areaId)
+                        areaName = item.theName;
+                }) : '';
+            var townName = '';
+            this.state.townId ?
+                this.state.townList.map((item) => {
+                    if (item.tableId == data.townId)
+                        townName = item.theName;
+                }) : '';
+            data.unitAddress = provinceName + cityName + areaName + townName + data.address;
+            //时间
+            data.openingDate = data.openingDate ? data.openingDate.format('YYYY-MM-DD') : new Date();
+
+            console.log('when saveDetail ---', data);
+
+            var cusId = getLocQueryByLabel('id');
             if (cusId === '') {
                 saveAddCustomerInfoById(data).then(res => {
                     console.log('saveCustomerInfoById res', res);
@@ -239,7 +311,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
         })
     }
     render() {
-        console.log(uploadUrl);
+        const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com';
+        const uploadUrl = 'http://up.qiniu.com/';
+        const data = { token: this.state.uptoken }
 
         let { getFieldDecorator } = this.props.form;
         var customer = this.state.customer;
@@ -249,15 +323,15 @@ class CustomerEditBaseinfoDetail extends React.Component {
             return <Option key={item.tableId}>{item.theName}</Option>
         });
         // 市option
-        var cityOptions = this.state.provinceId ? this.state.cityList.map((item, index) => {
+        var cityOptions = this.state.provinceList ? this.state.cityList.map((item, index) => {
             return <Option key={item.tableId}>{item.theName}</Option>
         }) : '';
         // 区option
-        var areaOptions = this.state.cityId ? this.state.areaList.map((item, index) => {
+        var areaOptions = this.state.cityList ? this.state.areaList.map((item, index) => {
             return <Option key={item.tableId}>{item.theName}</Option>
         }) : '';
         // 镇option
-        var townOptions = this.state.areaId ? this.state.townList.map((item, index) => {
+        var townOptions = this.state.areaList ? this.state.townList.map((item, index) => {
             return <Option key={item.tableId}>{item.theName}</Option>
         }) : '';
         // console.log('sss',provinceOptions);
@@ -412,7 +486,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="管辖归属">
                                     {getFieldDecorator('jurisdictionAscriptionId', {
-                                        initialValue: customer.jurisdictionAscriptionId ? customer.jurisdictionAscriptionId+"": '',
+                                        initialValue: customer.jurisdictionAscriptionId ? customer.jurisdictionAscriptionId + "" : '',
                                         rules: [{ required: true, message: 'Please input your jurisdictionAscriptionId!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
@@ -428,7 +502,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem labelCol={{ span: 13 }} wrapperCol={{ span: 11 }} label="企业地址">
                                     {getFieldDecorator('provinceId', {
                                         //initialValue: this.state.provinceList[0] ? this.state.provinceList[0].tableId : '',
-                                        initialValue: (customer.provinceId ? customer.provinceId : '') + "",
+                                        initialValue: (this.state.provinceList && customer.provinceId ? customer.provinceId : '') + "",
                                         rules: [{ required: true, message: 'Please input your provinceId!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
@@ -442,8 +516,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={3} style={{ marginRight: '10px' }}>
                                 <FormItem>
                                     {getFieldDecorator('cityId', {
-                                        //initialValue: this.state.cityList[0].tableId ? this.state.cityList[0].tableId : '',
-                                        initialValue: (customer.cityId ? customer.cityId : '') + "",
+                                        initialValue: (this.state.cityList && customer.cityId ? customer.cityId : '') + "",
                                         rules: [{ required: true, message: 'Please input your cityId!' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' }
                                         ],
@@ -457,8 +530,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={3} style={{ marginRight: '10px' }}>
                                 <FormItem>
                                     {getFieldDecorator('areaId', {
-                                        //initialValue: this.state.areaList[0].tableId ? this.state.areaList[0].tableId : '',
-                                        initialValue: (customer.areaId ? customer.areaId : '') + "",
+                                        initialValue: (this.state.areaList && customer.areaId ? customer.areaId : '') + "",
                                         //rules: [{ required: true, message: 'Please input your areaId!' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
@@ -472,8 +544,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={3} style={{ marginRight: '10px' }}>
                                 <FormItem>
                                     {getFieldDecorator('townId', {
-                                        //initialValue: this.state.townList[0].tableId ? this.state.provinceList[0].tableId : '',
-                                        initialValue: (customer.townId ? customer.townId : '') + "",
+                                        //initialValue: this.state.townList[0] ? this.state.provinceList[0].tableId : '',
+                                        initialValue: (this.state.townId ? customer.townId : '') + "",
                                         //rules: [{ required: true, message: 'Please input your townId!' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         // ],
@@ -529,11 +601,11 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="投产日期">
                                     {getFieldDecorator('openingDate', {
-                                        initialValue: moment(customer.openingDate || new Date(), 'YYYY-MM-DD'), 
+                                        initialValue: moment(customer.openingDate || new Date(), 'YYYY-MM-DD'),
                                     })(
                                         //<DatePicker value={customer.openingDate ? moment(customer.openingDate, 'YYYY/MM/DD') : moment(new Date(), 'YYYY/MM/DD')} onChange={this.onChange.bind(this)} />
                                         //<Input placeholder="投产日期" />
-                                        <DatePicker  value="2017-10-10" onChange={(data,dataString)=> console.log(data,'sss',dataString)}/>
+                                        <DatePicker />
                                         )}
                                 </FormItem>
                             </Col>
@@ -565,9 +637,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             </Col>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="重点类型">
-                                    {getFieldDecorator('unitCategory', {
-                                        initialValue: customer.unitCategory,
-                                        rules: [{ required: true, message: 'Please input your unitCategory!' },
+                                    {getFieldDecorator('priorityType', {
+                                        initialValue: customer.priorityType,
+                                        rules: [{ required: true, message: 'Please input your priorityType!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
                                     })(
@@ -592,7 +664,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="废水排放口数量">
                                     {getFieldDecorator('wastewaterDischargePorts', {
-                                        initialValue: customer.wastewaterDischargePorts ? customer.wastewaterDischargePorts + "" : '',
+                                        initialValue: customer.wastewaterDischargePorts ? customer.wastewaterDischargePorts+"" : '',
                                         rules: [{ required: true, message: 'Please input your wastewaterDischargePorts!' },
                                         {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                         ],
@@ -729,9 +801,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="其他">
                                     {getFieldDecorator('aiOther', {
                                         initialValue: customer.aiOther,
-                                        rules: [{ required: true, message: 'Please input your aiOther!' },
-                                        {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
-                                        ],
+                                        //rules: [{ required: true, message: 'Please input your aiOther!' },
+                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
+                                        //],
                                     })(
                                         <Input placeholder="其他" />
                                         )}
@@ -744,11 +816,14 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <div className="baseinfo-section">
                                 <h2 className="yzy-tab-content-title">生产工艺流程图及排污环节</h2>
                                 <Upload
-                                    action={downloadUrl}
+                                    action='http://up.qiniup.com'
+                                    enctype="multipart/form-data"
                                     listType="picture-card"
                                     fileList={this.state.prodFileList}
                                     onPreview={this.handlePicPreview.bind(this)}
                                     onChange={this.handlePicChange.bind(this)}
+                                   
+                                    data={this.qiniuyunData}
                                 >
                                     {this.state.prodFileList.length >= 1 ? null : uploadButton}
                                 </Upload>
