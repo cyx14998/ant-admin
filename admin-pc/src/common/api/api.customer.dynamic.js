@@ -61,7 +61,7 @@ export function getProductDynamicInfoAdd({
   customerMonthDclarationId = '1',
   theName,
   unitOfMeasurement,
-  yieId,
+  theYield,
 }) {
   return axios.get('/uMainProductOutputAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -69,7 +69,7 @@ export function getProductDynamicInfoAdd({
       // customerId: getCustomerId(),
       theName,
       unitOfMeasurement,
-      yieId,
+      theYield,
       customerMonthDclarationId,
       theYear,
       theMonth,
@@ -85,7 +85,7 @@ export function getProductDynamicInfoEdit({
   tableId,
   theName,
   unitOfMeasurement,
-  yieId
+  theYield
 }) {
   return axios.get('/uMainProductOutputUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -94,7 +94,7 @@ export function getProductDynamicInfoEdit({
       tableId,
       theName,
       unitOfMeasurement,
-      yieId,
+      theYield,
       customerMonthDclarationId,
       theYear,
       theMonth,
