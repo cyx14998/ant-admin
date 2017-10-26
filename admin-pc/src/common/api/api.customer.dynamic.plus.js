@@ -393,24 +393,6 @@ export function getWasteGasDischargeFactorRecordDelete(id){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /********************** 编辑-首页-固体废物产生及处置基本情况 **********************/
 /**
  * OK
@@ -518,6 +500,12 @@ export function getWasteSolidRecordDelete(id){
     }
   })
 }
+
+
+
+
+
+
 
 /********************** 编辑-首页-边界噪声基本情况 **********************/
 /*

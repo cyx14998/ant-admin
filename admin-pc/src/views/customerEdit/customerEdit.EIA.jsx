@@ -14,7 +14,7 @@ import {
   MyToast
 } from '../../common/utils';
 
-//废水排放基本信息详情
+//企业遵守法律法规详情
 import EIADetail from './customerEdit.EIADetail';
 
 
