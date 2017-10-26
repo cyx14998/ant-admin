@@ -24,6 +24,7 @@ import EditableCell from './editable.cell';
  * @params onCellChange
  * @params onDelete
  * @params onSave
+ * @params checkInNewpage
  * @params hasModal
  */
 class EditableTable extends Component {
@@ -43,6 +44,7 @@ class EditableTable extends Component {
       onCellChange,
       onDelete,
       onSave,
+      checkInNewpage,
       hasModal
     } = this.props;
 
@@ -93,8 +95,11 @@ class EditableTable extends Component {
             );
           }
 
-          // 编辑/删除
-          if (!text && !hasModal) {
+          /**
+           *  编辑/删除/新页面查看
+           *  @hasModal  模态框查看
+           */
+          if (!text && (typeof checkInNewpage === 'function')) {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
@@ -102,15 +107,13 @@ class EditableTable extends Component {
                 </Popconfirm>
 
                 <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}>保存</a>
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => checkInNewpage(record.tableId)}>查看</a>
               </div>
             )
           }
 
-          /**
-           *  此功能暂时不用
-           *  编辑/删除/查看
-           */
-          if (!text && hasModal) {
+          // 编辑/删除
+          if (!text) {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
@@ -118,7 +121,6 @@ class EditableTable extends Component {
                 </Popconfirm>
 
                 <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}>保存</a>
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => console.log(record.tableId)}>查看</a>
               </div>
             )
           }

@@ -21,7 +21,9 @@ import './index.less';
  */
 window.iframeHook = {};
 
-const MenuTop = () => (
+const MenuTop = ({
+    logout
+}) => (
     <div className="yzy-avatar-wrap">
         <img src={imgCircle} alt="" className="avatar" />
         <div className="avatar-info">
@@ -29,7 +31,7 @@ const MenuTop = () => (
             <div className="controls">
               <span className="username">游客</span>
               <span className="split">|</span>
-              <a className="logout">退出</a>
+              <a className="logout" onClick={logout}>退出</a>
             </div>
         </div>
     </div>
@@ -37,16 +39,34 @@ const MenuTop = () => (
 
 // 面包屑
 const BreadcrumbMap = ({
-    breads
-}) => (
-  <Breadcrumb>
-    {
-        breads.map(bread => (
-            <Breadcrumb.Item key={bread}>{bread}</Breadcrumb.Item>
-        ))
-    }
-  </Breadcrumb>
-);
+    breads,
+    onBreadClick
+}) => {
+
+    return (
+      <Breadcrumb>
+        {
+            breads.map(bread => {
+                let arrBread = bread.split('|');
+
+                if (!arrBread[1]) {
+                    return (
+                        <Breadcrumb.Item key={bread}>
+                            {arrBread[0]}
+                        </Breadcrumb.Item>
+                    )
+                }
+
+                return (
+                    <Breadcrumb.Item key={bread}>
+                        <a onClick={() => onBreadClick(bread, breads)} >{arrBread[0]}</a>
+                    </Breadcrumb.Item>
+                )
+            })
+        }
+      </Breadcrumb>
+    );
+}
 
 import SiderMenu from './sidermenu';
 
@@ -59,30 +79,109 @@ class Page extends React.Component {
         this.state = {
             collapsed: false,
             url: "/customer.html",
-            breads: ['客户管理']
+            breads: ['客户管理|/customer.html']
         }
     }
 
     componentDidMount() {
         var self = this;
 
-        // change iframe url
-        window.iframeHook.changePage = function (url) {
-            self.setState({
-                url
-            })
+        /** 
+         * 改变iframe url 和 面包屑导航增量
+         * @url 
+         * @breadIncrement
+         * @incrementType    add/replace
+         */
+        window.iframeHook.changePage = function ({url, breadIncrement, incrementType='add'}) {
+            if (!url) return;
+
+            if (!breadIncrement) {
+                self.setState({
+                    url
+                });
+
+                return;
+            }
+
+            if (incrementType === 'add') {
+                self.setState(prev => {
+                    prev.breads.push(breadIncrement);
+
+                    return {
+                        url,
+                        breads: prev.breads
+                    }
+                });
+
+                return;
+            }
+
+            if (incrementType === 'replace') {
+                self.setState(prev => {
+                    prev.breads.pop();
+                    prev.breads.push(breadIncrement);
+
+                    return {
+                        url,
+                        breads: prev.breads,
+                    };
+                });
+
+                return;
+            }
+        }
+
+        window.iframeHook.backToLogin = function () {
+            window.location.replace('/login.html');
         }
     }
 
     onCollapse(collapsed) {
       this.setState({ collapsed });
     }
-
+    /**
+     * SiderMenu
+     */
     onMenuChange(menu) {
-      console.log('onMenuChange----', menu);
-      this.setState({
-        breads: menu.keyPath.reverse()
-      });
+        console.log('onMenuChange----', menu);
+        var url = menu.key.split('|')[1],
+            path = menu.keyPath.reverse();
+
+        if (url === this.state.url) return;
+
+        this.setState({
+            url: url,
+            breads: path
+        });
+    }
+
+    // 面包屑点击事件
+    onBreadClick(bread, breads) {
+        console.log('onBreadClick-----', bread, breads)
+        var url = bread.split('|')[1];
+
+        if (!url) return;
+
+        if (url === this.state.url) return;
+
+        // 后面的面包屑切掉
+        var index = 0;
+        for (var i=0, len=breads.length; i<len; i++) {
+            if (breads[i] === bread) {
+                index = i;
+                break;
+            }
+        }
+
+        this.setState({
+            url,
+            breads: breads.slice(0, index+1)
+        })
+    }
+
+    logout() {
+        localStorage.removeItem('token');
+        window.location.replace('/login.html');
     }
 
     render() {
@@ -96,7 +195,7 @@ class Page extends React.Component {
                     className="yzy-menu-wrap">
                     <div className="yzy-menu-top-wrap">
                         <div className='title'>友通环保CRM管理系统</div>
-                        <MenuTop />
+                        <MenuTop logout={this.logout.bind(this)} />
                     </div>
                     <SiderMenu onMenuChange={this.onMenuChange.bind(this)} />
                 </Sider>
@@ -104,6 +203,7 @@ class Page extends React.Component {
                     <Header>
                         <BreadcrumbMap 
                             breads={this.state.breads}
+                            onBreadClick={this.onBreadClick.bind(this)}
                             className="yzy-breadcrumb" />
                     </Header>
                     <Content style={{width: '100%', height: '100%', overflow: 'hidden'}}>
