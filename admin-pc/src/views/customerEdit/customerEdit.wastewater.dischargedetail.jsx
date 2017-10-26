@@ -6,9 +6,14 @@ import {
     Form,
     Row,
     Col,
-    Input
+    Input,
+    Button
 } from 'antd';
 const FormItem = Form.Item;
+
+import {
+  MyToast
+} from '../../common/utils';
 
 const formItemLayout = {
     labelCol: { span: 8 },
@@ -18,46 +23,78 @@ const formItemLayout = {
 import { 
   getWastewaterDischargeDetail,
   getWastewaterDischargeUpdate,
+  getWastewaterDischargeAdd,
 } from '../../common/api/api.customer.plus.js';
 
 class WasteWaterDischargeDetail extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      data: {}
+    constructor(props){
+			super(props);
+			this.state = {
+				data: {},
+			}
     }
-  }
 
-  componentDidMount() {
-    var tableId = this.props.editId;
-    if (!tableId) return;
-    getWastewaterDischargeDetail({tableId:tableId}).then(res => {
-      console.log('getWastewaterDischargeDetail res ---', res);
+    componentDidMount() {
+			var tableId = this.props.editId;
+			if (!tableId) {
+				localStorage.setItem("wastewaterDischargeIsShow","none");
+				return;
+			}
+			localStorage.setItem("wastewaterDischargeIsShow","block");
+			getWastewaterDischargeDetail({tableId:tableId}).then(res => {
+				console.log('getWastewaterDischargeDetail res ---', res);
+				if (res.data.result !== 'success') {
+						MyToast(res.data.info)
+						return;
+				}
+				this.setState({data:res.data.wasteWaterDischargePort})
+			}).catch(err => {
+					MyToast('接口调用失败')
+			})
+		}
+    // 基本信息保存
+    saveDetail(e) {
+        e.preventDefault();
+        const {
+            form
+        } = this.props;
 
-      if (res.data.result !== 'success') {
-        resolve({
-          code: -1,
-          info: res.data.info,
+        form.validateFields((err, values) => {
+					if (err) return;
+					console.log('when saveDetail ---', values);
+					// console.log(tableId);
+					var tableId = this.props.editId;
+					if(tableId){
+
+					}else{
+						// 新增
+						getWastewaterDischargeAdd({
+								...values,
+						}).then(res => {
+								if (res.data.result !== 'success') {
+										MyToast(res.data.info)
+										return;
+								}
+								MyToast("新增成功")
+								localStorage.setItem("wastewaterDischargeIsShow","block");
+						}).catch(err => {
+								MyToast('接口调用失败')
+						});
+					}
         })
-        return;
-      }
-      
-      this.setState({data:res.data.wasteWaterDischargePort})
-    }).catch(err => {
-      reject(err)
-    })
-  }
-
+    }
   render() {
-    let { getFieldDecorator } = this.props.form;
+		let { getFieldDecorator } = this.props.form;
+		const wastewaterDischargeIsShow = localStorage.getItem("wastewaterDischargeIsShow")
     return(
-      <Form>
+    <div className="yzy-tab-content-item-wrap" style={{display:wastewaterDischargeIsShow}}>
+      <Form onSubmit={this.saveDetail.bind(this)}>
         <div className="baseinfo-section">
           <h2 className="yzy-tab-content-title">排放口基本信息</h2>
           <Row>
               <Col span={8}>
                   <FormItem {...formItemLayout} label="排水口编号">
-                      {getFieldDecorator('customerName', {
+                      {getFieldDecorator('serialNumber', {
                           initialValue: this.state.data.serialNumber,
                           rules: [{ required: true },
                           {/* { pattern: /^[0-9]*$/ } */ }
@@ -69,7 +106,7 @@ class WasteWaterDischargeDetail extends React.Component {
               </Col>
               <Col span={8}>
                   <FormItem {...formItemLayout} label="排放口名称">
-                      {getFieldDecorator('customerName', {
+                      {getFieldDecorator('theName', {
                           initialValue: this.state.data.theName,
                           rules: [{ required: true },
                           {/* { pattern: /^[0-9]*$/ } */ }
@@ -81,7 +118,7 @@ class WasteWaterDischargeDetail extends React.Component {
               </Col>
               <Col span={8}>
                   <FormItem {...formItemLayout} label="排放口位置">
-                      {getFieldDecorator('customerName', {
+                      {getFieldDecorator('outletLocation', {
                           initialValue: this.state.data.outletLocation,
                           rules: [{ required: true },
                           {/* { pattern: /^[0-9]*$/ } */ }
@@ -95,8 +132,8 @@ class WasteWaterDischargeDetail extends React.Component {
           <Row>
               <Col span={8}>
                   <FormItem {...formItemLayout} label="经度">
-                      {getFieldDecorator('customerName', {
-                          initialValue: this.state.data.longitude,
+                      {getFieldDecorator('longitude', {
+                          initialValue: this.state.data.longitude?this.state.data.longitude+"":"",
                           rules: [{ required: true },
                           {/* { pattern: /^[0-9]*$/ } */ }
                           ],
@@ -107,8 +144,8 @@ class WasteWaterDischargeDetail extends React.Component {
               </Col>
               <Col span={8}>
                   <FormItem {...formItemLayout} label="维度">
-                      {getFieldDecorator('customerName', {
-                          initialValue: this.state.data.latitude,
+                      {getFieldDecorator('latitude', {
+                          initialValue: this.state.data.latitude?this.state.data.latitude+"":"",
                           rules: [{ required: true },
                           {/* { pattern: /^[0-9]*$/ } */ }
                           ],
@@ -119,7 +156,7 @@ class WasteWaterDischargeDetail extends React.Component {
               </Col>
               <Col span={8}>
                   <FormItem {...formItemLayout} label="排放口去向">
-                      {getFieldDecorator('customerName', {
+                      {getFieldDecorator('emissionDestination', {
                           initialValue: this.state.data.emissionDestination,
                           rules: [{ required: true },
                           {/* { pattern: /^[0-9]*$/ } */ }
@@ -133,7 +170,7 @@ class WasteWaterDischargeDetail extends React.Component {
           <Row>
               <Col span={8}>
                   <FormItem {...formItemLayout} label="水体名称">
-                      {getFieldDecorator('customerName', {
+                      {getFieldDecorator('nameOfWaterBody', {
                           initialValue: this.state.data.nameOfWaterBody,
                           rules: [{ required: true },
                           {/* { pattern: /^[0-9]*$/ } */ }
@@ -145,7 +182,7 @@ class WasteWaterDischargeDetail extends React.Component {
               </Col>
               <Col span={8}>
                   <FormItem {...formItemLayout} label="污水排放规律">
-                      {getFieldDecorator('customerName', {
+                      {getFieldDecorator('dischargeLaw', {
                           initialValue: this.state.data.dischargeLaw,
                           rules: [{ required: true },
                           {/* { pattern: /^[0-9]*$/ } */ }
@@ -157,7 +194,7 @@ class WasteWaterDischargeDetail extends React.Component {
               </Col>
               <Col span={8}>
                   <FormItem {...formItemLayout} label="功能区类别">
-                      {getFieldDecorator('customerName', {
+                      {getFieldDecorator('functionalAreaCategory', {
                           initialValue: this.state.data.functionalAreaCategory,
                           rules: [{ required: true },
                           {/* { pattern: /^[0-9]*$/ } */ }
@@ -169,7 +206,11 @@ class WasteWaterDischargeDetail extends React.Component {
               </Col>
           </Row>
         </div>
+        <div className="yzy-block-center">
+            <Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
+        </div>
       </Form>
+      </div>
     )
   }
 }

@@ -21,7 +21,10 @@ import {
 
 function changeParentState(id) {
   var cusId = getLocQueryByLabel('id');
-  parent.window.iframeHook.changePage('/customerDynamicEdit.html?id='+ cusId +'&dynamicId=' + id)
+  parent.window.iframeHook.changePage({
+    url: '/customerDynamicEdit.html?id='+ cusId +'&dynamicId=' + id,
+    breadIncrement: '客户动态信息编辑'
+  })
 }
 
 const columns = [

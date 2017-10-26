@@ -22,7 +22,9 @@ class ModalEdit extends React.Component {
       modalShow,
       InnerComponent,
       editId,
-      closeModalEdit
+      closeModalEdit,
+      itemVisible,
+      showItemVisible,
     } = this.props;
 
     if (!modalShow) return null;
@@ -32,7 +34,10 @@ class ModalEdit extends React.Component {
         <div className="yzy-modal-edit">
           <h2 className="yzy-modal-edit-title">{!editId ? '新增' : '编辑'}{modalTitle}</h2>
           <div className="yzy-modal-edit-content">
-            <InnerComponent editId={editId} />
+            <InnerComponent 
+              editId={editId} 
+              itemVisible={itemVisible}
+              showItemVisible={showItemVisible} />
           </div>
           <a className="yzy-modal-edit-close" onClick={() => closeModalEdit()}>x</a>
         </div>

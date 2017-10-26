@@ -37,6 +37,14 @@ export function getCustomerList({
     }
   })
 }
+//获取七牛uptoken
+export function getQiNiuToken({}) {
+  return axios.get('/uQiNiuTokenGet.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+    }
+  });
+}
 //获取省份列表
 export function getProvinceList({}) {
   return axios.get('/uProvinceList.uhtm?InterfaceVersion=' + apiVer, {
@@ -47,7 +55,9 @@ export function getProvinceList({}) {
 }
 
 //获取市列表
-export function getCityList({id}) {
+export function getCityList({
+  id
+}) {
   return axios.get('/uCityList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
@@ -58,7 +68,9 @@ export function getCityList({id}) {
 
 
 // 获取区列表
-export function getAreaList({id}) {
+export function getAreaList({
+  id
+}) {
   return axios.get('/uAreaList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
@@ -72,7 +84,9 @@ export function getAreaList({id}) {
  * @QA：
  *    服务器内部错误
  */
-export function getTownList({id}) {
+export function getTownList({
+  id
+}) {
   return axios.get('/uTownList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
@@ -92,32 +106,23 @@ export function getCustomerInfoById() {
   });
 }
 
-/**
- * 编辑页---首页-基本信息增加保存add
- * @QA：
- *   
- */
-
+ // 编辑页---首页-基本信息增加保存add
 export function saveAddCustomerInfoById(data) {
   return axios.get('/uCustomerAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      ...data
+      ...data,
     }
   });
 }
-/**
- * 编辑页---首页-基本信息编辑保存edit
- * @QA：
- *   
- */
 
+// 编辑页---首页-基本信息编辑保存edit
 export function saveEditCustomerInfoById(data) {
   return axios.get('/uCustomerUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId: getCustomerId(),
-      ...data
+      ...data,
     }
   });
 }
@@ -192,12 +197,9 @@ export function getProductBaseInfoDelete(id) {
 
 /*************************** 编辑页---首页-原辅材料获取模块 ***********************/
 
-/**
- * 编辑页---首页-原辅材料获取
- * @QA:
- *   设计用耗量DesignConsumption字段错误
- *   
- */
+
+// 编辑页---首页-原辅材料获取
+
 
 export function getMaterialBaseInfoList({
   pageNumber = 1,
@@ -214,11 +216,9 @@ export function getMaterialBaseInfoList({
     }
   });
 }
-/**
- * 编辑页---首页-原辅材料新增
- * @QA: 
- *   
- */
+
+// 编辑页---首页-原辅材料新增
+
 export function getMaterialBaseInfoAdd({
   theName,
   unitOfMeasurement,
@@ -234,11 +234,9 @@ export function getMaterialBaseInfoAdd({
     }
   });
 }
-/**
- * 编辑页---首页-原辅材料编辑
- * @QA:   
- *   {result: "fail", info: "请输入设计用耗量"}: 设计用耗量DesignConsumption字段错误
- */
+
+// 编辑页---首页-原辅材料编辑
+
 export function getMaterialBaseInfoEdit({
   tableId,
   theName,
@@ -289,12 +287,8 @@ export function getEnergyBaseInfoList({
     }
   });
 }
-/**
- * 编辑页---首页-能源新增
- * @QA:
- *  年耗量annualConsumption字段错误
- *   
- */
+
+// 编辑页---首页-能源新增
 export function getEnergyBaseInfoAdd({
   theContent,
   theType,
@@ -311,12 +305,8 @@ export function getEnergyBaseInfoAdd({
   });
 }
 
-/**
- * 编辑页---首页-能源编辑
- * @QA:
- *  年耗量annualConsumption字段错误
- *   
- */
+
+// 编辑页---首页-能源编辑
 export function getEnergyBaseInfoEdit({
   tableId,
   theContent,
@@ -346,11 +336,9 @@ export function getEnergyBaseInfoDelete(id) {
 
 /*************************** 编辑页---首页-用水获取模块 ***********************/
 
-/**
- * 编辑页---首页-用水获取
- * @QA:
- *    AnnualConsumption字段错误
- */
+
+// 编辑页---首页-用水获取
+
 export function getWaterBaseInfoList({
   pageNumber = 1,
   countPerPage = 1000,
@@ -366,11 +354,9 @@ export function getWaterBaseInfoList({
     }
   });
 }
-/**
- * 编辑页---首页-用水新增
- * @QA:
- *    AnnualConsumption字段错误
- */
+
+//编辑页---首页-用水新增
+
 export function getWaterBaseInfoAdd({
   consumption,
   theType,
@@ -385,11 +371,9 @@ export function getWaterBaseInfoAdd({
     }
   });
 }
-/**
- * 编辑页---首页-用水编辑
- * @QA:
- *    AnnualConsumption字段错误
- */
+
+// 编辑页---首页-用水编辑
+
 export function getWaterBaseInfoEdit({
   tableId,
   consumption,
@@ -417,11 +401,9 @@ export function getWaterBaseInfoDelete(id) {
 }
 /*************************** 编辑页---首页-生产装置获取模块 ***********************/
 
-/**
- * 编辑页---首页-生产装置获取
- * @QA:
- *   
- */
+
+// 编辑页---首页-生产装置获取
+
 export function getDeviceBaseInfoList({
   pageNumber = 1,
   countPerPage = 1000,

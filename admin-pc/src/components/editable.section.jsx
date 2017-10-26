@@ -27,7 +27,9 @@ import { MyToast } from '../common/utils';
  * @params apiLoader
  * @params apiSave
  * @params apiDel
+ * @params hasModal          添加当前页面弹框功能（没有用到）
  * @params itemDataModel
+ * @params checkInNewpage    添加新页面查看功能
  * @return <Component />
  */
 class EditableSection extends Component {
@@ -175,7 +177,9 @@ class EditableSection extends Component {
   render() {
     let {
       secTitle,
-      columns
+      columns,
+      checkInNewpage,
+      hasModal
     } = this.props;
 
     return (
@@ -190,7 +194,9 @@ class EditableSection extends Component {
           onCellChange={this.onCellChange.bind(this)}
           onDelete={this.deleteItem.bind(this)}
           onSave={this.saveItem.bind(this)}
-          loading={this.state.loading} />
+          loading={this.state.loading}
+          checkInNewpage={checkInNewpage}
+          hasModal={hasModal} />
 
         {/** 
           <div className="yzy-block-center">

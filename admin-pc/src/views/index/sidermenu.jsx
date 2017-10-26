@@ -13,12 +13,27 @@ const SubMenu = Menu.SubMenu;
 const menuConfig = [
   {
     sub: '客户管理',
-    icon: 'user'
+    icon: 'user',
+    name: 'customer',
+    key: '客户管理|/customer.html'
   }, {
-    sub: '统计',
-    item: ['行业统计', '年度统计'],
-    icon: 'pie-chart'
-  }
+    sub: '客户检查计划管理',
+    icon: 'bars',
+    name: 'checkplan',
+    key: '客户检查计划管理|/checkplan.html'
+  }, {
+    sub: '员工管理',
+    icon: 'user-add',
+    name: 'staffmanagement',
+    key: '员工管理|/staffmanagement.html',
+  }, 
+  // {
+  //   sub: '导航测试',
+  //   icon: 'home',
+  //   key: '导航测试',
+  //   items: ['客户检查计划管理|/checkplan.html', '员工管理|/staffmanagement.html',]
+
+  // }
 ];
 
 class SiderMenu extends Component {
@@ -32,16 +47,16 @@ class SiderMenu extends Component {
     } = this.props;
 
     const menus = menuConfig.map(menu => {
-      // submenu
-      if (menu.item && menu.item.length > 0) {
+      // has submenu items
+      if (menu.items && menu.items.length > 0) {
         return (
           <SubMenu
-            key={menu.sub}
+            key={menu.key}
             title={<span><Icon type={menu.icon} /><span>{menu.sub}</span></span>}>
             {
-              menu.item.map(item => (
+              menu.items.map(item => (
                 <Menu.Item key={item}>
-                  {item}
+                  <span>{item.split('|')[0]}</span>
                 </Menu.Item>
               ))
             }
@@ -50,7 +65,7 @@ class SiderMenu extends Component {
       }
 
       return (
-        <Menu.Item key={menu.sub}>
+        <Menu.Item key={menu.key}>
           <Icon type={menu.icon} />
           <span>{menu.sub}</span>
         </Menu.Item>
@@ -60,7 +75,7 @@ class SiderMenu extends Component {
     return (
       <Menu 
         onClick={onMenuChange}
-        defaultSelectedKeys={['1']} 
+        defaultSelectedKeys={[menuConfig[0].key]} 
         mode="inline">
           {
             menus

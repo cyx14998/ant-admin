@@ -3,10 +3,10 @@
  */
 import axios, { getToken, apiVer, getCustomerId } from './index';
 
-/********************** 编辑-首页-废水排放基本情况 **********************/
+/********************** 编辑-首页-废水排放口基本情况 **********************/
 
 /* 
-* 获取废水排放基本信息列表    OK
+* 获取废水排放口基本信息列表    OK
 */
 export function getWastewaterDischargeList({
   pageNumber=1, 
@@ -23,7 +23,7 @@ export function getWastewaterDischargeList({
 }
 
 /* 
-* 获取废水排放基本信息详情    OK
+* 获取废水排放口基本信息详情    OK
 */
 export function getWastewaterDischargeDetail({
   tableId,
@@ -704,6 +704,9 @@ export function getWasteGasMonitoringRecordDelete(id){
 
 
 /********************** 编辑-首页-固体废物基本情况 **********************/
+/**
+ * OK
+ */
 
 /* 
 * 获取固体废物基本信息列表
@@ -724,8 +727,6 @@ export function getWasteSolidList({
 
 /* 
 * 获取固体废物基本信息详情
-* @QA
-*   只返回tableID
 */
 export function getWasteSolidDetail({
   tableId=1,
@@ -740,9 +741,6 @@ export function getWasteSolidDetail({
 
 /* 
 * 新增固体废物
-* @QA
-*   是否true/false无法解析
-*   hazardousWasteName处置方式字段未返回
 */
 export function getWastesolidAdd({
   serialNumber,
@@ -786,11 +784,9 @@ export function getWastesolidAdd({
 
 /* 
 * 编辑固体废物
-* @QA
-*   返回请选择企业，接口文档写不需要传customerId
 */
 export function getWastesolidUpdate({
-  tableId=1,
+  tableId,
   serialNumber,
   isHazardousWaste,
   hazardousWasteName,
@@ -831,7 +827,7 @@ export function getWastesolidUpdate({
 }
 
 /* 
-* 删除废水排放口
+* 删除固体废物基本信息
 */
 export function getWastesolidDelete(id){
   return axios.get('/uWasteSolidDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -842,12 +838,18 @@ export function getWastesolidDelete(id){
   })
 }
 
+
+
+
+
 /********************** 编辑-首页-边界噪声基本情况 **********************/
+/*
+ * OK
+ */
+
 
 /* 
 * 获取边界噪声基本信息列表
-* @QA
-* 噪声源性质与功能区类型数据要从接口获取，以下拉框的形式展示
 */
 export function getBoundaryNoiseList({
   pageNumber=1, 
@@ -857,6 +859,38 @@ export function getBoundaryNoiseList({
     params: {
       token: getToken(),
       customerId: getCustomerId(),
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
+
+/* 
+* 获取边界噪声功能区类型列表
+*/
+export function getFunctionalAreaTypeList({
+  pageNumber=1, 
+  countPerPage=1000,
+}){
+  return axios.get('/uFunctionalAreaTypeList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
+
+/* 
+* 获取噪声源性质列表
+*/
+export function getNoiseSourcePropertyList({
+  pageNumber=1, 
+  countPerPage=1000,
+}){
+  return axios.get('/uNoiseSourcePropertyList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
       pageNumber,
       countPerPage,
     }
@@ -927,6 +961,10 @@ export function getBoundaryNoiseDelete(id){
     }
   })
 }
+
+
+
+
 
 /********************** 编辑-首页-企业遵守法律法规情况 **********************/
 

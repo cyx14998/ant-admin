@@ -89,6 +89,8 @@ const itemDataModel = {
   createDatetime: '',
 };
 
+const wastewaterDischargeIsShow = localStorage.getItem("wastewaterDischargeIsShow")
+
 const InnerComponent = ({
   editId
 }) => (
