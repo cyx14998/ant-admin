@@ -24,6 +24,7 @@ import EditableCell from './editable.cell';
  * @params onCellChange
  * @params onDelete
  * @params onSave
+ * @params hasModal
  */
 class EditableTable extends Component {
   constructor(props) {
@@ -41,7 +42,8 @@ class EditableTable extends Component {
       columns,
       onCellChange,
       onDelete,
-      onSave
+      onSave,
+      hasModal
     } = this.props;
 
     let len = columns.length,
@@ -92,7 +94,7 @@ class EditableTable extends Component {
           }
 
           // 编辑/删除
-          if (!text) {
+          if (!text && !hasModal) {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
@@ -100,6 +102,23 @@ class EditableTable extends Component {
                 </Popconfirm>
 
                 <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}>保存</a>
+              </div>
+            )
+          }
+
+          /**
+           *  此功能暂时不用
+           *  编辑/删除/查看
+           */
+          if (!text && hasModal) {
+            return (
+              <div>
+                <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
+                  <a href="#">删除</a>
+                </Popconfirm>
+
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}>保存</a>
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => console.log(record.tableId)}>查看</a>
               </div>
             )
           }

@@ -52,7 +52,7 @@ class UneditableSection extends Component {
   getDataSource() {
     this.props.apiLoader().then(res => {
       if (res.code !== 0) {
-        MyToast(res.info)
+        MyToast(res.info);
         return;
       }
 
@@ -62,7 +62,7 @@ class UneditableSection extends Component {
         dataSource: res.data
       }));
     }).catch(err => {
-      MyToast('接口调用失败')
+      MyToast('接口调用失败');
     })
   }
 

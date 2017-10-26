@@ -13,11 +13,16 @@ const SubMenu = Menu.SubMenu;
 const menuConfig = [
   {
     sub: '客户管理',
-    icon: 'user'
+    icon: 'user',
+    iframeUrl: '/customer.html'
   }, {
-    sub: '统计',
-    item: ['行业统计', '年度统计'],
-    icon: 'pie-chart'
+    sub: '客户检查计划管理',
+    icon: 'bars',
+    
+  }, {
+    sub: '员工管理',
+    icon: 'user-add',
+    
   }
 ];
 

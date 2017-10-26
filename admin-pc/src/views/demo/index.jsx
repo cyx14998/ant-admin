@@ -123,7 +123,9 @@ class Demo extends Component {
       loading: false,
       customerList: [],
 
-      collapsed: false
+      collapsed: false,
+
+      itemVisible: false
     }
   }
 
@@ -139,11 +141,12 @@ class Demo extends Component {
     console.log('handleSearch ---------', values)
   }
 
-
   render() {
     
     return (
-      <UneditableDemoSection />
+      <div>
+        <UneditableDemoSection />
+      </div>
     )
 
     return (

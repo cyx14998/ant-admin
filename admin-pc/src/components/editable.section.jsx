@@ -27,6 +27,7 @@ import { MyToast } from '../common/utils';
  * @params apiLoader
  * @params apiSave
  * @params apiDel
+ * @params hasModal
  * @params itemDataModel
  * @return <Component />
  */
@@ -175,7 +176,8 @@ class EditableSection extends Component {
   render() {
     let {
       secTitle,
-      columns
+      columns,
+      hasModal
     } = this.props;
 
     return (
@@ -190,7 +192,8 @@ class EditableSection extends Component {
           onCellChange={this.onCellChange.bind(this)}
           onDelete={this.deleteItem.bind(this)}
           onSave={this.saveItem.bind(this)}
-          loading={this.state.loading} />
+          loading={this.state.loading}
+          hasModal={hasModal} />
 
         {/** 
           <div className="yzy-block-center">

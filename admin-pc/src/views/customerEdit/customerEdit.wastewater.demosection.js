@@ -1,4 +1,7 @@
 import React from 'react';
+import {
+  Button
+} from 'antd';
 /**
  * 模块测试
  */
@@ -58,18 +61,35 @@ const dataSource = [{
 
 }];
 
+
+
 /**
  * ModalEdit component
  */
 const InnerComponent = ({
-  editId
+  editId,
+  showItemVisible,
+  itemVisible,
 }) => (
   <div>
-    待编辑数据的id是--{editId}
+    <div>
+      待编辑数据的id是--{editId}
+    </div>
+    <div>
+
+      <p>{itemVisible.toString()}</p>
+
+      {
+        itemVisible && <p>可控制隐藏显示---></p>
+      }
+    </div>
+    <Button onClick={showItemVisible}>showItemVisible</Button>
   </div>
 );
 
-
+/**
+ * 可编辑模块
+ */
 const EditableDemoSection = connectEditableSectionApi({
   secTitle: '可编辑table测试模块',
   columns: columns,
@@ -153,6 +173,9 @@ const EditableDemoSection = connectEditableSectionApi({
   itemDataModel: itemDataModel
 });
 
+/**
+ * 不可编辑模块 + 弹框
+ */
 const UneditableDemoSection = connectUneditableSectionApi({
   secTitle: '不可编辑table测试模块',
   columns: columns,
@@ -208,8 +231,13 @@ const UneditableDemoSection = connectUneditableSectionApi({
   // 弹窗组件
   modalTitle: '某某模块',
   modalComponent: InnerComponent
-
 });
+
+
+/**
+ * 可编辑模块 + 弹框
+ */
+
 
 
 
