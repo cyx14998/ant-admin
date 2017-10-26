@@ -17,11 +17,17 @@ export const apiVer = '20171018';
 
 export function getToken () {
   var token = localStorage.getItem('token');
-
+  
   if (!token) {
     alert('登陆过期，请登陆后再来查看');
 
-    window.location.replace('/login.html');
+    if (window.innerFrame) {
+      window.location.replace('/login.html');
+      return;
+    }
+
+    // iframe 内调用时
+    parent.window.iframeHook.backToLogin();
   }
 
   return token;

@@ -100,11 +100,17 @@ const columns = [
 
 function changeIframeToEdit(id) {
   console.log('chanageiframe', parent.window.iframeHook)
-  parent.window.iframeHook.changePage('/customerEdit.html?id=' + id + '#' + Math.random())
+  parent.window.iframeHook.changePage({
+    url: '/customerEdit.html?id=' + id + '#' + Math.random(),
+    breadIncrement: '客户信息编辑'
+  })
 }
 
 function changeIframeToDynamic(id) {
-  parent.window.iframeHook.changePage('/customerDynamic.html?id=' + id)
+  parent.window.iframeHook.changePage({
+    url: '/customerDynamic.html?id=' + id,
+    breadIncrement: '客户动态信息|/customerDynamic.html?id=' + id,
+  })
 }
 
 //列表页面
@@ -158,7 +164,7 @@ class CustomerList extends React.Component {
   render() {
 
     return (
-      <div className="yzy-page" id="yzy-page">
+      <div className="yzy-page">
         <div className="yzy-search-form-wrap">
           <RcSearchForm {...rcsearchformData} 
             handleSearch={this.handleFormSearch.bind(this)} />
