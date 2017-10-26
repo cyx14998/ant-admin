@@ -143,7 +143,7 @@ class Demo extends Component {
   render() {
     
     return (
-      <UneditableDemoSection />
+      <EditableDemoSection />
     )
 
     return (
