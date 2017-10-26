@@ -27,6 +27,7 @@ import { MyToast } from '../common/utils';
  * @params apiLoader
  * @params onEdit  (Modal 新增或查看)
  * @params apiDel
+ * @params fetchReload  false/true  是否重新请求列表接口
  * @return <Component />
  */
 class UneditableSection extends Component {
@@ -47,6 +48,12 @@ class UneditableSection extends Component {
    */
   componentDidMount() {
     this.getDataSource();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.fetchReload === true) {
+      this.getDataSource();
+    }
   }
 
   getDataSource() {

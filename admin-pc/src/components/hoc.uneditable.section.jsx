@@ -1,5 +1,5 @@
 /**
- * 不可编辑，可查看型table
+ * 不可编辑 + Modal 可查看型table
  */
 import React, { Component } from 'react';
 import UneditableSection from './uneditable.section';
@@ -24,32 +24,13 @@ function connectUneditableSectionApi(options) {
         modalShow: false,
         editId: '',
         modalComponent: options.modalComponent,
-        itemVisible: false
+        itemVisible: false,
+        fetchReload: false  // 重新请求列表接口
       }
-
-      this.getDataSource = this.getDataSource.bind(this);
     }
 
     componentDidMount() {
       // console.log('modalComponent----------', options.modalComponent)
-    }
-
-    // 重新请求列表
-    getDataSource() {
-      options.apiLoader().then(res => {
-        if (res.code !== 0) {
-          MyToast(res.info)
-          return;
-        }
-
-        // success
-        this.setState(prev =>({
-          loading: false,
-          dataSource: res.data
-        }));
-      }).catch(err => {
-        MyToast('接口调用失败')
-      })
     }
 
     /**
@@ -64,11 +45,9 @@ function connectUneditableSectionApi(options) {
 
     closeModalEdit() {
       this.setState({
-        modalShow: false
+        modalShow: false,
+        fetchReload: true
       });
-
-      // apiLoader
-      this.getDataSource();
     }
 
     showItemVisible() {
@@ -81,7 +60,11 @@ function connectUneditableSectionApi(options) {
       return (
         <div>
           <UneditableSection 
-            {...options} 
+            secTitle={options.secTitle}
+            columns={options.columns}
+            apiLoader={options.apiLoader}
+            apiDel={options.apiDel}
+            fetchReload={this.state.fetchReload}
             onEdit={this.onEdit.bind(this)} />
           <ModalEdit 
             modalTitle={options.modalTitle}
