@@ -1,8 +1,9 @@
 /**
  * 废水污染物排放情况
  */
+import React from 'react';
 
-import connectEditableSectionApi from '../../components/hoc.editable.section';
+import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
 
 import { 
   getWastewaterDischargeRecordList,
@@ -51,7 +52,15 @@ const itemDataModel = {
   emissionDestination: '',
 };
 
-const WasteWaterDemoSection = connectEditableSectionApi({
+const InnerComponent = ({
+  editId,
+}) => (
+  <div>
+    待编辑数据的id是--{editId}
+  </div>
+);
+
+const WasteWaterDemoSection = connectUneditableSectionApi({
   secTitle: '废水排放基本信息列表',
   columns: columns,
   apiLoader: function () {
@@ -155,7 +164,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       });
     });
   },
-  itemDataModel: itemDataModel
+  // 弹窗组件
+  modalTitle: '废水排放基本情况详情',
+  modalComponent: InnerComponent
 })
 
 export default WasteWaterDemoSection;

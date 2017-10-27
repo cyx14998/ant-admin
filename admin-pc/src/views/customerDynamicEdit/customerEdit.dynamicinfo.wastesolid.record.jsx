@@ -15,6 +15,10 @@ import {
   MyToast
 } from '../../common/utils';
 
+import {
+  getLocQueryByLabel
+} from '../../common/utils';
+
 /**
  * table head
  */
@@ -102,7 +106,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      getWasteSolidRecordList({customerMonthDclarationId:1,}).then(res => {
+      var dynamicId = getLocQueryByLabel('dynamicId');
+      if(!dynamicId) return;
+      getWasteSolidRecordList({customerMonthDclarationId:dynamicId,}).then(res => {
         console.log('getWasteSolidRecordList res ---', res);
         
         if (res.data.result !== 'success') {

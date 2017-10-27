@@ -3,6 +3,10 @@
  */
 import React from 'react';
 
+import {
+  Button
+} from 'antd';
+
 import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
 
 //废水排放基本信息详情
@@ -92,13 +96,23 @@ const itemDataModel = {
 const wastewaterDischargeIsShow = localStorage.getItem("wastewaterDischargeIsShow")
 
 const InnerComponent = ({
-  editId
+  editId,
+  itemVisible,
+  showItemVisible
 }) => (
   <div>
-    <WasteWaterDischargeDetail editId={editId} />
-    <WasteWaterTreatment />
-    <WasteWaterDischargeFactor />
-    <WasteWaterMonitoringRecord />
+    <WasteWaterDischargeDetail showItemVisible={showItemVisible} editId={editId} />
+    {
+      editId?<div>
+        <WasteWaterTreatment />
+        <WasteWaterDischargeFactor />
+        <WasteWaterMonitoringRecord />
+      </div>: itemVisible && <div>
+        <WasteWaterTreatment />
+        <WasteWaterDischargeFactor />
+        <WasteWaterMonitoringRecord />
+      </div>
+    }
   </div>
 );
 
