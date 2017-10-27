@@ -1,6 +1,7 @@
 /**
- * 废水排放口基本情况详情
+ * 废气污染物排放情况
  */
+
 import React from 'react';
 import {
 	Form,
@@ -21,57 +22,55 @@ const formItemLayout = {
 }
 
 import {
-	getWastewaterDischargeDetail,
-	getWastewaterDischargeUpdate,
-	getWastewaterDischargeAdd,
+	getWasteGasDischargeDetail,
+	getWasteGasDischargeUpdate,
+	getWasteGasDischargeAdd,
 } from '../../common/api/api.customer.plus.js';
 
 /**
- * @params editId
- * @params showItemVisible
+ * @parms editId
+ * @parms showItemVisible
  */
-class WasteWaterDischargeDetail extends React.Component {
+class WasteGasDischargeDetail extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			data: {},
-			tableId: "",
+			tableId:"",
 		}
 	}
 
 	componentDidMount() {
 		var tableId = this.props.editId;
-
 		if (tableId === '') return;
-		getWastewaterDischargeDetail({ tableId: tableId }).then(res => {
-			console.log('getWastewaterDischargeDetail res ---', res);
+		getWasteGasDischargeDetail({ tableId: tableId }).then(res => {
+			console.log('getWasteGasDischargeDetail res ---', res);
 			if (res.data.result !== 'success') {
 				MyToast(res.data.info)
 				return;
 			}
-			this.setState({ data: res.data.wasteWaterDischargePort, tableId: res.data.wasteWaterDischargePort.tableId})
+			this.setState({ data: res.data.wasteGasDischargePort, tableId: res.data.wasteGasDischargePort.tableId })
 		}).catch(err => {
 			MyToast('接口调用失败')
 		})
 	}
-
 	// 基本信息保存
 	saveDetail(e) {
 		e.preventDefault();
-
 		const {
 			form
 		} = this.props;
 
 		form.validateFields((err, values) => {
 			if (err) return;
+			// console.log('when saveDetail ---', values);
 			var tableId = this.props.editId;
 			if(!tableId){
 				tableId = this.state.tableId;
 			}
 			//编辑
 			if(this.state.tableId){
-				getWastewaterDischargeUpdate({
+				getWasteGasDischargeUpdate({
 					...values,
 					tableId:tableId,
 				}).then(res => {
@@ -83,9 +82,9 @@ class WasteWaterDischargeDetail extends React.Component {
 				}).catch(err => {
 					MyToast('接口调用失败')
 				});
-			}else{
+			} else {
 				// 新增
-				getWastewaterDischargeAdd({
+				getWasteGasDischargeAdd({
 					...values,
 				}).then(res => {
 					if (res.data.result !== 'success') {
@@ -175,32 +174,6 @@ class WasteWaterDischargeDetail extends React.Component {
 								</FormItem>
 							</Col>
 							<Col span={8}>
-								<FormItem {...formItemLayout} label="排放口去向">
-									{getFieldDecorator('emissionDestination', {
-										initialValue: this.state.data.emissionDestination,
-										rules: [{ required: true },
-										{/* { pattern: /^[0-9]*$/ } */ }
-										],
-									})(
-										<Input placeholder="排放口去向" />
-										)}
-								</FormItem>
-							</Col>
-						</Row>
-						<Row>
-							<Col span={8}>
-								<FormItem {...formItemLayout} label="水体名称">
-									{getFieldDecorator('nameOfWaterBody', {
-										initialValue: this.state.data.nameOfWaterBody,
-										rules: [{ required: true },
-										{/* { pattern: /^[0-9]*$/ } */ }
-										],
-									})(
-										<Input placeholder="水体名称" />
-										)}
-								</FormItem>
-							</Col>
-							<Col span={8}>
 								<FormItem {...formItemLayout} label="污水排放规律">
 									{getFieldDecorator('dischargeLaw', {
 										initialValue: this.state.data.dischargeLaw,
@@ -212,6 +185,8 @@ class WasteWaterDischargeDetail extends React.Component {
 										)}
 								</FormItem>
 							</Col>
+						</Row>
+						<Row>
 							<Col span={8}>
 								<FormItem {...formItemLayout} label="功能区类别">
 									{getFieldDecorator('functionalAreaCategory', {
@@ -221,6 +196,30 @@ class WasteWaterDischargeDetail extends React.Component {
 										],
 									})(
 										<Input placeholder="功能区类别" />
+										)}
+								</FormItem>
+							</Col>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="排放方式">
+									{getFieldDecorator('dischargeMode', {
+										initialValue: this.state.data.dischargeMode,
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="排放方式" />
+										)}
+								</FormItem>
+							</Col>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="排放口类型">
+									{getFieldDecorator('dischargePortType', {
+										initialValue: this.state.data.dischargePortType,
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="排放口类型" />
 										)}
 								</FormItem>
 							</Col>
@@ -235,4 +234,4 @@ class WasteWaterDischargeDetail extends React.Component {
 	}
 }
 
-export default Form.create()(WasteWaterDischargeDetail);
+export default Form.create()(WasteGasDischargeDetail);

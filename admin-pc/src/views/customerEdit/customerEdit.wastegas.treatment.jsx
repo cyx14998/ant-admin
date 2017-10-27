@@ -1,14 +1,14 @@
 /**
- * 废气排放检测记录基本情况
+ * 废水治理基本情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getWasteGasMonitoringRecordList,
-  getWasteGasMonitoringRecordAdd,
-  getWasteGasMonitoringRecordDelete,
-  getWasteGasMonitoringRecordUpdate,
+  getWastewaterTreatmentList,
+  getWastewaterTreatmentAdd,
+  getWastewaterTreatmentDelete,
+  getWastewaterTreatmentUpdate,
 } from '../../common/api/api.customer.plus.js';
 
 import {
@@ -19,24 +19,32 @@ import {
  * table head
  */
 const columns = [{
-  title: '编号',
-  dataIndex: 'serialNumber',
+  title: '治理设施名称',
+  dataIndex: 'theName',
   width: '10%'
 }, {
-  title: '监测时间',
-  dataIndex: 'monitoringDatetime',
+  title: '治理类型',
+  dataIndex: 'governanceType',
   width: '10%'
 }, {
-  title: '监测部门',
-  dataIndex: 'monitoringDepart',
+  title: '处理方法ID',
+  dataIndex: 'approach',
   width: '10%'
 }, {
-  title: '监测结果',
-  dataIndex: 'monitoringResult',
+  title: '设计处理能力',
+  dataIndex: 'designProcessingPower',
   width: '10%'
 }, {
-  title: '监测报告',
-  dataIndex: 'monitoringReportURL',
+  title: '投入使用日期',
+  dataIndex: 'putInUseDate',
+  width: '5%'
+}, {
+  title: '对应排放口编号',
+  dataIndex: 'dischargePortNumber',
+  width: '5%'
+}, {
+  title: '传台账记录',
+  dataIndex: 'standingBookURL',
   width: '10%'
 }, {
   title: '操作',
@@ -59,15 +67,17 @@ const options = [{
  * 新数据默认值
  */
 const itemDataModel = {
-  serialNumber: '',
-  monitoringDatetime: '',
-  monitoringDepart: '',
-  monitoringResult: '',
-  monitoringReportURL: '',
+  theName: '',
+  governanceType: '',
+  approach: '',
+  designProcessingPower: '',
+  putInUseDate: '',
+  dischargePortNumber: '',
+  standingBookURL: '',
 };
 
-const WasteGasMonitoringRecord = connectEditableSectionApi({
-  secTitle: '废气排放检测记录基本情况',
+const WasteGasTreatment = connectEditableSectionApi({
+  secTitle: '废气治理基本情况',
   columns: columns,
   apiLoader: function ({apiListItemId}) {
     var editId = apiListItemId;
@@ -76,9 +86,8 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
     }
     return new Promise((resolve,reject) => {
       //获取数据
-      console.log(editId);
-      getWasteGasMonitoringRecordList({id: editId}).then(res => {
-        console.log('getWasteGasMonitoringRecordList res ---', res);
+      getWastewaterTreatmentList({sourceType:1,sourceId:editId}).then(res => {
+        console.log('getWastewaterTreatmentList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -88,7 +97,7 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.wasteGasMonitoringRecordList;
+        var data = res.data.controlFacilitiesList;
         resolve({
           code: 0,
           data,
@@ -100,19 +109,18 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record ----', record);
+    console.log('apiSave record -------------', record.apiListItemId);
     var self = this;
     if(record.apiListItemId === undefined){
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     }
-    record.DischargePortId = record.apiListItemId;
-
+    record.sourceId = record.apiListItemId;
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        console.log(record);
-        getWasteGasMonitoringRecordAdd({
+        getWastewaterTreatmentAdd({
           ...record,
+          sourceType:1
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -132,8 +140,9 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        getWasteGasMonitoringRecordUpdate({
+        getWastewaterTreatmentUpdate({
           ...record,
+          sourceType:1
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -157,7 +166,7 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getWasteGasMonitoringRecordDelete(tableId).then(res => {
+      getWastewaterTreatmentDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,
@@ -177,4 +186,4 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
   itemDataModel: itemDataModel
 })
 
-export default WasteGasMonitoringRecord;
+export default WasteGasTreatment;

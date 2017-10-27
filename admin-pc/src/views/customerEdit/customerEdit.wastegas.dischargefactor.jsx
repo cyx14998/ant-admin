@@ -64,10 +64,14 @@ const itemDataModel = {
 const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '废气排放因子基本情况',
   columns: columns,
-  apiLoader: function () {
+  apiLoader: function ({apiListItemId}) {
+      var editId = apiListItemId;
+      if(editId === undefined){
+        editId = localStorage.getItem('wastewater-discharge-editId');
+      }
     return new Promise((resolve,reject) => {
       //获取数据
-      getWasteGasDischargeFactorList({}).then(res => {
+      getWasteGasDischargeFactorList({WasteGasDischargePortId:editId}).then(res => {
         console.log('getWasteGasDischargeFactorList res ---', res);
 
         if (res.data.result !== 'success') {
@@ -78,7 +82,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.controlFacilitiesList;
+        var data = res.data.wasteGasDischargeFactorList;
         resolve({
           code: 0,
           data,
@@ -92,7 +96,10 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     // 新增
     console.log('apiSave record ----', record);
     var self = this;
-
+    if(record.apiListItemId === undefined){
+      record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
+    }
+    record.DischargePortId = record.apiListItemId;
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增

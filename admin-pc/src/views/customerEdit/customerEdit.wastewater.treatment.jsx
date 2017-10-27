@@ -76,16 +76,18 @@ const itemDataModel = {
   standingBookURL: '',
 };
 
-const WasteWaterDemoSection = connectEditableSectionApi({
+const WasteWaterTreatment = connectEditableSectionApi({
   secTitle: '废水治理基本情况',
   columns: columns,
   apiLoader: function ({apiListItemId}) {
-    console.log('treatment----------------', apiListItemId)
+    var editId = apiListItemId;
+    if(editId === undefined){
+      editId = localStorage.getItem('wastewater-discharge-editId');
+    }
     return new Promise((resolve,reject) => {
       //获取数据
-      getWastewaterTreatmentList({}).then(res => {
-        console.log('getWastewaterTreatmentList res ---', res);
-
+      getWastewaterTreatmentList({sourceType:0,sourceId:editId}).then(res => {
+        // console.log('getWastewaterTreatmentList res ---', res);
         if (res.data.result !== 'success') {
           resolve({
             code: -1,
@@ -106,15 +108,18 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record -------------', record.apiListItemId);
+    console.log('apiSave record -------------', record);
     var self = this;
-
+    if(record.apiListItemId === undefined){
+      record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
+    }
+    record.sourceId = record.apiListItemId;
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        console.log("sssssssss")
         getWastewaterTreatmentAdd({
           ...record,
+          sourceType:0,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -136,6 +141,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       return new Promise((resolve, reject) => {
         getWastewaterTreatmentUpdate({
           ...record,
+          sourceType:0
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -179,4 +185,4 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   itemDataModel: itemDataModel
 })
 
-export default WasteWaterDemoSection;
+export default WasteWaterTreatment;

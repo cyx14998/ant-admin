@@ -1,5 +1,5 @@
 /**
- * 废水污染物排放情况
+ * 企业遵守法律法规详情
  */
 import React from 'react';
 
@@ -134,7 +134,7 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getWastesolidDelete(tableId).then(res => {
+      getEIADelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,

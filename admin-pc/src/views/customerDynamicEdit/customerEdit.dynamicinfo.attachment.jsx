@@ -1,58 +1,42 @@
 /**
- * 废气污染物排放情况
+ * 企业附件信息基本情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getWasteGasDischargeDetail,
-  getWasteGasDischargeDelete,
-  getWasteGasDischargeUpdate,
-  getWasteGasDischargeAdd
-} from '../../common/api/api.customer.plus.js';
+  getAttachmentRecordList,
+  getAttachmentRecordAdd,
+  getAttachmentRecordUpdate,
+  getAttachmentRecordDelete,
+} from '../../common/api/api.customer.dynamic.plus.js';
 
 import {
   MyToast
+} from '../../common/utils';
+
+import {
+  getLocQueryByLabel
 } from '../../common/utils';
 
 /**
  * table head
  */
 const columns = [{
-  title: '排水口编号',
-  dataIndex: 'serialNumber',
-  width: '10%'
-}, {
-  title: '排放口名称',
+  title: '文件名称',
   dataIndex: 'theName',
   width: '10%'
 }, {
-  title: '排放口位置',
-  dataIndex: 'outletLocation',
+  title: '附件类型Id',
+  dataIndex: 'attachmentTypeId',
   width: '10%'
 }, {
-  title: '经度',
-  dataIndex: 'longitude',
+  title: '文件大小',
+  dataIndex: 'theSize',
   width: '10%'
 }, {
-  title: '维度',
-  dataIndex: 'latitude',
-  width: '10%'
-}, {
-  title: '污水排放规律',
-  dataIndex: 'dischargeLaw',
-  width: '10%'
-}, {
-  title: '功能区类别',
-  dataIndex: 'functionalAreaCategory',
-  width: '10%'
-}, {
-  title: '排放方式',
-  dataIndex: 'dischargeMode',
-  width: '10%'
-}, {
-  title: '排放口类型',
-  dataIndex: 'dischargePortType',
+  title: '文件路径',
+  dataIndex: 'filePath',
   width: '10%'
 }, {
   title: '操作',
@@ -75,27 +59,23 @@ const options = [{
  * 新数据默认值
  */
 const itemDataModel = {
-  serialNumber: '',
   theName: '',
-  outletLocation: '',
-  longitude: '',
-  latitude: '',
-  dischargeMode: '',
-  dischargePortType: '',
-  dischargeLaw: '',
-  functionalAreaCategory: '',
+  attachmentTypeId: '',
+  theSize: '',
+  filePath: '',
 };
 
-const WasteGasDemoSection = connectEditableSectionApi({
-  secTitle: '废气排放基本信息详情',
+const WasteWaterDemoSection = connectEditableSectionApi({
+  secTitle: '企业附件信息基本情况',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      console.log("ssssssss");
-      getWasteGasDischargeDetail({id:1}).then(res => {
-        console.log('getWasteGasDischargeDetail res ---', res);
-
+      var dynamicId = getLocQueryByLabel('dynamicId');
+      if(!dynamicId) return;
+      getAttachmentRecordList({customerMonthDclarationId:dynamicId,}).then(res => {
+        console.log('getAttachmentRecordList res ---', res);
+        
         if (res.data.result !== 'success') {
           resolve({
             code: -1,
@@ -104,7 +84,7 @@ const WasteGasDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = [res.data.wasteGasDischargePort];
+        var data = res.data.AttachmentRecordList;
         resolve({
           code: 0,
           data,
@@ -122,8 +102,10 @@ const WasteGasDemoSection = connectEditableSectionApi({
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        getWasteGasDischargeAdd({
+        getAttachmentRecordAdd({
           ...record,
+          customerMonthDclarationId:1,
+          boundaryNoiseId:1
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -143,7 +125,8 @@ const WasteGasDemoSection = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        getWasteGasDischargeUpdate({
+        console.log(record)
+        getAttachmentRecordUpdate({
           ...record,
         }).then(res => {
           if (res.data.result !== 'success') {
@@ -168,7 +151,7 @@ const WasteGasDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getWasteGasDischargeDelete(tableId).then(res => {
+      getAttachmentRecordDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,
@@ -188,4 +171,4 @@ const WasteGasDemoSection = connectEditableSectionApi({
   itemDataModel: itemDataModel
 })
 
-export default WasteGasDemoSection;
+export default WasteWaterDemoSection;
