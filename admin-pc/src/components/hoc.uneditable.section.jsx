@@ -14,7 +14,11 @@ import {
  * @params columns
  * @params apiLoader
  * @params apiDel
+ * @params cannotDeleteble  不可删除吗
  * @params modalComponent
+ *
+ * pass from props
+ * @apiListItemId  请求或保存数据时所需要的id
  */
 function connectUneditableSectionApi(options) {
   return class extends Component {
@@ -75,7 +79,9 @@ function connectUneditableSectionApi(options) {
             columns={options.columns}
             apiLoader={options.apiLoader}
             apiDel={options.apiDel}
+            cannotDeleteble={options.cannotDeleteble}
             fetchReload={this.state.fetchReload}
+            apiListItemId={this.props.apiListItemId}
             onEdit={this.onEdit.bind(this)} />
           <ModalEdit 
             modalTitle={options.modalTitle}

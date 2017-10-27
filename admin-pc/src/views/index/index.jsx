@@ -77,6 +77,7 @@ class Page extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            forceUpdate: '',   // 通过设置时间戳触发re-render
             collapsed: false,
             url: "/customer.html",
             breads: ['客户管理|/customer.html']
@@ -147,7 +148,6 @@ class Page extends React.Component {
      * SiderMenu
      */
     onMenuChange(menu) {
-        console.log('onMenuChange----', menu);
         var url = menu.key.split('|')[1],
             path = menu.keyPath.reverse();
 
