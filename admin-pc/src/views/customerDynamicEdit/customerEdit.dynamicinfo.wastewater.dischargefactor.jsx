@@ -79,10 +79,14 @@ const itemDataModel = {
 const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '废水排放因子基本情况',
   columns: columns,
-  apiLoader: function () {
+  apiLoader: function ({apiListItemId}) {
+    var editId = apiListItemId;
+    if(editId === undefined){
+      editId = localStorage.getItem('wastewater-discharge-editId');
+    }
     return new Promise((resolve,reject) => {
       //获取数据
-      getWasteWaterDischargeFactorRecordList({wasteWaterDischargeRecordId:1}).then(res => {
+      getWasteWaterDischargeFactorRecordList({wasteWaterDischargeRecordId: editId}).then(res => {
         console.log('getWasteWaterDischargeFactorRecordList res ---', res);
 
         if (res.data.result !== 'success') {
@@ -93,7 +97,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.controlFacilitiesList;
+        var data = res.data.wasteWaterDischargeFactorRecordList;
         resolve({
           code: 0,
           data,
@@ -106,19 +110,21 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   apiSave: function (record) {
     // 新增
     console.log('apiSave record ----', record);
-    var self = this;
-
+     var self = this;
+    if(record.apiListItemId === undefined){
+      record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
+    }
+    record.wasteWaterDischargeRecordId = record.apiListItemId;
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWasteWaterDischargeFactorRecordAdd({
           ...record,
-          wasteWaterDischargeRecordId:1,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
-              info: res.data.info,
+              info: "aaaaaaaa",
             });
             return;
           }

@@ -1,5 +1,6 @@
 /**
- * 不可编辑，可查看型table
+ * 此组件并未使用
+ * 可编辑 + 弹窗  可查看型table
  */
 import React, { Component } from 'react';
 import EditableSection from './editable.section';

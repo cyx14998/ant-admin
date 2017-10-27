@@ -37,7 +37,7 @@ export function getWastewaterDischargeDetail({
 }
 
 /* 
-* 新增废水排放口
+* 新增废水排放口   OK
 */
 export function getWastewaterDischargeAdd({
   nameOfWaterBody,
@@ -68,7 +68,7 @@ export function getWastewaterDischargeAdd({
 }
 
 /* 
-* 编辑废水排放口
+* 编辑废水排放口   OK
 */
 export function getWastewaterDischargeUpdate({
   tableId,
@@ -100,7 +100,7 @@ export function getWastewaterDischargeUpdate({
 }
 
 /* 
-* 删除废水排放口
+* 删除废水排放口     OK
 */
 export function getWastewaterDischargeDelete(id){
   return axios.get('/uWasteWaterDischargePortDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -111,22 +111,18 @@ export function getWastewaterDischargeDelete(id){
   })
 }
 
+
+
 /********************** 编辑-首页-废水治理基本情况 **********************/
-/**
- * @QA
- *  所有接口都未对接
- */
 
 /* 
 * 获取废水治理基本信息
-* @QA
-*   sourceId为排放口id，应该是传过来的tableId,现在给默认值测试,sourceType为类型也应该是传过来的
 */
 export function getWastewaterTreatmentList({
   pageNumber=1, 
   countPerPage=1000,
-  sourceId=1,
-  sourceType=0
+  sourceId,
+  sourceType
 }){
   return axios.get('/uControlFacilitiesList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -141,13 +137,10 @@ export function getWastewaterTreatmentList({
 
 /* 
 * 新增治理设施
-* @QA
-*   400(Bad Request)
-*   approachId字段有问题，获取时字段是approach,新增变成了approachID 
 */
 export function getWastewaterTreatmentAdd({
-  sourceId=1,
-  sourceType=0,
+  sourceId,
+  sourceType,
   theName,
   governanceType,
   approach,
@@ -173,14 +166,11 @@ export function getWastewaterTreatmentAdd({
 
 /* 
 * 编辑治理设施
-* @QA
-*   由于获取时没有数据，新增数据400错误，所以不能测试删除接口是否正确
-*   approachId字段有问题，获取时字段是approach,新增变成了approachID 
 */
 export function getWastewaterTreatmentUpdate({
   tableId,
-  sourceId=1,
-  sourceType=0,
+  sourceId,
+  sourceType,
   theName,
   governanceType,
   approach,
@@ -206,8 +196,6 @@ export function getWastewaterTreatmentUpdate({
 
 /* 
 * 删除治理设施
-* @QA
-*   由于获取时没有数据，新增数据400错误，所以不能测试删除接口是否正确
 */
 export function getWastewaterTreatmentDelete(id){
   return axios.get('/uControlFacilitiesDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -218,22 +206,17 @@ export function getWastewaterTreatmentDelete(id){
   })
 }
 
+
+
 /********************** 编辑-首页-废水排放因子基本情况 **********************/
-/**
- * @QA
- *  所有接口都未对接
- */
 
 /* 
-* 获取废水排放因子基本信息
-* @QA
-*   wasteWaterDischargePortId为排放口id，应该是传过来的tableId
-*   服务器内部异常
+* 获取废水排放因子基本信息    OK
 */
 export function getWastewaterDischargeFactorList({
   pageNumber=1, 
   countPerPage=1000,
-  wasteWaterDischargePortId=1,
+  wasteWaterDischargePortId,
 }){
   return axios.get('/uWasteWaterDischargeFactorList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -246,12 +229,10 @@ export function getWastewaterDischargeFactorList({
 }
 
 /* 
-* 新增废水排放因子
-* @QA
-*   400(Bad Request)
+* 新增废水排放因子    OK
 */
 export function getWastewaterDischargeFactorAdd({
-  wasteWaterDischargePortId=1,
+  wasteWaterDischargePortId,
   pollutantName,
   executeStandardNumber,
   standardValue,
@@ -271,10 +252,7 @@ export function getWastewaterDischargeFactorAdd({
 }
 
 /* 
-* 编辑废水排放因子
-* @QA
-*   由于获取时没有数据，新增数据400错误，所以不能测试删除接口是否正确
-*   approachId字段有问题，获取时字段是approach,新增变成了approachID 
+* 编辑废水排放因子    OK
 */
 export function getWastewaterDischargeFactorUpdate({
   tableId,
@@ -296,9 +274,7 @@ export function getWastewaterDischargeFactorUpdate({
 }
 
 /* 
-* 删除废水排放因子
-* @QA
-*   由于获取时没有数据，新增数据400错误，所以不能测试删除接口是否正确
+* 删除废水排放因子    OK
 */
 export function getWastewaterDischargeFactorDelete(id){
   return axios.get('/uWasteWaterDischargeFactorDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -309,22 +285,18 @@ export function getWastewaterDischargeFactorDelete(id){
   })
 }
 
+
+
+
 /********************** 编辑-首页-废水排放检测记录 **********************/
-/**
- * @QA
- *  所有接口都未对接
- */
 
 /* 
-* 获取废水排放检测记录
-* @QA
-*   wasteWaterDischargePortId为排放口id，应该是传过来的tableId
-*   服务器内部异常
+* 获取废水排放检测记录    OK
 */
 export function getWastewaterMonitoringRecordList({
   pageNumber=1, 
   countPerPage=1000,
-  wasteWaterDischargePortId=1,
+  wasteWaterDischargePortId,
 }){
   return axios.get('/uWasteWaterMonitoringRecordList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -337,12 +309,10 @@ export function getWastewaterMonitoringRecordList({
 }
 
 /* 
-* 新增废水排放检测记录
-* @QA
-*   400(Bad Request)
+* 新增废水排放检测记录    OK
 */
 export function getWastewaterMonitoringRecordAdd({
-  wasteWaterDischargePortId=1,
+  wasteWaterDischargePortId,
   serialNumber,
   monitoringDatetime,
   monitoringDepart,
@@ -364,34 +334,31 @@ export function getWastewaterMonitoringRecordAdd({
 }
 
 /* 
-* 编辑废水排放检测记录
-* @QA
-*   由于获取时没有数据，新增数据400错误，所以不能测试删除接口是否正确
-*   approachId字段有问题，获取时字段是approach,新增变成了approachID 
+* 编辑废水排放检测记录    OK
 */
 export function getWastewaterMonitoringRecordUpdate({
   tableId,
-  pollutantName,
-  executeStandardNumber,
-  standardValue,
-  isAutoMOPS,
+  serialNumber,
+  monitoringDatetime,
+  monitoringDepart,
+  monitoringResult,
+  monitoringReportURL,
 }){
   return axios.get('/uWasteWaterMonitoringRecordUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
-      pollutantName,
-      executeStandardNumber,
-      standardValue,
-      isAutoMOPS,
+      serialNumber,
+      monitoringDatetime,
+      monitoringDepart,
+      monitoringResult,
+      monitoringReportURL,
     }
   })
 }
 
 /* 
-* 删除废水排放检测记录
-* @QA
-*   由于获取时没有数据，新增数据400错误，所以不能测试删除接口是否正确
+* 删除废水排放检测记录    OK
 */
 export function getWastewaterMonitoringRecordDelete(id){
   return axios.get('/uWasteWaterMonitoringRecordDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -402,13 +369,18 @@ export function getWastewaterMonitoringRecordDelete(id){
   })
 }
 
+
+
+
+
+
+
+
+
 /********************** 编辑-首页-废气基本情况 **********************/
 
 /* 
 * 获取废气排放基本信息列表
-*@QA
-*   获取数据时，后端未返回全部字段
-*   废水治理基本情况应该是基于废水排放口id获得的，所以操作界面是否应该是删除，保存，查看
 */
 export function getWasteGasDischargeList({
   pageNumber=1, 
@@ -423,15 +395,12 @@ export function getWasteGasDischargeList({
     }
   })
 }
+
 /* 
 * 获取废气排放基本信息详情
-* @QA
-*   后端未返回经度纬度字段
-*   由于没有数据，排放口不存在，无法测试
-*   应该是点击按钮传tableId，现在只能给个默认值
 */
 export function getWasteGasDischargeDetail({
-  tableId=1,
+  tableId,
 }){
   return axios.get('/uWasteGasDischargePortDetail.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -442,8 +411,6 @@ export function getWasteGasDischargeDetail({
 }
 /* 
 * 新增废气排放口
-* @QA
-*   保存成功，但是查询无法查到
 */
 export function getWasteGasDischargeAdd({
   serialNumber,
@@ -475,8 +442,6 @@ export function getWasteGasDischargeAdd({
 
 /* 
 * 编辑废气排放口
-* @QA
-*   请选择企业，接口文档不需要
 */
 export function getWasteGasDischargeUpdate({
   tableId,
@@ -485,10 +450,10 @@ export function getWasteGasDischargeUpdate({
   outletLocation,
   longitude,
   latitude,
-  functionalAreaCategory,
-  emissionDestination,
+  dischargeMode,
+  dischargePortType,
   dischargeLaw,
-  nameOfGasBody
+  functionalAreaCategory,
 }){
   return axios.get('/uWasteGasDischargePortUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -499,10 +464,10 @@ export function getWasteGasDischargeUpdate({
       outletLocation,
       longitude,
       latitude,
-      functionalAreaCategory,
-      emissionDestination,
+      dischargeMode,
+      dischargePortType,
       dischargeLaw,
-      nameOfGasBody
+      functionalAreaCategory,
     }
   })
 }
@@ -520,21 +485,14 @@ export function getWasteGasDischargeDelete(id){
 }
 
 /********************** 编辑-首页-废气排放因子基本情况 **********************/
-/**
- * @QA
- *  所有接口都未对接
- */
 
 /* 
 * 获取废气排放因子基本信息
-* @QA
-*   WasteGasDischargePortId为排放口id，应该是传过来的tableId
-*   服务器内部异常
 */
 export function getWasteGasDischargeFactorList({
   pageNumber=1, 
   countPerPage=1000,
-  WasteGasDischargePortId=1,
+  WasteGasDischargePortId,
 }){
   return axios.get('/uWasteGasDischargeFactorList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -548,11 +506,9 @@ export function getWasteGasDischargeFactorList({
 
 /* 
 * 新增废气排放因子
-* @QA
-*   保存成功后服务器内部异常。。
 */
 export function getWasteGasDischargeFactorAdd({
-  wasteGasDischargePortId=1,
+  DischargePortId,
   pollutantName,
   executeStandardNumber,
   standardValue,
@@ -562,7 +518,7 @@ export function getWasteGasDischargeFactorAdd({
     params: {
       token: getToken(),
       customerId: getCustomerId(),
-      wasteGasDischargePortId,
+      wasteGasDischargePortId: DischargePortId,
       pollutantName,
       executeStandardNumber,
       standardValue,
@@ -573,8 +529,6 @@ export function getWasteGasDischargeFactorAdd({
 
 /* 
 * 编辑废气排放因子
-* @QA
-*   由于获取时没有数据，所以不能测试删除接口是否正确
 */
 export function getWasteGasDischargeFactorUpdate({
   tableId,
@@ -597,8 +551,6 @@ export function getWasteGasDischargeFactorUpdate({
 
 /* 
 * 删除废气排放因子
-* @QA
-*   由于获取时没有数据，所以不能测试删除接口是否正确
 */
 export function getWasteGasDischargeFactorDelete(id){
   return axios.get('/uWasteGasDischargeFactorDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -609,39 +561,34 @@ export function getWasteGasDischargeFactorDelete(id){
   })
 }
 
+
+
+
 /********************** 编辑-首页-废气排放检测记录 **********************/
-/**
- * @QA
- *  所有接口都未对接
- */
 
 /* 
 * 获取废气排放检测记录
-* @QA
-*   wasteWaterDischargePortId为排放口id，应该是传过来的tableId
 */
 export function getWasteGasMonitoringRecordList({
   pageNumber=1, 
   countPerPage=1000,
-  wasteGasDischargePortId=1,
+  id,
 }){
   return axios.get('/uWasteGasMonitoringRecordList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
-      wasteGasDischargePortId,
+      WasteGasDischargePortId: id,
     }
   })
 }
 
 /* 
 * 新增废气排放检测记录
-* @QA
-*   400(Bad Request)
 */
 export function getWasteGasMonitoringRecordAdd({
-  wasteGasDischargePortId=1,
+  DischargePortId,
   serialNumber,
   monitoringDatetime,
   monitoringDepart,
@@ -652,7 +599,7 @@ export function getWasteGasMonitoringRecordAdd({
     params: {
       token: getToken(),
       customerId: getCustomerId(),
-      wasteGasDischargePortId,
+      wasteGasDischargePortId:DischargePortId,
       serialNumber,
       monitoringDatetime,
       monitoringDepart,
@@ -664,8 +611,6 @@ export function getWasteGasMonitoringRecordAdd({
 
 /* 
 * 编辑废气排放检测记录
-* @QA
-*   由于获取时没有数据，新增数据400错误，所以不能测试删除接口是否正确
 */
 export function getWasteGasMonitoringRecordUpdate({
   tableId,
@@ -688,8 +633,6 @@ export function getWasteGasMonitoringRecordUpdate({
 
 /* 
 * 删除废气排放检测记录
-* @QA
-*   由于获取时没有数据，新增数据400错误，所以不能测试删除接口是否正确
 */
 export function getWasteGasMonitoringRecordDelete(id){
   return axios.get('/uWasteGasMonitoringRecordDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -729,7 +672,7 @@ export function getWasteSolidList({
 * 获取固体废物基本信息详情
 */
 export function getWasteSolidDetail({
-  tableId=1,
+  tableId,
 }){
   return axios.get('/uWasteSolidDetail.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -924,8 +867,6 @@ export function getBoundaryNoiseAdd({
 
 /* 
 * 编辑边界噪声
-* @QA
-*   噪声源性质与功能区类型数据要从接口获取，这俩个数据暂时写死。
 */
 export function getBoundaryNoiseUpdate({
   tableId,
@@ -967,6 +908,9 @@ export function getBoundaryNoiseDelete(id){
 
 
 /********************** 编辑-首页-企业遵守法律法规情况 **********************/
+/**
+ * OK
+ */
 
 /* 
 * 获取环评基本信息列表
@@ -989,7 +933,7 @@ export function getEIAList({
 * 获取环评基本信息详情
 */
 export function getEIADetail({
-  tableId=1, 
+  tableId, 
 }){
   return axios.get('/uCustomerEIADetail.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -1036,8 +980,6 @@ export function getEIAAdd({
 
 /* 
 * 编辑环评基本信息
-* @QA
-*   由于没有数据，新增400错误，所以不知道该接口是否正确
 */
 export function getEIAUpdate({
   tableId,
@@ -1072,8 +1014,6 @@ export function getEIAUpdate({
 
 /* 
 * 删除环评基本信息
-* @QA
-*   由于没有数据，新增400错误，所以不知道该接口是否正确
 */
 export function getEIADelete(id){
   return axios.get('/uCustomerEIADelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -1084,12 +1024,17 @@ export function getEIADelete(id){
   })
 }
 
+
+
+
 /********************** 编辑-首页-企业证件照基本情况 **********************/
+/**
+ * OK
+ */
+
 
 /* 
 * 获取企业证照材料
-* @QA
-*   
 */
 export function getCertificationList({
   pageNumber=1, 
@@ -1107,7 +1052,6 @@ export function getCertificationList({
 
 /* 
 * 新增企业证照材料
-*   400(Bad Request)
 */
 export function getCertificationAdd({
   theName,
@@ -1133,8 +1077,6 @@ export function getCertificationAdd({
 
 /* 
 * 编辑企业证照材料
-* @QA
-*   没有数据，没有办法测试
 */
 export function getCertificationUpdate({
   tableId,
@@ -1161,8 +1103,6 @@ export function getCertificationUpdate({
 
 /* 
 * 删除企业证照材料
-* @QA
-*   没有数据，没有办法测试
 */
 export function getCertificationDelete(id){
   return axios.get('/uCustomerCertificationDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -1172,6 +1112,14 @@ export function getCertificationDelete(id){
     }
   })
 }
+
+
+
+
+
+
+
+
 
 /********************** 编辑-首页-企业内部环保管理制度 **********************/
 
@@ -1194,7 +1142,6 @@ export function getIEPSList({
 
 /* 
 * 新增企业内部环保管理制度
-*   保存成功后，再次获取数据获取不到
 */
 export function getIEPSAdd({
   theName,
@@ -1214,8 +1161,6 @@ export function getIEPSAdd({
 
 /* 
 * 编辑企业内部环保管理制度
-* @QA
-*   没有数据，没有办法测试
 */
 export function getIEPSUpdate({
   tableId,
@@ -1223,7 +1168,7 @@ export function getIEPSUpdate({
   implementation,
   filePath,
 }){
-  return axios.get('/uCustomerEIAUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uCustomerIEPSUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
@@ -1236,8 +1181,6 @@ export function getIEPSUpdate({
 
 /* 
 * 删除企业内部环保管理制度
-* @QA
-*   没有数据，没有办法测试
 */
 export function getIEPSDelete(id){
   return axios.get('/uCustomerIEPSDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -1248,7 +1191,16 @@ export function getIEPSDelete(id){
   })
 }
 
+
+
+
+
+
 /********************** 编辑-首页-现场检查、监管信息 **********************/
+/**
+ * OK
+ */
+
 
 /* 
 * 获取现场检查、监管信息
@@ -1257,7 +1209,7 @@ export function getSiteInspectionList({
   pageNumber=1, 
   countPerPage=1000,
 }){
-  return axios.get('/uCustomerSiteInspectionList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uInspectionPlanDtlForCustomerList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -1269,8 +1221,6 @@ export function getSiteInspectionList({
 
 /* 
 * 新增现场检查、监管信息
-* @QA
-*   400 (Bad Request)
 */
 export function getSiteInspectionAdd({
   serialNumber,
@@ -1302,8 +1252,6 @@ export function getSiteInspectionAdd({
 
 /* 
 * 编辑现场检查、监管信息
-* @QA
-*   没有数据，没有办法测试
 */
 export function getSiteInspectionUpdate({
   tableId,
@@ -1336,8 +1284,6 @@ export function getSiteInspectionUpdate({
 
 /* 
 * 删除现场检查、监管信息
-* @QA
-*   没有数据，没有办法测试
 */
 export function getSiteInspectionDelete(id){
   return axios.get('/uCustomerSiteInspectionDelete.uhtm?InterfaceVersion=' + apiVer, {

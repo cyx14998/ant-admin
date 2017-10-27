@@ -66,13 +66,18 @@ const itemDataModel = {
   monitoringReportURL: '',
 };
 
-const WasteGasDemoSection = connectEditableSectionApi({
+const WasteGasMonitoringRecord = connectEditableSectionApi({
   secTitle: '废气排放检测记录基本情况',
   columns: columns,
-  apiLoader: function () {
+  apiLoader: function ({apiListItemId}) {
+    var editId = apiListItemId;
+    if(editId === undefined){
+      editId = localStorage.getItem('wastewater-discharge-editId');
+    }
     return new Promise((resolve,reject) => {
       //获取数据
-      getWasteGasMonitoringRecordList({}).then(res => {
+      console.log(editId);
+      getWasteGasMonitoringRecordList({id: editId}).then(res => {
         console.log('getWasteGasMonitoringRecordList res ---', res);
 
         if (res.data.result !== 'success') {
@@ -97,11 +102,15 @@ const WasteGasDemoSection = connectEditableSectionApi({
     // 新增
     console.log('apiSave record ----', record);
     var self = this;
+    if(record.apiListItemId === undefined){
+      record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
+    }
+    record.DischargePortId = record.apiListItemId;
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        console.log("sssssssss")
+        console.log(record);
         getWasteGasMonitoringRecordAdd({
           ...record,
         }).then(res => {
@@ -168,4 +177,4 @@ const WasteGasDemoSection = connectEditableSectionApi({
   itemDataModel: itemDataModel
 })
 
-export default WasteGasDemoSection;
+export default WasteGasMonitoringRecord;

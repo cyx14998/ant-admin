@@ -20,15 +20,29 @@ export function getWastewaterDischargeRecordList({
   pageNumber=1, 
   countPerPage=1000,
   customerMonthDclarationId,
-  theYear,
-  theMonth,
 }){
   return axios.get('/uWasteWaterDischargeRecordList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerMonthDclarationId,
-      theYear,
-      theMonth,
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
+
+/* 
+* 获取废水排放基本信息详情
+*/
+export function getWastewaterDischargeRecordDetail({
+  pageNumber=1, 
+  countPerPage=1000,
+  tableId,
+}){
+  return axios.get('/uWasteWaterDischargeRecordDetail.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
       pageNumber,
       countPerPage,
     }
@@ -393,24 +407,6 @@ export function getWasteGasDischargeFactorRecordDelete(id){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /********************** 编辑-首页-固体废物产生及处置基本情况 **********************/
 /**
  * OK
@@ -518,6 +514,12 @@ export function getWasteSolidRecordDelete(id){
     }
   })
 }
+
+
+
+
+
+
 
 /********************** 编辑-首页-边界噪声基本情况 **********************/
 /*

@@ -22,7 +22,7 @@ import {
 function changeParentState(id) {
   var cusId = getLocQueryByLabel('id');
   parent.window.iframeHook.changePage({
-    url: '/customerDynamicEdit.html?id='+ cusId +'&dynamicId=' + id,
+    url: '/customerDynamicEdit.html?id='+ cusId +'&dynamicId=' + id + '#' + Math.random(),
     breadIncrement: '客户动态信息编辑'
   })
 }
@@ -116,8 +116,7 @@ class CustomerDynamicList extends Component {
           <Table
             columns={columns} 
             dataSource={this.state.customerList}
-            loading={this.state.loading}
-            pagination={false}/>
+            loading={this.state.loading} />
           {/* <Pagination></Pagination> */}
         </div>
       </div>
