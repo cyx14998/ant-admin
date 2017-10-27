@@ -116,8 +116,7 @@ class CustomerDynamicList extends Component {
           <Table
             columns={columns} 
             dataSource={this.state.customerList}
-            loading={this.state.loading}
-            pagination={false}/>
+            loading={this.state.loading} />
           {/* <Pagination></Pagination> */}
         </div>
       </div>
