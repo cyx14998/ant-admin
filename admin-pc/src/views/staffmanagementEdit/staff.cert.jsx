@@ -8,6 +8,7 @@ import {
 } from 'antd';
 
 import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
+import StaffCertEdit from './staff.cert.edit';
 
 import {
   getStarffCertList,
@@ -135,7 +136,7 @@ const StaffCertModule = connectUneditableSectionApi({
   },
   // 弹窗组件
   modalTitle: '员工证照信息',
-  modalComponent: InnerComponent
+  modalComponent: StaffCertEdit
 });
 
 
