@@ -103,15 +103,15 @@ const InnerComponent = ({
   <div>
     <WasteWaterDischargeDetail showItemVisible={showItemVisible} editId={editId} />
     {
-      editId?<div>
+      editId === "" ? (itemVisible && (<div>
         <WasteWaterTreatment />
         <WasteWaterDischargeFactor />
         <WasteWaterMonitoringRecord />
-      </div>: itemVisible && <div>
+      </div>)) : (<div>
         <WasteWaterTreatment />
         <WasteWaterDischargeFactor />
         <WasteWaterMonitoringRecord />
-      </div>
+      </div>)
     }
   </div>
 );
@@ -143,28 +143,6 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
         MyToast('接口调用失败')
       })
     })  
-  },
-  
-  apiDel: function (tableId) {
-    console.log(`apiDel ${tableId}`);
-
-    return new Promise((resolve, reject) => {
-      getProductBaseInfoDelete(tableId).then(res => {
-        if (res.data.result !== 'success') {
-          resolve({
-            code: 1,
-            info: res.data.info,
-          });
-          return;
-        }
-
-        resolve({
-          code: 0 // success
-        });
-      }).catch(err => {
-        reject(err)
-      });
-    });
   },
   apiDel: function (tableId) {
     //删除
