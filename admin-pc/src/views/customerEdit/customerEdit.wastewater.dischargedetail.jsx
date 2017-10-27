@@ -26,6 +26,10 @@ import {
 	getWastewaterDischargeAdd,
 } from '../../common/api/api.customer.plus.js';
 
+/**
+ * @params editId
+ * @params showItemVisible
+ */
 class WasteWaterDischargeDetail extends React.Component {
 	constructor(props) {
 		super(props);
@@ -36,6 +40,9 @@ class WasteWaterDischargeDetail extends React.Component {
 
 	componentDidMount() {
 		var tableId = this.props.editId;
+
+		if (tableId === '') return;
+
 		getWastewaterDischargeDetail({ tableId: tableId }).then(res => {
 			console.log('getWastewaterDischargeDetail res ---', res);
 			if (res.data.result !== 'success') {
@@ -50,6 +57,10 @@ class WasteWaterDischargeDetail extends React.Component {
 	// 基本信息保存
 	saveDetail(e) {
 		e.preventDefault();
+
+		this.props.showItemVisible();
+		localStorage.setItem('wastewater-discharge-editId', 'x-001')
+		return;
 		const {
             form
         } = this.props;
@@ -70,7 +81,7 @@ class WasteWaterDischargeDetail extends React.Component {
 						MyToast(res.data.info)
 						return;
 					}
-					console.log("sssssssss",this.props.showItemVisible);
+					
 					this.props.showItemVisible();
 					MyToast("新增成功")
 				}).catch(err => {

@@ -74,8 +74,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
         this.qiniuyunData = {
             key: 'key-' + Math.random(),
-            // token: 'xozWSPMxkMjIVoHg2JyXq4-7-oJaEADLOKHVR0vU:op2YL5U-pJJNOZfHl4GThkhnHi8=:eyJkZWxldGVBZnRlckRheXMiOjcsInNjb3BlIjoianNzZGsiLCJkZWFkbGluZSI6MTUwOTAyNTU2NX0=',
-            token: "W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:6jzF7_tnR1MxUJbDN0B5tyAYIq0=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDI3NzUwfQ==",
+            token: 'xozWSPMxkMjIVoHg2JyXq4-7-oJaEADLOKHVR0vU:op2YL5U-pJJNOZfHl4GThkhnHi8=:eyJkZWxldGVBZnRlckRheXMiOjcsInNjb3BlIjoianNzZGsiLCJkZWFkbGluZSI6MTUwOTAyNTU2NX0=',
+            // token: "W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:6jzF7_tnR1MxUJbDN0B5tyAYIq0=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDI3NzUwfQ==",
             // save_key: true,
             // runtimes: 'html5,flash,html4',      // 上传模式，依次退化
             // browse_button: 'coverImagePath',         // 上传选择的点选按钮，必需
@@ -123,7 +123,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             }
         }).catch(err => console.log(err));
 
-        this.beforeUpload();
+        // this.beforeUpload();
     }
     //更改省份
     changeProvince(key) {

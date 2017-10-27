@@ -79,7 +79,8 @@ const itemDataModel = {
 const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '废水治理基本情况',
   columns: columns,
-  apiLoader: function () {
+  apiLoader: function ({apiListItemId}) {
+    console.log('treatment----------------', apiListItemId)
     return new Promise((resolve,reject) => {
       //获取数据
       getWastewaterTreatmentList({}).then(res => {
@@ -105,7 +106,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record ----', record);
+    console.log('apiSave record -------------', record.apiListItemId);
     var self = this;
 
     if (record.tableId === '') {

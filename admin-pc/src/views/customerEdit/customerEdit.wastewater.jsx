@@ -103,15 +103,15 @@ const InnerComponent = ({
   <div>
     <WasteWaterDischargeDetail showItemVisible={showItemVisible} editId={editId} />
     {
-      editId?<div>
+      editId ? (<div>
+        <WasteWaterTreatment apiListItemId={editId} />
+        <WasteWaterDischargeFactor apiListItemId={editId} />
+        <WasteWaterMonitoringRecord />
+      </div>) : (itemVisible && (<div>
         <WasteWaterTreatment />
         <WasteWaterDischargeFactor />
         <WasteWaterMonitoringRecord />
-      </div>: itemVisible && <div>
-        <WasteWaterTreatment />
-        <WasteWaterDischargeFactor />
-        <WasteWaterMonitoringRecord />
-      </div>
+      </div>))
     }
   </div>
 );

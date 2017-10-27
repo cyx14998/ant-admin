@@ -1,7 +1,7 @@
 /**
  * 废水排放因子基本情况
  */
-
+import React from 'react';
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
@@ -61,10 +61,23 @@ const itemDataModel = {
   isAutoMOPS: '',
 };
 
+function getEditIdHook (id) {
+  return id;
+}
+
+/**
+ * 
+ */
 const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '废水排放因子基本情况',
   columns: columns,
-  apiLoader: function () {
+  apiLoader: function ({apiListItemId}) {
+    var eidtId = apiListItemId;
+
+
+    console.log('apiLoader eidtId -----------', eidtId)
+    // var eidtId = localStorage.getItem('wastewater-discharge-editId');
+
     return new Promise((resolve,reject) => {
       //获取数据
       getWastewaterDischargeFactorList({}).then(res => {
@@ -90,7 +103,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record ----', record);
+    console.log('apiSave apiListItemId ----', record.apiListItemId);
     var self = this;
 
     if (record.tableId === '') {
@@ -161,6 +174,32 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     });
   },
   itemDataModel: itemDataModel
-})
+});
+
+
+/**
+ * @params eidtId
+ */
+class AAA extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.getEditId = this.getEditId.bind(this);
+  }
+
+  getEditId() {
+
+  }
+
+  render() {
+    var eidtId = this.props.eidtId;
+
+    return (
+      <div>
+
+      </div>
+    )
+  }
+}
 
 export default WasteWaterDemoSection;

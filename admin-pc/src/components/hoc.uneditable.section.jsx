@@ -44,10 +44,21 @@ function connectUneditableSectionApi(options) {
     }
 
     closeModalEdit() {
+      // 当关闭新增窗口时，itemVisible set to false
+      if (this.state.editId === '') {
+        this.setState({
+          modalShow: false,
+          fetchReload: true,
+          itemVisible: false
+        });
+        return;
+      }
+
       this.setState({
         modalShow: false,
         fetchReload: true
       });
+      
     }
 
     showItemVisible() {
