@@ -49,7 +49,10 @@ import connectUneditableSectionApi from '../../components/hoc.uneditable.section
 import './index.less';
 
 import {
-  getCheckplanMainlist
+  getCheckplanMainlist,
+  getCheckplanMainAdd,
+  getCheckplanMainEdit,
+  getCheckplanMainDelete,
 } from '../../common/api/api.checkplan';
 
 import {
@@ -153,7 +156,7 @@ const EditableDemoSection = connectEditableSectionApi({
     // 新增
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
-        getProductBaseInfoAdd({
+        getCheckplanMainAdd({
           ...record,
         }).then(res => {
           if (res.data.result !== 'success') {
@@ -173,13 +176,32 @@ const EditableDemoSection = connectEditableSectionApi({
       });
     } else {
       // 编辑
+       return new Promise((resolve, reject) => {
+        getCheckplanMainEdit({
+          ...record,
+        }).then(res => {
+          if (res.data.result !== 'success') {
+            resolve({
+              code: 1,
+              info: res.data.info,
+            });
+            return;
+          }
+
+          resolve({
+            code: 0 // success
+          })
+        }).catch(err => {
+          reject(err)
+        });
+      });
     }
   },
   apiDel: function (tableId) {
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getProductBaseInfoDelete(tableId).then(res => {
+      getCheckplanMainDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,

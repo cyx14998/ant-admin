@@ -68,19 +68,16 @@ class Dynamicinfo extends React.Component {
                     <TabPane tab="生产信息" key="1">
                          <CustomerEditBaseinfoDetail onBaseinfoSave={this.setTabPaneActive.bind(this)} /> 
                     </TabPane>
-                     <TabPane tab="排污单位基本情况-产品" disabled={this.state.tabPaneDisabled} key="2">
-                         1
-                    </TabPane>
-                    <TabPane tab="废水污染物基本情况" disabled={this.state.tabPaneDisabled} key="3">
+                    <TabPane tab="废水污染物基本情况" disabled={this.state.tabPaneDisabled} key="2">
                         <CustomerEditDynamicinfoWasteWater />
                     </TabPane>
-                    <TabPane tab="废气污染物基本情况" disabled={this.state.tabPaneDisabled} key="4">
+                    <TabPane tab="废气污染物基本情况" disabled={this.state.tabPaneDisabled} key="3">
                         <CustomerEditDynamicinfoWasteGas />
                     </TabPane>
-                    <TabPane tab="固体废物基本情况" disabled={this.state.tabPaneDisabled} key="5">
+                    <TabPane tab="固体废物基本情况" disabled={this.state.tabPaneDisabled} key="4">
                         <CustomerEditDynamicinfoWasteSolidRecord />
                     </TabPane>
-                    <TabPane tab="边界噪声基本情况" disabled={this.state.tabPaneDisabled} key="6">
+                    <TabPane tab="边界噪声基本情况" disabled={this.state.tabPaneDisabled} key="5">
                         <CustomerEditDynamicinfoBoundaryNoise />
                     </TabPane>
                 </Tabs>
