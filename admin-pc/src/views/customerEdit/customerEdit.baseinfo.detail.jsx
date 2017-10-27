@@ -71,11 +71,18 @@ class CustomerEditBaseinfoDetail extends React.Component {
         
         this.beforeUpload = this.beforeUpload.bind(this);
 
+
         this.qiniuyunData = {
-            // token: '',
-            token: 'xozWSPMxkMjIVoHg2JyXq4-7-oJaEADLOKHVR0vU:1AreAaaS0j5_bjgQsHSshM0zTZI=:eyJkZWxldGVBZnRlckRheXMiOjcsInNjb3BlIjoianNzZGsiLCJkZWFkbGluZSI6MTUwOTAxNTA3Mn0=',
-            //token: "W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:AuMz5nKqsSrEQ6Y6mb-gBpJunIQ=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDEzMTkxfQ=="
-            // token:"W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:wxacrkBBNB8Pjby5ZJaQQd4NGLs=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDE1OTM2fQ==",
+            key: 'key-' + Math.random(),
+            token: 'xozWSPMxkMjIVoHg2JyXq4-7-oJaEADLOKHVR0vU:op2YL5U-pJJNOZfHl4GThkhnHi8=:eyJkZWxldGVBZnRlckRheXMiOjcsInNjb3BlIjoianNzZGsiLCJkZWFkbGluZSI6MTUwOTAyNTU2NX0=',
+            // token: "W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:6jzF7_tnR1MxUJbDN0B5tyAYIq0=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDI3NzUwfQ==",
+            // save_key: true,
+            // runtimes: 'html5,flash,html4',      // 上传模式，依次退化
+            // browse_button: 'coverImagePath',         // 上传选择的点选按钮，必需
+            // domain: 'http://oyc0y0ksm.bkt.clouddn.com',     // bucket域名，下载资源时用到，必需
+            // container: 'container'            // 上传区域DOM ID，默认是browser_button的父元素
+
+
         };
     }
 
@@ -116,8 +123,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             }
         }).catch(err => console.log(err));
 
-
-        this.beforeUpload();
+        // this.beforeUpload();
     }
     //更改省份
     changeProvince(key) {
@@ -816,8 +822,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <div className="baseinfo-section">
                                 <h2 className="yzy-tab-content-title">生产工艺流程图及排污环节</h2>
                                 <Upload
-                                    action='http://up.qiniup.com'
-                                    enctype="multipart/form-data"
+                                    action='http://up.qiniu.com'
+                                    container='container'
                                     listType="picture-card"
                                     fileList={this.state.prodFileList}
                                     onPreview={this.handlePicPreview.bind(this)}

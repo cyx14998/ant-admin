@@ -12,7 +12,7 @@ import connectUneditableSectionApi from '../../components/hoc.uneditable.section
 //废水排放基本信息详情
 import WasteGasDischargeDetail from './customerEdit.wastegas.dischargedetail';
 //废水治理基本情况
-import WasteWaterTreatment from './customerEdit.wastewater.treatment';
+import WasteGasTreatment from './customerEdit.wastegas.treatment';
 // //废水因子基本情况
 import WasteGasDischargeFactor from './customerEdit.wastegas.dischargefactor';
 // //废水排放检测记录
@@ -97,19 +97,19 @@ const InnerComponent = ({
     <WasteGasDischargeDetail showItemVisible={showItemVisible} editId={editId} />
     {
       editId === "" ? (itemVisible && (<div>
-        <WasteWaterTreatment />
+        <WasteGasTreatment />
         <WasteGasDischargeFactor />
         <WasteGasMonitoringRecord />
       </div>)): (<div>
-        <WasteWaterTreatment />
-        <WasteGasDischargeFactor />
-        <WasteGasMonitoringRecord />
+        <WasteGasTreatment apiListItemId={editId} />
+        <WasteGasDischargeFactor apiListItemId={editId} />
+        <WasteGasMonitoringRecord apiListItemId={editId} />
       </div>)
     }
   </div>
 );
 
-const WasteWaterDemoSection = connectUneditableSectionApi({
+const WasteGasDischarge = connectUneditableSectionApi({
   secTitle: '废气排放基本信息列表',
   columns: columns,
   apiLoader: function () {
@@ -138,7 +138,7 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
   },
   apiDel: function (tableId) {
     //删除
-    console.log(`apiDel ${tableId}`);
+    // console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
       getWasteGasDischargeDelete(tableId).then(res => {
@@ -163,4 +163,4 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
   modalComponent: InnerComponent
 })
 
-export default WasteWaterDemoSection;
+export default WasteGasDischarge;

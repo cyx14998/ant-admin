@@ -1,42 +1,42 @@
 /**
- * 废气排放检测记录基本情况
+ * 企业附件信息基本情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
-  getWasteGasMonitoringRecordList,
-  getWasteGasMonitoringRecordAdd,
-  getWasteGasMonitoringRecordDelete,
-  getWasteGasMonitoringRecordUpdate,
-} from '../../common/api/api.customer.plus.js';
+  getAttachmentRecordList,
+  getAttachmentRecordAdd,
+  getAttachmentRecordUpdate,
+  getAttachmentRecordDelete,
+} from '../../common/api/api.customer.dynamic.plus.js';
 
 import {
   MyToast
+} from '../../common/utils';
+
+import {
+  getLocQueryByLabel
 } from '../../common/utils';
 
 /**
  * table head
  */
 const columns = [{
-  title: '编号',
-  dataIndex: 'serialNumber',
+  title: '文件名称',
+  dataIndex: 'theName',
   width: '10%'
 }, {
-  title: '监测时间',
-  dataIndex: 'monitoringDatetime',
+  title: '附件类型Id',
+  dataIndex: 'attachmentTypeId',
   width: '10%'
 }, {
-  title: '监测部门',
-  dataIndex: 'monitoringDepart',
+  title: '文件大小',
+  dataIndex: 'theSize',
   width: '10%'
 }, {
-  title: '监测结果',
-  dataIndex: 'monitoringResult',
-  width: '10%'
-}, {
-  title: '监测报告',
-  dataIndex: 'monitoringReportURL',
+  title: '文件路径',
+  dataIndex: 'filePath',
   width: '10%'
 }, {
   title: '操作',
@@ -59,27 +59,23 @@ const options = [{
  * 新数据默认值
  */
 const itemDataModel = {
-  serialNumber: '',
-  monitoringDatetime: '',
-  monitoringDepart: '',
-  monitoringResult: '',
-  monitoringReportURL: '',
+  theName: '',
+  attachmentTypeId: '',
+  theSize: '',
+  filePath: '',
 };
 
-const WasteGasMonitoringRecord = connectEditableSectionApi({
-  secTitle: '废气排放检测记录基本情况',
+const WasteWaterDemoSection = connectEditableSectionApi({
+  secTitle: '企业附件信息基本情况',
   columns: columns,
-  apiLoader: function ({apiListItemId}) {
-    var editId = apiListItemId;
-    if(editId === undefined){
-      editId = localStorage.getItem('wastewater-discharge-editId');
-    }
+  apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      console.log(editId);
-      getWasteGasMonitoringRecordList({id: editId}).then(res => {
-        console.log('getWasteGasMonitoringRecordList res ---', res);
-
+      var dynamicId = getLocQueryByLabel('dynamicId');
+      if(!dynamicId) return;
+      getAttachmentRecordList({customerMonthDclarationId:dynamicId,}).then(res => {
+        console.log('getAttachmentRecordList res ---', res);
+        
         if (res.data.result !== 'success') {
           resolve({
             code: -1,
@@ -88,7 +84,7 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.wasteGasMonitoringRecordList;
+        var data = res.data.AttachmentRecordList;
         resolve({
           code: 0,
           data,
@@ -102,17 +98,14 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
     // 新增
     console.log('apiSave record ----', record);
     var self = this;
-    if(record.apiListItemId === undefined){
-      record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
-    }
-    record.DischargePortId = record.apiListItemId;
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        console.log(record);
-        getWasteGasMonitoringRecordAdd({
+        getAttachmentRecordAdd({
           ...record,
+          customerMonthDclarationId:1,
+          boundaryNoiseId:1
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -132,7 +125,8 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        getWasteGasMonitoringRecordUpdate({
+        console.log(record)
+        getAttachmentRecordUpdate({
           ...record,
         }).then(res => {
           if (res.data.result !== 'success') {
@@ -157,7 +151,7 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getWasteGasMonitoringRecordDelete(tableId).then(res => {
+      getAttachmentRecordDelete(tableId).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,
@@ -177,4 +171,4 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
   itemDataModel: itemDataModel
 })
 
-export default WasteGasMonitoringRecord;
+export default WasteWaterDemoSection;

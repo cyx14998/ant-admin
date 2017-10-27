@@ -66,14 +66,21 @@ const itemDataModel = {
   monitoringReportURL: '',
 };
 
-const WasteWaterDemoSection = connectEditableSectionApi({
+/**
+ * @params apiListItemId
+ */
+const WasteWaterMonitoringRecord = connectEditableSectionApi({
   secTitle: '废水排放检测记录基本情况',
   columns: columns,
-  apiLoader: function () {
+  apiLoader: function ({apiListItemId}) {
+    var editId = apiListItemId;
+    if(editId === undefined){
+      editId = localStorage.getItem('wastewater-discharge-editId');
+    }
     return new Promise((resolve,reject) => {
       //获取数据
-      getWastewaterMonitoringRecordList({}).then(res => {
-        console.log('getWastewaterMonitoringRecordList res ---', res);
+      getWastewaterMonitoringRecordList({wasteWaterDischargePortId: editId}).then(res => {
+        // console.log('getWastewaterMonitoringRecordList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -95,13 +102,16 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record ----', record);
+    // console.log('apiSave record ----', record);
     var self = this;
+    if(record.apiListItemId === undefined){
+      record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
+    }
+    record.wasteWaterDischargePortId = record.apiListItemId;
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        console.log("sssssssss")
         getWastewaterMonitoringRecordAdd({
           ...record,
         }).then(res => {
@@ -145,7 +155,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiDel: function (tableId) {
     //删除
-    console.log(`apiDel ${tableId}`);
+    // console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
       getWastewaterMonitoringRecordDelete(tableId).then(res => {
@@ -168,4 +178,4 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   itemDataModel: itemDataModel
 })
 
-export default WasteWaterDemoSection;
+export default WasteWaterMonitoringRecord;

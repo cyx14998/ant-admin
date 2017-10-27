@@ -108,15 +108,15 @@ const InnerComponent = ({
         <WasteWaterDischargeFactor />
         <WasteWaterMonitoringRecord />
       </div>)) : (<div>
-        <WasteWaterTreatment />
-        <WasteWaterDischargeFactor />
-        <WasteWaterMonitoringRecord />
+        <WasteWaterTreatment apiListItemId={editId} />
+        <WasteWaterDischargeFactor apiListItemId={editId} />
+        <WasteWaterMonitoringRecord apiListItemId={editId}/>
       </div>)
     }
   </div>
 );
 
-const WasteWaterDemoSection = connectUneditableSectionApi({
+const WasteWaterDischarge = connectUneditableSectionApi({
   secTitle: '废水排放口基本信息列表',
   columns: columns,
   apiLoader: function () {
@@ -124,7 +124,7 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
     return new Promise((resolve, reject) => {
       //获取数据
       getWastewaterDischargeList({}).then(res => {
-        console.log('getWastewaterList res ---', res);
+        // console.log('getWastewaterList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -146,7 +146,7 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
   },
   apiDel: function (tableId) {
     //删除
-    console.log(`apiDel ${tableId}`);
+    // console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
       getWastewaterDischargeDelete(tableId).then(res => {
@@ -171,4 +171,4 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
   modalComponent: InnerComponent
 });
 
-export default WasteWaterDemoSection;
+export default WasteWaterDischarge;

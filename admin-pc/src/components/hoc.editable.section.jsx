@@ -14,6 +14,7 @@ import EditableSection from './editable.section';
  * @params apiSave
  * @params apiDel
  * @params itemDataModel
+ * @params checkInNewpage    添加新页面查看功能
  */
 function connectEditableSectionApi(options) {
   // return function(Comp) {

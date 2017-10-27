@@ -20,15 +20,29 @@ export function getWastewaterDischargeRecordList({
   pageNumber=1, 
   countPerPage=1000,
   customerMonthDclarationId,
-  theYear,
-  theMonth,
 }){
   return axios.get('/uWasteWaterDischargeRecordList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerMonthDclarationId,
-      theYear,
-      theMonth,
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
+
+/* 
+* 获取废水排放基本信息详情
+*/
+export function getWastewaterDischargeRecordDetail({
+  pageNumber=1, 
+  countPerPage=1000,
+  tableId,
+}){
+  return axios.get('/uWasteWaterDischargeRecordDetail.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
       pageNumber,
       countPerPage,
     }

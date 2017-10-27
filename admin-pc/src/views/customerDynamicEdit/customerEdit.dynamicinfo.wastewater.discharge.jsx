@@ -1,172 +1,200 @@
 /**
- * 废水污染物排放情况
+ * 废气污染物排放情况
  */
+
 import React from 'react';
+import {
+	Form,
+	Row,
+	Col,
+	Input,
+  Button,
+  Select,
+} from 'antd';
+const FormItem = Form.Item;
+const Option = Select.Option;
 
-import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
+import {
+	MyToast
+} from '../../common/utils';
 
-import { 
-  getWastewaterDischargeRecordList,
-  getWastewaterDischargeRecordAdd,
-  getWastewaterDischargeRecordUpdate,
-  getWastewaterDischargeRecordDelete,
+import {
+  getLocQueryByLabel
+} from '../../common/utils';
+
+const cusMId = getLocQueryByLabel("dynamicId");
+
+const formItemLayout = {
+	labelCol: { span: 8 },
+	wrapperCol: { span: 16 },
+}
+
+import {
+	getWastewaterDischargeRecordDetail,
+	getWastewaterDischargeRecordAdd,
+	getWastewaterDischargeRecordUpdate,
 } from '../../common/api/api.customer.dynamic.plus.js';
 
 import {
-  MyToast
-} from '../../common/utils';
+  getWastewaterDischargeList
+} from '../../common/api/api.customer.plus.js';
 
 /**
- * table head
+ * @parms editId
+ * @parms showItemVisible
  */
-const columns = [{
-  title: '排放量',
-  dataIndex: 'emissionAmount',
-  width: '10%'
-}, {
-  title: '排放去向',
-  dataIndex: 'emissionDestination',
-  width: '10%'
-}, {
-  title: '操作',
-  dataIndex: 'operation',
-  width: '10%'
-}];
+class WasteGasDischargeDetail extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			data: {},
+      tableId:"",
+      dischargePort:[]
+		}
+	}
 
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
-
-/**
- * 新数据默认值
- */
-const itemDataModel = {
-  emissionAmount: '',
-  emissionDestination: '',
-};
-
-const InnerComponent = ({
-  editId,
-}) => (
-  <div>
-    待编辑数据的id是--{editId}
-  </div>
-);
-
-const WasteWaterDemoSection = connectUneditableSectionApi({
-  secTitle: '废水排放基本信息列表',
-  columns: columns,
-  apiLoader: function () {
-    return new Promise((resolve,reject) => {
-      //获取数据
-      getWastewaterDischargeRecordList({
-        customerMonthDclarationId:1,
-        theYear:1,
-        theMonth:1,
-      }).then(res => {
-        console.log('getWastewaterDischargeRecordList res ---', res);
-
-        if (res.data.result !== 'success') {
-          resolve({
-            code: -1,
-            info: res.data.info,
-          })
-          return;
-        }
-
-        var data = res.data.wasteWaterDischargeRecordList;
-        resolve({
-          code: 0,
-          data,
-        })
-      }).catch(err => {
-        MyToast('接口调用失败')
+	componentDidMount() {
+    //获取所有排放口
+    getWastewaterDischargeList({}).then(res => {
+			if (res.data.result !== 'success') {
+				MyToast(res.data.info)
+				return;
+      }
+      var tableId = [];
+      res.data.wasteWaterDischargePortList.map((item,index) => {
+        tableId.push(item.tableId);
       })
+
+			this.setState({ dischargePort: tableId })
+		}).catch(err => {
+			MyToast('接口调用失败')
     })
-  },
-  apiSave: function (record) {
-    // 新增
-    console.log('apiSave record ----', record);
-    var self = this;
+    var tableId = this.props.editId;
+    if (tableId === '') return;
+		getWastewaterDischargeRecordDetail({ tableId: tableId }).then(res => {
+      console.log("sssssssssssss",res); 
+			if (res.data.result !== 'success') {
+				MyToast(res.data.info)
+				return;
+      }
+      // var data = JSON.parse(res.data);
+			// this.setState({ data: res.data.wasteGasDischargePort, tableId: res.data.wasteGasDischargePort.tableId })
+		}).catch(err => {
+			MyToast('接口调用失败')
+    })
+   
+	}
+	// 基本信息保存
+	saveDetail(e) {
+		e.preventDefault();
+		const {
+			form
+		} = this.props;
 
-    if (record.tableId === '') {
-      return new Promise((resolve, reject) => {
-        // 新增
-        getWastewaterDischargeRecordAdd({
-          ...record,
-          customerMonthDclarationId:1,
-          wasteWaterDischargePortId:1,
-        }).then(res => {
-          if (res.data.result !== 'success') {
-            resolve({
-              code: 1,
-              info: res.data.info,
-            });
-            return;
-          }
+		form.validateFields((err, values) => {
+			if (err) return;
+			console.log('when saveDetail ---', values);
+			var tableId = this.props.editId;
+			if(!tableId){
+				tableId = this.state.tableId;
+      }
+			//编辑
+			if(this.state.tableId){
+				getWastewaterDischargeRecordUpdate({
+					...values,
+					tableId:tableId,
+				}).then(res => {
+					if (res.data.result !== 'success') {
+						MyToast(res.data.info)
+						return;
+					}
+					MyToast("保存成功")
+				}).catch(err => {
+					MyToast('接口调用失败')
+				});
+			} else {
+				// 新增
+				getWastewaterDischargeRecordAdd({
+          ...values,
+          customerMonthDclarationId: cusMId,
+				}).then(res => {
+					if (res.data.result !== 'success') {
+						MyToast(res.data.info)
+						return;
+					}
+					localStorage.setItem('wastewater-discharge-editId', res.data.tableId);
+					this.setState({tableId:res.data.tableId});
+					this.props.showItemVisible();
+					MyToast("新增成功")
+				}).catch(err => {
+					MyToast('接口调用失败')
+				});
+			}
+		})
+	}
 
-          resolve({
-            code: 0 // success
-          })
-        }).catch(err => {
-          reject(err)
-        });
-      });
-    } else {
-      // 编辑
-      return new Promise((resolve, reject) => {
-        getWastewaterDischargeRecordUpdate({
-          ...record,
-        }).then(res => {
-          if (res.data.result !== 'success') {
-            resolve({
-              code: 1,
-              info: res.data.info,
-            });
-            return;
-          }
 
-          resolve({
-            code: 0 // success
-          })
-        }).catch(err => {
-          reject(err)
-        });
-      });
-    }
-  },
-  apiDel: function (tableId) {
-    //删除
-    console.log(`apiDel ${tableId}`);
+	render() {
+		let { getFieldDecorator } = this.props.form;
+		return (
+			<div className="yzy-tab-content-item-wrap">
+				<Form onSubmit={this.saveDetail.bind(this)}>
+					<div className="baseinfo-section">
+						<h2 className="yzy-tab-content-title">废水排放基本信息详情</h2>
+						<Row>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="排放量">
+									{getFieldDecorator('emissionAmount', {
+										initialValue: this.state.data.emissionAmount,
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="排放量" />
+										)}
+								</FormItem>
+							</Col>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="排放去向">
+									{getFieldDecorator('emissionDestination', {
+										initialValue: this.state.data.emissionDestination,
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="排放去向" />
+										)}
+								</FormItem>
+							</Col>
+              <Col span={8}>
+								<FormItem {...formItemLayout} label="废水排放口ID">
+									{getFieldDecorator('wasteWaterDischargePortId', {
+										initialValue: this.state.dischargePort[0]+'',
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+                    <Select>
+                      {
+                        this.state.dischargePort.map((item,index) =>{
+                           return(
+                            <Option key={index} value={item.toString()}>{item.toString()}</Option>
+                          ) 
+                        })
+                      }
+                    </Select>
+										)}
+								</FormItem>
+							</Col>
+						</Row>
+					</div>
+					<div className="yzy-block-center">
+						<Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
+					</div>
+				</Form>
+			</div>
+		)
+	}
+}
 
-    return new Promise((resolve, reject) => {
-      getWastewaterDischargeRecordDelete(tableId).then(res => {
-        if (res.data.result !== 'success') {
-          resolve({
-            code: 1,
-            info: res.data.info,
-          });
-          return;
-        }
-
-        resolve({
-          code: 0 // success
-        });
-      }).catch(err => {
-        reject(err)
-      });
-    });
-  },
-  // 弹窗组件
-  modalTitle: '废水排放基本情况详情',
-  modalComponent: InnerComponent
-})
-
-export default WasteWaterDemoSection;
+export default Form.create()(WasteGasDischargeDetail);

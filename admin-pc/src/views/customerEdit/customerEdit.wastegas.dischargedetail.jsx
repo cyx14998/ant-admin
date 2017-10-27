@@ -31,26 +31,25 @@ import {
  * @parms editId
  * @parms showItemVisible
  */
-class WasteWaterDischargeDetail extends React.Component {
+class WasteGasDischargeDetail extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			data: {},
+			tableId:"",
 		}
 	}
 
 	componentDidMount() {
 		var tableId = this.props.editId;
-		if (tableId === '') {
-			return;
-		}
+		if (tableId === '') return;
 		getWasteGasDischargeDetail({ tableId: tableId }).then(res => {
 			console.log('getWasteGasDischargeDetail res ---', res);
 			if (res.data.result !== 'success') {
 				MyToast(res.data.info)
 				return;
 			}
-			this.setState({ data: res.data.wasteGasDischargePort })
+			this.setState({ data: res.data.wasteGasDischargePort, tableId: res.data.wasteGasDischargePort.tableId })
 		}).catch(err => {
 			MyToast('接口调用失败')
 		})
@@ -64,11 +63,25 @@ class WasteWaterDischargeDetail extends React.Component {
 
 		form.validateFields((err, values) => {
 			if (err) return;
-			console.log('when saveDetail ---', values);
-			// console.log(tableId);
+			// console.log('when saveDetail ---', values);
 			var tableId = this.props.editId;
-			if (tableId) {
-
+			if(!tableId){
+				tableId = this.state.tableId;
+			}
+			//编辑
+			if(this.state.tableId){
+				getWasteGasDischargeUpdate({
+					...values,
+					tableId:tableId,
+				}).then(res => {
+					if (res.data.result !== 'success') {
+						MyToast(res.data.info)
+						return;
+					}
+					MyToast("保存成功")
+				}).catch(err => {
+					MyToast('接口调用失败')
+				});
 			} else {
 				// 新增
 				getWasteGasDischargeAdd({
@@ -78,6 +91,8 @@ class WasteWaterDischargeDetail extends React.Component {
 						MyToast(res.data.info)
 						return;
 					}
+					localStorage.setItem('wastewater-discharge-editId', res.data.tableId);
+					this.setState({tableId:res.data.tableId});
 					this.props.showItemVisible();
 					MyToast("新增成功")
 				}).catch(err => {
@@ -219,192 +234,4 @@ class WasteWaterDischargeDetail extends React.Component {
 	}
 }
 
-export default Form.create()(WasteWaterDischargeDetail);
-
-// import connectEditableSectionApi from '../../components/hoc.editable.section';
-
-// import { 
-//   getWasteGasDischargeDetail,
-//   getWasteGasDischargeDelete,
-//   getWasteGasDischargeUpdate,
-//   getWasteGasDischargeAdd
-// } from '../../common/api/api.customer.plus.js';
-
-// import {
-//   MyToast
-// } from '../../common/utils';
-
-// /**
-//  * table head
-//  */
-// const columns = [{
-//   title: '排水口编号',
-//   dataIndex: 'serialNumber',
-//   width: '10%'
-// }, {
-//   title: '排放口名称',
-//   dataIndex: 'theName',
-//   width: '10%'
-// }, {
-//   title: '排放口位置',
-//   dataIndex: 'outletLocation',
-//   width: '10%'
-// }, {
-//   title: '经度',
-//   dataIndex: 'longitude',
-//   width: '10%'
-// }, {
-//   title: '维度',
-//   dataIndex: 'latitude',
-//   width: '10%'
-// }, {
-//   title: '污水排放规律',
-//   dataIndex: 'dischargeLaw',
-//   width: '10%'
-// }, {
-//   title: '功能区类别',
-//   dataIndex: 'functionalAreaCategory',
-//   width: '10%'
-// }, {
-//   title: '排放方式',
-//   dataIndex: 'dischargeMode',
-//   width: '10%'
-// }, {
-//   title: '排放口类型',
-//   dataIndex: 'dischargePortType',
-//   width: '10%'
-// }, {
-//   title: '操作',
-//   dataIndex: 'operation',
-//   width: '10%'
-// }];
-
-// /**
-//  * 可选项
-//  */
-// const options = [{
-//   value: 'sy',
-//   label: '事业单位'
-// }, {
-//   value: 'qy',
-//   label: '企业单位'
-// }];
-
-// /**
-//  * 新数据默认值
-//  */
-// const itemDataModel = {
-//   serialNumber: '',
-//   theName: '',
-//   outletLocation: '',
-//   longitude: '',
-//   latitude: '',
-//   dischargeMode: '',
-//   dischargePortType: '',
-//   dischargeLaw: '',
-//   functionalAreaCategory: '',
-// };
-
-// const WasteGasDemoSection = connectEditableSectionApi({
-//   secTitle: '废气排放基本信息详情',
-//   columns: columns,
-//   apiLoader: function () {
-//     return new Promise((resolve,reject) => {
-//       //获取数据
-//       console.log("ssssssss");
-//       getWasteGasDischargeDetail({id:1}).then(res => {
-//         console.log('getWasteGasDischargeDetail res ---', res);
-
-//         if (res.data.result !== 'success') {
-//           resolve({
-//             code: -1,
-//             info: res.data.info,
-//           })
-//           return;
-//         }
-
-//         var data = [res.data.wasteGasDischargePort];
-//         resolve({
-//           code: 0,
-//           data,
-//         })
-//       }).catch(err => {
-//         MyToast('接口调用失败')
-//       })
-//     })
-//   },
-//   apiSave: function (record) {
-//     // 新增
-//     console.log('apiSave record ----', record);
-//     var self = this;
-
-//     if (record.tableId === '') {
-//       return new Promise((resolve, reject) => {
-//         // 新增
-//         getWasteGasDischargeAdd({
-//           ...record,
-//         }).then(res => {
-//           if (res.data.result !== 'success') {
-//             resolve({
-//               code: 1,
-//               info: res.data.info,
-//             });
-//             return;
-//           }
-
-//           resolve({
-//             code: 0 // success
-//           })
-//         }).catch(err => {
-//           reject(err)
-//         });
-//       });
-//     } else {
-//       // 编辑
-//       return new Promise((resolve, reject) => {
-//         getWasteGasDischargeUpdate({
-//           ...record,
-//         }).then(res => {
-//           if (res.data.result !== 'success') {
-//             resolve({
-//               code: 1,
-//               info: res.data.info,
-//             });
-//             return;
-//           }
-
-//           resolve({
-//             code: 0 // success
-//           })
-//         }).catch(err => {
-//           reject(err)
-//         });
-//       });
-//     }
-//   },
-//   apiDel: function (tableId) {
-//     //删除
-//     console.log(`apiDel ${tableId}`);
-
-//     return new Promise((resolve, reject) => {
-//       getWasteGasDischargeDelete(tableId).then(res => {
-//         if (res.data.result !== 'success') {
-//           resolve({
-//             code: 1,
-//             info: res.data.info,
-//           });
-//           return;
-//         }
-
-//         resolve({
-//           code: 0 // success
-//         });
-//       }).catch(err => {
-//         reject(err)
-//       });
-//     });
-//   },
-//   itemDataModel: itemDataModel
-// })
-
-// export default WasteGasDemoSection;
+export default Form.create()(WasteGasDischargeDetail);
