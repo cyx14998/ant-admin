@@ -16,7 +16,7 @@ const rcsearchformData = {
   fields: [{
     type: 'input',
     label: '企业名称',
-    name: 'companyName',
+    name: 'customerName',
     rules: [{ required: true, message: '请输入企业名称' }],
   }, {
     type: 'input',
