@@ -11,6 +11,10 @@ import {
   getBoundaryNoiseRecordDelete,
 } from '../../common/api/api.customer.dynamic.plus.js';
 
+import {
+  getLocQueryByLabel
+} from '../../common/utils';
+
 /**
  * table head
  */
@@ -83,7 +87,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      getBoundaryNoiseRecordList({customerMonthDclarationId:1}).then(res => {
+      var dynamicId = getLocQueryByLabel('dynamicId');
+      if(!dynamicId) return;
+      getBoundaryNoiseRecordList({customerMonthDclarationId:dynamicId}).then(res => {
         console.log('getBoundaryNoiseRecordList res ---', res);
 
         if (res.data.result !== 'success') {

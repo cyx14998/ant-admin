@@ -95,13 +95,17 @@ class Page extends React.Component {
         window.iframeHook.changePage = function ({url, breadIncrement, incrementType='add'}) {
             if (!url) return;
 
-            if (!breadIncrement) {
+            let lastBread = self.state.breads[self.state.breads.length - 1];
+
+            if (!breadIncrement || breadIncrement === lastBread) {
                 self.setState({
                     url
                 });
 
                 return;
             }
+
+
 
             if (incrementType === 'add') {
                 self.setState(prev => {
