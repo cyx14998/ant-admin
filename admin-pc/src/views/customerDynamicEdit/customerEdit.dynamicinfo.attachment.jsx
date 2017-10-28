@@ -1,13 +1,15 @@
 /**
  * 企业附件信息基本情况
  */
+import React from 'react';
 
-import connectEditableSectionApi from '../../components/hoc.editable.section';
+import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
+
+//废气排放基本信息详情
+import AttachmentRecordDetail from './customerEdit.dynamicinfo.attachment.detail';
 
 import { 
   getAttachmentRecordList,
-  getAttachmentRecordAdd,
-  getAttachmentRecordUpdate,
   getAttachmentRecordDelete,
 } from '../../common/api/api.customer.dynamic.plus.js';
 
@@ -15,6 +17,7 @@ import {
   MyToast
 } from '../../common/utils';
 
+//获取query
 import {
   getLocQueryByLabel
 } from '../../common/utils';
@@ -64,8 +67,16 @@ const itemDataModel = {
   theSize: '',
   filePath: '',
 };
+const InnerComponent = ({
+  editId,
+  itemVisible,
+}) => (
+  <div>
+    <AttachmentRecordDetail editId={editId} />
+  </div>
+);
 
-const WasteWaterDemoSection = connectEditableSectionApi({
+const AttachmentRecord = connectUneditableSectionApi({
   secTitle: '企业附件信息基本情况',
   columns: columns,
   apiLoader: function () {
@@ -75,7 +86,6 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       if(!dynamicId) return;
       getAttachmentRecordList({customerMonthDclarationId:dynamicId,}).then(res => {
         console.log('getAttachmentRecordList res ---', res);
-        
         if (res.data.result !== 'success') {
           resolve({
             code: -1,
@@ -84,7 +94,13 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.AttachmentRecordList;
+        var data = res.data.attachmentDynamicList;
+        data = data.map((item,index) => {
+          return {
+            ...item,
+            attachmentTypeId: item.attachmentType.tableId,
+          }
+        })
         resolve({
           code: 0,
           data,
@@ -93,58 +109,6 @@ const WasteWaterDemoSection = connectEditableSectionApi({
         MyToast('接口调用失败')
       })
     })
-  },
-  apiSave: function (record) {
-    // 新增
-    console.log('apiSave record ----', record);
-    var self = this;
-
-    if (record.tableId === '') {
-      return new Promise((resolve, reject) => {
-        // 新增
-        getAttachmentRecordAdd({
-          ...record,
-          customerMonthDclarationId:1,
-          boundaryNoiseId:1
-        }).then(res => {
-          if (res.data.result !== 'success') {
-            resolve({
-              code: 1,
-              info: res.data.info,
-            });
-            return;
-          }
-
-          resolve({
-            code: 0 // success
-          })
-        }).catch(err => {
-          reject(err)
-        });
-      });
-    } else {
-      // 编辑
-      return new Promise((resolve, reject) => {
-        console.log(record)
-        getAttachmentRecordUpdate({
-          ...record,
-        }).then(res => {
-          if (res.data.result !== 'success') {
-            resolve({
-              code: 1,
-              info: res.data.info,
-            });
-            return;
-          }
-
-          resolve({
-            code: 0 // success
-          })
-        }).catch(err => {
-          reject(err)
-        });
-      });
-    }
   },
   apiDel: function (tableId) {
     //删除
@@ -168,7 +132,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       });
     });
   },
-  itemDataModel: itemDataModel
+  // 弹窗组件
+  modalTitle: '企业附件基本情况',
+  modalComponent: InnerComponent
 })
 
-export default WasteWaterDemoSection;
+export default AttachmentRecord;

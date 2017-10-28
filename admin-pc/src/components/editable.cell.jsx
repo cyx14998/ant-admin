@@ -52,7 +52,7 @@ class EditableCell extends Component {
     } = this.props;
 
     return (
-      <Select style={{width: '100%'}} onChange={(v) => onCellChange(tableId, dataIndex, v)} value={value || ''}>
+      <Select style={{width: '100%'}} onSelect={(v) => onCellChange(tableId, dataIndex, v)} value={value || ''}>
         {
           options.map((opt, i) => (
             <Option key={i} value={opt.value}>{opt.label}</Option>

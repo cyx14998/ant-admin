@@ -49,7 +49,8 @@ class WasteGasDischargeDetail extends React.Component {
 		this.state = {
 			data: {},
       tableId:"",
-      dischargePort:[]
+			dischargePort:[],
+			dischargePortItem: "",
 		}
 	}
 
@@ -64,7 +65,6 @@ class WasteGasDischargeDetail extends React.Component {
       res.data.wasteWaterDischargePortList.map((item,index) => {
         tableId.push(item.tableId);
       })
-
 			this.setState({ dischargePort: tableId })
 		}).catch(err => {
 			MyToast('接口调用失败')
@@ -72,13 +72,16 @@ class WasteGasDischargeDetail extends React.Component {
     var tableId = this.props.editId;
     if (tableId === '') return;
 		getWastewaterDischargeRecordDetail({ tableId: tableId }).then(res => {
-      console.log("sssssssssssss",res); 
+			console.log("ssssssssssssssssssssssssssssssssssssss",res);
 			if (res.data.result !== 'success') {
-				MyToast(res.data.info)
+				MyToast(data.info)
 				return;
       }
-      // var data = JSON.parse(res.data);
-			// this.setState({ data: res.data.wasteGasDischargePort, tableId: res.data.wasteGasDischargePort.tableId })
+			this.setState({ 
+				data: res.data.wasteWaterDischargeRecord, 
+				tableId: res.data.wasteWaterDischargeRecord.tableId, 
+				dischargePortItem: res.data.wasteWaterDischargeRecord.wasteWaterDischargePort.tableId
+			})
 		}).catch(err => {
 			MyToast('接口调用失败')
     })
@@ -169,7 +172,7 @@ class WasteGasDischargeDetail extends React.Component {
               <Col span={8}>
 								<FormItem {...formItemLayout} label="废水排放口ID">
 									{getFieldDecorator('wasteWaterDischargePortId', {
-										initialValue: this.state.dischargePort[0]+'',
+										initialValue: this.state.dischargePortItem+'' || this.state.dischargePort[0]+'',
 										rules: [{ required: true },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],

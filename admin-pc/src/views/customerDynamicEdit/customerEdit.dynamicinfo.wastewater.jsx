@@ -76,7 +76,7 @@ const InnerComponent = ({
   </div>
 );
 
-const WasteWaterDemoSection = connectUneditableSectionApi({
+const WasteWaterDischargeRecord = connectUneditableSectionApi({
   secTitle: '废水排放基本信息列表',
   columns: columns,
   apiLoader: function () {
@@ -106,57 +106,6 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
       })
     })
   },
-  apiSave: function (record) {
-    // 新增
-    console.log('apiSave record ----', record);
-    var self = this;
-
-    if (record.tableId === '') {
-      return new Promise((resolve, reject) => {
-        // 新增
-        getWastewaterDischargeRecordAdd({
-          ...record,
-          customerMonthDclarationId:1,
-          wasteWaterDischargePortId:1,
-        }).then(res => {
-          if (res.data.result !== 'success') {
-            resolve({
-              code: 1,
-              info: res.data.info,
-            });
-            return;
-          }
-
-          resolve({
-            code: 0 // success
-          })
-        }).catch(err => {
-          reject(err)
-        });
-      });
-    } else {
-      // 编辑
-      return new Promise((resolve, reject) => {
-        getWastewaterDischargeRecordUpdate({
-          ...record,
-        }).then(res => {
-          if (res.data.result !== 'success') {
-            resolve({
-              code: 1,
-              info: res.data.info,
-            });
-            return;
-          }
-
-          resolve({
-            code: 0 // success
-          })
-        }).catch(err => {
-          reject(err)
-        });
-      });
-    }
-  },
   apiDel: function (tableId) {
     //删除
     console.log(`apiDel ${tableId}`);
@@ -170,7 +119,7 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
           });
           return;
         }
-
+        console.log(res);
         resolve({
           code: 0 // success
         });
@@ -180,8 +129,8 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
     });
   },
   // 弹窗组件
-  modalTitle: '废水排放基本情况详情',
+  modalTitle: '废水排放基本情况',
   modalComponent: InnerComponent
 })
 
-export default WasteWaterDemoSection;
+export default WasteWaterDischargeRecord;

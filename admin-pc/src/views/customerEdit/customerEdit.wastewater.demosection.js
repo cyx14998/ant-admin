@@ -62,6 +62,9 @@ const dataSource = [{
     options: [{
       label: 'sosososo',
       value: 'so'
+    }, {
+      label: 'hahaha',
+      value: 'ha'
     }]
   }
 }];
@@ -133,6 +136,11 @@ const EditableDemoSection = connectEditableSectionApi({
   },
   apiSave: function (record) {
     console.log('apiSave record ----', record);
+
+    return Promise.resolve({
+      code: 0,    
+    });
+
     var self = this;
 
     // 新增

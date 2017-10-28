@@ -43,4 +43,28 @@ export function MyToast (info, timeout=1000) {
 }
 
 
+/**
+ * 数据字段转换
+ * @param [object Array]
+ *     tableId  =>  value
+ *     theName  =>  label
+ * @return [object Array]
+ */
+export function convertObjectLabel(source) {
+  var dest = [];
+
+  var len = source.length,
+      i;
+  for (i=0; i<len; i++) {
+    let newItem = {
+      value: source[i].tableId+'',
+      label: source[i].theName+''
+    };
+
+    dest.push(newItem);
+  }
+
+  return dest;
+}
+
 

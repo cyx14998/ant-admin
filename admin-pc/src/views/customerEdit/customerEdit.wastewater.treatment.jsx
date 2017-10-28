@@ -97,6 +97,13 @@ const WasteWaterTreatment = connectEditableSectionApi({
         }
 
         var data = res.data.controlFacilitiesList;
+        console.log(data);
+        data = data.map((item,index) => {
+          return {
+            ...item,
+            approach: item.approach.tableId
+          }
+        })
         resolve({
           code: 0,
           data,
