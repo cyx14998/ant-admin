@@ -3,17 +3,6 @@
  */
 import React from 'react';
 
-// 字段
-// staffId,
-// theName,
-// filePath,
-// expiryDatetime,
-// certificationUnit,
-// serialNumber,
-// professionalCategory,
-// repetitionCycle,
-// theRemarks
-
 import {
   Form,
   Row,
@@ -27,9 +16,13 @@ import {
 } from 'antd';
 const FormItem = Form.Item;
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 import {
   getStarffCertListAdd,
-  getStarffCertListUpdate
+  getStarffCertListUpdate,
+  getStaffCertDetails
 } from '../../common/api/api.staffmanagement';
 
 import {
@@ -56,19 +49,20 @@ class StaffCertEdit extends React.Component {
     this.state = {
       uptoken: '',
       uploadedFileList: [{
-        response: {
-          filePath: '1509107788542'
-        }
+        uid: -1,
+        status: 'done',
+        url: 'http://oyc0y0ksm.bkt.clouddn.com/1509173501415'
       }],
       previewImage: '',
       previewVisible: false,
-      data: {}
+      data: {},
     }
 
-    this.qiniuyunData = {};
+    this._getStaffCertDetails = this._getStaffCertDetails.bind(this);
   }
 
   componentDidMount() {
+    // prepare for upload image
     getQiNiuToken({}).then(res => {
         if (!res.data || !res.data.uptoken) {
             MyToast('getqiniuyun uptoken error');
@@ -80,36 +74,60 @@ class StaffCertEdit extends React.Component {
           uptoken: res.data.uptoken
         });
     }).catch(err => console.log(err));
+
+    // get default details if has tableid
+    let editId = this.props.editId;
+    if (editId !== '') {
+      this._getStaffCertDetails(editId)
+    }
   }
 
   // 获取数据详情，注意图片处理
-  getStaffCertInfo() {
+  _getStaffCertDetails(tableId) {
+    getStaffCertDetails({
+      tableId
+    }).then(res => {
+      console.log('getStaffCertDetails res', res)
+      if (res.data.result !== 'success') {
+        MyToast(res.data.info || '获取证照详情失败');
+        return;
+      }
 
+      this.setState({
+        data: res.data.memberCertification
+      })
+    }).catch(err => {
+      MyToast('获取证照详情失败')
+    })
   }
 
   beforeUpload(file) {
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
-      MyToast('Image must smaller than 2MB!');
+      MyToast('请选择图片小于2MB!');
     }
 
     return isLt2M;
   }
 
-  handleUploadChange({fileList}) {
-    console.log('handleUploadChange fileList----------', fileList)
-    this.setState({
-      uploadedFileList: fileList
-    });
-    // if (info.file.status === 'done') {
-    //     // Get this url from response in real world.
-    //     // console.log('Upload done-----------', info)
-    //     var filePath = info.file.response.filePath;
-
-    //     this.setState({
-    //       uploadedFile: downloadUrl + filePath,
-    //     })
+  handleUploadChange({file, fileList}) {
+    console.log('handleUploadChange file--------------', file)
+    // console.log('handleUploadChange fileList----------', fileList)
+    // {
+    //   uid: '',
+    //   response: {
+    //     filePath: '1509168004229'
+    //   }
     // }
+
+    /**
+     * 上传成功 or 删除成功
+     */
+    if (file.status === 'done' || file.status === 'removed') {
+      this.setState({
+        uploadedFileList: fileList
+      });
+    }
   }
 
   handlePreview(file) {
@@ -133,8 +151,21 @@ class StaffCertEdit extends React.Component {
     form.validateFields((err, values) => {
       if (err) return;
 
-      var uploadedFilePath = this.state.uploadedFileList[0].response.filePath;
+      var fileOne = this.state.uploadedFileList[0];
+      if (!fileOne) return MyToast('请上传证件图片');
+
+      // 默认
+      var uploadedFilePath = fileOne.url;
+      // 上传
+      if (!uploadedFilePath) {
+        uploadedFilePath = fileOne.response.filePath;
+      }
+
       if (!uploadedFilePath) return MyToast('请上传证件图片');
+
+      if (uploadedFilePath.indexOf(downloadUrl) === -1) {
+        uploadedFilePath = downloadUrl + uploadedFilePath;
+      }
 
       var staffId = getLocQueryByLabel('staffId');
 
@@ -144,14 +175,34 @@ class StaffCertEdit extends React.Component {
           ...values,
           filePath: uploadedFilePath,
           staffId: staffId,
-        })
+        }).then(res => {
+          if (res.data.result !== 'success') {
+            return MyToast(res.data.info || '新增失败')
+          }
+
+          MyToast('新增成功');
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 200);
+        }).catch(err => MyToast('新增失败'));
       } else {
         // save 
         getStarffCertListUpdate({
           ...values,
           filePath: uploadedFilePath,
           tableId: editId
-        })
+        }).then(res => {
+          if (res.data.result !== 'success') {
+            return MyToast(res.data.info || '更新失败')
+          }
+
+          MyToast('更新成功');
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 200);
+        }).catch(err => MyToast('更新失败'));
       }
     });
   }
@@ -233,12 +284,9 @@ class StaffCertEdit extends React.Component {
               <Col span={12}>
                 <FormItem {...formItemLayout} label="截止日期">
                   {getFieldDecorator('expiryDatetime', {
-                    initialValue: this.state.data.expiryDatetime,
-                    rules: [{ required: true },
-                    {/* { pattern: /^[0-9]*$/ } */ }
-                    ],
+                    initialValue: moment(this.state.data.expiryDatetime || new Date(), dateFormat),
                   })(
-                    <DatePicker placeholder="截止日期" />
+                    <DatePicker format={dateFormat} placeholder="截止日期" />
                     )}
                 </FormItem>
               </Col>

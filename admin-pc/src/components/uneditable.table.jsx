@@ -52,6 +52,12 @@ class UneditableTable extends Component {
        */
       (function(i) {
         columns[i].render = (text, record) => {
+
+          // 文件下载
+          if (columns[i].type === 'downloadfile') {
+            return <a target="_blank" href={text} download="图片">点击下载</a>
+          }
+
           // 如果有值，直接渲染
           if (text !== undefined) {
             return text;
