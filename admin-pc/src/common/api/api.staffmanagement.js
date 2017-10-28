@@ -27,6 +27,21 @@ export function getStaffList ({
   })
 }
 
+/**
+ * 获取员工详情
+ * QA: 接口错误，传入参数 staffId
+ */
+export function getStaffDetails({
+  staffId
+}) {
+  return axios.get('/uMemberDetail.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId: staffId
+    }
+  })
+}
+
 
 /**
  * 员工新增
@@ -114,6 +129,20 @@ export function getStarffCertList({
       staffId,
       pageNumber,
       countPerPage
+    }
+  })
+}
+
+/**
+ * 员工证照详情
+ */
+export function getStaffCertDetails({
+  tableId
+}) {
+  return axios.get('/uMemberCertificationDetail.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId
     }
   })
 }

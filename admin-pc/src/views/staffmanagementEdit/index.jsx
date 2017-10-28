@@ -28,11 +28,44 @@ class StaffManagementEdit extends Component {
   constructor(props) {
     super(props);
 
-    this.staffId = getLocQueryByLabel('staffId') || '';
+    this.state = {
+      staffId: getLocQueryByLabel('staffId') || ''
+    }
   }
 
   componentDidMount() {
     
+  }
+
+  onStaffDetailsSave(values) {
+    // console.log('onStaffDetailsSave---------------', values)
+    if (this.state.staffId === '') {
+      // add
+      getStaffListAdd(values).then(res => {
+        console.log('getStaffListAdd res --------', res)
+        if (res.data.result !== 'success') {
+          return MyToast(res.data.info || '新增失败')
+        }
+
+        MyToast('新增成功');
+        this.setState({
+          staffId: res.data.tableId
+        });
+        
+      }).catch(err => MyToast('新增失败'));
+    } else {
+      // update
+      getStaffListUpdate({
+        ...values,
+        staffId: this.state.staffId
+      }).then(res => {
+        if (res.data.result !== 'success') {
+          return MyToast(res.data.info || '更新失败')
+        }
+
+        MyToast('更新成功');
+      }).catch(err => MyToast('更新失败'));
+    }
   }
 
 
@@ -41,8 +74,8 @@ class StaffManagementEdit extends Component {
     return (
       <div className="yzy-page">
         <div className="yzy-list-wrap">
-          <StaffDetails />
-          <StaffCertModule apiListItemId={this.staffId} />
+          <StaffDetails staffId={this.state.staffId} onSave={this.onStaffDetailsSave.bind(this)} />
+          { this.state.staffId && <StaffCertModule apiListItemId={this.state.staffId} /> }
         </div>
       </div>
     )
