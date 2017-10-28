@@ -24,6 +24,19 @@ export function getCheckplanMainlist({
   })
 }
 /**
+ * 企业检查计划详情
+ */
+export function getCheckplanDetail({
+  tableId,
+}) {
+  return axios.get('/uInspectionPlanMstDetail.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+    }
+  })
+}
+/**
  * 企业检查计划主表增加
  */
 export function getCheckplanMainAdd({
@@ -120,9 +133,9 @@ export function getCheckplanSubAdd({
   })
 }
 /**
- * 企业检查计划详情
+ * 企业检查计划子表详情
  */
-export function getCheckplanDetail({
+export function getCheckplanSubDetail({
   pageNumber = 1,
   countPerPage = 1000,
   tableId,
@@ -145,7 +158,7 @@ export function getCheckplanSubEdit({
   regulatoryRecordURL,
   theRemarks,
 }) {
-  return axios.get('/uInspectionPlanDtlUpload.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uInspectionPlanDtlUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,

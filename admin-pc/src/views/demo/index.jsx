@@ -142,6 +142,9 @@ class Demo extends Component {
   }
 
   render() {
+    return (
+      <EditableDemoSection />
+    )
     
     return (
       <div>

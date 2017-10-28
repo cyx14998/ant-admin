@@ -82,6 +82,7 @@ const dataSource = [{
     unitOfMeasurement: 'kg',
     yield: '20'
 }];
+const dynamicId = getLocQueryByLabel('dynamicId');
 
 export const CustomerEditDynamicinfoFuel = connectEditableSectionApi({
     secTitle: '燃料基本信息',
@@ -92,7 +93,7 @@ export const CustomerEditDynamicinfoFuel = connectEditableSectionApi({
             var cusId = getLocQueryByLabel('id');
             if (!cusId) return;
 
-            getFuelDynamicInfoList({}).then(res => {
+            getFuelDynamicInfoList({customerMonthDclarationId: dynamicId}).then(res => {
                 console.log('fuellist res', res)
                 if (res.data.result !== 'success') {
                     resolve({
@@ -117,7 +118,7 @@ export const CustomerEditDynamicinfoFuel = connectEditableSectionApi({
         if (record.tableId === '') {
             // 新增      
             return new Promise((resolve, reject) => {
-                getFuelDynamicInfoAdd(record).then(res => {
+                getFuelDynamicInfoAdd({...record,customerMonthDclarationId: dynamicId}).then(res => {
                     console.log('AddFuel res', res);
                     if (res.data.result !== 'success') {
                         resolve({
@@ -136,7 +137,7 @@ export const CustomerEditDynamicinfoFuel = connectEditableSectionApi({
         } else {
             // 编辑
             return new Promise((resolve, reject) => {
-                getFuelDynamicInfoEdit(record).then(res => {
+                getFuelDynamicInfoEdit({...record,customerMonthDclarationId: dynamicId}).then(res => {
                     console.log('AddFuel res', res);
                     if (res.data.result !== 'success') {
                         resolve({

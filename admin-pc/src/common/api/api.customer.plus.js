@@ -1205,7 +1205,7 @@ export function getIEPSDelete(id){
 /* 
 * 获取现场检查、监管信息
 */
-export function getSiteInspectionList({
+export function getInspectionPlanDtlForList({
   pageNumber=1, 
   countPerPage=1000,
 }){
@@ -1219,6 +1219,25 @@ export function getSiteInspectionList({
   })
 }
 
+
+
+/********************** 编辑-首页-监管记录 **********************/
+/* 
+* 获取检查、监管信息
+*/
+export function getSiteInspectionList({
+  pageNumber=1, 
+  countPerPage=1000,
+}){
+  return axios.get('/uCustomerSiteInspectionList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      customerId: getCustomerId(),
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
 /* 
 * 新增现场检查、监管信息
 */

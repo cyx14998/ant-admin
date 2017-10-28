@@ -14,6 +14,7 @@ import {
 import {
   getLocQueryByLabel
 } from '../../common/utils';
+const dynamicId = getLocQueryByLabel('dynamicId');
 
 /**
  * table head
@@ -78,7 +79,16 @@ const itemDataModel = {
   exceedingStandardDays: '',
   noisePeriodStart: '',
   noisePeriodEnd: '',
-  IsBoundaryExceeding100: '',
+  IsBoundaryExceeding100: {
+    value: '1',
+    options : [{
+      value: "1",
+      label: '是'
+    }, {
+      value: "0",
+      label: '否'
+    }]
+  },
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
@@ -87,7 +97,6 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      var dynamicId = getLocQueryByLabel('dynamicId');
       if(!dynamicId) return;
       getBoundaryNoiseRecordList({customerMonthDclarationId:dynamicId}).then(res => {
         console.log('getBoundaryNoiseRecordList res ---', res);
@@ -101,6 +110,21 @@ const WasteWaterDemoSection = connectEditableSectionApi({
         }
 
         var data = res.data.boundaryNoiseRecordList;
+        data = data.map((item,index) => {
+          return {
+            ...item,
+            IsBoundaryExceeding100: {
+              value: item.IsBoundaryExceeding100 === true ? "1" : "0" ,
+              options : [{
+                value: "1",
+                label: "是"
+              }, {
+                value: "0",
+                label: "否"
+              }] 
+            }
+          }
+        })
         resolve({
           code: 0,
           data,
@@ -113,14 +137,14 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   apiSave: function (record) {
     // 新增
     console.log('apiSave record ----', record);
+    record.IsBoundaryExceeding100 = record.IsBoundaryExceeding100.value;
     var self = this;
-
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getBoundaryNoiseRecordAdd({
           ...record,
-          customerMonthDclarationId:1,
+          customerMonthDclarationId: dynamicId,
           boundaryNoiseId:1,
         }).then(res => {
           console.log("getBoundaryNoiseRecordAdd res",res)

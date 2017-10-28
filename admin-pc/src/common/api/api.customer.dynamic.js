@@ -26,13 +26,10 @@ export function getCustomerDynamicList({
 
 
 // 编辑页---首页-产品动态信息获取
-
 export function getProductDynamicInfoList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword = '',
-  theYear = '2017',
-  theMonth = '04',
   customerMonthDclarationId = 1,
 }) {
   return axios.get('/uMainProductOutputList.uhtm?InterfaceVersion=' + apiVer, {
@@ -42,22 +39,14 @@ export function getProductDynamicInfoList({
       pageNumber,
       countPerPage,
       keyword,
-      theYear,
-      theMonth,
       customerMonthDclarationId, //文档无
     }
   });
 }
 
-/**
- * 编辑页---首页-产品动态信息新增
- * @QA:
- *    {result: "fail", info: "请输入产量"}
- *   
- */
+
+// 编辑页---首页-产品动态信息新增
 export function getProductDynamicInfoAdd({
-  theYear = '2017',
-  theMonth = '04',
   customerMonthDclarationId = '1',
   theName,
   unitOfMeasurement,
@@ -71,17 +60,13 @@ export function getProductDynamicInfoAdd({
       unitOfMeasurement,
       theYield,
       customerMonthDclarationId,
-      theYear,
-      theMonth,
     }
   });
 }
 
 //编辑页---首页-产品动态信息编辑
 export function getProductDynamicInfoEdit({
-  theYear = '2017',
-  theMonth = '01',
-  customerMonthDclarationId = '1',
+  customerMonthDclarationId ,
   tableId,
   theName,
   unitOfMeasurement,
@@ -94,10 +79,8 @@ export function getProductDynamicInfoEdit({
       tableId,
       theName,
       unitOfMeasurement,
-      theYield,
       customerMonthDclarationId,
-      theYear,
-      theMonth,
+      theYield
     }
   });
 }
@@ -116,7 +99,6 @@ export function getProductDynamicInfoDelete(id) {
 /*************************** 编辑页---首页-原辅材料获取模块 ***********************/
 
 //编辑页---首页-原辅材料获取 (success)
-
 export function getMaterialDynamicInfoList({
   pageNumber = 1,
   countPerPage = 1000,
@@ -136,11 +118,8 @@ export function getMaterialDynamicInfoList({
 }
 
 // 编辑页---首页-原辅材料新增 (success)
-
 export function getMaterialDynamicInfoAdd({
   customerMonthDclarationId = '1',
-  theYear = '2017',
-  theMonth = '04',
   theName,
   unitOfMeasurement,
   consumption,
@@ -150,10 +129,8 @@ export function getMaterialDynamicInfoAdd({
       token: getToken(),
       // customerId: getCustomerId(),
       customerMonthDclarationId,
-      theYear,
-      theMonth,
       theName,
-      UnitOfMeasurement: 1,
+      UnitOfMeasurement,
       consumption,
     }
   });
@@ -167,26 +144,21 @@ export function getMaterialDynamicInfoEdit({
   theName,
   unitOfMeasurement,
   consumption,
-  theYear = '2017',
-  theMonth = '01'
 }) {
   return axios.get('/uAuxiliaryMaterialsConsumptionUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       // customerId: getCustomerId(),
-      theYear, //文档无
-      theMonth, //文档无
       tableId,
       theName,
       unitOfMeasurement,
       consumption,
-      customerMonthDclarationId
+      customerMonthDclarationId,
     }
   });
 }
 
 //编辑页---首页-原辅材料删除 (success)
-
 export function getMaterialDynamicInfoDelete(id) {
   return axios.get('/uAuxiliaryMaterialsConsumptionDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -200,13 +172,10 @@ export function getMaterialDynamicInfoDelete(id) {
 
 
 // 编辑页---首页-用水获取
-
 export function getWaterDynamicInfoList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword = '',
-  theYear = '2017',
-  theMonth = '01',
   customerMonthDclarationId = 1
 }) {
   return axios.get('/uElectricityAndWaterConsumptionList.uhtm?InterfaceVersion=' + apiVer, {
@@ -216,15 +185,12 @@ export function getWaterDynamicInfoList({
       pageNumber,
       countPerPage,
       keyword,
-      theYear,
-      theMonth,
       customerMonthDclarationId,
     }
   });
 }
 
 //  编辑页---首页-用水新增 （success）
-
 export function getWaterDynamicInfoAdd({
   customerMonthDclarationId = 1,
   useWaterType,
@@ -247,12 +213,9 @@ export function getWaterDynamicInfoAdd({
   });
 }
 
-
 // 编辑页---首页-用水编辑
 export function getWaterDynamicInfoEdit({
   customerMonthDclarationId = '1',
-  theYear = '2017',
-  theMonth = '01',
   tableId,
   useWaterType,
   repeatedWaterConsumption,
@@ -263,12 +226,8 @@ export function getWaterDynamicInfoEdit({
   return axios.get('/uElectricityAndWaterConsumptionUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      // customerId: getCustomerId(),
       customerMonthDclarationId,
-      theYear, //文档无
-      theMonth,
       tableId,
-      theMonth,
       useWaterType,
       repeatedWaterConsumption,
       totalWaterConsumption,
@@ -279,7 +238,6 @@ export function getWaterDynamicInfoEdit({
 }
 
 //编辑页---首页-用水删除 (success)
-
 export function getWaterDynamicInfoDelete(id) {
   return axios.get('/uElectricityAndWaterConsumptionDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -296,26 +254,20 @@ export function getFuelDynamicInfoList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword = '',
-  theYear = '2017',
-  theMonth = '01',
   customerMonthDclarationId = 1,
 }) {
   return axios.get('/uFuelConsumptionList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      // customerId: getCustomerId(),
       pageNumber,
       countPerPage,
       keyword,
-      theYear,
-      theMonth,
       customerMonthDclarationId,
     }
   });
 }
 
 // 编辑页---首页-燃料动态信息新增 (success)
-
 export function getFuelDynamicInfoAdd({
   customerMonthDclarationId = 1,
   theName,
@@ -331,7 +283,6 @@ export function getFuelDynamicInfoAdd({
   return axios.get('/uFuelConsumptionAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      // customerId: getCustomerId(),
       customerMonthDclarationId,
       theName,
       placeOfOrigin,
@@ -348,7 +299,6 @@ export function getFuelDynamicInfoAdd({
 
 
 // 编辑页---首页-燃料动态信息编辑
-
 export function getFuelDynamicInfoEdit({
   customerMonthDclarationId = 1,
   tableId,
@@ -365,7 +315,6 @@ export function getFuelDynamicInfoEdit({
   return axios.get('/uFuelConsumptionUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      // customerId: getCustomerId(),
       customerMonthDclarationId,
       tableId,
       theName,

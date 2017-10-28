@@ -201,7 +201,7 @@ const EditableDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getCheckplanMainDelete(tableId).then(res => {
+      getCheckplanMainDelete({tableId}).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,

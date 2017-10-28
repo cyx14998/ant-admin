@@ -73,7 +73,16 @@ const itemDataModel = {
   emissionConcentration: '',
   dataSources: '',
   emissionAmount: '',
-  isOverproof: '',
+  isOverproof: {
+    value: '1',
+    options : [{
+      value: "1",
+      label: '是'
+    }, {
+      value: "0",
+      label: '否'
+    }]
+  },
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
@@ -98,6 +107,21 @@ const WasteWaterDemoSection = connectEditableSectionApi({
         }
 
         var data = res.data.wasteWaterDischargeFactorRecordList;
+        data = data.map((item,index) => {
+          return {
+            ...item,
+            isOverproof: {
+              value: item.isOverproof === true ? "1" : "0" ,
+              options : [{
+                value: "1",
+                label: "是"
+              }, {
+                value: "0",
+                label: "否"
+              }] 
+            }
+          }
+        })
         resolve({
           code: 0,
           data,
@@ -110,7 +134,8 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   apiSave: function (record) {
     // 新增
     console.log('apiSave record ----', record);
-     var self = this;
+    record.isOverproof = record.isOverproof.value;
+    var self = this;
     if(record.apiListItemId === undefined){
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     }
@@ -124,7 +149,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
-              info: "aaaaaaaa",
+              info: res.data.info,
             });
             return;
           }

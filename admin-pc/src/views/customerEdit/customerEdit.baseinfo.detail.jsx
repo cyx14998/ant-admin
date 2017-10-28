@@ -20,7 +20,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 import moment from 'moment';
 
-import { getLocQueryByLabel } from '../../common/utils';
+import { MyToast, getLocQueryByLabel } from '../../common/utils';
 import { getToken, } from '../../common/api/index';
 
 import {
@@ -110,25 +110,27 @@ class CustomerEditBaseinfoDetail extends React.Component {
             // console.log(res.data.customer)
             this.setState({
                 customer: res.data.customer
-            })    
+            })
             // data.productionFlowChartURL=this.state.prodImgUrl;
             // data.factoryFloorPlanURL
-            if(res.data.customer.productionFlowChartURL){
+            if (res.data.customer.productionFlowChartURL) {
                 self.setState({
                     prodFileList: [{
                         uid: '1',
                         name: '123',
                         url: res.data.customer.productionFlowChartURL
-                    }]
+                    }],
+                    prodImgUrl: res.data.customer.productionFlowChartURL,
                 });
             }
-            if(res.data.customer.factoryFloorPlanURL){
+            if (res.data.customer.factoryFloorPlanURL) {
                 self.setState({
                     positionFileList: [{
                         uid: '1',
                         name: '123',
                         url: res.data.customer.factoryFloorPlanURL
-                    }]
+                    }],
+                    positionImgUrl: res.data.customer.factoryFloorPlanURL
                 });
             }
             if (res.data.customer.cityId) {
@@ -254,13 +256,13 @@ class CustomerEditBaseinfoDetail extends React.Component {
         var index = fileList.length;
         if (index > 0) {
             if (fileList[index - 1].status === 'done') {
-                console.log(fileList[index - 1]);                
+                console.log(fileList[index - 1]);
                 console.log(fileList[index - 1].response);
                 // console.log(fileList[index - 1].response.result)
                 this.setState({
                     prodImgUrl: downloadUrl + fileList[index - 1].response.filePath,
                 });
-            }else {
+            } else {
                 console.log(1)
             }
         }
@@ -293,7 +295,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 console.log(fileList[index - 1].response);
                 // console.log(fileList[index - 1].response.result)
                 this.setState({
-                    positionImgUrl: downloadUrl + fileList[index - 1].response.result,
+                    positionImgUrl: downloadUrl + fileList[index - 1].response.filePath,
                 });
             }
         }
@@ -355,27 +357,32 @@ class CustomerEditBaseinfoDetail extends React.Component {
             //时间
             data.openingDate = data.openingDate ? data.openingDate.format('YYYY-MM-DD') : new Date();
             //图片
-            data.productionFlowChartURL=this.state.prodImgUrl;
-            data.factoryFloorPlanURL=this.state.positionImgUrl;
+            data.productionFlowChartURL = this.state.prodImgUrl;
+            data.factoryFloorPlanURL = this.state.positionImgUrl;
             console.log('when saveDetail ---', data);
 
             var cusId = getLocQueryByLabel('id');
             if (cusId === '') {
+                //新增
                 saveAddCustomerInfoById(data).then(res => {
                     console.log('saveCustomerInfoById res', res);
                     if (res.data.result !== 'success') {
                         return
-                        console.log('success');
                     }
-                }).catch(err => console.log(err))
+                    MyToast('保存成功');
+                }).catch(err =>
+                    MyToast(err)
+                    )
             } else {
                 saveEditCustomerInfoById(data).then(res => {
                     console.log('saveCustomerInfoById res', res);
                     if (res.data.result !== 'success') {
                         return
-                        console.log('success');
                     }
-                }).catch(err => console.log(err))
+                    MyToast('编辑成功');
+                }).catch(err =>
+                    MyToast(err)
+                    )
             }
         })
     }
@@ -525,18 +532,6 @@ class CustomerEditBaseinfoDetail extends React.Component {
                         </Row>
 
                         <Row>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label="行业类别">
-                                    {getFieldDecorator('industryCategory', {
-                                        initialValue: customer.industryCategory,
-                                        //rules: [{ required: true, message: 'Please input your industryCategory!' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
-                                    })(
-                                        <Input placeholder="行业类别" />
-                                        )}
-                                </FormItem>
-                            </Col>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="企业规模">
                                     {getFieldDecorator('enterpriseScale', {
@@ -911,7 +906,6 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     fileList={this.state.positionFileList}
                                     onPreview={this.handlePositionPicPreview.bind(this)}
                                     onChange={this.handlePositionPicChange.bind(this)}
-
                                     data={{
                                         ...this.qiniuyunData,
                                         key: Date.now()

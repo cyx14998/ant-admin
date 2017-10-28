@@ -58,7 +58,16 @@ const itemDataModel = {
   pollutantName: '',
   executeStandardNumber: '',
   standardValue: '',
-  isAutoMOPS: '',
+  isAutoMOPS: {
+    value: '1',
+    options : [{
+      value: "1",
+      label: '是'
+    }, {
+      value: "0",
+      label: '否'
+    }]
+  },
 };
 
 function getEditIdHook (id) {
@@ -92,6 +101,21 @@ const WasteWaterDischargeFactor = connectEditableSectionApi({
         }
 
         var data = res.data.wasteWaterDischargeFactorList;
+        data = data.map((item,index) => {
+          return {
+            ...item,
+            isAutoMOPS: {
+              value: item.isAutoMOPS === true ? "1" : "0" ,
+              options : [{
+                value: "1",
+                label: "是"
+              }, {
+                value: "0",
+                label: "否"
+              }] 
+            }
+          }
+        })
         resolve({
           code: 0,
           data,
@@ -104,6 +128,7 @@ const WasteWaterDischargeFactor = connectEditableSectionApi({
   apiSave: function (record) {
     // 新增
     // console.log('apiSave apiListItemId ----', record);
+    record.isAutoMOPS = record.isAutoMOPS.value;
     var self = this;
     if(record.apiListItemId === undefined){
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')

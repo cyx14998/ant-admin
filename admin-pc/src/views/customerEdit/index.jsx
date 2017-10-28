@@ -29,8 +29,10 @@ import CustomerEditEIA from './customerEdit.EIA';
 import CustomerEditCertification from './customerEdit.certification';
 // 企业内部环保管理制度
 import CustomerIEPS from './customerEdit.IEPS';
-// 现场检查、监管信息
-import CustomerSiteInspection from './customerEdit.siteInspection';
+//企业现场检查记录
+import CustomerInspectionPlanDtlFor from './customerEdit.inspectionplandtlfor';
+//企业监管记录
+import CustomerSiteInspection from './customerEdit.siteinspection';
 
 import {
     getCustomerId
@@ -100,6 +102,9 @@ class Customerinfo extends React.Component {
                         <CustomerIEPS />
                     </TabPane>
                     <TabPane tab="现场检查,监管信息" disabled={this.state.tabPaneDisabled} key="10">
+                        <CustomerInspectionPlanDtlFor />
+                    </TabPane>
+                    <TabPane tab="检查记录" disabled={this.state.tabPaneDisabled} key="11">
                         <CustomerSiteInspection />
                     </TabPane>
                 </Tabs>

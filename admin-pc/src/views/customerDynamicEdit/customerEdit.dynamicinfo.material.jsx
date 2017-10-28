@@ -51,7 +51,8 @@ const dataSource = [{
   unitOfMeasurement: 'kg',
   consumption: '22.33',
 }];
-
+const dynamicId = getLocQueryByLabel('dynamicId');
+console.log(dynamicId)
 export const CustomerEditDynamicinfoMaterial = connectEditableSectionApi({
   secTitle: '原辅材料基本信息',
   columns: columns,
@@ -61,7 +62,7 @@ export const CustomerEditDynamicinfoMaterial = connectEditableSectionApi({
       var cusId = getLocQueryByLabel('id');
       if (!cusId) return;
 
-      getMaterialDynamicInfoList({}).then(res => {
+      getMaterialDynamicInfoList({customerMonthDclarationId: dynamicId}).then(res => {
         console.log('materiallist res',res)        
         if (res.data.result !== 'success') {
           resolve({
@@ -86,7 +87,7 @@ export const CustomerEditDynamicinfoMaterial = connectEditableSectionApi({
     if (record.tableId === '') {
       // 新增      
       return new Promise((resolve, reject) => {
-        getMaterialDynamicInfoAdd(record).then(res => {
+        getMaterialDynamicInfoAdd({...record,customerMonthDclarationId: dynamicId}).then(res => {
           console.log('AddMaterial res', res);
           if (res.data.result !== 'success') {
             resolve({
@@ -105,7 +106,7 @@ export const CustomerEditDynamicinfoMaterial = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        getMaterialDynamicInfoEdit(record).then(res => {
+        getMaterialDynamicInfoEdit({...record,customerMonthDclarationId: dynamicId}).then(res => {
           console.log('AddMaterial res', res);
           if (res.data.result !== 'success') {
             resolve({
