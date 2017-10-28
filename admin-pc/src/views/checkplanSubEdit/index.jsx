@@ -15,7 +15,9 @@ import {
     Table,
     Upload,
     Icon,
-    Modal
+    Modal,
+    Checkbox,
+    Radio,
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -37,37 +39,19 @@ const uploadButton = (
         <div className="ant-upload-text">Upload</div>
     </div>
 );
-const columns = [{
-    title: '姓名',
-    dataIndex: 'realName',
-    width: '10%'
-}, {
-    title: '性别',
-    dataIndex: 'sex',
-    width: '10%'
-}, {
-    title: '年龄',
-    dataIndex: 'age',
-    width: '10%'
-}, {
-    title: '手机号',
-    dataIndex: 'phoneNumber',
-    width: '10%'
-},
-{
-    title: '操作',
-    dataIndex: 'operation',
-    width: '20%'
-}
-];
+
 import {
     getMemberList,
     getCheckplanSubAdd,
     getCheckplanSubEdit,
+    getCheckplanSubPerformer,
     getCheckplanSubDetail
 } from '../../common/api/api.checkplan';
 
-import { getQiNiuToken } from '../../common/api/api.customer';
+import {
+    getQiNiuToken,
+    getCustomerList
+} from '../../common/api/api.customer';
 
 class CheckplanDetail extends React.Component {
     constructor(props) {
@@ -75,6 +59,7 @@ class CheckplanDetail extends React.Component {
         this.state = ({
             data: {},
             memberList: [],
+            performerId: '',
             prodPreviewImage: [], //反馈工艺
             positionPreviewImage: [], //检查单         
             prodPreviewVisible: false,
@@ -83,8 +68,15 @@ class CheckplanDetail extends React.Component {
             positionImgUrl: '',
             prodFileList: [], //反馈工艺流程图
             positionFileList: [], //检查单图
+            checkplanSubEditInfo: {},
+            customerList: [], //企业列表
+
+            checkSubId: getLocQueryByLabel('checkSubId') || '',//新增子表返回的子表id用来显示底面的员工列表
         });
         this.beforeUpload = this.beforeUpload.bind(this);
+
+        this._getCheckplanSubDetail = this._getCheckplanSubDetail.bind(this);
+        this._getMemberList = this._getMemberList.bind(this);
 
         this.qiniuyunData = {
             // key: Date.now(),
@@ -95,46 +87,145 @@ class CheckplanDetail extends React.Component {
     }
 
     componentDidMount() {
-        var checkSubId = getLocQueryByLabel('checkSubId');
-        console.log(checkSubId)
-        //  if(checkSubId==''){
-        //      return
-        //  }
-        // localStorage.setItem("wastewaterDischargeIsShow", "block");
-        // getCheckplanSubDetail({ tableId: checkSubId }).then(res => {
-        //     console.log('getCheckplanDetail res ---', res);
-        //     if (res.data.result !== 'success') {
-        //         MyToast(res.data.info)
-        //         return;
-        //     }
-        //     this.setState({ data: res.data.inspectionPlanDtl })
-        // }).catch(err => {
-        //     MyToast('接口调用失败')
-        // })
-        // var checkplanId = getLocQueryByLabel('checkplanId');
-        //获取人员列表
-        // getMemberList({}).then(res => {
-        //     console.log('getMemberlist res ---', res);
+        var self = this;
+        // var checkSubId = getLocQueryByLabel('checkSubId');
+        // var customerId = getLocQueryByLabel('customerId');
+        // console.log(checkSubId, 'sss', customerId);
 
-        //     if (res.data.result !== 'success') {
-        //         resolve({
-        //             code: -1,
-        //             info: res.data.info,
-        //         })
-        //         return;
-        //     }
-        //     this.setState({
-        //         memberList: res.data.memberList,
-        //     });
-        // }).catch(err => {
-        //     reject(err)
-        // })
-        this.beforeUpload();
+        if (self.state.checkSubId) {
+            console.log('编辑')
+            //编辑页面
+            self._getCheckplanSubDetail().then(res => {
+                self._getMemberList();
+            });
+
+        } else {
+            console.log('新增')
+            //新增页面
+            self._getMemberList();
+        }
+
+        //获取企业列表
+        getCustomerList({}).then(res => {
+            console.log('getCustomerList res ---', res);
+
+            if (res.data.result !== 'success') {
+                resolve({
+                    code: -1,
+                    info: res.data.info,
+                })
+                return;
+            }
+            self.setState({
+                customerList: res.data.customerList,
+            });
+        }).catch(err => {
+            reject(err)
+        })
+
+        self.beforeUpload();
     }
-    //选择执行人员
-    selectPerformer(checkedValues) {
-        console.log('checked = ', checkedValues);
+    //获取子表详情
+    _getCheckplanSubDetail() {
+        var self = this;
+        return new Promise((resolve, rejcet) => {
+            getCheckplanSubDetail({ tableId: this.state.checkSubId }).then(res => {
+                console.log('getCheckplanSubDetail res ---', res);
+
+                if (res.data.result !== 'success') {
+                    resolve({
+                        code: -1,
+                        info: res.data.info,
+                    })
+                    return;
+                }
+                var checkplanSubEdit = res.data.inspectionPlanDtl;
+                self.setState({
+                    checkplanSubEditInfo: checkplanSubEdit,
+                });
+                //图片
+                if (checkplanSubEdit.feedbackSheetURL) {
+                    self.setState({
+                        prodFileList: [{
+                            uid: '1',
+                            name: '123',
+                            url: checkplanSubEdit.feedbackSheetURL
+                        }],
+                        prodImgUrl: checkplanSubEdit.feedbackSheetURL
+                    });
+                }
+                if (checkplanSubEdit.regulatoryRecordURL) {
+                    self.setState({
+                        positionFileList: [{
+                            uid: '1',
+                            name: '123',
+                            url: checkplanSubEdit.regulatoryRecordURL
+                        }],
+                        positionImgUrl: checkplanSubEdit.regulatoryRecordURL
+                    });
+                }
+
+                resolve({
+                    code: 0
+                });
+            }).catch(err => {
+                console.log(err)
+            })
+        })
     }
+    // 获取人员列表
+    _getMemberList() {
+        var self = this;
+        getMemberList({}).then(res => {
+            console.log('getMemberlist res ---', res);
+
+            if (res.data.result !== 'success') {
+                resolve({
+                    code: -1,
+                    info: res.data.info,
+                })
+                return;
+            }
+
+            var memberList = res.data.memberList;
+
+            // 新增
+            if (self.state.checkplanSubEditInfo.performer === undefined) {
+                self.setState({
+                    memberList: memberList,
+                });
+                return;
+            }
+
+            // 更新
+            var performerId = self.state.checkplanSubEditInfo.performer.tableId;
+
+            if (memberList.length !== 0) {
+                
+                memberList = memberList.map((item) => {
+                    item.checked = false;
+                    if (performerId) {
+                        if (item.tableId == performerId) {
+                            item.checked = true;
+                        }
+                    };
+
+                    return item;
+                });
+            }
+
+            self.setState({
+                memberList: memberList,
+            });
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    // changeProvince(key){
+    //     console.log(key)
+    // }
+    //获取uptoken
     beforeUpload(file) {
         console.log(file)
         //获取uptoken
@@ -205,7 +296,7 @@ class CheckplanDetail extends React.Component {
                 console.log(fileList[index - 1].response);
                 // console.log(fileList[index - 1].response.result)
                 this.setState({
-                    positionImgUrl: downloadUrl + fileList[index - 1].response.result,
+                    positionImgUrl: downloadUrl + fileList[index - 1].response.filePath,
                 });
             }
         }
@@ -234,6 +325,7 @@ class CheckplanDetail extends React.Component {
     }
     // 基本信息保存
     saveDetail(e) {
+        var self = this;
         e.preventDefault();
         const {
             form
@@ -241,13 +333,15 @@ class CheckplanDetail extends React.Component {
 
         form.validateFields((err, values) => {
             var data = { ...values };
-            data.feedbackSheetURL = this.state.prodImgUrl;
-            data.regulatoryRecordURL = this.state.positionImgUrl;
+            data.feedbackSheetURL = self.state.prodImgUrl;
+            data.regulatoryRecordURL = self.state.positionImgUrl;
             if (err) return;
             console.log(data)
 
-            var checkSubId = getLocQueryByLabel('checkSubId');
-            if (checkSubId) {
+            var checkSubId = this.state.checkSubId;
+            console.log(checkSubId)
+            if (checkSubId && checkSubId != undefined) {
+                console.log('编辑')
                 getCheckplanSubEdit({
                     ...data,
                     tableId: checkSubId
@@ -256,34 +350,103 @@ class CheckplanDetail extends React.Component {
                         MyToast(res.data.info)
                         return;
                     }
-                    MyToast("保存成功")
-                    // localStorage.setItem("wastewaterDischargeIsShow", "block");
+                    MyToast("编辑成功")
                 }).catch(err => {
-                    MyToast('接口调用失败')
+                    console.log(err)
                 });
             } else {
-                const checkplanId = getLocQueryByLabel('checkplanId');
+                console.log('新增')
+                var checkplanId = getLocQueryByLabel('checkplanId');
+                if (data.customerId == '' || !data.customerId) {
+                    MyToast('请选择公司');
+                    return;
+                }
                 // 新增
                 getCheckplanSubAdd({
                     ...data,
                     inspectionPlanMstId: checkplanId,//主表Id
-                    customerId: checkplanId,//企业Id
-
                 }).then(res => {
+                    console.log(res)
+
                     if (res.data.result !== 'success') {
                         MyToast(res.data.info)
                         return;
                     }
-                    MyToast("新增成功")
-                    // localStorage.setItem("wastewaterDischargeIsShow", "block");
+                    self.setState({
+                        checkSubId: res.data.tableId,
+                    });
+                    MyToast("添加成功")
                 }).catch(err => {
-                    MyToast('接口调用失败')
+                    console.log(err)
                 });
             }
         })
     }
+    //选择执行人员
+    selectPerformer(record, index) {
+        console.log('checked = ', record);
+        var arr = this.state.memberList;
+        arr.length ? arr.map((item) => {
+            item.checked = false;
+        }) : '';
+        arr[index].checked = true;
+        this.setState({
+            performerId: record.tableId,
+            memberList: arr
+        })
+    }
+    //执行人员保存
+    performerSave() {
+        var checkSubId = this.state.checkSubId;
+        var performerId = this.state.performerId;
+        console.log(checkSubId, performerId)
+        getCheckplanSubPerformer({ tableId: checkSubId, performerId: performerId }).then(res => {
+            console.log('perfomerSave res ---', res);
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info)
+                return;
+            }
+            MyToast('保存成功')
+        }).catch(err => {
+            console.log(err)
+        })
+    }
     render() {
         let { getFieldDecorator } = this.props.form;
+        var checkSubId = getLocQueryByLabel('checkSubId');
+        var checkplanSubEditInfo = this.state.checkplanSubEditInfo;
+        //企业options
+        var customerOptions = this.state.customerList.map((item, index) => {
+            return <Option key={item.tableId}>{item.customerName}</Option>
+        });
+        const columns = [{
+            title: '姓名',
+            dataIndex: 'realName',
+            width: '10%'
+        }, {
+            title: '性别',
+            dataIndex: 'sex',
+            width: '10%'
+        }, {
+            title: '年龄',
+            dataIndex: 'age',
+            width: '10%'
+        }, {
+            title: '手机号',
+            dataIndex: 'phoneNumber',
+            width: '10%'
+        },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            width: '20%',
+            render: (text, record, index) => (
+                <div>
+                    <Checkbox checked={record.checked} onChange={this.selectPerformer.bind(this, record, index)}></Checkbox>
+                </div>
+            )
+        }
+        ];
         return (
             <div className="yzy-page">
                 <div className="yzy-tab-content-item-wrap">
@@ -292,9 +455,23 @@ class CheckplanDetail extends React.Component {
                             <h2 className="yzy-tab-content-title">检查计划子表信息详情</h2>
                             <Row>
                                 <Col span={8}>
+                                    <FormItem {...formItemLayout} label="企业名称">
+                                        {getFieldDecorator('customerId', {
+                                            //initialValue: checkplanSubEditInfo.customer ? checkplanSubEditInfo.customer.customerName : '',
+                                            //rules: [{ required: true },
+                                            //],
+                                        })(checkSubId && checkSubId != undefined ?
+                                            <div>{checkplanSubEditInfo.customer ? checkplanSubEditInfo.customer.customerName : ''}</div> :
+                                            <Select>
+                                                {customerOptions}
+                                            </Select>
+                                            )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={8}>
                                     <FormItem {...formItemLayout} label="备注">
                                         {getFieldDecorator('theRemarks', {
-                                            //initialValue: this.state.data.theRemarks,
+                                            initialValue: checkplanSubEditInfo.theRemarks,
                                             rules: [{ required: true },
                                             {/* { pattern: /^[0-9]*$/ } */ }
                                             ],
@@ -356,14 +533,19 @@ class CheckplanDetail extends React.Component {
                         <div className="yzy-block-center">
                             <Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
                         </div>
-                        <div className="baseinfo-section">
-                            <h2 className="yzy-tab-content-title">检查计划子表信息详情</h2>
-                            <Table
-                                columns={columns}
-                                dataSource={this.state.memberList}
-                                rowKey="tableId"
-                                loading={this.state.loading} />
-                        </div>
+                        {this.state.checkSubId ?
+                            <div className="baseinfo-section" style={{ marginTop: 50 }}>
+                                <h2 className="yzy-tab-content-title">检查计划子表执行者选择</h2>
+                                <Table
+                                    columns={columns}
+                                    dataSource={this.state.memberList}
+                                    rowKey="tableId"
+                                    loading={this.state.loading} />
+                                <div className="yzy-block-center">
+                                    <Button type="primary" style={{ padding: '0 40px' }} onClick={this.performerSave.bind(this)}>确定</Button>
+                                </div>
+                            </div> : null
+                        }
                     </Form>
                 </div >
             </div>

@@ -51,18 +51,18 @@ const dataSource = [{
   unitOfMeasurement: 'kg',
   theYield: '20'
 }];
-
+const dynamicId = getLocQueryByLabel('dynamicId');
 export const CustomerEditDynamicinfoProd = connectEditableSectionApi({
   secTitle: '主要产品基本信息',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve, reject) => {
-      // 获取产品信息列表
-      var cusId = getLocQueryByLabel('id');
+       var cusId = getLocQueryByLabel('id');
       if (!cusId) return;
-
-      getProductDynamicInfoList({}).then(res => {
-        console.log('prolist res',res)        
+      // 获取产品信息列表
+      console.log("dynamicId",dynamicId)
+      getProductDynamicInfoList({ customerMonthDclarationId: dynamicId }).then(res => {
+        console.log('prolist res', res)
         if (res.data.result !== 'success') {
           resolve({
             code: -1,
@@ -86,7 +86,7 @@ export const CustomerEditDynamicinfoProd = connectEditableSectionApi({
     if (record.tableId === '') {
       // 新增      
       return new Promise((resolve, reject) => {
-        getProductDynamicInfoAdd(record).then(res => {
+        getProductDynamicInfoAdd({...record,customerMonthDclarationId: dynamicId}).then(res => {
           console.log('AddProd res', res);
           if (res.data.result !== 'success') {
             resolve({
@@ -105,7 +105,7 @@ export const CustomerEditDynamicinfoProd = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        getProductDynamicInfoEdit(record).then(res => {
+        getProductDynamicInfoEdit({record,customerMonthDclarationId: dynamicId}).then(res => {
           console.log('AddProd res', res);
           if (res.data.result !== 'success') {
             resolve({
@@ -129,15 +129,15 @@ export const CustomerEditDynamicinfoProd = connectEditableSectionApi({
       getProductDynamicInfoDelete(tableId).then(res => {
         console.log('DeleteProd res', res);
         if (res.data.result !== 'success') {
-            resolve({
-              code: -1,
-              info: res.data.info,
-            });
-            return
-          }
           resolve({
-            code: 0 // success
-          })
+            code: -1,
+            info: res.data.info,
+          });
+          return
+        }
+        resolve({
+          code: 0 // success
+        })
       }).catch(err => {
         reject(err)
       });
