@@ -63,6 +63,7 @@ const dataSource = [{
     waterSource: '11',
     electricityConsumption: '11',
 }];
+const dynamicId = getLocQueryByLabel('dynamicId');
 
 export const CustomerEditDynamicinfoWater = connectEditableSectionApi({
     secTitle: '企业用水信息',
@@ -73,7 +74,7 @@ export const CustomerEditDynamicinfoWater = connectEditableSectionApi({
             var cusId = getLocQueryByLabel('id');
             if (!cusId) return;
 
-            getWaterDynamicInfoList({}).then(res => {
+            getWaterDynamicInfoList({customerMonthDclarationId: dynamicId}).then(res => {
                 console.log('Waterlist res', res)
                 if (res.data.result !== 'success') {
                     console.log(res.data.info)
@@ -99,7 +100,7 @@ export const CustomerEditDynamicinfoWater = connectEditableSectionApi({
         if (record.tableId === '') {
             // 新增      
             return new Promise((resolve, reject) => {
-                getWaterDynamicInfoAdd(record).then(res => {
+                getWaterDynamicInfoAdd({...record,customerMonthDclarationId: dynamicId}).then(res => {
                     console.log('AddWater res', res);
                     if (res.data.result !== 'success') {
                         resolve({
@@ -118,7 +119,7 @@ export const CustomerEditDynamicinfoWater = connectEditableSectionApi({
         } else {
             // 编辑
             return new Promise((resolve, reject) => {
-                getWaterDynamicInfoEdit(record).then(res => {
+                getWaterDynamicInfoEdit({...record,customerMonthDclarationId: dynamicId}).then(res => {
                     console.log('AddWater res', res);
                     if (res.data.result !== 'success') {
                         resolve({
