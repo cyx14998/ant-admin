@@ -88,16 +88,29 @@ const itemDataModel = {
   emissionRateActual: '',
   dataSources: '',
   emissionAmount: '',
-  isOverproof: '',
+  isOverproof: {
+    value: '1',
+    options : [{
+      value: "1",
+      label: '是'
+    }, {
+      value: "0",
+      label: '否'
+    }]
+  },
 };
 
 const WasteGasDemoSection = connectEditableSectionApi({
   secTitle: '废气排放因子基本情况',
   columns: columns,
-  apiLoader: function () {
+  apiLoader: function ({apiListItemId}) {
+    var editId = apiListItemId;
+    if(editId === undefined){
+      editId = localStorage.getItem('wastewater-discharge-editId');
+    }
     return new Promise((resolve,reject) => {
       //获取数据
-      getWasteGasDischargeFactorRecordList({wasteGasDischargeRecordId:1}).then(res => {
+      getWasteGasDischargeFactorRecordList({wasteGasDischargeRecordId: editId}).then(res => {
         console.log('getWasteGasDischargeFactorRecordList res ---', res);
 
         if (res.data.result !== 'success') {
@@ -109,6 +122,21 @@ const WasteGasDemoSection = connectEditableSectionApi({
         }
 
         var data = res.data.wasteGasDischargeFactorRecordList;
+        data = data.map((item,index) => {
+          return {
+            ...item,
+            isOverproof: {
+              value: item.isOverproof === true ? "1" : "0" ,
+              options : [{
+                value: "1",
+                label: "是"
+              }, {
+                value: "0",
+                label: "否"
+              }] 
+            }
+          }
+        })
         resolve({
           code: 0,
           data,
@@ -121,14 +149,18 @@ const WasteGasDemoSection = connectEditableSectionApi({
   apiSave: function (record) {
     // 新增
     console.log('apiSave record ----', record);
+    record.isOverproof = record.isOverproof.value;
     var self = this;
+    if(record.apiListItemId === undefined){
+      record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
+    }
+    record.wasteGasDischargePortId = record.apiListItemId;
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWasteGasDischargeFactorRecordAdd({
           ...record,
-          wasteGasDischargeRecordId:1,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({

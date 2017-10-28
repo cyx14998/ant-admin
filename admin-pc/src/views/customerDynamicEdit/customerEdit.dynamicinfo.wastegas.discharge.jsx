@@ -2,185 +2,266 @@
  * 废气污染物排放情况
  */
 
-import connectEditableSectionApi from '../../components/hoc.editable.section';
+import React from 'react';
+import {
+	Form,
+	Row,
+	Col,
+	Input,
+  Button,
+  Select,
+} from 'antd';
+const FormItem = Form.Item;
+const Option = Select.Option;
 
-import { 
-  getWasteGasDischargeRecordList,
-  getWasteGasDischargeRecordAdd,
-  getWasteGasDischargeRecordUpdate,
-  getWasteGasDischargeRecordDelete,
+import {
+	MyToast
+} from '../../common/utils';
+
+import {
+  getLocQueryByLabel
+} from '../../common/utils';
+
+const cusMId = getLocQueryByLabel("dynamicId");
+
+const formItemLayout = {
+	labelCol: { span: 8 },
+	wrapperCol: { span: 16 },
+}
+
+import {
+	getWasteGasDischargeRecordDetail,
+	getWasteGasDischargeRecordAdd,
+	getWasteGasDischargeRecordUpdate,
 } from '../../common/api/api.customer.dynamic.plus.js';
 
 import {
-  MyToast
-} from '../../common/utils';
+  getWasteGasDischargeList
+} from '../../common/api/api.customer.plus.js';
 
 /**
- * table head
+ * @parms editId
+ * @parms showItemVisible
  */
-const columns = [{
-  title: '实测排放量',
-  dataIndex: 'measuredExhaustVolume',
-  width: '10%'
-}, {
-  title: '排放时间',
-  dataIndex: 'emissionTime',
-  width: '10%'
-}, {
-  title: '废气排放量',
-  dataIndex: 'exhaustEmission',
-  width: '10%'
-}, {
-  title: '数据来源',
-  dataIndex: 'dataSources',
-  width: '10%'
-}, {
-  title: '燃料',
-  dataIndex: 'fuel',
-  width: '10%'
-}, {
-  title: '林格曼黑度',
-  dataIndex: 'ringermanBlackness',
-  width: '10%'
-}, {
-  title: '废气类型',
-  dataIndex: 'exhaustGasType',
-  width: '10%'
-}, {
-  title: '操作',
-  dataIndex: 'operation',
-  width: '10%'
-}];
+class WasteGasDischargeDetail extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			data: {},
+      tableId:"",
+      dischargePort:[],
+      dischargePortItem: ""
+		}
+	}
 
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
-
-/**
- * 新数据默认值
- */
-const itemDataModel = {
-  measuredExhaustVolume: '',
-  emissionTime: '',
-  exhaustEmission: '',
-  dataSources: '',
-  fuel: '',
-  ringermanBlackness: '',
-  exhaustGasType: '',
-};
-
-const WasteGasDemoSection = connectEditableSectionApi({
-  secTitle: '废气排放基本信息列表',
-  columns: columns,
-  apiLoader: function () {
-    return new Promise((resolve,reject) => {
-      //获取数据
-      getWasteGasDischargeRecordList({
-        customerMonthDclarationId:1,
-        theYear:1,
-        theMonth:1,
-      }).then(res => {
-        console.log('getWasteGasDischargeRecordList res ---', res);
-
-        if (res.data.result !== 'success') {
-          resolve({
-            code: -1,
-            info: res.data.info,
-          })
-          return;
-        }
-
-        var data = res.data.wasteGasDischargeRecordList;
-        resolve({
-          code: 0,
-          data,
-        })
-      }).catch(err => {
-        MyToast('接口调用失败')
+	componentDidMount() {
+    //获取所有排放口
+    getWasteGasDischargeList({}).then(res => {
+			if (res.data.result !== 'success') {
+				MyToast(res.data.info)
+				return;
+      }
+      var tableId = [];
+      res.data.wasteGasDischargePortList.map((item,index) => {
+        tableId.push(item.tableId);
       })
+			this.setState({ dischargePort: tableId })
+		}).catch(err => {
+			MyToast('接口调用失败')
     })
-  },
-  apiSave: function (record) {
-    // 新增
-    console.log('apiSave record ----', record);
-    var self = this;
+    var tableId = this.props.editId;
+    if (tableId === '') return;
+		getWasteGasDischargeRecordDetail({ tableId: tableId }).then(res => {
+      console.log(res);
+			if (res.data.result !== 'success') {
+				MyToast(data.info)
+				return;
+      }
+			this.setState({ 
+        data: res.data.wasteGasDischargeRecord, 
+        tableId: res.data.wasteGasDischargeRecord.tableId,
+        dischargePortItem: res.data.wasteGasDischargeRecord.wasteGasDischargePort.tableId
+      })
+		}).catch(err => {
+			MyToast('接口调用失败')
+    })
+   
+	}
+	// 基本信息保存
+	saveDetail(e) {
+		e.preventDefault();
+		const {
+			form
+		} = this.props;
 
-    if (record.tableId === '') {
-      return new Promise((resolve, reject) => {
-        // 新增
-        getWasteGasDischargeRecordAdd({
-          ...record,
-          customerMonthDclarationId:1,
-          wasteGasDischargePortId:1,
-        }).then(res => {
-          if (res.data.result !== 'success') {
-            resolve({
-              code: 1,
-              info: res.data.info,
-            });
-            return;
-          }
+		form.validateFields((err, values) => {
+			if (err) return;
+			console.log('when saveDetail ---', values);
+			var tableId = this.props.editId;
+			if(!tableId){
+				tableId = this.state.tableId;
+      }
+			//编辑
+			if(this.state.tableId){
+				getWasteGasDischargeRecordUpdate({
+					...values,
+					tableId:tableId,
+				}).then(res => {
+					if (res.data.result !== 'success') {
+						MyToast(res.data.info)
+						return;
+					}
+					MyToast("保存成功")
+				}).catch(err => {
+					MyToast('接口调用失败')
+				});
+			} else {
+				// 新增
+				getWasteGasDischargeRecordAdd({
+          ...values,
+          customerMonthDclarationId: cusMId,
+				}).then(res => {
+					if (res.data.result !== 'success') {
+						MyToast(res.data.info)
+						return;
+					}
+					localStorage.setItem('wastewater-discharge-editId', res.data.tableId);
+					this.setState({tableId:res.data.tableId});
+					this.props.showItemVisible();
+					MyToast("新增成功")
+				}).catch(err => {
+					MyToast('接口调用失败')
+				});
+			}
+		})
+	}
 
-          resolve({
-            code: 0 // success
-          })
-        }).catch(err => {
-          reject(err)
-        });
-      });
-    } else {
-      // 编辑
-      return new Promise((resolve, reject) => {
-        getWasteGasDischargeRecordUpdate({
-          ...record,
-        }).then(res => {
-          if (res.data.result !== 'success') {
-            resolve({
-              code: 1,
-              info: res.data.info,
-            });
-            return;
-          }
 
-          resolve({
-            code: 0 // success
-          })
-        }).catch(err => {
-          reject(err)
-        });
-      });
-    }
-  },
-  apiDel: function (tableId) {
-    //删除
-    console.log(`apiDel ${tableId}`);
+	render() {
+		let { getFieldDecorator } = this.props.form;
+		return (
+			<div className="yzy-tab-content-item-wrap">
+				<Form onSubmit={this.saveDetail.bind(this)}>
+					<div className="baseinfo-section">
+						<h2 className="yzy-tab-content-title">废水排放基本信息详情</h2>
+						<Row>
+              <Col span={8}>
+								<FormItem {...formItemLayout} label="废水排放口ID">
+									{getFieldDecorator('wasteGasDischargePortId', {
+										initialValue: this.state.dischargePortItem+'' || this.state.dischargePort[0]+'',
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+                    <Select>
+                      {
+                        this.state.dischargePort.map((item,index) =>{
+                           return(
+                            <Option key={index} value={item.toString()}>{item.toString()}</Option>
+                          ) 
+                        })
+                      }
+                    </Select>
+										)}
+								</FormItem>
+							</Col>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="实测排放量">
+									{getFieldDecorator('measuredExhaustVolume', {
+										initialValue: this.state.data.measuredExhaustVolume?this.state.data.measuredExhaustVolume+'':'',
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="实测排放量" />
+										)}
+								</FormItem>
+							</Col>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="排放时间">
+									{getFieldDecorator('emissionTime', {
+										initialValue: this.state.data.emissionTime?this.state.data.emissionTime+'':'',
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="排放时间" />
+										)}
+								</FormItem>
+							</Col>
+						</Row>
+            <Row>
+              <Col span={8}>
+								<FormItem {...formItemLayout} label="废气排放量">
+									{getFieldDecorator('exhaustEmission', {
+										initialValue: this.state.data.exhaustEmission?this.state.data.exhaustEmission+'':'',
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="废气排放量" />
+										)}
+								</FormItem>
+							</Col>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="数据来源">
+									{getFieldDecorator('dataSources', {
+										initialValue: this.state.data.dataSources,
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="数据来源" />
+										)}
+								</FormItem>
+							</Col>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="燃料">
+									{getFieldDecorator('fuel', {
+										initialValue: this.state.data.fuel?this.state.data.fuel+'':'',
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="燃料" />
+										)}
+								</FormItem>
+							</Col>
+						</Row>
+            <Row>
+              <Col span={8}>
+								<FormItem {...formItemLayout} label="林格曼黑度">
+									{getFieldDecorator('ringermanBlackness', {
+										initialValue: this.state.data.ringermanBlackness?this.state.data.ringermanBlackness+'':'',
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="林格曼黑度" />
+										)}
+								</FormItem>
+							</Col>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="废气类型">
+									{getFieldDecorator('exhaustGasType', {
+										initialValue: this.state.data.exhaustGasType,
+										rules: [{ required: true },
+										{/* { pattern: /^[0-9]*$/ } */ }
+										],
+									})(
+										<Input placeholder="废气类型" />
+										)}
+								</FormItem>
+							</Col>
+						</Row>
+					</div>
+					<div className="yzy-block-center">
+						<Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
+					</div>
+				</Form>
+			</div>
+		)
+	}
+}
 
-    return new Promise((resolve, reject) => {
-      getWasteGasDischargeRecordDelete(tableId).then(res => {
-        if (res.data.result !== 'success') {
-          resolve({
-            code: 1,
-            info: res.data.info,
-          });
-          return;
-        }
-
-        resolve({
-          code: 0 // success
-        });
-      }).catch(err => {
-        reject(err)
-      });
-    });
-  },
-  itemDataModel: itemDataModel
-})
-
-export default WasteGasDemoSection;
+export default Form.create()(WasteGasDischargeDetail);
