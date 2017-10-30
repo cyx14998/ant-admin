@@ -82,7 +82,7 @@ export function getStaffListAdd({
  * 员工修改
  */
 export function getStaffListUpdate({
-  tableId,
+  staffId,
   phoneNumber,
   password,
   email,
@@ -98,7 +98,7 @@ export function getStaffListUpdate({
   return axios.get('/uMemberUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      tableId,
+      tableId: staffId,
       phoneNumber,
       password,
       email,

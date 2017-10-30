@@ -19,6 +19,8 @@ const FormItem = Form.Item;
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
 
+import QiniuUpload from '../../components/upload';
+
 import {
   getStarffCertListAdd,
   getStarffCertListUpdate,
@@ -47,14 +49,8 @@ class StaffCertEdit extends React.Component {
     super(props);
 
     this.state = {
-      uptoken: '',
-      uploadedFileList: [{
-        uid: -1,
-        status: 'done',
-        url: 'http://oyc0y0ksm.bkt.clouddn.com/1509173501415'
-      }],
-      previewImage: '',
-      previewVisible: false,
+      uploadedFileList: [],
+      
       data: {},
     }
 
@@ -62,18 +58,6 @@ class StaffCertEdit extends React.Component {
   }
 
   componentDidMount() {
-    // prepare for upload image
-    getQiNiuToken({}).then(res => {
-        if (!res.data || !res.data.uptoken) {
-            MyToast('getqiniuyun uptoken error');
-            return;
-        }
-
-        // this.qiniuyunData.token = res.data.uptoken;
-        this.setState({
-          uptoken: res.data.uptoken
-        });
-    }).catch(err => console.log(err));
 
     // get default details if has tableid
     let editId = this.props.editId;
@@ -93,52 +77,25 @@ class StaffCertEdit extends React.Component {
         return;
       }
 
+      var memberCertification = res.data.memberCertification;
+
       this.setState({
-        data: res.data.memberCertification
+        data: memberCertification,
+        uploadedFileList: [{
+          uid: -1,
+          status: 'done',
+          url: memberCertification.filePath
+        }]
       })
     }).catch(err => {
       MyToast('获取证照详情失败')
     })
   }
 
-  beforeUpload(file) {
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      MyToast('请选择图片小于2MB!');
-    }
-
-    return isLt2M;
-  }
-
-  handleUploadChange({file, fileList}) {
-    console.log('handleUploadChange file--------------', file)
-    // console.log('handleUploadChange fileList----------', fileList)
-    // {
-    //   uid: '',
-    //   response: {
-    //     filePath: '1509168004229'
-    //   }
-    // }
-
-    /**
-     * 上传成功 or 删除成功
-     */
-    if (file.status === 'done' || file.status === 'removed') {
-      this.setState({
-        uploadedFileList: fileList
-      });
-    }
-  }
-
-  handlePreview(file) {
+  handleUploadedFileList({fileList}) {
     this.setState({
-      previewImage: file.url || file.thumbUrl,
-      previewVisible: true,
+        uploadedFileList: fileList,
     });
-  }
-
-  handleCancel() {
-    this.setState({ previewVisible: false });
   }
 
   saveDetail(e) {
@@ -184,7 +141,7 @@ class StaffCertEdit extends React.Component {
 
           setTimeout(() => {
             window.location.reload();
-          }, 200);
+          }, 500);
         }).catch(err => MyToast('新增失败'));
       } else {
         // save 
@@ -201,7 +158,7 @@ class StaffCertEdit extends React.Component {
 
           setTimeout(() => {
             window.location.reload();
-          }, 200);
+          }, 500);
         }).catch(err => MyToast('更新失败'));
       }
     });
@@ -277,7 +234,7 @@ class StaffCertEdit extends React.Component {
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
-                    <Input placeholder="复证周期" />
+                    <Input addonAfter="年" placeholder="复证周期" />
                     )}
                 </FormItem>
               </Col>
@@ -293,38 +250,14 @@ class StaffCertEdit extends React.Component {
             </Row>
             <Row>
               <Col span={12}>
-                <Row>
-                  <Col style={{fontSize: '12px', color: '#000', textAlign: 'right'}} span={6}>证件上传：</Col>
-                  <Col span={18}>
-                    <Upload
-                        action='http://up.qiniup.com'
-                        container="container"
-                        listType="picture-card"
-                        multiple={false}
-                        accept="image/*"
-                        beforeUpload={this.beforeUpload.bind(this)}
-                        onChange={this.handleUploadChange.bind(this)}
-                        fileList={this.state.uploadedFileList}
-                        onPreview={this.handlePreview.bind(this)}
-                        data={{
-                          token: this.state.uptoken,                       
-                          key: Date.now()
-                        }}>
-                        {
-                          this.state.uploadedFileList.length === 1 ? null : 
-                          (
-                            <div>
-                                <Icon type="plus" />
-                                <div className="ant-upload-text">证件上传</div>
-                            </div>
-                          )
-                        }
-                    </Upload>
-                    <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancel.bind(this)}>
-                      <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
-                    </Modal>
-                  </Col>
-                </Row>
+                <div className="yzy-tab-content-item-wrap">
+                  <h2 className="yzy-tab-content-title">证件上传</h2>
+                  <QiniuUpload
+                      uploadTitle="证件上传"
+                      uploadedFileList={this.state.uploadedFileList}
+                      handleUploadedFileList={this.handleUploadedFileList.bind(this)}
+                     />
+                </div>
               </Col>
             </Row>
           </div>
