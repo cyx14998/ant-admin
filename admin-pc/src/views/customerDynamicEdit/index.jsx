@@ -23,8 +23,9 @@ import CustomerEditDynamicinfoBoundaryNoise from './customerEdit.dynamicinfo.bou
 import CustomerEditDynamicinfoAttachment from './customerEdit.dynamicinfo.attachment';
 
 import {
-    getCustomerId
-} from '../../common/api/index';
+  getCustomerDynamicList,
+} from '../../common/api/api.customer.dynamic';
+
 import {
     MyToast,
     getLocQueryByLabel
@@ -39,21 +40,56 @@ class Dynamicinfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tabPaneDisabled: false
+            tabPaneDisabled: false,
+
+            // 动态月份选择
+            selectedDynamicId: '',
+            dynamicOptions: []
         };
+
+        this.customerId = getLocQueryByLabel('id') || '';
+        this.defaultDynamicId = getLocQueryByLabel('dynamicId') || '';
+
+        this.getDynamicListOptions = this.getDynamicListOptions.bind(this);
     }
 
-    componentDidMount() {
-        var cusId = getLocQueryByLabel('id');
-        var dynamicId = getLocQueryByLabel('dynamicId');
+    componentDidMount() {        
 
-        console.log('Dynamicinfo cusId dynamicId ------', cusId, dynamicId)
-        var cusId = getCustomerId();
-        if (!cusId) {
+        if (this.customerId === '') {
             this.setState({
-                tabPaneDisabled: true
+                tabPaneDisabled: true,                
             })
+        };
+
+        this.getDynamicListOptions();
+    }
+
+    getDynamicListOptions() {
+      //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
+      getCustomerDynamicList({}).then(res => {
+        console.log('getCustomerDynamicList ---', res)
+        if (res.data.result !== 'success') {
+          MyToast(res.data.info || '获取动态列表失败')
+          return;
         }
+
+        var dynamicList = res.data.customerMonthDclarationList;
+
+        var dynamicOptions = dynamicList.map(item => {
+            return {
+                key: item.tableId.toString(),
+                value: item.tableId.toString(),
+                label: item.theYear + '-' + item.theMonth
+            }
+        });
+
+        this.setState({
+            dynamicOptions,
+            selectedDynamicId: this.defaultDynamicId
+        });
+      }).catch(err => {
+        MyToast(err || '获取动态列表失败')
+      })
     }
 
     setTabPaneActive() {
@@ -61,11 +97,41 @@ class Dynamicinfo extends React.Component {
             tabPaneDisabled: false
         })
     }
+
+    onSeletChange(dynamicId) {
+        this.setState({
+            selectedDynamicId: dynamicId
+        })
+    }
+
+    refreshDynamicId() {
+        // 根据动态id，重新请求数据
+        if (this.defaultDynamicId === this.state.selectedDynamicId) return;
+
+        window.location.search = `id=${this.customerId}&dynamicId=${this.state.selectedDynamicId}`;
+    }
     
     render() {
         
         return (
             <div className="yzy-page">
+                <div className="yzy-tab-content-item-wrap">
+                  <h2 className="yzy-tab-content-title">选择动态月份</h2>
+                  <div style={{padding: '20px'}}>
+                    <Select 
+                        style={{width: '200px'}} 
+                        placeholder="选择动态月份" 
+                        onChange={this.onSeletChange.bind(this)}
+                        value={this.state.selectedDynamicId}>
+                        {
+                            this.state.dynamicOptions.map(item => (
+                                <Option key={item.key} value={item.value}>{item.label}</Option>
+                            ))
+                        }
+                    </Select>
+                    <Button style={{marginLeft: '20px'}} type="primary" onClick={this.refreshDynamicId.bind(this)}>确定</Button>
+                  </div>
+                </div>
                 <Tabs defaultActiveKey="1">
                     <TabPane tab="生产信息" key="1">
                          <CustomerEditBaseinfoDetail onBaseinfoSave={this.setTabPaneActive.bind(this)} /> 

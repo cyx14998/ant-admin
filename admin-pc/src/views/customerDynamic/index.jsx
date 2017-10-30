@@ -5,25 +5,40 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
 
+// 推荐在入口文件全局设置 locale
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
+
 import { 
   Table,
   Button, 
-  Popconfirm
+  Popconfirm,
+  Modal,
+  DatePicker
 } from 'antd';
 
 import {
-  getCustomerDynamicList
+  getCustomerDynamicList,
+  getCustomerDynamicListAdd,
+  getCustomerDynamicListDelete
 } from '../../common/api/api.customer.dynamic';
 
 import {
-  getLocQueryByLabel
+  getLocQueryByLabel,
+  MyToast
 } from '../../common/utils';
 
-function changeParentState(id) {
+const MonthPicker = DatePicker.MonthPicker;
+const monthFormat = 'YYYY-MM';
+
+function changeParentState({
+  dynamicId,
+}) {
   var cusId = getLocQueryByLabel('id');
   parent.window.iframeHook.changePage({
-    url: '/customerDynamicEdit.html?id='+ cusId +'&dynamicId=' + id + '#' + Math.random(),
-    breadIncrement: '客户动态信息编辑'
+    url: `/customerDynamicEdit.html?id=${cusId}&dynamicId=${dynamicId}#${Math.random()}`,
+    breadIncrement: `客户动态信息编辑`,
   })
 }
 
@@ -31,20 +46,17 @@ const columns = [
   {
     title: '年',
     dataIndex: 'theYear',
-    key: 'uniformSocialCreditCode',
-    width: '25%'
-  }, {
-    title: '季度',
-    dataIndex: 'theQuarter',
-    key: 'customerName',
-    width: '25%'
-  }, {
+  }, 
+  // {
+  //   title: '季度',
+  //   dataIndex: 'theQuarter',
+  // }, 
+  {
     title: '月',
     dataIndex: 'theMonth',
-    width: '25%'
   }, {
     title: '编辑',
-    width: '25%'
+    width: 120
   }
 ];
 
@@ -54,19 +66,24 @@ class CustomerDynamicList extends Component {
 
     this.state = {
       loading: true,
-      customerList: [],
+      customerDynamicList: [],
+
+      modalVisible: false,
+      selectedMonth: moment(new Date()).format(monthFormat),
     }
 
     this.getData = this.getData.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
 
-    columns[3].render = (text, record) => {
+    columns[2].render = (text, record) => {
       return (
         <div>
           <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteItem(record.tableId)}>
             <a href="#">删除</a>
           </Popconfirm>
-          <a style={{marginLeft: '10px'}} onClick={() => changeParentState(record.tableId)}>查看</a>
+          <a style={{marginLeft: '10px'}} onClick={() => changeParentState({
+            dynamicId: record.tableId
+          })}>查看</a>
         </div>
       )
     } 
@@ -82,28 +99,77 @@ class CustomerDynamicList extends Component {
     getCustomerDynamicList(params).then(res => {
       console.log('getCustomerDynamicList ---', res)
       if (res.data.result !== 'success') {
-        alert(res.data.info || '接口失败')
+        MyToast(res.data.info || '获取动态列表失败')
         return;
       }
 
       this.setState({
         loading: false,
-        customerList: res.data.customerMonthDclarationList.map((item, i) => {
+        customerDynamicList: res.data.customerMonthDclarationList.map((item, i) => {
 
           item.key = i;
           return item;
         })
       })
     }).catch(err => {
-      alert(res.data.info || '接口失败')
+      MyToast(err || '获取动态列表失败')
     })
   }
 
   deleteItem(tableId) {
-    alert(tableId)
+    getCustomerDynamicListDelete({
+      tableId
+    }).then(res => {
+      if (res.data.result !== 'success') {
+        MyToast(res.data.info || '删除失败');
+        return;
+      }
+
+      MyToast('删除成功');
+
+      this.getData({});
+    }).catch(err => MyToast(err))
   }
 
 
+  closeModal() {
+    this.setState({
+      modalVisible: false
+    })
+  }
+
+  showModal() {
+    this.setState({
+      modalVisible: true
+    })
+  }
+
+  onMonthChange(date, dateString) {
+    this.setState({
+      selectedMonth: dateString
+    })
+  }
+
+  addDynamicItem() {
+    var month = this.state.selectedMonth.split('-');
+
+    getCustomerDynamicListAdd({
+      theYear: month[0],
+      theMonth: month[1]
+    }).then(res => {
+      if (res.data.result !== 'success') {
+        MyToast(res.data.info || '添加动态列表失败');
+        return;
+      }
+
+      MyToast('添加动态列表成功');
+
+      this.getData({});
+      this.setState({
+        modalVisible: false
+      });
+    }).catch(err => MyToast('添加动态列表失败'))
+  }
 
   render() {
     return (
@@ -111,14 +177,24 @@ class CustomerDynamicList extends Component {
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
             <Button type="primary" style={{marginLeft: 8}}
-              onClick={() => changeParentState('')}>新增</Button>
+              onClick={this.showModal.bind(this)}>新增</Button>
           </div>
           <Table
             columns={columns} 
-            dataSource={this.state.customerList}
+            dataSource={this.state.customerDynamicList}
             loading={this.state.loading} />
           {/* <Pagination></Pagination> */}
         </div>
+
+        <Modal visible={this.state.modalVisible} footer={null} onCancel={this.closeModal.bind(this)}>
+          <div style={{padding: '20px 20px 200px 20px'}}>
+            <span style={{marginRight: '10px'}}>请选择动态数据区间：</span>
+            <MonthPicker 
+              defaultValue={moment(new Date(), monthFormat)}
+              onChange={this.onMonthChange.bind(this)} />
+            <Button style={{marginLeft: '20px'}} type="primary" onClick={this.addDynamicItem.bind(this)}>保存</Button>
+          </div>
+        </Modal>
       </div>
     )
   }

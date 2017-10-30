@@ -17,31 +17,10 @@ const rcsearchformData = {
     type: 'input',
     label: '企业名称',
     name: 'customerName',
-    rules: [{ required: true, message: '请输入企业名称' }],
   }, {
     type: 'input',
     label: '统一社会信用代码',
     name: 'uniformSocialCreditCode',
-  }, {
-    type: 'select',
-    label: '单位类别',
-    name: 'unitCategory',
-    options:[
-      {
-        value: "我是value1",
-        label: "我是label1"
-      },
-    ]
-  }, {
-    type: 'select',
-    label: '行业类别',
-    name: 'industryCategory',
-    options:[
-      {
-        value: "我是value2",
-        label: "我是label2"
-      },
-    ]
   }]
 }
 
@@ -54,45 +33,38 @@ const columns = [
     title: '统一社会信用代码',
     dataIndex: 'uniformSocialCreditCode',
     key: 'uniformSocialCreditCode',
-    width: '15%'
   }, {
     title: '企业名称',
     dataIndex: 'customerName',
     key: 'customerName',
-    width: '15%'
   }, {
     title: '单位地址',
     dataIndex: 'unitAddress',
     key: 'unitAddress',
-    width: '20%'
   }, {
     title: '联系人',
     dataIndex: 'contactPerson',
     key: 'contactPerson',
-    width: '10%'
   }, {
     title: '电话',
     dataIndex: 'phoneNumber',
     key: 'phoneNumber',
-    width: '10%'
   }, {
     title: '传真',
     dataIndex: 'fax',
     key: 'fax',
-    width: '5%'
   }, {
     title: '邮政编码',
     dataIndex: 'postalCode',
     key: 'postalCode',
-    width: '5%'
   }, {
-    title: '编辑',
+    title: '操作',
     key: 'action',
-    width: '15%',
+    width: 120,
     render: (text, record) => (
       <div>
-        <Button type="primary" onClick={() => changeIframeToEdit(record.tableId)}>编辑</Button>
-        <Button type="primary" onClick={() => changeIframeToDynamic(record.tableId)}>查看动态</Button>
+        <a type="primary" onClick={() => changeIframeToEdit(record.tableId)}>编辑</a>
+        <a style={{marginLeft: '10px'}} type="primary" onClick={() => changeIframeToDynamic(record.tableId)}>查看动态</a>
       </div>
     )
   }
@@ -155,9 +127,7 @@ class CustomerList extends React.Component {
     console.log('handleSearch ---------', values);
     this.getData({
       companyName: values.companyName,
-      industryCategory: values.industryCategory,
       uniformSocialCreditCode: values.uniformSocialCreditCode,
-      unitCategory: values.unitCategory
     });
   }
 

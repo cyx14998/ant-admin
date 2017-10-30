@@ -38,19 +38,24 @@ class StaffManagementEdit extends Component {
   }
 
   onStaffDetailsSave(values) {
-    // console.log('onStaffDetailsSave---------------', values)
+    console.log('onStaffDetailsSave---------------', values)
     if (this.state.staffId === '') {
       // add
       getStaffListAdd(values).then(res => {
         console.log('getStaffListAdd res --------', res)
         if (res.data.result !== 'success') {
-          return MyToast(res.data.info || '新增失败')
+          MyToast(res.data.info || '新增失败');
+          return;
         }
 
         MyToast('新增成功');
-        this.setState({
-          staffId: res.data.tableId
-        });
+        // this.setState({
+        //   staffId: res.data.tableId
+        // });
+
+        setTimeout(() => {
+          window.location.search = `staffId=${res.data.tableId}`;
+        }, 500);
         
       }).catch(err => MyToast('新增失败'));
     } else {

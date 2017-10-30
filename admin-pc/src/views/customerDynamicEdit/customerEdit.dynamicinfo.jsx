@@ -54,7 +54,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 <CustomerEditDynamicinfoMaterial />
                 <CustomerEditDynamicinfoWater />
                 <CustomerEditDynamicinfoFuel />
-            </div >
+            </div>
         )
     }
 }

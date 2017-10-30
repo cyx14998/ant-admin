@@ -84,7 +84,7 @@ class EditableSection extends Component {
    * @value       数据赋值
    */
   onCellChange(tableId, dataIndex, value) {
-    console.log('oncellchange value-----------', value)
+    // console.log('oncellchange value-----------', value)
     this.setState(prev => {
       return {
         dataSource: prev.dataSource.map(item => {
