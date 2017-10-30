@@ -1,7 +1,6 @@
 /**
  * 边界噪声情况
  */
-
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
@@ -17,6 +16,8 @@ import {
   MyToast,
   convertObjectLabel
 } from '../../common/utils';
+
+import axios from '../../common/api';
 
 /**
  * table head
@@ -52,17 +53,6 @@ const columns = [{
 }];
 
 /**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
-
-/**
  * 新数据默认值
  */
 const itemDataModel = {
@@ -70,90 +60,61 @@ const itemDataModel = {
   measuringPointName: '',
   measuringPointPosition: '',
   noiseSourceName: '',
-  noiseSourcePropertyId:{
-    value: '',
-    options: [{
-      value: '',
-      label: ''
-    }]
-  },
-  functionalAreaTypeId: {
-    value: '',
-    options: [{
-      value: '',
-      label: ''
-    }]
-  }
+  noiseSourcePropertyId: '',
+  functionalAreaTypeId: '',
 };
 
-
-const WasteWaterDemoSection = connectEditableSectionApi({
+const BoundaryNoise = connectEditableSectionApi({
   secTitle: '边界噪声基本情况',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
-      //获取数据
-      getBoundaryNoiseList({}).then(res => {
-        console.log('getBoundaryNoiseList res ---', res);
-
-        if (res.data.result !== 'success') {
-          resolve({
-            code: -1,
-            info: res.data.info,
-          })
-          return;
-        }
-
+      axios.all([
+        getFunctionalAreaTypeList({}),
+        getNoiseSourcePropertyList({}),
+        getBoundaryNoiseList({})
+      ]).then(axios.spread((areaList, noiseSourceList,noiseList) => {
+        //获取表单数据
+        var noiseData = noiseList.data.boundaryNoiseList;
         //获取功能区类型列表
-        getFunctionalAreaTypeList({}).then(list => {
-          var functionalAreaTypeList = list.data.functionalAreaTypeList;
-          var data = {
-            value: "1",
-            options: convertObjectLabel(functionalAreaTypeList)
-          };
-          console.log(data)
-          itemDataModel.functionalAreaTypeId = data;
-        }).catch(err => {
-          MyToast('接口调用失败')
-        })
-        
+        var functionalAreaTypeList = areaList.data.functionalAreaTypeList;
+        var areaData = {
+          value: "1",
+          options: convertObjectLabel(functionalAreaTypeList)
+        };
         //获取噪声源性质列表
-        getNoiseSourcePropertyList({}).then(list => {
-          var noiseSourcePropertyList = list.data.noiseSourcePropertyList;
-          var data = {
-            value: "1",
-            options: convertObjectLabel(noiseSourcePropertyList)
-          };
-          itemDataModel.noiseSourcePropertyId = data;
-        }).catch(err => {
-          MyToast('接口调用失败')
-        })
-
-        var data = res.data.boundaryNoiseList;
-        data = data.map((item,index) => {
+        var noiseSourcePropertyList = noiseSourceList.data.noiseSourcePropertyList;
+        var noiseSourceData = {
+          value: "1",
+          options: convertObjectLabel(noiseSourcePropertyList)
+        };
+        //改变新增默认值
+        itemDataModel.noiseSourcePropertyId = noiseSourceData;  //噪声源性质
+        itemDataModel.functionalAreaTypeId = areaData;  //功能区类型
+        //重新拼接数据
+        noiseData = noiseData.map( item => {
           return {
             ...item,
-            functionalAreaTypeId:{
-              value: item.functionalAreaType.theName,
-              options: [{
-                value: '',
-                label: ''
-              }]},
-            noiseSourcePropertyId: item.noiseSourceProperty.theName,
+            functionalAreaTypeId: {
+              value: item.functionalAreaType.tableId+'',
+              options: convertObjectLabel(functionalAreaTypeList)
+            },
+            noiseSourcePropertyId: {
+              value: item.noiseSourceProperty.tableId+'',
+              options: convertObjectLabel(noiseSourcePropertyList),
+            },
           }
-        })
+        });
+        //渲染页面
         resolve({
           code: 0,
-          data,
+          data: noiseData,
         })
-      }).catch(err => {
-        MyToast('接口调用失败')
-      })
+      }))
     })
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record ----', record);
     record.noiseSourcePropertyId = record.noiseSourcePropertyId.value;
     record.functionalAreaTypeId = record.functionalAreaTypeId.value;
     var self = this;
@@ -164,7 +125,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
         getBoundaryNoiseAdd({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseAdd res",res)
+          // console.log("getBoundaryNoiseAdd res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -183,11 +144,10 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        console.log(record)
         getBoundaryNoiseUpdate({
           ...record,
         }).then(res => {
-          console.log("getBoundaryNoiseUpdate res",res)
+          // console.log("getBoundaryNoiseUpdate res",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -207,7 +167,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiDel: function (tableId) {
     //删除
-    console.log(`apiDel ${tableId}`);
+    // console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
       getBoundaryNoiseDelete(tableId).then(res => {
@@ -230,4 +190,4 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   itemDataModel: itemDataModel
 })
 
-export default WasteWaterDemoSection;
+export default BoundaryNoise;

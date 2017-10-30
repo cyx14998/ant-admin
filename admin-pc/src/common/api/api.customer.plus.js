@@ -111,8 +111,6 @@ export function getWastewaterDischargeDelete(id){
   })
 }
 
-
-
 /********************** 编辑-首页-废水治理基本情况 **********************/
 
 /* 
@@ -143,7 +141,7 @@ export function getWastewaterTreatmentAdd({
   sourceType,
   theName,
   governanceType,
-  approach,
+  approachId,
   designProcessingPower,
   putInUseDate,
   standingBookURL,
@@ -154,7 +152,7 @@ export function getWastewaterTreatmentAdd({
       customerId: getCustomerId(),
       theName,
       governanceType,
-      approachId: approach,
+      approachId,
       designProcessingPower,
       putInUseDate,
       standingBookURL,
@@ -173,7 +171,7 @@ export function getWastewaterTreatmentUpdate({
   sourceType,
   theName,
   governanceType,
-  approach,
+  approachId,
   designProcessingPower,
   putInUseDate,
   standingBookURL,
@@ -186,7 +184,7 @@ export function getWastewaterTreatmentUpdate({
       sourceType,
       theName,
       governanceType,
-      approachId: approach,
+      approachId,
       designProcessingPower,
       putInUseDate,
       standingBookURL,
@@ -1309,6 +1307,24 @@ export function getSiteInspectionDelete(id){
     params: {
       token: getToken(),
       tableId:id,
+    }
+  })
+}
+
+/********************** 列表项 **********************/
+
+/* 
+* 治理方法列表
+*/
+export function getApproachList({
+  pageNumber=1, 
+  countPerPage=1000,
+}){
+  return axios.get('/uApproachList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber,
+      countPerPage,
     }
   })
 }

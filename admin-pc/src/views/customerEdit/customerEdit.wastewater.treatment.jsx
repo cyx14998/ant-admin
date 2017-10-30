@@ -39,10 +39,6 @@ const columns = [{
   dataIndex: 'putInUseDate',
   width: '5%'
 }, {
-  title: '对应排放口编号',
-  dataIndex: 'dischargePortNumber',
-  width: '5%'
-}, {
   title: '传台账记录',
   dataIndex: 'standingBookURL',
   width: '10%'
@@ -50,17 +46,6 @@ const columns = [{
   title: '操作',
   dataIndex: 'operation',
   width: '10%'
-}];
-
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
 }];
 
 /**
@@ -72,7 +57,6 @@ const itemDataModel = {
   approach: '',
   designProcessingPower: '',
   putInUseDate: '',
-  dischargePortNumber: '',
   standingBookURL: '',
 };
 
