@@ -14,12 +14,14 @@ import axios, {
 export function getCheckplanMainlist({
   pageNumber = 1,
   countPerPage = 1000,
+  lotNumber
 }) {
   return axios.get('/uInspectionPlanMstList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
-      countPerPage
+      countPerPage,
+      lotNumber
     }
   })
 }
@@ -94,6 +96,20 @@ export function getCheckplanMainDelete({
   })
 }
 /**************************** 检查计划子表 ***********************/
+
+/**
+ * 企业检查计划子表增加--批量
+ */
+export function getCheckplanSubAddAll({
+inspectionPlanMstId
+}) {
+  return axios.get('/uInspectionPlanDtlAddAll.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      inspectionPlanMstId,
+    }
+  })
+}
 /**
  * 企业检查计划子表列表
  */
@@ -101,6 +117,7 @@ export function getCheckplanSublist({
   pageNumber = 1,
   countPerPage = 1000,
   inspectionPlanMstId,
+  customerName,
 }) {
   return axios.get('/uInspectionPlanDtlList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -108,6 +125,7 @@ export function getCheckplanSublist({
       pageNumber,
       countPerPage,
       inspectionPlanMstId,
+      customerName
     }
   })
 }
@@ -192,6 +210,21 @@ export function getCheckplanSubPerformer({
     params: {
       token: getToken(),
       tableId,
+      performerId
+    }
+  })
+}
+/**
+ * 企业检查计划子表分配执行者--批量
+ */
+export function getCheckplanSubPerformerMulti({
+  tableIdArr,
+  performerId
+}) {
+  return axios.get('/uInspectionPlanDtlAllotPerformer.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableIdArr,
       performerId
     }
   })

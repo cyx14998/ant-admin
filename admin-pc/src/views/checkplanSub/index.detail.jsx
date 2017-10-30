@@ -59,7 +59,6 @@ class CheckplanDetail extends React.Component {
         this.state = ({
             data: {},
             memberList: [],
-            performerId: '',
             prodPreviewImage: [], //反馈工艺
             positionPreviewImage: [], //检查单         
             prodPreviewVisible: false,
@@ -71,12 +70,11 @@ class CheckplanDetail extends React.Component {
             checkplanSubEditInfo: {},
             customerList: [], //企业列表
 
-            checkSubId: getLocQueryByLabel('checkSubId') || '',//新增子表返回的子表id用来显示底面的员工列表
+            recordEdit: this.props.recordEdit || '',//新增子表返回的子表id用来显示底面的员工列表
         });
         this.beforeUpload = this.beforeUpload.bind(this);
 
         this._getCheckplanSubDetail = this._getCheckplanSubDetail.bind(this);
-        this._getMemberList = this._getMemberList.bind(this);
 
         this.qiniuyunData = {
             // key: Date.now(),
@@ -86,25 +84,70 @@ class CheckplanDetail extends React.Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        var self=this;
+        if (self.state.recordEdit !== nextProps.recordEdit) {
+            console.log('编辑')
+            //编辑页面
+            // self._getCheckplanSubDetail(nextProps.checkSubId).then(res => {
+            // });
+self.setState({
+    recordEdit: nextProps.recordEdit
+})
+//图片
+                if (nextProps.recordEdit.feedbackSheetURL) {
+                    self.setState({
+                        prodFileList: [{
+                            uid: '1',
+                            name: '123',
+                            url: nextProps.recordEdit.feedbackSheetURL
+                        }],
+                        prodImgUrl: nextProps.recordEdit.feedbackSheetURL
+                    });
+                } else {
+                    self.setState({
+                        prodFileList: null,
+                        positionImgUrl: ''
+                    });
+                }
+                if (nextProps.recordEdit.regulatoryRecordURL) {
+                    self.setState({
+                        positionFileList: [{
+                            uid: '1',
+                            name: '123',
+                            url: nextProps.recordEdit.regulatoryRecordURL
+                        }],
+                        positionImgUrl: nextProps.recordEdit.regulatoryRecordURL
+                    });
+                } else {
+                    self.setState({
+                        positionFileList: null,
+                        positionImgUrl: ''
+                    });
+                }
+        }
+
+    }
     componentDidMount() {
+        this.setState({
+            checkplanSubEditInfo: {},
+            prodFileList: [],
+            positionFileList: [], //检查单图            
+        })
+        console.log(this.props.checkSubId)
         var self = this;
         // var checkSubId = getLocQueryByLabel('checkSubId');
         // var customerId = getLocQueryByLabel('customerId');
         // console.log(checkSubId, 'sss', customerId);
 
-        if (self.state.checkSubId) {
-            console.log('编辑')
-            //编辑页面
-            self._getCheckplanSubDetail().then(res => {
-                self._getMemberList();
-            });
-
-        } else {
-            console.log('新增')
-            //新增页面
-            self._getMemberList();
-        }
-
+        // if (self.state.checkSubId) {
+        //     //编辑页面
+        //     self._getCheckplanSubDetail(self.state.checkSubId).then(res => {
+        //     });
+        // }
+        this.setState({
+            recordEdit: this.props.recordEdit
+        });
         //获取企业列表
         getCustomerList({}).then(res => {
             console.log('getCustomerList res ---', res);
@@ -120,16 +163,16 @@ class CheckplanDetail extends React.Component {
                 customerList: res.data.customerList,
             });
         }).catch(err => {
-            reject(err)
+            console.log(err)
         })
 
         self.beforeUpload();
     }
     //获取子表详情
-    _getCheckplanSubDetail() {
+    _getCheckplanSubDetail(checkSubId) {
         var self = this;
         return new Promise((resolve, rejcet) => {
-            getCheckplanSubDetail({ tableId: this.state.checkSubId }).then(res => {
+            getCheckplanSubDetail({ tableId: checkSubId }).then(res => {
                 console.log('getCheckplanSubDetail res ---', res);
 
                 if (res.data.result !== 'success') {
@@ -141,7 +184,7 @@ class CheckplanDetail extends React.Component {
                 }
                 var checkplanSubEdit = res.data.inspectionPlanDtl;
                 self.setState({
-                    checkplanSubEditInfo: checkplanSubEdit,
+                    recordEdit: checkplanSubEdit,
                 });
                 //图片
                 if (checkplanSubEdit.feedbackSheetURL) {
@@ -153,6 +196,11 @@ class CheckplanDetail extends React.Component {
                         }],
                         prodImgUrl: checkplanSubEdit.feedbackSheetURL
                     });
+                } else {
+                    self.setState({
+                        prodFileList: null,
+                        positionImgUrl: ''
+                    });
                 }
                 if (checkplanSubEdit.regulatoryRecordURL) {
                     self.setState({
@@ -162,6 +210,11 @@ class CheckplanDetail extends React.Component {
                             url: checkplanSubEdit.regulatoryRecordURL
                         }],
                         positionImgUrl: checkplanSubEdit.regulatoryRecordURL
+                    });
+                } else {
+                    self.setState({
+                        positionFileList: null,
+                        positionImgUrl: ''
                     });
                 }
 
@@ -173,58 +226,7 @@ class CheckplanDetail extends React.Component {
             })
         })
     }
-    // 获取人员列表
-    _getMemberList() {
-        var self = this;
-        getMemberList({}).then(res => {
-            console.log('getMemberlist res ---', res);
 
-            if (res.data.result !== 'success') {
-                resolve({
-                    code: -1,
-                    info: res.data.info,
-                })
-                return;
-            }
-
-            var memberList = res.data.memberList;
-
-            // 新增
-            if (self.state.checkplanSubEditInfo.performer === undefined) {
-                self.setState({
-                    memberList: memberList,
-                });
-                return;
-            }
-
-            // 更新
-            var performerId = self.state.checkplanSubEditInfo.performer.tableId;
-
-            if (memberList.length !== 0) {
-                
-                memberList = memberList.map((item) => {
-                    item.checked = false;
-                    if (performerId) {
-                        if (item.tableId == performerId) {
-                            item.checked = true;
-                        }
-                    };
-
-                    return item;
-                });
-            }
-
-            self.setState({
-                memberList: memberList,
-            });
-        }).catch(err => {
-            console.log(err)
-        })
-    }
-
-    // changeProvince(key){
-    //     console.log(key)
-    // }
     //获取uptoken
     beforeUpload(file) {
         console.log(file)
@@ -382,71 +384,14 @@ class CheckplanDetail extends React.Component {
             }
         })
     }
-    //选择执行人员
-    selectPerformer(record, index) {
-        console.log('checked = ', record);
-        var arr = this.state.memberList;
-        arr.length ? arr.map((item) => {
-            item.checked = false;
-        }) : '';
-        arr[index].checked = true;
-        this.setState({
-            performerId: record.tableId,
-            memberList: arr
-        })
-    }
-    //执行人员保存
-    performerSave() {
-        var checkSubId = this.state.checkSubId;
-        var performerId = this.state.performerId;
-        console.log(checkSubId, performerId)
-        getCheckplanSubPerformer({ tableId: checkSubId, performerId: performerId }).then(res => {
-            console.log('perfomerSave res ---', res);
-            if (res.data.result !== 'success') {
-                MyToast(res.data.info)
-                return;
-            }
-            MyToast('保存成功')
-        }).catch(err => {
-            console.log(err)
-        })
-    }
+
     render() {
         let { getFieldDecorator } = this.props.form;
-        var checkSubId = getLocQueryByLabel('checkSubId');
-        var checkplanSubEditInfo = this.state.checkplanSubEditInfo;
+        var recordEdit = this.state.recordEdit;
         //企业options
         var customerOptions = this.state.customerList.map((item, index) => {
             return <Option key={item.tableId}>{item.customerName}</Option>
         });
-        const columns = [{
-            title: '姓名',
-            dataIndex: 'realName',
-            width: '10%'
-        }, {
-            title: '性别',
-            dataIndex: 'sex',
-            width: '10%'
-        }, {
-            title: '年龄',
-            dataIndex: 'age',
-            width: '10%'
-        }, {
-            title: '手机号',
-            dataIndex: 'phoneNumber',
-            width: '10%'
-        },
-        {
-            title: '操作',
-            dataIndex: 'operation',
-            width: '20%',
-            render: (text, record, index) => (
-                <div>
-                    <Checkbox checked={record.checked} onChange={this.selectPerformer.bind(this, record, index)}></Checkbox>
-                </div>
-            )
-        }
-        ];
         return (
             <div className="yzy-page">
                 <div className="yzy-tab-content-item-wrap">
@@ -457,11 +402,11 @@ class CheckplanDetail extends React.Component {
                                 <Col span={8}>
                                     <FormItem {...formItemLayout} label="企业名称">
                                         {getFieldDecorator('customerId', {
-                                            //initialValue: checkplanSubEditInfo.customer ? checkplanSubEditInfo.customer.customerName : '',
+                                            //initialValue: recordEdit.customer ? recordEdit.customer.customerName : '',
                                             //rules: [{ required: true },
                                             //],
-                                        })(checkSubId && checkSubId != undefined ?
-                                            <div>{checkplanSubEditInfo.customer ? checkplanSubEditInfo.customer.customerName : ''}</div> :
+                                        })(this.state.recordEdit && this.state.recordEdit != undefined ?
+                                            <div>{recordEdit.customer ? recordEdit.customer.customerName : ''}</div> :
                                             <Select>
                                                 {customerOptions}
                                             </Select>
@@ -471,7 +416,7 @@ class CheckplanDetail extends React.Component {
                                 <Col span={8}>
                                     <FormItem {...formItemLayout} label="备注">
                                         {getFieldDecorator('theRemarks', {
-                                            initialValue: checkplanSubEditInfo.theRemarks,
+                                            initialValue: recordEdit.theRemarks,
                                             //rules: [{ required: true },
                                             //{ pattern: /^[0-9]*$/ } 
                                             //],
@@ -498,7 +443,7 @@ class CheckplanDetail extends React.Component {
                                                 key: Date.now()
                                             }}
                                         >
-                                            {this.state.prodFileList.length >= 1 ? null : uploadButton}
+                                            {(this.state.prodFileList && this.state.prodFileList.length) >= 1 ? null : uploadButton}
                                         </Upload>
                                         <Modal visible={this.state.prodPreviewVisible} footer={null} onCancel={this.prodPicModalCancel.bind(this)}>
                                             <img alt="example" style={{ width: '100%' }} src={this.state.prodPreviewImage} />
@@ -521,7 +466,7 @@ class CheckplanDetail extends React.Component {
                                                 key: Date.now()
                                             }}
                                         >
-                                            {this.state.positionFileList.length >= 1 ? null : uploadButton}
+                                            {(this.state.positionFileList && this.state.positionFileList.length) >= 1 ? null : uploadButton}
                                         </Upload>
                                         <Modal visible={this.state.positionPreviewVisible} footer={null} onCancel={this.positionPicModalCancel.bind(this)}>
                                             <img alt="example" style={{ width: '100%' }} src={this.state.positionPreviewImage} />
@@ -533,19 +478,6 @@ class CheckplanDetail extends React.Component {
                         <div className="yzy-block-center">
                             <Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
                         </div>
-                        {this.state.checkSubId ?
-                            <div className="baseinfo-section" style={{ marginTop: 50 }}>
-                                <h2 className="yzy-tab-content-title">检查计划子表执行者选择</h2>
-                                <Table
-                                    columns={columns}
-                                    dataSource={this.state.memberList}
-                                    rowKey="tableId"
-                                    loading={this.state.loading} />
-                                <div className="yzy-block-center">
-                                    <Button type="primary" style={{ padding: '0 40px' }} onClick={this.performerSave.bind(this)}>确定</Button>
-                                </div>
-                            </div> : null
-                        }
                     </Form>
                 </div >
             </div>
@@ -554,4 +486,4 @@ class CheckplanDetail extends React.Component {
 }
 var CheckplanDetailForm = Form.create()(CheckplanDetail);
 
-ReactDOM.render(<CheckplanDetailForm />, document.getElementById('root'));
+export default Form.create()(CheckplanDetailForm);
