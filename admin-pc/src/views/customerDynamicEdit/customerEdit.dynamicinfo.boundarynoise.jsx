@@ -9,69 +9,64 @@ import {
   getBoundaryNoiseRecordAdd,
   getBoundaryNoiseRecordUpdate,
   getBoundaryNoiseRecordDelete,
+
+  getBoundaryNoiseList,
 } from '../../common/api/api.customer.dynamic.plus.js';
 
 import {
-  getLocQueryByLabel
+  getLocQueryByLabel,
+  convertObjectLabel,
+  MyToast
 } from '../../common/utils';
+
 const dynamicId = getLocQueryByLabel('dynamicId');
+
 
 /**
  * table head
  */
 const columns = [{
+  title: '边界噪声',
+  dataIndex: 'boundaryNoiseId',
+  width: 80,
+}, {
   title: '执行标准',
   dataIndex: 'implementationStandards',
-  width: '10%'
 }, {
   title: '等效声级',
   dataIndex: 'equivalentSoundLevel',
-  width: '10%'
 }, {
   title: '峰值声级',
   dataIndex: 'peakSoundLevel',
-  width: '10%'
 }, {
   title: '超标分贝数',
   dataIndex: 'exceedingDecibels',
-  width: '10%'
 }, {
   title: '超标天数',
   dataIndex: 'exceedingStandardDays',
-  width: '10%'
 }, {
   title: '噪声时段 开始时刻（时）',
   dataIndex: 'noisePeriodStart',
-  width: '10%'
 }, {
   title: '噪声时段 结束时刻（时）',
   dataIndex: 'noisePeriodEnd',
-  width: '10%'
 }, {
-  title: '边界超标长度是否超过100米',
+  title: '边界超标超过100米',
   dataIndex: 'IsBoundaryExceeding100',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
-}];
-
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
+  width: 120
 }];
 
 /**
  * 新数据默认值
  */
 const itemDataModel = {
+  boundaryNoiseId: {
+    value: '',
+    options: []
+  },
   implementationStandards: '',
   equivalentSoundLevel: '',
   peakSoundLevel: '',
@@ -80,7 +75,7 @@ const itemDataModel = {
   noisePeriodStart: '',
   noisePeriodEnd: '',
   IsBoundaryExceeding100: {
-    value: '1',
+    value: '0',
     options : [{
       value: "1",
       label: '是'
@@ -98,40 +93,65 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     return new Promise((resolve,reject) => {
       //获取数据
       if(!dynamicId) return;
-      getBoundaryNoiseRecordList({customerMonthDclarationId:dynamicId}).then(res => {
-        console.log('getBoundaryNoiseRecordList res ---', res);
 
+      // 获取边界噪声选项列表
+      getBoundaryNoiseList({}).then(res => {
         if (res.data.result !== 'success') {
-          resolve({
-            code: -1,
-            info: res.data.info,
-          })
+          MyToast(res.data.info || '获取边界噪声ID失败');
           return;
         }
 
-        var data = res.data.boundaryNoiseRecordList;
-        data = data.map((item,index) => {
-          return {
-            ...item,
-            IsBoundaryExceeding100: {
-              value: item.IsBoundaryExceeding100 === true ? "1" : "0" ,
-              options : [{
-                value: "1",
-                label: "是"
-              }, {
-                value: "0",
-                label: "否"
-              }] 
-            }
+        var data = res.data.boundaryNoiseList;
+
+        var boundaryNoiseListOptions = convertObjectLabel(data, 'tableId', 'noiseSourceName');  
+
+        return boundaryNoiseListOptions;
+      }).then(boundaryNoiseListOptions => {
+        // console.log('then boundaryNoiseListOptions----------', boundaryNoiseListOptions)
+
+        itemDataModel.boundaryNoiseId.options = boundaryNoiseListOptions;
+
+        getBoundaryNoiseRecordList({customerMonthDclarationId: dynamicId}).then(res => {
+          // console.log('getBoundaryNoiseRecordList res ---', res);
+
+          if (res.data.result !== 'success') {
+            resolve({
+              code: -1,
+              info: res.data.info,
+            })
+            return;
           }
+
+          var data = res.data.boundaryNoiseRecordList;
+
+          data = data.map((item,index) => {
+            return {
+              ...item,
+              boundaryNoiseId: {
+                value: item.boundaryNoiseId,
+                options: boundaryNoiseListOptions
+              },
+              IsBoundaryExceeding100: {
+                value: item.IsBoundaryExceeding100 === true ? "1" : "0" ,
+                options : [{
+                  value: "1",
+                  label: "是"
+                }, {
+                  value: "0",
+                  label: "否"
+                }] 
+              }
+            }
+          });
+
+          resolve({
+            code: 0,
+            data,
+          })
+        }).catch(err => {
+          MyToast('接口调用失败')
         })
-        resolve({
-          code: 0,
-          data,
-        })
-      }).catch(err => {
-        MyToast('接口调用失败')
-      })
+      }).catch(err => MyToast(err));
     })
   },
   apiSave: function (record) {
@@ -139,15 +159,16 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     console.log('apiSave record ----', record);
     record.IsBoundaryExceeding100 = record.IsBoundaryExceeding100.value;
     var self = this;
+
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getBoundaryNoiseRecordAdd({
           ...record,
+          boundaryNoiseId: record.boundaryNoiseId.value,
           customerMonthDclarationId: dynamicId,
-          boundaryNoiseId:1,
         }).then(res => {
-          console.log("getBoundaryNoiseRecordAdd res",res)
+          console.log("getBoundaryNoiseRecordAdd res-------",res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -169,7 +190,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
         console.log(record)
         getBoundaryNoiseRecordUpdate({
           ...record,
-          boundaryNoiseId:1,
+          boundaryNoiseId: record.boundaryNoiseId.value,
         }).then(res => {
           console.log("getBoundaryNoiseRecordUpdate res",res)
           if (res.data.result !== 'success') {

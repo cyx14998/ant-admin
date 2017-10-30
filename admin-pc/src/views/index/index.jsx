@@ -151,17 +151,23 @@ class Page extends React.Component {
         var url = menu.key.split('|')[1],
             path = menu.keyPath.reverse();
 
-        if (url === this.state.url) return;
+        if (url === this.state.url) {
+            this.setState({
+                url:   `${url}#${Math.random()}`
+            });
+            return;
+        }
 
         this.setState({
             url: url,
             breads: path
+        }, () => {
+            this.forceUpdate();
         });
     }
 
     // 面包屑点击事件
     onBreadClick(bread, breads) {
-        console.log('onBreadClick-----', bread, breads)
         var url = bread.split('|')[1];
 
         if (!url) return;

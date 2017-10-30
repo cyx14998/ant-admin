@@ -21,9 +21,7 @@ export function getCustomerList({
   pageNumber = 1,
   countPerPage = 1000,
   companyName = '',
-  industryCategory = '',
   uniformSocialCreditCode = '',
-  unitCategory = ''
 }) {
   return axios.get('/uCustomerList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -31,9 +29,7 @@ export function getCustomerList({
       pageNumber,
       countPerPage,
       companyName,
-      industryCategory,
       uniformSocialCreditCode,
-      unitCategory,
     }
   })
 }
