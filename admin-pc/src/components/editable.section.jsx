@@ -22,6 +22,7 @@ import EditableTable from './editable.table';
 import { MyToast } from '../common/utils';
 
 /**
+ * pass from hoc.options
  * @params secTitle
  * @params columns
  * @params apiLoader
@@ -30,6 +31,9 @@ import { MyToast } from '../common/utils';
  * @params hasModal          添加当前页面弹框功能（没有用到）
  * @params itemDataModel
  * @params checkInNewpage    添加新页面查看功能
+ *
+ * pass from props
+ * @apiListItemId  请求或保存数据时所需要的id
  * @return <Component />
  */
 class EditableSection extends Component {
@@ -53,7 +57,12 @@ class EditableSection extends Component {
   }
 
   getDataSource() {
-    this.props.apiLoader().then(res => {
+    let {
+      apiListItemId,
+      apiLoader
+    } = this.props;
+
+    apiLoader({apiListItemId}).then(res => {
       if (res.code !== 0) {
         MyToast(res.info)
         return;
@@ -75,6 +84,7 @@ class EditableSection extends Component {
    * @value       数据赋值
    */
   onCellChange(tableId, dataIndex, value) {
+    console.log('oncellchange value-----------', value)
     this.setState(prev => {
       return {
         dataSource: prev.dataSource.map(item => {
@@ -155,7 +165,16 @@ class EditableSection extends Component {
 
   // 
   saveItem(record) {
-    this.props.apiSave(record).then(res => {
+    let {
+      apiListItemId,
+      apiSave
+    } = this.props;
+
+    if (apiListItemId !== undefined) {
+      record.apiListItemId = apiListItemId;
+    }
+
+    apiSave(record).then(res => {
       if (res.code !== 0) {
         MyToast(res.info);
         return;

@@ -27,7 +27,9 @@ import { MyToast } from '../common/utils';
  * @params apiLoader
  * @params onEdit  (Modal 新增或查看)
  * @params apiDel
+ * @params cannotDeleteble
  * @params fetchReload  false/true  是否重新请求列表接口
+ * @params apiListItemId   请求接口传递的id参数
  * @return <Component />
  */
 class UneditableSection extends Component {
@@ -57,7 +59,12 @@ class UneditableSection extends Component {
   }
 
   getDataSource() {
-    this.props.apiLoader().then(res => {
+    let {
+      apiListItemId,
+      apiLoader
+    } = this.props;
+
+    apiLoader({apiListItemId}).then(res => {
       if (res.code !== 0) {
         MyToast(res.info);
         return;
@@ -106,7 +113,8 @@ class UneditableSection extends Component {
     let {
       secTitle,
       columns,
-      onEdit
+      onEdit,
+      cannotDeleteble
     } = this.props;
 
     return (
@@ -120,6 +128,7 @@ class UneditableSection extends Component {
           dataSource={this.state.dataSource}
           onDelete={this.deleteItem.bind(this)}
           onEdit={onEdit}
+          cannotDeleteble={cannotDeleteble}
           loading={this.state.loading} />
 
         {/** 

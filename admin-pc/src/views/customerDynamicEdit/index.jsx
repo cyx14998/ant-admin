@@ -19,6 +19,8 @@ import CustomerEditDynamicinfoWasteGas from './customerEdit.dynamicinfo.wastegas
 import CustomerEditDynamicinfoWasteSolidRecord from './customerEdit.dynamicinfo.wastesolid.record';
 //边界噪声基本情况
 import CustomerEditDynamicinfoBoundaryNoise from './customerEdit.dynamicinfo.boundarynoise';
+//企业附件基本情况
+import CustomerEditDynamicinfoAttachment from './customerEdit.dynamicinfo.attachment';
 
 import {
     getCustomerId
@@ -79,6 +81,9 @@ class Dynamicinfo extends React.Component {
                     </TabPane>
                     <TabPane tab="边界噪声基本情况" disabled={this.state.tabPaneDisabled} key="5">
                         <CustomerEditDynamicinfoBoundaryNoise />
+                    </TabPane>
+                    <TabPane tab="企业附件基本情况" disabled={this.state.tabPaneDisabled} key="6">
+                        <CustomerEditDynamicinfoAttachment />
                     </TabPane>
                 </Tabs>
             </div>

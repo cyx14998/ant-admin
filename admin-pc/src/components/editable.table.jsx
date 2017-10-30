@@ -58,7 +58,7 @@ class EditableTable extends Component {
       (function(i) {
         columns[i].render = (text, record) => {
           // select
-          if (text && Object.prototype.toString.call(text.options) === '[object Array]') {
+          if (text !== undefined && Object.prototype.toString.call(text.options) === '[object Array]') {
             return (
               <EditableCell 
                 tableId={record.tableId}
@@ -71,7 +71,7 @@ class EditableTable extends Component {
           } 
 
           // date 通过正则判断是否是日期字符串 2017-11-11
-          if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(text)) {
+          if (text !== undefined && /^[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(text)) {
             return (
               <EditableCell 
                 tableId={record.tableId}
@@ -83,7 +83,7 @@ class EditableTable extends Component {
           }
 
           // input
-          if (typeof text === 'number' || typeof text === 'string') {
+          if (text !== undefined && (typeof text === 'number' || typeof text === 'string')) {
             // input
             return (
               <EditableCell 
@@ -99,7 +99,7 @@ class EditableTable extends Component {
            *  编辑/删除/新页面查看
            *  @hasModal  模态框查看
            */
-          if (!text && (typeof checkInNewpage === 'function')) {
+          if (text === undefined && (typeof checkInNewpage === 'function')) {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
@@ -113,7 +113,7 @@ class EditableTable extends Component {
           }
 
           // 编辑/删除
-          if (!text) {
+          if (text === undefined) {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>

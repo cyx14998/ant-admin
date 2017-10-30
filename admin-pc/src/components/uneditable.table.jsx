@@ -22,6 +22,7 @@ const Option = Select.Option;
  * @params dataSource
  * @params onDelete
  * @params onEdit
+ * @params cannotDeleteble  true / undefined
  */
 class UneditableTable extends Component {
   constructor(props) {
@@ -38,7 +39,8 @@ class UneditableTable extends Component {
     let { 
       columns,
       onDelete,
-      onEdit
+      onEdit,
+      cannotDeleteble
     } = this.props;
 
     let len = columns.length,
@@ -50,13 +52,28 @@ class UneditableTable extends Component {
        */
       (function(i) {
         columns[i].render = (text, record) => {
+
+          // 文件下载
+          if (columns[i].type === 'downloadfile') {
+            return <a target="_blank" href={text} download="图片">点击下载</a>
+          }
+
           // 如果有值，直接渲染
-          if (text) {
+          if (text !== undefined) {
             return text;
           }
 
+
+          if (text === undefined && cannotDeleteble) {
+            return (
+              <div>
+                <a href="#" onClick={() => onEdit(record.tableId)}>查看</a>
+              </div>
+            )
+          }
+
           // 新窗口编辑/删除
-          if (!text) {
+          if (text === undefined) {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>

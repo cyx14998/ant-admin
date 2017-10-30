@@ -72,21 +72,6 @@ const options = [{
   label: '企业单位'
 }];
 
-/**
- * 新数据默认值
- */
-const itemDataModel = {
-  serialNumber: '',
-  isHazardousWaste: '',
-  hazardousWasteName: '',
-  disposalMethod: '',
-  theName: '',
-  processing: '',
-  storagePlaceAddress: '',
-  disposeUnitName: '',
-  filingInfoURL: '',
-};
-
 const InnerComponent = ({
   editId
 }) => (
@@ -113,6 +98,12 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
         }
 
         var data = res.data.wasteSolidList;
+        data = data.map((item,index) => {
+          return {
+            ...item,
+            isHazardousWaste: item.isHazardousWaste === true ? "是" : "否" ,
+          }
+        })
         resolve({
           code: 0,
           data,

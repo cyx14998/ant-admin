@@ -78,6 +78,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
         this.beforeUpload = this.beforeUpload.bind(this);
 
+
         this.qiniuyunData = {
             // key: Date.now(),
             // token: 'xozWSPMxkMjIVoHg2JyXq4-7-oJaEADLOKHVR0vU:1AreAaaS0j5_bjgQsHSshM0zTZI=:eyJkZWxldGVBZnRlckRheXMiOjcsInNjb3BlIjoianNzZGsiLCJkZWFkbGluZSI6MTUwOTAxNTA3Mn0=',
@@ -143,8 +144,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             }
         }).catch(err => console.log(err));
 
-
-        this.beforeUpload();
+        // this.beforeUpload();
     }
     //更改省份
     changeProvince(key) {

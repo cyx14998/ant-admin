@@ -20,15 +20,29 @@ export function getWastewaterDischargeRecordList({
   pageNumber=1, 
   countPerPage=1000,
   customerMonthDclarationId,
-  theYear,
-  theMonth,
 }){
   return axios.get('/uWasteWaterDischargeRecordList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerMonthDclarationId,
-      theYear,
-      theMonth,
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
+
+/* 
+* 获取废水排放基本信息详情
+*/
+export function getWastewaterDischargeRecordDetail({
+  pageNumber=1, 
+  countPerPage=1000,
+  tableId,
+}){
+  return axios.get('/uWasteWaterDischargeRecordDetail.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
       pageNumber,
       countPerPage,
     }
@@ -77,7 +91,7 @@ export function getWastewaterDischargeRecordUpdate({
 * 删除废水排放口
 */
 export function getWastewaterDischargeRecordDelete(id){
-  return axios.get('/uWasteWaterDischargePortDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uWasteWaterDischargeRecordDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId:id,
@@ -87,14 +101,10 @@ export function getWastewaterDischargeRecordDelete(id){
 
 /********************** 编辑-首页-废水排放因子基本情况 **********************/
 /**
- * @QA
- *  无法测试
  */
 
 /* 
 * 获取废水排放因子基本信息
-* @QA
-*   wasteWaterDischargeRecordId为排放口id，排放口信息不存在
 */
 export function getWasteWaterDischargeFactorRecordList({
   pageNumber=1, 
@@ -113,9 +123,6 @@ export function getWasteWaterDischargeFactorRecordList({
 
 /* 
 * 新增废水排放因子
-* @QA
-*   (Bad Request)
-*   wasteWaterDischargeRecordId不存在，无法测试
 */
 export function getWasteWaterDischargeFactorRecordAdd({
   wasteWaterDischargeRecordId,
@@ -144,6 +151,7 @@ export function getWasteWaterDischargeFactorRecordAdd({
 
 /* 
 * 编辑废水排放因子
+*
 */
 export function getWasteWaterDischargeFactorRecordUpdate({
   tableId,
@@ -198,15 +206,29 @@ export function getWasteGasDischargeRecordList({
   pageNumber=1, 
   countPerPage=1000,
   customerMonthDclarationId,
-  theYear,
-  theMonth,
 }){
   return axios.get('/uWasteGasDischargeRecordList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerMonthDclarationId,
-      theYear,
-      theMonth,
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
+
+/* 
+* 获取废气排放基本信息详情
+*/
+export function getWasteGasDischargeRecordDetail({
+  pageNumber=1, 
+  countPerPage=1000,
+  tableId,
+}){
+  return axios.get('/uWasteGasDischargeRecordDetail.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
       pageNumber,
       countPerPage,
     }
@@ -275,6 +297,7 @@ export function getWasteGasDischargeRecordUpdate({
 * 删除废气排放口
 */
 export function getWasteGasDischargeRecordDelete(id){
+  console.log("ssssssssssssssssssssssssssssssssssssss",id);
   return axios.get('/uWasteGasDischargeRecordDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
@@ -393,24 +416,6 @@ export function getWasteGasDischargeFactorRecordDelete(id){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /********************** 编辑-首页-固体废物产生及处置基本情况 **********************/
 /**
  * OK
@@ -519,6 +524,12 @@ export function getWasteSolidRecordDelete(id){
   })
 }
 
+
+
+
+
+
+
 /********************** 编辑-首页-边界噪声基本情况 **********************/
 /*
  *Ok
@@ -617,3 +628,134 @@ export function getBoundaryNoiseRecordDelete(id){
     }
   })
 }
+
+
+
+
+
+
+
+/********************** 编辑-首页-企业附件基本情况 **********************/
+/*
+ *Ok
+ */
+
+/* 
+* 获取边界噪声基本信息列表
+*/
+export function getAttachmentRecordList({
+  customerMonthDclarationId,
+  pageNumber=1, 
+  countPerPage=1000,
+}){
+  return axios.get('/uAttachmentDynamicList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      customerMonthDclarationId,
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
+
+/* 
+* 获取企业附件基本信息详情
+*/
+export function getAttachmentRecordDetail({
+  customerMonthDclarationId,
+  pageNumber=1, 
+  countPerPage=1000,
+}){
+  return axios.get('/uAttachmentDynamicDetail.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      customerMonthDclarationId,
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
+
+/* 
+* 获取附件类型列表
+*/
+export function getAttachmentTypeList({
+  pageNumber=1, 
+  countPerPage=1000,
+}){
+  return axios.get('/uAttachmentTypeList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber, 
+      countPerPage,
+    }
+  })
+}
+
+/* 
+* 新增企业附件
+*/
+export function getAttachmentRecordAdd({
+  customerMonthDclarationId,
+  theName,
+  attachmentTypeId,
+  theSize,
+  filePath,
+}){
+  return axios.get('/uAttachmentDynamicAdd.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      customerMonthDclarationId,
+      theName,
+      attachmentTypeId,
+      theSize,
+      filePath,
+    }
+  })
+}
+
+// /* 
+// * 编辑边界噪声
+// */
+// export function getBoundaryNoiseRecordUpdate({
+//   tableId,
+//   boundaryNoiseId,
+//   implementationStandards,
+//   equivalentSoundLevel,
+//   peakSoundLevel,
+//   exceedingDecibels,
+//   exceedingStandardDays,
+//   noisePeriodStart,
+//   noisePeriodEnd,
+//   IsBoundaryExceeding100,
+// }){
+//   return axios.get('/uBoundaryNoiseRecordUpdate.uhtm?InterfaceVersion=' + apiVer, {
+//     params: {
+//       token: getToken(),
+//       tableId,
+//       boundaryNoiseId,
+//       implementationStandards,
+//       equivalentSoundLevel,
+//       peakSoundLevel,
+//       exceedingDecibels,
+//       exceedingStandardDays,
+//       noisePeriodStart,
+//       noisePeriodEnd,
+//       IsBoundaryExceeding100,
+//     }
+//   })
+// }
+
+/* 
+* 删除边界噪声
+*/
+export function getAttachmentRecordDelete(id){
+  return axios.get('/uAttachmentDynamicDelete.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId:id,
+    }
+  })
+}
+
+

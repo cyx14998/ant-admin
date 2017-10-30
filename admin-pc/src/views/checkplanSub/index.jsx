@@ -23,34 +23,7 @@ const rcsearchformData = {
         type: 'input',
         label: '企业名称',
         name: 'customerName',
-        rules: [{ required: true, message: '请输入企业名称' }],
-    },
-        // {
-        //     type: 'input',
-        //     label: '统一社会信用代码',
-        //     name: 'uniformSocialCreditCode',
-        //   }, {
-        //     type: 'select',
-        //     label: '单位类别',
-        //     name: 'unitCategory',
-        //     options:[
-        //       {
-        //         value: "我是value1",
-        //         label: "我是label1"
-        //       },
-        //     ]
-        //   }, {
-        //     type: 'select',
-        //     label: '行业类别',
-        //     name: 'industryCategory',
-        //     options:[
-        //       {
-        //         value: "我是value2",
-        //         label: "我是label2"
-        //       },
-        //     ]
-        //   }
-    ]
+    }]
 }
 import { getLocQueryByLabel } from '../../common/utils';
 

@@ -119,14 +119,14 @@ class WasteWaterDischargeDetail extends React.Component {
               <Col span={8}>
                   <FormItem {...formItemLayout} label="是否危废">
                       {getFieldDecorator('isHazardousWaste', {
-                          initialValue: this.state.data.isHazardousWaste?this.state.data.isHazardousWaste+'':'',
+                          initialValue: this.state.data.isHazardousWaste===true ? '是':'否',
                           rules: [{ required: true },
                           {/* { pattern: /^[0-9]*$/ } */ }
                           ],
                       })(
                         <Select>
-                          <Option value="true">true</Option>
-                          <Option value="false">false</Option>
+                          <Option value="1">是</Option>
+                          <Option value="0">否</Option>
                         </Select>
                       )}
                   </FormItem>

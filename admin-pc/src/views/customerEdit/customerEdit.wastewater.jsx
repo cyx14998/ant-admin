@@ -3,6 +3,10 @@
  */
 import React from 'react';
 
+import {
+  Button
+} from 'antd';
+
 import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
 
 //废水排放基本信息详情
@@ -92,17 +96,27 @@ const itemDataModel = {
 const wastewaterDischargeIsShow = localStorage.getItem("wastewaterDischargeIsShow")
 
 const InnerComponent = ({
-  editId
+  editId,
+  itemVisible,
+  showItemVisible
 }) => (
   <div>
-    <WasteWaterDischargeDetail editId={editId} />
-    <WasteWaterTreatment />
-    <WasteWaterDischargeFactor />
-    <WasteWaterMonitoringRecord />
+    <WasteWaterDischargeDetail showItemVisible={showItemVisible} editId={editId} />
+    {
+      editId === "" ? (itemVisible && (<div>
+        <WasteWaterTreatment />
+        <WasteWaterDischargeFactor />
+        <WasteWaterMonitoringRecord />
+      </div>)) : (<div>
+        <WasteWaterTreatment apiListItemId={editId} />
+        <WasteWaterDischargeFactor apiListItemId={editId} />
+        <WasteWaterMonitoringRecord apiListItemId={editId}/>
+      </div>)
+    }
   </div>
 );
 
-const WasteWaterDemoSection = connectUneditableSectionApi({
+const WasteWaterDischarge = connectUneditableSectionApi({
   secTitle: '废水排放口基本信息列表',
   columns: columns,
   apiLoader: function () {
@@ -110,7 +124,7 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
     return new Promise((resolve, reject) => {
       //获取数据
       getWastewaterDischargeList({}).then(res => {
-        console.log('getWastewaterList res ---', res);
+        // console.log('getWastewaterList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -130,31 +144,9 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
       })
     })  
   },
-  
-  apiDel: function (tableId) {
-    console.log(`apiDel ${tableId}`);
-
-    return new Promise((resolve, reject) => {
-      getProductBaseInfoDelete(tableId).then(res => {
-        if (res.data.result !== 'success') {
-          resolve({
-            code: 1,
-            info: res.data.info,
-          });
-          return;
-        }
-
-        resolve({
-          code: 0 // success
-        });
-      }).catch(err => {
-        reject(err)
-      });
-    });
-  },
   apiDel: function (tableId) {
     //删除
-    console.log(`apiDel ${tableId}`);
+    // console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
       getWastewaterDischargeDelete(tableId).then(res => {
@@ -179,4 +171,4 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
   modalComponent: InnerComponent
 });
 
-export default WasteWaterDemoSection;
+export default WasteWaterDischarge;

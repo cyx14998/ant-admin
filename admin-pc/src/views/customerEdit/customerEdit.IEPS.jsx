@@ -53,7 +53,7 @@ const itemDataModel = {
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '证照材料信息',
+  secTitle: '企业内部环保管理制度基本情况',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {

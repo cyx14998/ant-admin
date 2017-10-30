@@ -77,6 +77,7 @@ class Page extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            forceUpdate: '',   // 通过设置时间戳触发re-render
             collapsed: false,
             url: "/customer.html",
             breads: ['客户管理|/customer.html']
@@ -95,13 +96,17 @@ class Page extends React.Component {
         window.iframeHook.changePage = function ({url, breadIncrement, incrementType='add'}) {
             if (!url) return;
 
-            if (!breadIncrement) {
+            let breadIncrementHadin = self.state.breads.indexOf(breadIncrement) !== -1;
+
+            if (!breadIncrement || breadIncrementHadin) {
                 self.setState({
                     url
                 });
 
                 return;
             }
+
+
 
             if (incrementType === 'add') {
                 self.setState(prev => {
@@ -143,7 +148,6 @@ class Page extends React.Component {
      * SiderMenu
      */
     onMenuChange(menu) {
-        console.log('onMenuChange----', menu);
         var url = menu.key.split('|')[1],
             path = menu.keyPath.reverse();
 

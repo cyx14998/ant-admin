@@ -1,7 +1,7 @@
 /**
  * 废水排放因子基本情况
  */
-
+import React from 'react';
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
@@ -58,17 +58,39 @@ const itemDataModel = {
   pollutantName: '',
   executeStandardNumber: '',
   standardValue: '',
-  isAutoMOPS: '',
+  isAutoMOPS: {
+    value: '1',
+    options : [{
+      value: "1",
+      label: '是'
+    }, {
+      value: "0",
+      label: '否'
+    }]
+  },
 };
 
-const WasteWaterDemoSection = connectEditableSectionApi({
+function getEditIdHook (id) {
+  return id;
+}
+
+/**
+ * @params apiListItemId
+ */
+const WasteWaterDischargeFactor = connectEditableSectionApi({
   secTitle: '废水排放因子基本情况',
   columns: columns,
-  apiLoader: function () {
+  apiLoader: function ({apiListItemId}) {
+    var editId = apiListItemId;
+    if(editId === undefined){
+      editId = localStorage.getItem('wastewater-discharge-editId');
+    }
+
+    // console.log('apiLoader eidtId -----------', editId)
     return new Promise((resolve,reject) => {
       //获取数据
-      getWastewaterDischargeFactorList({}).then(res => {
-        console.log('getWastewaterDischargeFactorList res ---', res);
+      getWastewaterDischargeFactorList({wasteWaterDischargePortId:editId}).then(res => {
+        // console.log('getWastewaterDischargeFactorList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -78,7 +100,22 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.controlFacilitiesList;
+        var data = res.data.wasteWaterDischargeFactorList;
+        data = data.map((item,index) => {
+          return {
+            ...item,
+            isAutoMOPS: {
+              value: item.isAutoMOPS === true ? "1" : "0" ,
+              options : [{
+                value: "1",
+                label: "是"
+              }, {
+                value: "0",
+                label: "否"
+              }] 
+            }
+          }
+        })
         resolve({
           code: 0,
           data,
@@ -90,13 +127,16 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record ----', record);
+    // console.log('apiSave apiListItemId ----', record);
+    record.isAutoMOPS = record.isAutoMOPS.value;
     var self = this;
-
+    if(record.apiListItemId === undefined){
+      record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
+    }
+    record.wasteWaterDischargePortId = record.apiListItemId;
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
-        console.log("sssssssss")
         getWastewaterDischargeFactorAdd({
           ...record,
         }).then(res => {
@@ -161,6 +201,6 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     });
   },
   itemDataModel: itemDataModel
-})
+});
 
-export default WasteWaterDemoSection;
+export default WasteWaterDischargeFactor;

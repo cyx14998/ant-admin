@@ -1,5 +1,5 @@
 /**
- * 企业证照材料信息
+ * 企业证照材料基本情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
@@ -68,7 +68,7 @@ const itemDataModel = {
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
-  secTitle: '边界噪声基本情况',
+  secTitle: '企业证照材料基本情况',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
