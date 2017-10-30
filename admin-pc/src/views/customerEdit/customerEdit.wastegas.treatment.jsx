@@ -5,6 +5,7 @@
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
+  getApproachList,
   getWastewaterTreatmentList,
   getWastewaterTreatmentAdd,
   getWastewaterTreatmentDelete,
@@ -12,8 +13,11 @@ import {
 } from '../../common/api/api.customer.plus.js';
 
 import {
-  MyToast
+  MyToast,
+  convertObjectLabel
 } from '../../common/utils';
+
+import axios from '../../common/api';
 
 /**
  * table head
@@ -28,7 +32,7 @@ const columns = [{
   width: '10%'
 }, {
   title: '处理方法ID',
-  dataIndex: 'approach',
+  dataIndex: 'approachId',
   width: '10%'
 }, {
   title: '设计处理能力',
@@ -37,10 +41,6 @@ const columns = [{
 }, {
   title: '投入使用日期',
   dataIndex: 'putInUseDate',
-  width: '5%'
-}, {
-  title: '对应排放口编号',
-  dataIndex: 'dischargePortNumber',
   width: '5%'
 }, {
   title: '传台账记录',
@@ -69,13 +69,15 @@ const options = [{
 const itemDataModel = {
   theName: '',
   governanceType: '',
-  approach: '',
+  approachId: '',
   designProcessingPower: '',
   putInUseDate: '',
-  dischargePortNumber: '',
   standingBookURL: '',
 };
 
+/**
+ * @params apiListItemId
+ */
 const WasteGasTreatment = connectEditableSectionApi({
   secTitle: '废气治理基本情况',
   columns: columns,
@@ -85,35 +87,45 @@ const WasteGasTreatment = connectEditableSectionApi({
       editId = localStorage.getItem('wastewater-discharge-editId');
     }
     return new Promise((resolve,reject) => {
-      //获取数据
-      getWastewaterTreatmentList({sourceType:1,sourceId:editId}).then(res => {
-        console.log('getWastewaterTreatmentList res ---', res);
-
-        if (res.data.result !== 'success') {
-          resolve({
-            code: -1,
-            info: res.data.info,
-          })
-          return;
-        }
-
-        var data = res.data.controlFacilitiesList;
+      axios.all([
+        getApproachList({}),
+        getWastewaterTreatmentList({sourceType:1,sourceId:editId}),
+      ]).then(axios.spread((approachList, wwTreatmentList) => {
+        console.log("approachList=====================",approachList),
+        console.log("wwTreatmentList=====================",wwTreatmentList)
+        //废气治理列表
+        var wwTreatmentData = wwTreatmentList.data.controlFacilitiesList;
+        //处理方法列表
+        var approachList = approachList.data.approachList;
+        var approachData = {
+          value: "1",
+          options: convertObjectLabel(approachList)
+        };
+        itemDataModel.approachId = approachData;  //噪声源性质
+        wwTreatmentData = wwTreatmentData.map( item => {
+          return {
+            ...item,
+            approachId: {
+              value: item.approach.tableId+'',
+              options: convertObjectLabel(approachList)
+            },
+          }
+        });
+        //渲染页面
         resolve({
           code: 0,
-          data,
+          data: wwTreatmentData,
         })
-      }).catch(err => {
-        MyToast('接口调用失败')
-      })
+      }))
     })
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record -------------', record.apiListItemId);
+    record.approachId = record.approachId.value;
     var self = this;
     if(record.apiListItemId === undefined){
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
-    }
+    };
     record.sourceId = record.apiListItemId;
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
