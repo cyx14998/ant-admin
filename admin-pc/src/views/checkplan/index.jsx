@@ -253,7 +253,7 @@ const EditableDemoSection = connectEditableSectionApi({
 
     parent.window.iframeHook.changePage({
       url: '/checkplanSub.html?checkplanId=' + tableId + '#' + Math.random(),
-      breadIncrement: '检查计划清单'
+      breadIncrement: '检查计划清单|/checkplanSub.html?checkplanId=' + tableId + '#' + Math.random(),
     })
   },
 

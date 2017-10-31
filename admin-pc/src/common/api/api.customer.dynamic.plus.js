@@ -557,8 +557,8 @@ export function getBoundaryNoiseRecordList({
 * 新增边界噪声
 */
 export function getBoundaryNoiseRecordAdd({
-  customerMonthDclarationId,
   boundaryNoiseId,
+  customerMonthDclarationId,
   implementationStandards,
   equivalentSoundLevel,
   peakSoundLevel,
@@ -571,8 +571,8 @@ export function getBoundaryNoiseRecordAdd({
   return axios.get('/uBoundaryNoiseRecordAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      customerMonthDclarationId,
       boundaryNoiseId,
+      customerMonthDclarationId,
       implementationStandards,
       equivalentSoundLevel,
       peakSoundLevel,
@@ -758,4 +758,20 @@ export function getAttachmentRecordDelete(id){
   })
 }
 
-
+/**
+ * 边界噪声id列表 select.option 选项使用
+ * uBoundaryNoiseList.uhtm
+ */
+export function getBoundaryNoiseList({
+  pageNumber=1,
+  countPerPage=100
+}) {
+  return axios.get('/uBoundaryNoiseList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      customerId: getCustomerId(),
+      pageNumber,
+      countPerPage
+    }
+  })
+}

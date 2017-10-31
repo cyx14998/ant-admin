@@ -103,8 +103,8 @@ class CheckplanSubDetail extends React.Component {
                     <a href={prodImgUrl} style={{ marginLeft: 8 }}>{prodImgUrl?prodImgUrl:'无'}</a>
                     <h2 className="yzy-tab-content-title">检查记录下载</h2>
                     <a href={positionImgUrl} style={{ marginLeft: 8 }}>{positionImgUrl?positionImgUrl:'无'}</a>
-                    <h2 className="yzy-tab-content-title">附件下载</h2>
-                    <a href="#" style={{ marginLeft: 8 }}>附件下载地址</a>
+                    <h2 className="yzy-tab-content-title">整改报告</h2>
+                    <a href="#" style={{ marginLeft: 8 }}>整改报告地址</a>
             </div>
             </div >
         )

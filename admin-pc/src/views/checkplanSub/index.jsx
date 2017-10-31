@@ -454,7 +454,7 @@ class CustomerCheckPlanSub extends React.Component {
                             width='70%'
                             visible={this.state.customerListModalVisible}
                             onCancel={() => this.setState({ customerListModalVisible: false })}
-                            onOk={() => this.setState({ customerListModalVisible: false })}
+                            footer={null}                            
                             className='modal'
                         >
                             <Table
@@ -471,7 +471,7 @@ class CustomerCheckPlanSub extends React.Component {
                             width='70%'
                             visible={this.state.multiModalVisible}
                             onCancel={() => this.setState({ multiModalVisible: false })}
-                            onOk={() => this.setState({ multiModalVisible: false })}
+                            footer={null}
                             className='modal'
                         >
                             <Table

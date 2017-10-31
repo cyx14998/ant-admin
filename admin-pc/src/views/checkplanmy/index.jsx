@@ -76,20 +76,7 @@ class CustomerCheckPlanMy extends React.Component {
     }
 
     componentDidMount() {
-        this.getData({ inspectionPlanMstId: 1 });
-        // this.getCustomerList();
-        // getCheckplanDetail({ tableId: checkplanId }).then(res => {
-        //     console.log('getCheckplanDetail res ---', res);
-        //     if (res.data.result !== 'success') {
-        //         MyToast(res.data.info)
-        //         return;
-        //     }
-        //     this.setState({
-        //         checkplanDetail: res.data.inspectionPlanMst
-        //     })
-        // }).catch(err => {
-        //     console.log(err)
-        // })
+        this.getData({ });
     }
     //获取列表数据--封装
     getData(params) {
@@ -135,54 +122,7 @@ class CustomerCheckPlanMy extends React.Component {
             //   unitCategory: values.unitCategory
         });
     }
-    // //列表删除
-    // onEditDelete(text, record, index) {
-    //     var self = this;
-    //     //调用列表删除接口
-    //     getCheckplanSubDelete({ tableId: record.tableId }).then(res => {
-    //         console.log('getCheckplanSubDelete ---', res)
-    //         if (res.data.result !== 'success') {
-    //             alert(res.data.info || '接口失败')
-    //             return;
-    //         }
-    //         self.state.checkplanMyList.splice(index, 1);
-    //         self.setState({
-    //             checkplanMyList: self.state.checkplanMyList
-    //         })
-    //     }).catch(err => {
-    //         alert(err || '接口失败')
-    //     })
-    // }
-    // //列表新增
-    // selectCustomer(record) {
-    //     getCheckplanSubAdd({
-    //         inspectionPlanMstId: checkplanId,//主表Id
-    //         customerId: record.tableId, //企业Id
-    //     }).then(res => {
-    //         this.setState({
-    //             customerListModalVisible: false,
-    //         });
-    //         console.log(res)
 
-    //         if (res.data.result !== 'success') {
-    //             MyToast(res.data.info)
-    //             return;
-    //         }
-    //         MyToast("添加成功");
-    //         this.getData({ inspectionPlanMstId: checkplanId });
-    //         this.getCustomerList();
-    //     }).catch(err => {
-    //         console.log(err);
-    //         MyToast("添加失败")
-    //     });
-    // }
-    // //列表单个执行者
-    // singlePerformSelect(tableId) {
-    //     this.setState({
-    //         multiModalVisible: true,
-    //         checkSubId: tableId,
-    //     })
-    // }
     //列表完成
     clickComplete(tableId) {
         console.log(tableId)
@@ -198,74 +138,7 @@ class CustomerCheckPlanMy extends React.Component {
             alert(err || '接口失败')
         })
     }
-    // //批量新增
-    // addAll() {
-    //     getCheckplanSubAddAll({ inspectionPlanMstId: checkplanId }).then(res => {
-    //         console.log('批量新增 res ---', res);
-    //         if (res.data.result !== 'success') {
-    //             MyToast(res.data.info)
-    //             return;
-    //         }
-    //         MyToast('批量新增成功');
-    //         this.getData({ inspectionPlanMstId: checkplanId })
-    //     }).catch(err => {
-    //         console.log(err)
-    //     })
-    // }
-    // //执行者批量按钮点击
-    // performerbtn() {
-    //     if (this.state.checkSubIdArr.length > 0) {
-    //         this.setState({ multiModalVisible: true })
-    //     } else {
-    //         MyToast('请先选择要管理的数据');
-    //     }
-    // }
-    // //选择执行人员
-    // selectPerformer(tableId) {
-    //     console.log('performerSelect = ', tableId);
-    //     //单个选择
-    //     if (this.state.checkSubId) {
-    //         getCheckplanSubPerformer({ tableId: this.state.checkSubId, performerId: tableId }).then(res => {
-    //             console.log('perfomerSave res ---', res);
-    //             this.setState({
-    //                 multiModalVisible: false,
-    //             });
-    //             if (res.data.result !== 'success') {
-    //                 MyToast(res.data.info)
-    //                 return;
-    //             }
-    //             MyToast('选择成功');
-    //             this.getData({ inspectionPlanMstId: checkplanId });
-    //         }).catch(err => {
-    //             console.log(err)
-    //             MyToast('选择失败')
-    //         })
-    //         this.setState({
-    //             checkSubId: '',
-    //         });
-    //     } else {
-    //         //批量选择
-    //         console.log(this.state.checkSubIdArr);
-    //         getCheckplanSubPerformerMulti({ tableIdArr: this.state.checkSubIdArr, performerId: tableId }).then(res => {
-    //             console.log('perfomerMultiSave res ---', res);
-    //             this.setState({
-    //                 multiModalVisible: false,
-    //             });
-    //             if (res.data.result !== 'success') {
-    //                 MyToast(res.data.info)
-    //                 return;
-    //             }
-    //             MyToast('批量选择成功');
-    //             this.getData({ inspectionPlanMstId: checkplanId });
-    //             this.setState({
-    //                 checkSubId: '',
-    //             });
-    //         }).catch(err => {
-    //             console.log(err)
-    //             MyToast('批量选择失败')
-    //         })
-    //     }
-    // }
+
     saveFormRef(form) {
         this.form = form.props.form;
     }
@@ -280,17 +153,6 @@ class CustomerCheckPlanMy extends React.Component {
             recordEdit: recordEdit,
             editModalVisible: true,
         });
-    }
-    // 存储子组件数据
-    onSaveInfo(type, data, tableId) {
-        console.log(type);
-        this.setState({
-            prodImgUrl: data
-        });
-    }
-    //saveInnerInfo 保存编辑弹窗里面的form数据
-    saveInnerInfo() {
-        console.log(this.state.prodImgUrl);
     }
     render() {
         // const checkplanDetail = this.state.checkplanDetail;
@@ -337,7 +199,7 @@ class CustomerCheckPlanMy extends React.Component {
             render: (text, record, index) => (
                 <div>
                     <a onClick={() => self.showTestModal(record)} style={{ marginRight: 8 }}>编辑</a>
-                    
+
                     {/* {this.state.checkplanMyList.length > 1 ?
                         (
                             <Popconfirm title="Sure to delete?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
@@ -350,66 +212,7 @@ class CustomerCheckPlanMy extends React.Component {
             )
         },
         ];
-        // const memberData = [{
-        //     title: '姓名',
-        //     dataIndex: 'realName',
-        //     width: '10%'
-        // }, {
-        //     title: '性别',
-        //     dataIndex: 'sex',
-        //     width: '10%'
-        // }, {
-        //     title: '年龄',
-        //     dataIndex: 'age',
-        //     width: '10%'
-        // }, {
-        //     title: '手机号',
-        //     dataIndex: 'phoneNumber',
-        //     width: '10%'
-        // },
-        // {
-        //     title: '操作',
-        //     dataIndex: 'operation',
-        //     width: '20%',
-        //     render: (text, record) => (
-        //         <Button type="primary" onClick={this.selectPerformer.bind(this, record.tableId)} >选择</Button>
-        //     )
-        // }
-        // ];
-        // const customersData = [{
-        //     title: '企业名称',
-        //     dataIndex: 'customerName',
-        //     width: '10%'
-        // }, {
-        //     title: '统一社会信用代码',
-        //     dataIndex: 'uniformSocialCreditCode',
-        //     width: '15%'
-        // }, {
-        //     title: '单位地址',
-        //     dataIndex: 'unitAddress',
-        //     width: '20%'
-        // }, {
-        //     title: '传真',
-        //     dataIndex: 'fax',
-        //     width: '5%'
-        // }, {
-        //     title: '联系人',
-        //     dataIndex: 'contactPerson',
-        //     key: 'contactPerson',
-        //     width: '10%'
-        // }, {
-        //     title: '电话',
-        //     dataIndex: 'phoneNumber',
-        //     width: '10%'
-        // },
-        // {
-        //     title: '操作',
-        //     dataIndex: 'operation',
-        //     width: '20%',
-        //     render: (text, record) => (
-        //         <Button type="primary" onClick={this.selectCustomer.bind(this, record)} >选择</Button>
-        //     )
-        // }];
+
         var self = this;
         const rowSelection = {
             onChange(selectedRowKeys) {
@@ -449,36 +252,6 @@ class CustomerCheckPlanMy extends React.Component {
                 <div className="yzy-list-wrap">
                     <div className="yzy-list-btns-wrap">
                         <Button type="primary">导出excel</Button>
-                        {/* <Button type="primary" style={{ marginLeft: 8 }}
-                            onClick={() => this.setState({ customerListModalVisible: true })}>新增</Button>
-                        <Modal
-                            title="子表数据新增，选择企业"
-                            width='70%'
-                            visible={this.state.customerListModalVisible}
-                            onCancel={() => this.setState({ customerListModalVisible: false })}
-                            onOk={() => this.setState({ customerListModalVisible: false })}
-                            className='modal'
-                        >
-                            <Table
-                                columns={customersData}
-                                dataSource={this.state.customerList}
-                                rowKey="tableId" />
-                        </Modal>
-                        <Button type="primary" onClick={this.addAll.bind(this)} style={{ marginLeft: 8 }}>新增(全部)</Button>                        
-                        <Button type="primary" onClick={this.performerbtn.bind(this)} style={{ marginLeft: 8 }}>执行者管理</Button>
-                        <Modal
-                            title="执行者管理"
-                            width='70%'
-                            visible={this.state.multiModalVisible}
-                            onCancel={() => this.setState({ multiModalVisible: false })}
-                            onOk={() => this.setState({ multiModalVisible: false })}
-                            className='modal'
-                        >
-                            <Table
-                                columns={memberData}
-                                dataSource={this.state.memberList}
-                                rowKey="tableId" />
-                        </Modal> */}
                     </div>
                     <Table
                         rowSelection={rowSelection}
@@ -487,20 +260,20 @@ class CustomerCheckPlanMy extends React.Component {
                         dataSource={this.state.checkplanMyList}
                         rowKey="tableId"
                         loading={this.state.loading} />
-                    {/* <Pagination></Pagination> */}
                 </div>
-
                 {
                     this.state.editModalVisible ? <Modal
                         visible={true}
                         title="编辑页面"
                         width='70%'
+                        okText=''
+                        footer={null}
                         onCancel={this.TestCancel.bind(this)}
-                        onOk={this.saveInnerInfo.bind(this)}
+                        cancelText=''
                         className='modal editModal'
                     >
-                        <CheckplanDetailForm recordEdit={this.state.recordEdit} onSaveInfo = {this.onSaveInfo.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)} />
-                    </Modal> : <div>hello--------------------</div>
+                        <CheckplanDetailForm recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)}wrappedComponentRef={this.saveFormRef.bind(this)} />
+                    </Modal> : null
                 }
             </div>
         )

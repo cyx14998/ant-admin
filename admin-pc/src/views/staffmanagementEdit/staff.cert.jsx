@@ -69,6 +69,7 @@ const StaffCertModule = connectUneditableSectionApi({
   secTitle: '证照信息',
   columns: columns,
   apiLoader: function ({apiListItemId}) {
+    // 新增员工证照时，不需要调用接口
     if (apiListItemId === '') {
       return Promise.resolve({
         code: 0,

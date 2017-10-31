@@ -50,15 +50,15 @@ export function MyToast (info, timeout=1000) {
  *     theName  =>  label
  * @return [object Array]
  */
-export function convertObjectLabel(source) {
+export function convertObjectLabel(source, valueProp='tableId', labelProp='theName') {
   var dest = [];
 
   var len = source.length,
       i;
   for (i=0; i<len; i++) {
     let newItem = {
-      value: source[i].tableId+'',
-      label: source[i].theName+''
+      value: source[i][valueProp]+'',
+      label: source[i][labelProp]+''
     };
 
     dest.push(newItem);

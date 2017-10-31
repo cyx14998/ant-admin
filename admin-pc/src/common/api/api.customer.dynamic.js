@@ -19,9 +19,43 @@ export function getCustomerDynamicList({
     params: {
       token: getToken(),
       customerId: getCustomerId(),
+      pageNumber,
+      countPerPage
     }
   })
 }
+
+/**
+ * 动态列表新增
+ */
+export function getCustomerDynamicListAdd({
+  theYear,
+  theMonth
+}) {
+  return axios.get('/uCustomerMonthDclarationAdd.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      customerId: getCustomerId(),
+      theYear,
+      theMonth
+    }
+  })
+}
+
+/**
+ * 动态列表删除
+ */
+export function getCustomerDynamicListDelete({
+  tableId
+}) {
+  return axios.get('/uCustomerMonthDclarationDelete.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId
+    }
+  })
+}
+
 /**************************** 编辑页---首页-产品动态信息模块 ***********************/
 
 

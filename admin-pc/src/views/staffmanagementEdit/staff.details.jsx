@@ -19,6 +19,8 @@ const Option = Select.Option;
 
 import md5 from 'crypto-js/md5';
 
+import QiniuUpload from '../../components/upload';
+
 import {
   getDepartmentList
 } from '../../common/api/api.department';
@@ -27,9 +29,6 @@ import {
   getStaffDetails
 } from '../../common/api/api.staffmanagement';
 
-import {
-  getQiNiuToken
-} from '../../common/api/api.customer';
 
 import {
   MyToast,
@@ -40,6 +39,7 @@ const formItemLayout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 }
+
 const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 const uploadUrl = 'http://up.qiniu.com/';
 
@@ -52,16 +52,16 @@ class StaffDetails extends React.Component {
     super(props);
 
     this.state = {
-      uptoken: '',
-      uploadedFileList: [{
-        uid: -1,
-        status: 'done',
-        url: 'http://oyc0y0ksm.bkt.clouddn.com/1509173501415'
-      }],
-      previewImage: 'http://oyc0y0ksm.bkt.clouddn.com/1509173501415',
-      previewVisible: false,
+      // 默认图片
+      uploadedFileList: [],
+
       // 员工主信息
-      data: {},
+      data: {
+        age: '',
+        sex: '',
+        departmentId: '',
+      },
+
       departmentList: []
     }
 
@@ -70,19 +70,6 @@ class StaffDetails extends React.Component {
   }
 
   componentDidMount() {
-    // prepare for upload image
-    getQiNiuToken({}).then(res => {
-        if (!res.data || !res.data.uptoken) {
-            MyToast('getqiniuyun uptoken error');
-            return;
-        }
-
-        // this.qiniuyunData.token = res.data.uptoken;
-        this.setState({
-          uptoken: res.data.uptoken
-        });
-    }).catch(err => console.log(err));
-
     // 获取部门列表
     this._getDepartmentList();
 
@@ -102,8 +89,17 @@ class StaffDetails extends React.Component {
         return;
       }
 
+      var departmentList = res.data.departmentList.map(item => {
+        let department = {
+          value: item.tableId,
+          label: item.theName
+        };
+
+        return department;
+      });
+
       this.setState({
-        departmentList: res.data.departmentList
+        departmentList: departmentList
       });
     }).catch(err => {
       MyToast('获取部门列表失败')
@@ -119,45 +115,25 @@ class StaffDetails extends React.Component {
         return;
       }
 
+      var memberDetail = res.data.member;
+
       this.setState({
-        data: res.data.member
+        data: memberDetail,
+        uploadedFileList: [{
+          uid: -1,
+          status: 'done',
+          url: memberDetail.headImagePath
+        }]
       });
     }).catch(err => {
       MyToast('获取员工详情失败')
     })
   }
 
-  beforeUpload(file) {
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      MyToast('请选择图片小于2MB!');
-    }
-
-    return isLt2M;
-  }
-
-  handleUploadChange({file, fileList}) {
-    console.log('handleUploadChange file--------------', file)
-
-    /**
-     * 上传成功 or 删除成功
-     */
-    if (file.status === 'done' || file.status === 'removed') {
-      this.setState({
-        uploadedFileList: fileList
-      });
-    }
-  }
-
-  handlePreview(file) {
+  handleUploadedFileList({fileList}) {
     this.setState({
-      previewImage: file.url || file.thumbUrl,
-      previewVisible: true,
+        uploadedFileList: fileList,
     });
-  }
-
-  handleCancel() {
-    this.setState({ previewVisible: false });
   }
 
   saveDetail(e) {
@@ -169,6 +145,7 @@ class StaffDetails extends React.Component {
     } = this.props;
 
     form.validateFields((err, values) => {
+      console.log('-----------', values.password)
       if (err) return;
 
       var fileOne = this.state.uploadedFileList[0];
@@ -187,12 +164,25 @@ class StaffDetails extends React.Component {
         uploadedFilePath = downloadUrl + uploadedFilePath;
       }
 
+      /**
+       * 密码是否修改？
+       */
+      var password = values.password;
+      delete values.password;
 
-      onSave({
-        ...values,
-        password: md5(password),
-        headImagePath: uploadedFilePath
-      });
+      // 没有修改
+      if (password !== this.state.data.password) {
+        onSave({
+          ...values,
+          password: md5(password).toString(),
+          headImagePath: uploadedFilePath
+        });
+      } else {
+        onSave({
+          ...values,
+          headImagePath: uploadedFilePath
+        });
+      }
     });
   }
 
@@ -220,7 +210,7 @@ class StaffDetails extends React.Component {
               <Col span={8}>
                 <FormItem {...formItemLayout} label="性别">
                   {getFieldDecorator('sex', {
-                    initialValue: this.state.data.sex + '',
+                    initialValue: this.state.data.sex.toString(),
                     rules: [{ required: true },
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
@@ -235,7 +225,7 @@ class StaffDetails extends React.Component {
               <Col span={8}>
                 <FormItem {...formItemLayout} label="年龄">
                   {getFieldDecorator('age', {
-                    initialValue: this.state.data.age,
+                    initialValue: this.state.data.age.toString(),
                     rules: [{ required: true },
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
@@ -285,13 +275,17 @@ class StaffDetails extends React.Component {
               <Col span={8}>
                 <FormItem {...formItemLayout} label="部门ID">
                   {getFieldDecorator('departmentId', {
-                    initialValue: this.state.data.departmentId || '1',
+                    initialValue: this.state.data.departmentId.toString(),
                     rules: [{ required: true },
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
                     <Select placeholder="部门ID">
-                      <Option key="1" value="1">财务部</Option>
+                      {
+                        this.state.departmentList.map(item => {
+                          return <Option key={item.value} value={item.value.toString()}>{item.label}</Option>
+                        })
+                      }
                     </Select>
                     )}
                 </FormItem>
@@ -304,14 +298,14 @@ class StaffDetails extends React.Component {
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
-                    <Input placeholder="密码" />
+                    <Input type="password" placeholder="密码" />
                     )}
                 </FormItem>
               </Col>
               <Col span={8}>
                 <FormItem {...formItemLayout} label="账号是否激活">
                   {getFieldDecorator('isActivationLogin', {
-                    initialValue: this.state.data.isActivationLogin,
+                    initialValue: this.state.data.isActivationLogin ? '1' : '0',
                     rules: [{ required: true },
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
@@ -341,38 +335,14 @@ class StaffDetails extends React.Component {
 
             <Row>
               <Col span={12}>
-                <Row>
-                  <Col style={{fontSize: '12px', color: '#000', textAlign: 'right'}} span={6}>头像上传：</Col>
-                  <Col span={18}>
-                    <Upload
-                        action='http://up.qiniup.com'
-                        container="container"
-                        listType="picture-card"
-                        multiple={false}
-                        accept="image/*"
-                        beforeUpload={this.beforeUpload.bind(this)}
-                        onChange={this.handleUploadChange.bind(this)}
-                        fileList={this.state.uploadedFileList}
-                        onPreview={this.handlePreview.bind(this)}
-                        data={{
-                          token: this.state.uptoken,                       
-                          key: Date.now() + ''
-                        }}>
-                        {
-                          this.state.uploadedFileList.length === 1 ? null : 
-                          (
-                            <div>
-                                <Icon type="plus" />
-                                <div className="ant-upload-text">证件上传</div>
-                            </div>
-                          )
-                        }
-                    </Upload>
-                    <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancel.bind(this)}>
-                      <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
-                    </Modal>
-                  </Col>
-                </Row>
+                <div className="yzy-tab-content-item-wrap">
+                  <h2 className="yzy-tab-content-title">头像上传</h2>
+                  <QiniuUpload
+                      uploadTitle="证件上传"
+                      uploadedFileList={this.state.uploadedFileList}
+                      handleUploadedFileList={this.handleUploadedFileList.bind(this)}
+                     />
+                </div>
               </Col>
             </Row>
           </div>
