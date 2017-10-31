@@ -21,7 +21,12 @@ const menuConfig = [
     icon: 'bars',
     name: 'checkplan',
     key: '客户检查计划管理|/checkplan.html'
-  }, {
+  },{
+    sub: '我的检查任务',
+    icon: 'bars',
+    name: 'checkplanmy',
+    key: '我的检查任务|/checkplanmy.html'
+  },  {
     sub: '员工管理',
     icon: 'user-add',
     name: 'staffmanagement',
