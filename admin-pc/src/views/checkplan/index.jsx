@@ -88,18 +88,7 @@ const columns = [{
 }, {
   title: '备注',
   dataIndex: 'theRemarks',
-<<<<<<< HEAD
-  width: '10%'
-}, 
-// {
-//   title: '创建时间',
-//   dataIndex: 'createDatetime',
-//   width: '10%'
-// }, 
-{
-=======
 }, {
->>>>>>> zxk009
   title: '操作',
   dataIndex: 'operation',
   width: 120
