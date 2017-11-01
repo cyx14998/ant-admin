@@ -67,31 +67,25 @@ import {
 const columns = [{
   title: '编号',
   dataIndex: 'serialNumber',
-  width: '10%'
+  disabled: true,
 }, {
   title: '批号',
   dataIndex: 'lotNumber',
-  width: '10%'
 }, {
   title: '检查开始日期',
   dataIndex: 'planDateStart',
-  width: '10%'
 }, {
   title: '检查结束日期',
   dataIndex: 'planDateEnd',
-  width: '10%'
 }, {
   title: '需检查企业总数',
   dataIndex: 'totalCount',
-  width: '10%'
 }, {
   title: '已完成检查数量',
   dataIndex: 'completeCount',
-  width: '10%'
 }, {
   title: '备注',
   dataIndex: 'theRemarks',
-  width: '10%'
 }, 
 // {
 //   title: '创建时间',
@@ -101,7 +95,7 @@ const columns = [{
 {
   title: '操作',
   dataIndex: 'operation',
-  width: '20%'
+  width: 120
 }];
 
 /**
