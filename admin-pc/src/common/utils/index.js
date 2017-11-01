@@ -57,8 +57,8 @@ export function convertObjectLabel(source, valueProp='tableId', labelProp='theNa
       i;
   for (i=0; i<len; i++) {
     let newItem = {
-      value: source[i][valueProp]+'',
-      label: source[i][labelProp]+''
+      value: source[i][valueProp] + '',
+      label: source[i][labelProp] + ''
     };
 
     dest.push(newItem);

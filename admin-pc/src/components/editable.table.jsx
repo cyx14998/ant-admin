@@ -26,6 +26,7 @@ import EditableCell from './editable.cell';
  * @params onSave
  * @params checkInNewpage
  * @params hasModal
+ * @params onEdit
  */
 class EditableTable extends Component {
   constructor(props) {
@@ -45,7 +46,8 @@ class EditableTable extends Component {
       onDelete,
       onSave,
       checkInNewpage,
-      hasModal
+      hasModal,
+      onEdit
     } = this.props;
 
     let len = columns.length,
@@ -64,6 +66,7 @@ class EditableTable extends Component {
                 tableId={record.tableId}
                 dataIndex={columns[i].dataIndex}
                 cellType="select"
+                disabled={text.disabled}
                 value={text.value}
                 options={text.options}
                 onCellChange={onCellChange} />
@@ -71,26 +74,28 @@ class EditableTable extends Component {
           } 
 
           // date 通过正则判断是否是日期字符串 2017-11-11
-          if (text !== undefined && /^[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(text)) {
+          if (text !== undefined && (text.cellType === 'datepicker' || /^[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(text))) {
             return (
               <EditableCell 
                 tableId={record.tableId}
                 dataIndex={columns[i].dataIndex}
                 cellType="datepicker"
-                value={text}
+                disabled={text.disabled}
+                value={text.disabled ? text.value : text}
                 onCellChange={onCellChange} />
             )
           }
 
           // input
-          if (text !== undefined && (typeof text === 'number' || typeof text === 'string')) {
+          if (text !== undefined && (text.cellType === 'input' || typeof text === 'number' || typeof text === 'string')) {
             // input
             return (
               <EditableCell 
                 tableId={record.tableId}
                 dataIndex={columns[i].dataIndex}
                 cellType="input"
-                value={text}
+                disabled={text.disabled}
+                value={text.disabled === true ? text.value : text}
                 onCellChange={onCellChange} />
             );
           }
@@ -108,6 +113,23 @@ class EditableTable extends Component {
 
                 <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}>保存</a>
                 <a href="#" style={{marginLeft: '10px'}} onClick={() => checkInNewpage(record.tableId)}>查看</a>
+              </div>
+            )
+          }
+
+          /**
+           *  编辑/删除/新页面查看
+           *  @hasModal  模态框查看
+           */
+          if ((text === undefined) && (hasModal === true)) {
+            return (
+              <div>
+                <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
+                  <a href="#">删除</a>
+                </Popconfirm>
+
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}>保存</a>
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => onEdit(record.tableId)}>查看</a>
               </div>
             )
           }

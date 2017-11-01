@@ -4,6 +4,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 import RcSearchForm from '../../components/rcsearchform';
 
 // RcSearchForm datablob
@@ -67,30 +70,25 @@ import {
 const columns = [{
   title: '编号',
   dataIndex: 'serialNumber',
-  width: '10%'
 }, {
   title: '批号',
   dataIndex: 'lotNumber',
-  width: '10%'
 }, {
   title: '检查开始日期',
   dataIndex: 'planDateStart',
-  width: '10%'
 }, {
   title: '检查结束日期',
   dataIndex: 'planDateEnd',
-  width: '10%'
 }, {
   title: '需检查企业总数',
   dataIndex: 'totalCount',
-  width: '10%'
 }, {
   title: '已完成检查数量',
   dataIndex: 'completeCount',
-  width: '10%'
 }, {
   title: '备注',
   dataIndex: 'theRemarks',
+<<<<<<< HEAD
   width: '10%'
 }, 
 // {
@@ -99,10 +97,14 @@ const columns = [{
 //   width: '10%'
 // }, 
 {
+=======
+}, {
+>>>>>>> zxk009
   title: '操作',
   dataIndex: 'operation',
-  width: '20%'
+  width: 120
 }];
+
 
 /**
  * 新数据默认值
@@ -111,12 +113,11 @@ const itemDataModel = {
   tableId: '',
   serialNumber: '',
   lotNumber: '',
-  planDateStart: '',
-  planDateEnd: '',
+  planDateStart: moment(new Date()).format(dateFormat),
+  planDateEnd: moment(new Date()).format(dateFormat),
   totalCount: '',
   completeCount: '',
   theRemarks: '',
-  createDatetime: ''
 };
 //搜索功能未实现
 function getData(params) {
@@ -164,7 +165,25 @@ const EditableDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.inspectionPlanMstList;
+        var data =  res.data.inspectionPlanMstList;
+
+        data = data.map(item => {
+          
+          item.serialNumber = {
+            cellType: 'input',
+            value: item.serialNumber,
+            disabled: true
+          }
+
+          item.planDateEnd = {
+            cellType: 'datepicker',
+            value: item.planDateEnd,
+            disabled: true
+          }
+
+          return item;
+        });
+
         resolve({
           code: 0,
           data,

@@ -9,15 +9,17 @@ import {
   getWasteSolidRecordAdd,
   getWasteSolidRecordUpdate,
   getWasteSolidRecordDelete,
-} from '../../common/api/api.customer.dynamic.plus.js';
+
+  getWasteSolidList,
+} from '../../common/api/api.customer.dynamic.plus';
 
 import {
+  getLocQueryByLabel,
+  convertObjectLabel,
   MyToast
 } from '../../common/utils';
 
-import {
-  getLocQueryByLabel
-} from '../../common/utils';
+const dynamicId = getLocQueryByLabel('dynamicId');
 
 /**
  * table head
@@ -25,62 +27,41 @@ import {
 const columns = [{
   title: '废物名称',
   dataIndex: 'theName',
-  width: '5%'
 }, {
   title: '所属固体废物Id',
   dataIndex: 'wasteSolidId',
-  width: '8%'
+  width: 80,
 }, {
   title: '主要污染物',
   dataIndex: 'mainPollutants',
-  width: '7%'
 }, {
   title: '产生量(顿)',
   dataIndex: 'productionQuantity',
-  width: '5%'
 }, {
   title: '综合利用量',
   dataIndex: 'comprehensiveUtilization',
-  width: '5%'
 }, {
   title: '处置去向',
   dataIndex: 'disposeWhereabouts',
-  width: '5%'
 }, {
   title: '处置量-符合环保标准的量(吨)',
   dataIndex: 'disposalCapacityLawful',
-  width: '12%'
 }, {
   title: '贮存量-符合环保标准的量(吨)',
   dataIndex: 'StorageCapacityLawful',
-  width: '12%'
 }, {
   title: '处置量-不符合环保标准的量(吨)',
   dataIndex: 'disposalCapacityUnLawful',
-  width: '12%'
 }, {
   title: '贮存量-不符合环保标准的量(吨)',
   dataIndex: 'storageCapacityUnLawful',
-  width: '12%'
 }, {
   title: '排放量-不符合环保标准的量(吨)',
   dataIndex: 'emissionAmount',
-  width: '12%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '5%'
-}];
-
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
+  width: 120
 }];
 
 /**
@@ -88,7 +69,10 @@ const options = [{
  */
 const itemDataModel = {
   theName: '',
-  wasteSolidId: '',
+  wasteSolidId: {
+    value: '',
+    options: []
+  },
   mainPollutants: '',
   productionQuantity: '',
   comprehensiveUtilization: '',
@@ -106,27 +90,57 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      var dynamicId = getLocQueryByLabel('dynamicId');
       if(!dynamicId) return;
-      getWasteSolidRecordList({customerMonthDclarationId:dynamicId,}).then(res => {
-        console.log('getWasteSolidRecordList res ---', res);
-        
+
+      /**
+       * 固体废物可选项
+       */
+      getWasteSolidList({}).then(res => {
         if (res.data.result !== 'success') {
-          resolve({
-            code: -1,
-            info: res.data.info,
-          })
+          MyToast(res.data.info || '获取固体废物选项失败');
           return;
         }
 
-        var data = res.data.wasteSolidRecordList;
-        resolve({
-          code: 0,
-          data,
+        var wasteSolidList = res.data.wasteSolidList;
+
+        var wasteSolidListOptions = convertObjectLabel(wasteSolidList, 'tableId', 'theName'); 
+        return wasteSolidListOptions;
+      }).then(wasteSolidListOptions => {
+        console.log('wasteSolidListOptions-----------', wasteSolidListOptions);
+        itemDataModel.wasteSolidId.options = wasteSolidListOptions;
+
+        getWasteSolidRecordList({customerMonthDclarationId: dynamicId}).then(res => {
+          console.log('getWasteSolidRecordList res ---', res);
+          
+          if (res.data.result !== 'success') {
+            resolve({
+              code: -1,
+              info: res.data.info,
+            })
+            return;
+          }
+
+          var data = res.data.wasteSolidRecordList;
+
+          data = data.map(item => {
+            return {
+              ...item,
+              wasteSolidId: {
+                value: item.wasteSolidId + '',
+                options: wasteSolidListOptions
+              }
+            }
+          });
+
+          resolve({
+            code: 0,
+            data,
+          })
+        }).catch(err => {
+          MyToast('接口调用失败')
         })
-      }).catch(err => {
-        MyToast('接口调用失败')
-      })
+
+      }).catch(err => MyToast(err));
     })
   },
   apiSave: function (record) {
@@ -139,8 +153,8 @@ const WasteWaterDemoSection = connectEditableSectionApi({
         // 新增
         getWasteSolidRecordAdd({
           ...record,
-          customerMonthDclarationId:1,
-          boundaryNoiseId:1
+          customerMonthDclarationId: dynamicId,
+          wasteSolidId: parseInt(record.wasteSolidId.value),
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -160,9 +174,10 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        console.log(record)
         getWasteSolidRecordUpdate({
           ...record,
+          customerMonthDclarationId: dynamicId,
+          wasteSolidId: parseInt(record.wasteSolidId.value),
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({

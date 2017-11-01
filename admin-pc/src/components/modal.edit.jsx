@@ -2,6 +2,9 @@
  * 模态编辑
  */
 import React from 'react';
+import {
+  Modal
+} from 'antd';
 
 /**
  * @params modalTitle
@@ -30,18 +33,17 @@ class ModalEdit extends React.Component {
     if (!modalShow) return null;
 
     return (
-      <div className="yzy-modal-edit-wrap">
-        <div className="yzy-modal-edit">
-          <h2 className="yzy-modal-edit-title">{!editId ? '新增' : '编辑'}{modalTitle}</h2>
-          <div className="yzy-modal-edit-content">
-            <InnerComponent 
-              editId={editId} 
-              itemVisible={itemVisible}
-              showItemVisible={showItemVisible} />
-          </div>
-          <a className="yzy-modal-edit-close" onClick={() => closeModalEdit()}>x</a>
-        </div>
-      </div>
+      <Modal
+        width="90%"
+        visible={true}
+        title={modalTitle}
+        onCancel={closeModalEdit}
+        footer={null}>
+          <InnerComponent 
+            editId={editId} 
+            itemVisible={itemVisible}
+            showItemVisible={showItemVisible} />
+      </Modal>
     )
   }
 }
