@@ -369,6 +369,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 saveAddCustomerInfoById(data).then(res => {
                     console.log('saveCustomerInfoById res', res);
                     if (res.data.result !== 'success') {
+                        MyToast(res.data.info);
                         return
                     }
                     MyToast('保存成功');
