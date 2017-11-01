@@ -472,9 +472,9 @@ class CheckplanDetail extends React.Component {
                                     <FormItem {...formItemLayout} label="备注">
                                         {getFieldDecorator('theRemarks', {
                                             initialValue: checkplanSubEditInfo.theRemarks,
-                                            rules: [{ required: true },
-                                            {/* { pattern: /^[0-9]*$/ } */ }
-                                            ],
+                                            //rules: [{ required: true },
+                                            //{ pattern: /^[0-9]*$/ } 
+                                            //],
                                         })(
                                             <Input placeholder="危险废物名称" />
                                             )}

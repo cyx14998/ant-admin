@@ -4,6 +4,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 import RcSearchForm from '../../components/rcsearchform';
 
 // RcSearchForm datablob
@@ -11,34 +14,11 @@ const rcsearchformData = {
   colspan: 2,
   fields: [{
     type: 'input',
-    label: '企业名称',
-    name: 'companyName',
-    rules: [{ required: true, message: '请输入企业名称' }],
-  }, {
-    type: 'input',
-    label: '统一社会信用代码',
-    name: 'uniformSocialCreditCode',
-  }, {
-    type: 'select',
-    label: '单位类别',
-    name: 'unitCategory',
-    options:[
-      {
-        value: "我是value1",
-        label: "我是label1"
-      },
-    ]
-  }, {
-    type: 'select',
-    label: '行业类别',
-    name: 'industryCategory',
-    options:[
-      {
-        value: "我是value2",
-        label: "我是label2"
-      },
-    ]
-  }]
+    label: '批号',
+    name: 'lotNumber',
+    rules: [{ required: true, message: '请输入批号' }],
+  },
+  ]
 };
 
 
@@ -65,40 +45,30 @@ import {
 const columns = [{
   title: '编号',
   dataIndex: 'serialNumber',
-  width: '10%'
 }, {
   title: '批号',
   dataIndex: 'lotNumber',
-  width: '10%'
 }, {
   title: '检查开始日期',
   dataIndex: 'planDateStart',
-  width: '10%'
 }, {
   title: '检查结束日期',
   dataIndex: 'planDateEnd',
-  width: '10%'
 }, {
   title: '需检查企业总数',
   dataIndex: 'totalCount',
-  width: '10%'
 }, {
   title: '已完成检查数量',
   dataIndex: 'completeCount',
-  width: '10%'
 }, {
   title: '备注',
   dataIndex: 'theRemarks',
-  width: '10%'
-}, {
-  title: '创建时间',
-  dataIndex: 'createDatetime',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '20%'
+  width: 120
 }];
+
 
 /**
  * 新数据默认值
@@ -107,14 +77,45 @@ const itemDataModel = {
   tableId: '',
   serialNumber: '',
   lotNumber: '',
-  planDateStart: '',
-  planDateEnd: '',
-  totalCount: '',
-  completeCount: '',
+  planDateStart: moment(new Date()).format(dateFormat),
+  planDateEnd: moment(new Date()).format(dateFormat),
+  totalCount:  {
+    cellType: 'input',
+    value: '',
+    disabled: true
+  },
+  completeCount: {
+    cellType: 'input',
+    value: '',
+    disabled: true
+  },
   theRemarks: '',
-  createDatetime: ''
 };
+//搜索功能未实现
+function getData(params) {
+  //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
+  return new Promise((resolve, reject) => {
+    getCheckplanMainlist(params).then(res => {
+      console.log('getCheckplanMainlist res ---', res);
 
+      if (res.data.result !== 'success') {
+        resolve({
+          code: -1,
+          info: res.data.info,
+        })
+        return;
+      }
+
+      var data = res.data.inspectionPlanMstList;
+      resolve({
+        code: 0,
+        data,
+      })
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
 
 /**
  * 可编辑模块
@@ -136,7 +137,28 @@ const EditableDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data =  res.data.inspectionPlanMstList;
+        var data = res.data.inspectionPlanMstList;
+
+        data = data.map(item => {
+
+          item.serialNumber = {
+            cellType: 'input',
+            value: item.serialNumber,
+            disabled: true
+          }
+          item.totalCount = {
+            cellType: 'input',
+            value: item.totalCount,
+            disabled: true
+          }
+          item.completeCount = {
+            cellType: 'input',
+            value: item.completeCount,
+            disabled: true
+          }
+          return item;
+        });
+
         resolve({
           code: 0,
           data,
@@ -144,10 +166,7 @@ const EditableDemoSection = connectEditableSectionApi({
       }).catch(err => {
         reject(err)
       })
-    })
-    // return Promise.resolve({
-    //   data: dataSource
-    // })    
+    })  
   },
   apiSave: function (record) {
     console.log('apiSave record ----', record);
@@ -176,7 +195,7 @@ const EditableDemoSection = connectEditableSectionApi({
       });
     } else {
       // 编辑
-       return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         getCheckplanMainEdit({
           ...record,
         }).then(res => {
@@ -201,7 +220,7 @@ const EditableDemoSection = connectEditableSectionApi({
     console.log(`apiDel ${tableId}`);
 
     return new Promise((resolve, reject) => {
-      getCheckplanMainDelete(tableId).then(res => {
+      getCheckplanMainDelete({ tableId }).then(res => {
         if (res.data.result !== 'success') {
           resolve({
             code: 1,
@@ -222,7 +241,7 @@ const EditableDemoSection = connectEditableSectionApi({
   // 添加新页面查看功能
   checkInNewpage: function (tableId) {
     if (tableId === '') return;
-    
+
     parent.window.iframeHook.changePage({
       url: '/checkplanSub.html?checkplanId=' + tableId + '#' + Math.random(),
       breadIncrement: '检查计划清单|/checkplanSub.html?checkplanId=' + tableId + '#' + Math.random(),
@@ -236,16 +255,21 @@ class CustomerCheckPlan extends Component {
   constructor(props) {
     super(props);
   }
-
+  // 搜索功能未实现
   handleFormSearch(values) {
+    if (!values.lotNumber) return;
+
     console.log('handleFormSearch--------', values)
+    getData({
+      lotNumber: values.lotNumber
+    })
   }
 
   render() {
     return (
       <div className="yzy-page">
         <div className="yzy-search-form-wrap">
-          <RcSearchForm {...rcsearchformData} 
+          <RcSearchForm {...rcsearchformData}
             handleSearch={this.handleFormSearch.bind(this)} />
         </div>
         <div className="yzy-list-wrap">

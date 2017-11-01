@@ -1,167 +1,125 @@
 /**
  * 检查子表编辑页面
  */
-import React from 'react';
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import './index.less';
 
 import {
-    Form,
     Row,
     Col,
     Input,
-    Button,
-    Select,
-    Radio
+    Upload,
+    Icon,
+    Modal,
 } from 'antd';
-const FormItem = Form.Item;
-const Option = Select.Option;
-const RadioGroup = Radio.Group;
 
 import {
-    MyToast
+    getLocQueryByLabel, MyToast
 } from '../../common/utils';
 
 const formItemLayout = {
-    labelCol: { span: 4 },
+    labelCol: { span: 8 },
     wrapperCol: { span: 16 },
 }
-const performers = [
-    { tableId: 1, theName: '张某' },
-    { tableId: 2, theName: '李某' },
-    { tableId: 3, theName: '王某' }
-]
-import {
-    getWasteSolidDetail,
-    getWastesolidUpdate,
-    getWastesolidAdd,
-} from '../../common/api/api.customer.plus.js';
+const uploadButton = (
+    <div>
+        <Icon type="plus" />
+        <div className="ant-upload-text">Upload</div>
+    </div>
+);
 
-class CheckplanDetail extends React.Component {
+import {
+    getCheckplanSubAdd,
+    getCheckplanSubEdit,
+    getCheckplanSubPerformer,
+    getCheckplanSubDetail
+} from '../../common/api/api.checkplan';
+
+
+class CheckplanSubDetail extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
+        this.state = ({
             data: {},
-        }
+            prodImgUrl: '',
+            positionImgUrl: '',
+            reportUrl: '',
+
+            recordEdit: this.props.recordEdit || '',//新增子表返回的子表id用来显示底面的员工列表
+        });
     }
 
-    componentDidMount() {
-        var tableId = this.props.editId;
-        if (!tableId) {
-            localStorage.setItem("wastewaterDischargeIsShow", "none");
-            return;
-        }
-        localStorage.setItem("wastewaterDischargeIsShow", "block");
-        getWasteSolidDetail({ tableId: tableId }).then(res => {
-            console.log('getCheckplanDetail res ---', res);
-            if (res.data.result !== 'success') {
-                MyToast(res.data.info)
-                return;
-            }
-            this.setState({ data: res.data.wasteSolid })
-        }).catch(err => {
-            MyToast('接口调用失败')
-        })
-    }
-    selectPerformer(checkedValues) {
-        console.log('checked = ', checkedValues);
-    }
-    // 基本信息保存
-    saveDetail(e) {
-        e.preventDefault();
-        const {
-            form
-        } = this.props;
-
-        form.validateFields((err, values) => {
-            if (err) return;
-            var tableId = this.props.editId;
-            if (tableId) {
-                getWastesolidUpdate({
-                    ...values,
-                    tableId: tableId
-                }).then(res => {
-                    if (res.data.result !== 'success') {
-                        MyToast(res.data.info)
-                        return;
-                    }
-                    MyToast("保存成功")
-                    localStorage.setItem("wastewaterDischargeIsShow", "block");
-                }).catch(err => {
-                    MyToast('接口调用失败')
+    componentWillReceiveProps(nextProps) {
+        var self = this;
+        if (self.state.recordEdit !== nextProps.recordEdit) {
+            console.log('编辑')
+            self.setState({
+                recordEdit: nextProps.recordEdit
+            })
+            //文件
+            if (nextProps.recordEdit.feedbackSheetURL) {
+                self.setState({
+                    prodImgUrl: nextProps.recordEdit.feedbackSheetURL
                 });
             } else {
-                // 新增
-                getWastesolidAdd({
-                    ...values,
-                }).then(res => {
-                    if (res.data.result !== 'success') {
-                        MyToast(res.data.info)
-                        return;
-                    }
-                    MyToast("新增成功")
-                    localStorage.setItem("wastewaterDischargeIsShow", "block");
-                }).catch(err => {
-                    MyToast('接口调用失败')
+                self.setState({
+                    prodImgUrl: ''
                 });
             }
-        })
+            if (nextProps.recordEdit.regulatoryRecordURL) {
+                self.setState({
+                    positionImgUrl: nextProps.recordEdit.regulatoryRecordURL
+                });
+            } else {
+                self.setState({
+                    positionImgUrl: ''
+                });
+            }
+            if (nextProps.recordEdit.rectificationReportURL) {
+                self.setState({
+                    reportUrl: nextProps.recordEdit.rectificationReportURL
+                });
+            } else {
+                self.setState({
+                    reportUrl: ''
+                });
+            }
+        }
+
+    }
+    componentDidMount() {
+        var self = this;
+        console.log(self.props.recordEdit);
+        self.setState({
+            recordEdit: self.props.recordEdit
+        });
     }
     render() {
-        let { getFieldDecorator } = this.props.form;
+        var recordEdit = this.state.recordEdit;
+        var prodImgUrl = recordEdit.feedbackSheetURL;
+        var positionImgUrl = recordEdit.regulatoryRecordURL;
+        var reportUrl = recordEdit.rectificationReportURL
         return (
             <div className="yzy-tab-content-item-wrap">
-                <Form onSubmit={this.saveDetail.bind(this)}>
-                    <div className="baseinfo-section">
-                        <h2 className="yzy-tab-content-title">检查计划子表信息详情</h2>
-                        <Row>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label="反馈单下载地址">
-                                    {getFieldDecorator('feedbackSheetURL', {
-                                        initialValue: this.state.data.feedbackSheetURL,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
-                                    })(
-                                        <Input placeholder="编号" />
-                                        )}
-                                </FormItem>
-                            </Col>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label="检查记录下载地址">
-                                    {getFieldDecorator('regulatoryRecordURL', {
-                                        initialValue: this.state.data.regulatoryRecordURL,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
-                                    })(
-                                        <Input placeholder="编号" />
-                                        )}
-                                </FormItem>
-                            </Col>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label="备注">
-                                    {getFieldDecorator('theRemarks', {
-                                        initialValue: this.state.data.theRemarks,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
-                                    })(
-                                        <Input placeholder="危险废物名称" />
-                                        )}
-                                </FormItem>
-                            </Col>
-                        </Row>
-                    </div>
-                    <div className="yzy-block-center">
-                        <Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
-                    </div>
-                    <div className="baseinfo-section">
-                        <h2 className="yzy-tab-content-title">检查计划子表信息详情</h2>
-                      
-                    </div>
-                </Form>
+                <div className="baseinfo-section">
+                    <h2 className="yzy-tab-content-title">检查计划子表信息详情</h2>
+                    <Row>
+                        <Col span={2}> 企业名称：</Col>
+                        <Col span={8}>{recordEdit.customer ? recordEdit.customer.customerName : ''}</Col>
+                        <Col span={2}>备注：</Col>
+                        <Col span={8}>{recordEdit.theRemarks ? recordEdit.theRemarks : '无'}</Col>
+                    </Row>
+                    <h2 className="yzy-tab-content-title">反馈单下载</h2>
+                    <a target="_blank" download="图片" href={prodImgUrl} style={{ marginLeft: 8 }}>{prodImgUrl ? '下载地址' : '无'}</a>
+                    <h2 className="yzy-tab-content-title">检查记录下载</h2>
+                    <a target="_blank" download="图片" href={positionImgUrl} style={{ marginLeft: 8 }}>{positionImgUrl ? '下载地址' : '无'}</a>
+                    <h2 className="yzy-tab-content-title">整改报告</h2>
+                    <a target="_blank" download="图片" href={reportUrl} style={{ marginLeft: 8 }}>{reportUrl ? '下载地址' : '无'}</a>
+                </div>
             </div >
         )
     }
 }
 
-ReactDOM.render(<CheckplanDetail />, document.getElementById('root'));
+export default CheckplanSubDetail;

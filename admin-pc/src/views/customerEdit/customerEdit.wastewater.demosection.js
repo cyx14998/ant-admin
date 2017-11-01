@@ -6,7 +6,7 @@ import {
  * 模块测试
  */
 import connectEditableSectionApi from '../../components/hoc.editable.section';
-
+import connectEditableModalSectionApi from '../../components/hoc.editable.modal.section';
 import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
 
 import {
@@ -47,7 +47,10 @@ const itemDataModel = {
   tableId: '',
   theName: '',
   unitOfMeasurement: '',
-  designAnnualOutput: ''
+  designAnnualOutput: {
+    value: '',
+    options: []
+  }
 };
 
 /**
@@ -59,6 +62,7 @@ const dataSource = [{
   unitOfMeasurement: 'kg',
   designAnnualOutput: {
     value: 'so',
+    disabled: true,
     options: [{
       label: 'sosososo',
       value: 'so'
@@ -85,13 +89,13 @@ const InnerComponent = ({
     </div>
     <div>
 
-      <p>{itemVisible.toString()}</p>
+      <p>{(itemVisible && itemVisible.toString()) || 'hello'}</p>
 
       {
         itemVisible && <p>可控制隐藏显示---></p>
       }
     </div>
-    <Button onClick={showItemVisible}>showItemVisible</Button>
+    { showItemVisible && (<Button onClick={showItemVisible}>showItemVisible</Button>) }
   </div>
 );
 
@@ -129,7 +133,7 @@ const EditableDemoSection = connectEditableSectionApi({
       }).catch(err => {
         reject(err)
       })
-    })
+    });
     // return Promise.resolve({
     //   data: dataSource
     // })    
@@ -256,12 +260,106 @@ const UneditableDemoSection = connectUneditableSectionApi({
 /**
  * 可编辑模块 + 弹框
  */
+const EditableModalDemoSection = connectEditableModalSectionApi({
+  secTitle: '可编辑table模块 + modal',
+  columns: columns,
+  apiLoader: function () {
 
+    return new Promise((resolve, reject) => {
+      resolve({
+        code: 0,
+        data: dataSource
+      });
+      return;
+      
+      getProductBaseInfoList({}).then(res => {
+        console.log('getProductBaseInfoList res ---', res);
+
+        if (res.data.result !== 'success') {
+          resolve({
+            code: -1,
+            info: res.data.info,
+          })
+          return;
+        }
+
+        var data = res.data.mainProductBaseInfoList;
+        resolve({
+          code: 0,
+          data,
+        })
+      }).catch(err => {
+        reject(err)
+      })
+    }) 
+  },
+  apiSave: function (record) {
+    console.log('apiSave record ----', record);
+
+    return Promise.resolve({
+      code: 0,    
+    });
+
+    var self = this;
+
+    // 新增
+    if (record.tableId === '') {
+      return new Promise((resolve, reject) => {
+        getProductBaseInfoAdd({
+          ...record,
+        }).then(res => {
+          if (res.data.result !== 'success') {
+            resolve({
+              code: 1,
+              info: res.data.info,
+            });
+            return;
+          }
+
+          resolve({
+            code: 0 // success
+          })
+        }).catch(err => {
+          reject(err)
+        });
+      });
+    } else {
+      // 编辑
+    }
+  },
+  apiDel: function (tableId) {
+    console.log(`apiDel ${tableId}`);
+
+    return new Promise((resolve, reject) => {
+      getProductBaseInfoDelete(tableId).then(res => {
+        if (res.data.result !== 'success') {
+          resolve({
+            code: 1,
+            info: res.data.info,
+          });
+          return;
+        }
+
+        resolve({
+          code: 0 // success
+        });
+      }).catch(err => {
+        reject(err)
+      });
+    });
+  },
+  itemDataModel: itemDataModel,
+
+  // 弹窗组件
+  modalTitle: '某某模块',
+  modalComponent: InnerComponent
+});
 
 
 
 export {
   EditableDemoSection,
-  UneditableDemoSection
+  UneditableDemoSection,
+  EditableModalDemoSection
 }
 

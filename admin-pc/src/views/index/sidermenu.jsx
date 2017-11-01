@@ -13,19 +13,29 @@ const SubMenu = Menu.SubMenu;
 const menuConfig = [
   {
     sub: '客户管理',
-    icon: 'user',
+    icon: 'team',
     name: 'customer',
     key: '客户管理|/customer.html'
   }, {
     sub: '客户检查计划管理',
-    icon: 'bars',
+    icon: 'schedule',
     name: 'checkplan',
     key: '客户检查计划管理|/checkplan.html'
-  }, {
+  },{
+    sub: '我的检查任务',
+    icon: 'solution',
+    name: 'checkplanmy',
+    key: '我的检查任务|/checkplanmy.html'
+  },  {
     sub: '员工管理',
-    icon: 'user-add',
+    icon: 'contacts',
     name: 'staffmanagement',
     key: '员工管理|/staffmanagement.html',
+  }, {
+    sub: '部门管理',
+    icon: 'fork',
+    name: 'department',
+    key: '部门管理|/department.html',
   }, 
   // {
   //   sub: '导航测试',

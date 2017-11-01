@@ -1,5 +1,5 @@
 /**
- * 现场检查、监督信息
+ * 企业现场检查记录
  */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -16,6 +16,45 @@ import {
   MyToast
 } from '../../common/utils';
 
+const columns = [{
+  title: '编号',
+  dataIndex: 'num',
+  render: (text, record, index) => (index + 1)
+}, {
+  title: '企业名称',
+  dataIndex: 'customer.customerName',
+}, {
+  title: '执行者名称',
+  dataIndex: 'performer.realName',
+}, {
+  title: '监管记录',
+  dataIndex: 'regulatoryRecordURL',
+  render: (text, record) => (
+    <a target="_blank" download="文件" href={record.regulatoryRecordURL}>{record.regulatoryRecordURL ? '下载地址' : '无'}</a>
+  )
+}, {
+  title: '反馈单',
+  dataIndex: 'feedbackSheetURL',
+  render: (text, record) => (
+    <a target="_blank" download="文件" href={record.feedbackSheetURL}>{record.feedbackSheetURL ? '下载地址' : '无'}</a>
+  )
+},
+//  {
+//   title: '整改报告',
+//   dataIndex: 'correctionReportURL',
+// },
+{
+  title: '执行状态',
+  dataIndex: 'theState',
+},
+{
+  title: '创建时间',
+  dataIndex: 'createDatetime',
+},
+{
+  title: '备注',
+  dataIndex: 'theRemarks',
+},];
 class SiteInspection extends React.Component {
   constructor(props) {
     super(props);
@@ -35,63 +74,22 @@ class SiteInspection extends React.Component {
         })
         return;
       }
+
       this.setState({ dataSource: res.data.inspectionPlanDtlList })
-      resolve({
-        code: 0,
-        data,
-      })
+
     }).catch(err => {
       MyToast('接口调用失败')
-    })
+    });
   }
+
+
   render() {
-    const columns = [{
-      title: '编号',
-      dataIndex: 'serialNumber',
-      width: '10%'
-    }, {
-      title: '监管日期',
-      dataIndex: 'InspectionDate',
-      width: '10%'
-    }, {
-      title: '监管记录',
-      dataIndex: 'recordURL',
-      width: '10%'
-    }, {
-      title: '反馈单',
-      dataIndex: 'feedBackRecordURL',
-      width: '10%'
-    }, {
-      title: '整改报告',
-      dataIndex: 'correctionReportURL',
-      width: '10%'
-    }, {
-      title: '约谈记录',
-      dataIndex: 'interviewRecordURL',
-      width: '10%'
-    }, {
-      title: '检查支队处理情况',
-      dataIndex: 'supervisionProcessing',
-      width: '10%'
-    }, {
-      title: '行政处罚',
-      dataIndex: 'administrativePenaltiesURL',
-      width: '10%'
-    }, {
-      title: '信访记录',
-      dataIndex: 'petitionRecordURL',
-      width: '10%'
-    }, {
-      title: '操作',
-      dataIndex: 'operation',
-      width: '10%'
-    }];
+
     return (
       <div className="yzy-tab-content-item-wrap">
         <div className="baseinfo-section">
-          <h2 className="yzy-tab-content-title">排放口基本信息</h2>
+          <h2 className="yzy-tab-content-title">现场检查</h2>
           <Table
-            pagination={false}
             columns={columns}
             dataSource={this.state.dataSource}
             rowKey="tableId" />

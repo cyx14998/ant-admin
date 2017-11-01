@@ -1227,7 +1227,7 @@ export function getSiteInspectionList({
   pageNumber=1, 
   countPerPage=1000,
 }){
-  return axios.get('/uCustomerSiteInspectionList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uCustomerSuperviseList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
@@ -1240,29 +1240,21 @@ export function getSiteInspectionList({
 * 新增现场检查、监管信息
 */
 export function getSiteInspectionAdd({
-  serialNumber,
-  InspectionDate,
-  recordURL,
-  feedBackRecordURL,
-  correctionReportURL,
-  interviewRecordURL,
-  supervisionProcessing,
-  administrativePenaltiesURL,
-  petitionRecordURL,
+  theType,
+  filePath,
+  fileName,
+  fileSize,
+  theRemarks,
 }){
-  return axios.get('/uCustomerSiteInspectionAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uCustomerSuperviseAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),
-      serialNumber,
-      InspectionDate,
-      recordURL,
-      feedBackRecordURL,
-      correctionReportURL,
-      interviewRecordURL,
-      supervisionProcessing,
-      administrativePenaltiesURL,
-      petitionRecordURL,
+      theType,
+      filePath,
+      fileName,
+      fileSize,
+      theRemarks
     }
   })
 }
@@ -1272,29 +1264,21 @@ export function getSiteInspectionAdd({
 */
 export function getSiteInspectionUpdate({
   tableId,
-  serialNumber,
-  InspectionDate,
-  recordURL,
-  feedBackRecordURL,
-  correctionReportURL,
-  interviewRecordURL,
-  supervisionProcessing,
-  administrativePenaltiesURL,
-  petitionRecordURL,
+  theType,
+  filePath,
+  fileName,
+  fileSize,
+  theRemarks
 }){
-  return axios.get('/uCustomerSiteInspectionUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uCustomerSuperviseUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
-      serialNumber,
-      InspectionDate,
-      recordURL,
-      feedBackRecordURL,
-      correctionReportURL,
-      interviewRecordURL,
-      supervisionProcessing,
-      administrativePenaltiesURL,
-      petitionRecordURL,
+      theType,
+      filePath,
+      fileName,
+      fileSize,
+      theRemarks
     }
   })
 }
@@ -1303,14 +1287,30 @@ export function getSiteInspectionUpdate({
 * 删除现场检查、监管信息
 */
 export function getSiteInspectionDelete(id){
-  return axios.get('/uCustomerSiteInspectionDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uCustomerSuperviseDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId:id,
     }
   })
 }
-
+/* 
+* 获取检查、监管信息--------详情
+*/
+export function getSiteInspectionDetail({
+  pageNumber=1, 
+  countPerPage=1000,
+  tableId,
+}){
+  return axios.get('/uCustomerSuperviseDetail.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
 /********************** 列表项 **********************/
 
 /* 

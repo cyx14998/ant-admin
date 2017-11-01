@@ -1,6 +1,5 @@
-/**
- * 客户检查计划管理
- */
+
+// 客户检查计划管理
 import axios, {
   getToken,
   getCustomerId,
@@ -8,24 +7,22 @@ import axios, {
 } from './index';
 
 
-/**
- * 企业检查计划主表列表
- */
+ // 企业检查计划主表列表
 export function getCheckplanMainlist({
   pageNumber = 1,
   countPerPage = 1000,
+  lotNumber
 }) {
   return axios.get('/uInspectionPlanMstList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
-      countPerPage
+      countPerPage,
+      lotNumber
     }
   })
 }
-/**
- * 企业检查计划详情
- */
+ // 企业检查计划详情
 export function getCheckplanDetail({
   tableId,
 }) {
@@ -36,9 +33,8 @@ export function getCheckplanDetail({
     }
   })
 }
-/**
- * 企业检查计划主表增加
- */
+
+ // 企业检查计划主表增加
 export function getCheckplanMainAdd({
   serialNumber,
   lotNumber,
@@ -57,9 +53,8 @@ export function getCheckplanMainAdd({
     }
   })
 }
-/**
- * 企业检查计划主表编辑
- */
+
+// 企业检查计划主表编辑
 export function getCheckplanMainEdit({
   tableId,
   serialNumber,
@@ -80,9 +75,8 @@ export function getCheckplanMainEdit({
     }
   })
 }
-/**
- * 企业检查计划主表删除
- */
+
+// 企业检查计划主表删除
 export function getCheckplanMainDelete({
   tableId,
 }) {
@@ -94,13 +88,36 @@ export function getCheckplanMainDelete({
   })
 }
 /**************************** 检查计划子表 ***********************/
-/**
- * 企业检查计划子表列表
- */
+
+
+// 企业检查计划子表增加--批量
+export function getCheckplanSubAddMulti({
+inspectionPlanMstId
+}) {
+  return axios.get('/uInspectionPlanDtlAddBatch.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      inspectionPlanMstId,
+    }
+  })
+}
+// 企业检查计划子表增加--全部
+export function getCheckplanSubAddAll({
+inspectionPlanMstId
+}) {
+  return axios.get('/uInspectionPlanDtlAddAll.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      inspectionPlanMstId,
+    }
+  })
+}
+ // 企业检查计划子表列表
 export function getCheckplanSublist({
   pageNumber = 1,
   countPerPage = 1000,
   inspectionPlanMstId,
+  customerName,
 }) {
   return axios.get('/uInspectionPlanDtlList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -108,12 +125,12 @@ export function getCheckplanSublist({
       pageNumber,
       countPerPage,
       inspectionPlanMstId,
+      customerName
     }
   })
 }
-/**
- * 企业检查计划子表增加
- */
+
+// 企业检查计划子表增加
 export function getCheckplanSubAdd({
   inspectionPlanMstId,
   customerId,
@@ -132,9 +149,8 @@ export function getCheckplanSubAdd({
     }
   })
 }
-/**
- * 企业检查计划子表详情
- */
+
+// 企业检查计划子表详情
 export function getCheckplanSubDetail({
   pageNumber = 1,
   countPerPage = 1000,
@@ -149,9 +165,8 @@ export function getCheckplanSubDetail({
     }
   })
 }
-/**
- * 企业检查计划子表编辑
- */
+
+// 企业检查计划子表编辑
 export function getCheckplanSubEdit({
   tableId,
   feedbackSheetURL,
@@ -168,9 +183,8 @@ export function getCheckplanSubEdit({
     }
   })
 }
-/**
- * 企业检查计划子表删除
- */
+
+// 企业检查计划子表删除
 export function getCheckplanSubDelete({
   tableId,
 }) {
@@ -181,9 +195,20 @@ export function getCheckplanSubDelete({
     }
   })
 }
-/**
- * 企业检查计划子表分配执行者
- */
+
+// 企业检查计划子表完成
+export function getCheckplanSubComplete({
+  tableId,
+}) {
+  return axios.get('/uInspectionPlanDtlComplete.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+    }
+  })
+}
+
+ // 企业检查计划子表分配执行者 
 export function getCheckplanSubPerformer({
   tableId,
   performerId
@@ -197,8 +222,23 @@ export function getCheckplanSubPerformer({
   })
 }
 /**
- * 企业检查计划子表获取员工列表
+ * 企业检查计划子表分配执行者--批量
+ *  服务器内部错误
  */
+export function getCheckplanSubPerformerMulti({
+  tableIdArr,
+  performerId
+}) {
+  return axios.get('/uInspectionPlanDtlAllotPerformerBatch.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableIdArr,
+      performerId
+    }
+  })
+}
+
+// 企业检查计划子表获取员工列表
 export function getMemberList({
   pageNumber = 1,
   countPerPage = 1000,
@@ -208,6 +248,22 @@ export function getMemberList({
       token: getToken(),
       pageNumber,
       countPerPage,
+    }
+  })
+}
+
+ // 企业检查计划子表获取企业列表
+export function getCustomerList({
+  pageNumber = 1,
+  countPerPage = 1000,
+  inspectionPlanMstId
+}) {
+  return axios.get('/uCustomerListForInspectionPlan.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber,
+      countPerPage,
+      inspectionPlanMstId
     }
   })
 }
