@@ -2,26 +2,43 @@
  * 废水污染物排放情况
  */
 import React from 'react';
+import {
+  Modal
+} from 'antd';
 
-import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
+import connectEeditableSectionApi from '../../components/hoc.editable.section';
 
-//废水因子基本情况
+/**
+ * 废水污染物排放情况
+ *   - 废水因子基本情况
+ */
 import WasteWaterDischargeFactor from './customerEdit.dynamicinfo.wastewater.dischargefactor';
-//废水排放基本信息详情
-import WasteWaterDischargeDetail from './customerEdit.dynamicinfo.wastewater.discharge';
+
+/**
+ * 已弃用，基本信息自带编辑功能
+ * 废水排放基本信息详情
+ */
+// import WasteWaterDischargeDetail from './customerEdit.dynamicinfo.wastewater.discharge';
+
+
+import {
+  getWastewaterDischargeList, // 选择废水排放口
+} from '../../common/api/api.customer.plus';
 
 import { 
   getWastewaterDischargeRecordList,
   getWastewaterDischargeRecordDelete,
-} from '../../common/api/api.customer.dynamic.plus.js';
+  getWastewaterDischargeRecordAdd,
+  getWastewaterDischargeRecordUpdate,
+} from '../../common/api/api.customer.dynamic.plus';
 
 import {
+  getLocQueryByLabel,
+  convertObjectLabel,
   MyToast
 } from '../../common/utils';
 
-import {
-  getLocQueryByLabel
-} from '../../common/utils';
+const dynamicId = getLocQueryByLabel("dynamicId");
 
 /**
  * table head
@@ -29,27 +46,18 @@ import {
 const columns = [{
   title: '排放量',
   dataIndex: 'emissionAmount',
-  width: '10%'
 }, {
   title: '排放去向',
   dataIndex: 'emissionDestination',
-  width: '10%'
+}, {
+  title: '排放口',
+  dataIndex: 'portsNumber',
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
 
 /**
  * 新数据默认值
@@ -57,54 +65,122 @@ const options = [{
 const itemDataModel = {
   emissionAmount: '',
   emissionDestination: '',
+  portsNumber: {
+    value: '',
+    options: []
+  }
 };
 
-const InnerComponent = ({
-  editId,
-  itemVisible,
-  showItemVisible
-}) => (
-  <div>
-    <WasteWaterDischargeDetail showItemVisible={showItemVisible} editId={editId} />
-    {
-      editId === "" ? (itemVisible && (<div>
-        <WasteWaterDischargeFactor />
-      </div>)) : (<div>
-        <WasteWaterDischargeFactor apiListItemId={editId} />
-      </div>)
-    }
-  </div>
-);
-
-const WasteWaterDischargeRecord = connectUneditableSectionApi({
+const WasteWaterDischargeRecordBase = connectEeditableSectionApi({
   secTitle: '废水排放基本信息列表',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve,reject) => {
       //获取数据
-      var cusMId = getLocQueryByLabel("dynamicId");
-      getWastewaterDischargeRecordList({
-        customerMonthDclarationId: cusMId,
-      }).then(res => {
-        console.log('getWastewaterDischargeRecordList res ---', res);
+      if (!dynamicId) return;
 
+      //获取所有排放口
+      getWastewaterDischargeList({}).then(res => {
         if (res.data.result !== 'success') {
-          resolve({
-            code: -1,
-            info: res.data.info,
-          })
+          MyToast(res.data.info)
           return;
         }
 
-        var data = res.data.wasteWaterDischargeRecordList;
-        resolve({
-          code: 0,
-          data,
-        })
-      }).catch(err => {
-        MyToast('接口调用失败')
-      })
+        var data = res.data.wasteWaterDischargePortList;
+
+        var wasteWaterDischargePortListOptions = convertObjectLabel(data, 'tableId', 'serialNumber');
+
+        return wasteWaterDischargePortListOptions;
+      }).then(wasteWaterDischargePortListOptions => {
+        itemDataModel.portsNumber.options = wasteWaterDischargePortListOptions;
+
+        getWastewaterDischargeRecordList({
+          customerMonthDclarationId: dynamicId,
+        }).then(res => {
+          console.log('getWastewaterDischargeRecordList res ---', res);
+
+          if (res.data.result !== 'success') {
+            resolve({
+              code: -1,
+              info: res.data.info,
+            })
+            return;
+          }
+
+          var data = res.data.wasteWaterDischargeRecordList;
+
+          data = data.map(item => {
+            return {
+              ...item,
+              portsNumber: {
+                value: item.portsNumber,
+                disabled: true,
+                options: wasteWaterDischargePortListOptions
+              }
+            }
+          });
+
+          resolve({
+            code: 0,
+            data,
+          })
+        }).catch(err => {
+          MyToast('接口调用失败')
+        })        
+      }).catch(err => MyToast(err));      
     })
+  },
+  apiSave: function (record) {
+    // 新增
+    var self = this;
+
+    if (record.tableId === '') {
+      return new Promise((resolve, reject) => {
+        // 新增
+        getWastewaterDischargeRecordAdd({
+          ...record,
+          customerMonthDclarationId: dynamicId,
+          wasteWaterDischargePortId: record.portsNumber.value,
+        }).then(res => {
+          if (res.data.result !== 'success') {
+            resolve({
+              code: 1,
+              info: res.data.info,
+            });
+            return;
+          }
+
+          resolve({
+            code: 0 // success
+          })
+        }).catch(err => {
+          reject(err)
+        });
+      });
+    } else {
+      // 编辑
+      return new Promise((resolve, reject) => {
+        getWastewaterDischargeRecordUpdate({
+          ...record,
+          customerMonthDclarationId: dynamicId,
+          wasteWaterDischargePortId: record.portsNumber.value,
+        }).then(res => {
+          if (res.data.result !== 'success') {
+            resolve({
+              code: 1,
+              info: res.data.info,
+            });
+            return;
+          }
+
+          resolve({
+            code: 0 // success
+          })
+        }).catch(err => {
+          reject(err)
+        });
+      });
+    }
   },
   apiDel: function (tableId) {
     //删除
@@ -128,9 +204,55 @@ const WasteWaterDischargeRecord = connectUneditableSectionApi({
       });
     });
   },
-  // 弹窗组件
-  modalTitle: '废水排放基本情况',
-  modalComponent: InnerComponent
-})
+
+  itemDataModel: itemDataModel
+});
+
+class WasteWaterDischargeRecord extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      modalVisible: false,
+      eidtId: ''
+    }
+  }
+
+  onCheckClick(eidtId) {
+    if (eidtId === '') return;
+
+    this.setState({
+      modalVisible: true,
+      eidtId: eidtId
+    });
+  }
+
+  handleCancel() {
+    this.setState({
+      modalVisible: false,
+      eidtId: ''
+    })
+  }
+
+
+  render() {
+    return (
+      <div>
+        <WasteWaterDischargeRecordBase checkInNewpage={this.onCheckClick.bind(this)}  />
+
+        <Modal
+          width="90%"
+          visible={this.state.modalVisible}
+          title="废水排放因子"
+          onCancel={this.handleCancel.bind(this)}
+          footer={null}>
+          { this.state.eidtId === '' ? null : <WasteWaterDischargeFactor apiListItemId={this.state.eidtId} /> }
+        </Modal>
+      </div>
+    )
+  }
+}
+
+
 
 export default WasteWaterDischargeRecord;

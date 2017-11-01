@@ -4,6 +4,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 import RcSearchForm from '../../components/rcsearchform';
 
 // RcSearchForm datablob
@@ -15,31 +18,6 @@ const rcsearchformData = {
     name: 'lotNumber',
     rules: [{ required: true, message: '请输入批号' }],
   },
-    // {
-    //   type: 'input',
-    //   label: '统一社会信用代码',
-    //   name: 'uniformSocialCreditCode',
-    // }, {
-    //   type: 'select',
-    //   label: '单位类别',
-    //   name: 'unitCategory',
-    //   options:[
-    //     {
-    //       value: "我是value1",
-    //       label: "我是label1"
-    //     },
-    //   ]
-    // }, {
-    //   type: 'select',
-    //   label: '行业类别',
-    //   name: 'industryCategory',
-    //   options:[
-    //     {
-    //       value: "我是value2",
-    //       label: "我是label2"
-    //     },
-    //   ]
-    // }
   ]
 };
 
@@ -67,7 +45,6 @@ import {
 const columns = [{
   title: '编号',
   dataIndex: 'serialNumber',
-  disabled: true,
 }, {
   title: '批号',
   dataIndex: 'lotNumber',
@@ -86,17 +63,12 @@ const columns = [{
 }, {
   title: '备注',
   dataIndex: 'theRemarks',
-}, 
-// {
-//   title: '创建时间',
-//   dataIndex: 'createDatetime',
-//   width: '10%'
-// }, 
-{
+}, {
   title: '操作',
   dataIndex: 'operation',
   width: 120
 }];
+
 
 /**
  * 新数据默认值
@@ -105,12 +77,19 @@ const itemDataModel = {
   tableId: '',
   serialNumber: '',
   lotNumber: '',
-  planDateStart: '',
-  planDateEnd: '',
-  totalCount: '',
-  completeCount: '',
+  planDateStart: moment(new Date()).format(dateFormat),
+  planDateEnd: moment(new Date()).format(dateFormat),
+  totalCount:  {
+    cellType: 'input',
+    value: '',
+    disabled: true
+  },
+  completeCount: {
+    cellType: 'input',
+    value: '',
+    disabled: true
+  },
   theRemarks: '',
-  createDatetime: ''
 };
 //搜索功能未实现
 function getData(params) {
@@ -159,6 +138,27 @@ const EditableDemoSection = connectEditableSectionApi({
         }
 
         var data = res.data.inspectionPlanMstList;
+
+        data = data.map(item => {
+
+          item.serialNumber = {
+            cellType: 'input',
+            value: item.serialNumber,
+            disabled: true
+          }
+          item.totalCount = {
+            cellType: 'input',
+            value: item.totalCount,
+            disabled: true
+          }
+          item.completeCount = {
+            cellType: 'input',
+            value: item.completeCount,
+            disabled: true
+          }
+          return item;
+        });
+
         resolve({
           code: 0,
           data,
@@ -166,10 +166,7 @@ const EditableDemoSection = connectEditableSectionApi({
       }).catch(err => {
         reject(err)
       })
-    })
-    // return Promise.resolve({
-    //   data: dataSource
-    // })    
+    })  
   },
   apiSave: function (record) {
     console.log('apiSave record ----', record);

@@ -18,7 +18,6 @@ const Option = Select.Option;
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
 
-
 class EditableCell extends Component {
   constructor(props) {
     super(props)
@@ -31,12 +30,14 @@ class EditableCell extends Component {
     let {
       tableId,
       dataIndex,
+      disabled,
       value,
       onCellChange
     } = this.props;
 
     return (
       <Input
+        disabled={disabled}
         value={value}
         onChange={(e) => onCellChange(tableId, dataIndex, e.target.value)} />
     )
@@ -48,11 +49,16 @@ class EditableCell extends Component {
       dataIndex,
       value,
       options,
+      disabled,
       onCellChange
     } = this.props;
 
     return (
-      <Select style={{width: '100%'}} onSelect={(v) => onCellChange(tableId, dataIndex, v)} value={value || ''}>
+      <Select 
+        disabled={disabled ? true : false}
+        style={{width: '100%'}} 
+        onSelect={(v) => onCellChange(tableId, dataIndex, v)} 
+        value={value || ''}>
         {
           options.map((opt, i) => (
             <Option key={i} value={opt.value}>{opt.label}</Option>
@@ -66,12 +72,14 @@ class EditableCell extends Component {
     let {
       tableId,
       dataIndex,
+      disabled,
       value,
       onCellChange
     } = this.props;
 
     return (
       <DatePicker 
+        disabled={disabled}
         value={moment(value, dateFormat)}
         onChange={(date, dateString) => onCellChange(tableId, dataIndex, dateString)} />
     )
