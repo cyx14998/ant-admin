@@ -18,25 +18,43 @@ import {
 
 const columns = [{
   title: '编号',
-  dataIndex: 'serialNumber',
+  dataIndex: 'num',
+  render: (text, record, index) => (index + 1)
 }, {
-  title: '监管日期',
-  dataIndex: 'InspectionDate',
+  title: '企业名称',
+  dataIndex: 'customer.customerName',
+}, {
+  title: '执行者名称',
+  dataIndex: 'performer.realName',
 }, {
   title: '监管记录',
-  dataIndex: 'recordURL',
+  dataIndex: 'regulatoryRecordURL',
+  render: (text, record) => (
+    <a target="_blank" download="文件" href={record.regulatoryRecordURL}>{record.regulatoryRecordURL ? '下载地址' : '无'}</a>
+  )
 }, {
   title: '反馈单',
-  dataIndex: 'feedBackRecordURL',
-}, {
-  title: '整改报告',
-  dataIndex: 'correctionReportURL',
-}, {
-  title: '操作',
-  dataIndex: 'operation',
-  
-}];
-
+  dataIndex: 'feedbackSheetURL',
+  render: (text, record) => (
+    <a target="_blank" download="文件" href={record.feedbackSheetURL}>{record.feedbackSheetURL ? '下载地址' : '无'}</a>
+  )
+},
+//  {
+//   title: '整改报告',
+//   dataIndex: 'correctionReportURL',
+// },
+{
+  title: '执行状态',
+  dataIndex: 'theState',
+},
+{
+  title: '创建时间',
+  dataIndex: 'createDatetime',
+},
+{
+  title: '备注',
+  dataIndex: 'theRemarks',
+},];
 class SiteInspection extends React.Component {
   constructor(props) {
     super(props);
@@ -58,7 +76,7 @@ class SiteInspection extends React.Component {
       }
 
       this.setState({ dataSource: res.data.inspectionPlanDtlList })
-      
+
     }).catch(err => {
       MyToast('接口调用失败')
     });
@@ -66,13 +84,12 @@ class SiteInspection extends React.Component {
 
 
   render() {
-    
+
     return (
       <div className="yzy-tab-content-item-wrap">
         <div className="baseinfo-section">
-          <h2 className="yzy-tab-content-title">排放口基本信息</h2>
+          <h2 className="yzy-tab-content-title">现场检查</h2>
           <Table
-            pagination={false}
             columns={columns}
             dataSource={this.state.dataSource}
             rowKey="tableId" />

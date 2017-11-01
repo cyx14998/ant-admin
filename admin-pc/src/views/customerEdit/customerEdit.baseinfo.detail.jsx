@@ -74,6 +74,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             areaId: '',
             townId: '',
             uptoken: '',
+            onBaseinfoSave: this.props.onBaseinfoSave||'',
         });
 
         this.beforeUpload = this.beforeUpload.bind(this);
@@ -324,32 +325,33 @@ class CustomerEditBaseinfoDetail extends React.Component {
     }
     // 基本信息保存
     saveDetail(e) {
+        var self=this;
         e.preventDefault();
         const {
           form
-        } = this.props;
+        } = self.props;
 
         form.validateFields((err, values) => {
             if (err) return;
 
             var data = { ...values };
             // 地址
-            var provinceName = this.state.provinceId ? this.state.provinceList[data.provinceId - 1].theName : '';
+            var provinceName = self.state.provinceId ? self.state.provinceList[data.provinceId - 1].theName : '';
             var cityName = '';
-            this.state.cityId ?
-                this.state.cityList.map((item) => {
+            self.state.cityId ?
+                self.state.cityList.map((item) => {
                     if (item.tableId == data.cityId)
                         cityName = item.theName;
                 }) : '';
             var areaName = '';
-            this.state.areaId ?
-                this.state.areaList.map((item) => {
+            self.state.areaId ?
+                self.state.areaList.map((item) => {
                     if (item.tableId == data.areaId)
                         areaName = item.theName;
                 }) : '';
             var townName = '';
-            this.state.townId ?
-                this.state.townList.map((item) => {
+            self.state.townId ?
+                self.state.townList.map((item) => {
                     if (item.tableId == data.townId)
                         townName = item.theName;
                 }) : '';
@@ -357,8 +359,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
             //时间
             data.openingDate = data.openingDate ? data.openingDate.format('YYYY-MM-DD') : new Date();
             //图片
-            data.productionFlowChartURL = this.state.prodImgUrl;
-            data.factoryFloorPlanURL = this.state.positionImgUrl;
+            data.productionFlowChartURL = self.state.prodImgUrl;
+            data.factoryFloorPlanURL = self.state.positionImgUrl;
             console.log('when saveDetail ---', data);
 
             var cusId = getLocQueryByLabel('id');
@@ -370,6 +372,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                         return
                     }
                     MyToast('保存成功');
+                    self.state.onBaseinfoSave();
                 }).catch(err =>
                     MyToast(err)
                     )

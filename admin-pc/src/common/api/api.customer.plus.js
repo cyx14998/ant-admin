@@ -1243,7 +1243,8 @@ export function getSiteInspectionAdd({
   theType,
   filePath,
   fileName,
-  fileSize
+  fileSize,
+  theRemarks,
 }){
   return axios.get('/uCustomerSuperviseAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -1252,7 +1253,8 @@ export function getSiteInspectionAdd({
       theType,
       filePath,
       fileName,
-      fileSize
+      fileSize,
+      theRemarks
     }
   })
 }
@@ -1265,7 +1267,8 @@ export function getSiteInspectionUpdate({
   theType,
   filePath,
   fileName,
-  fileSize
+  fileSize,
+  theRemarks
 }){
   return axios.get('/uCustomerSuperviseUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -1274,7 +1277,8 @@ export function getSiteInspectionUpdate({
       theType,
       filePath,
       fileName,
-      fileSize
+      fileSize,
+      theRemarks
     }
   })
 }
@@ -1290,7 +1294,23 @@ export function getSiteInspectionDelete(id){
     }
   })
 }
-
+/* 
+* 获取检查、监管信息--------详情
+*/
+export function getSiteInspectionDetail({
+  pageNumber=1, 
+  countPerPage=1000,
+  tableId,
+}){
+  return axios.get('/uCustomerSuperviseDetail.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+      pageNumber,
+      countPerPage,
+    }
+  })
+}
 /********************** 列表项 **********************/
 
 /* 

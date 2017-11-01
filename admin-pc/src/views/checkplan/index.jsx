@@ -18,31 +18,6 @@ const rcsearchformData = {
     name: 'lotNumber',
     rules: [{ required: true, message: '请输入批号' }],
   },
-    // {
-    //   type: 'input',
-    //   label: '统一社会信用代码',
-    //   name: 'uniformSocialCreditCode',
-    // }, {
-    //   type: 'select',
-    //   label: '单位类别',
-    //   name: 'unitCategory',
-    //   options:[
-    //     {
-    //       value: "我是value1",
-    //       label: "我是label1"
-    //     },
-    //   ]
-    // }, {
-    //   type: 'select',
-    //   label: '行业类别',
-    //   name: 'industryCategory',
-    //   options:[
-    //     {
-    //       value: "我是value2",
-    //       label: "我是label2"
-    //     },
-    //   ]
-    // }
   ]
 };
 
@@ -104,8 +79,16 @@ const itemDataModel = {
   lotNumber: '',
   planDateStart: moment(new Date()).format(dateFormat),
   planDateEnd: moment(new Date()).format(dateFormat),
-  totalCount: '',
-  completeCount: '',
+  totalCount:  {
+    cellType: 'input',
+    value: '',
+    disabled: true
+  },
+  completeCount: {
+    cellType: 'input',
+    value: '',
+    disabled: true
+  },
   theRemarks: '',
 };
 //搜索功能未实现
@@ -154,22 +137,25 @@ const EditableDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data =  res.data.inspectionPlanMstList;
+        var data = res.data.inspectionPlanMstList;
 
         data = data.map(item => {
-          
+
           item.serialNumber = {
             cellType: 'input',
             value: item.serialNumber,
             disabled: true
           }
-
-          item.planDateEnd = {
-            cellType: 'datepicker',
-            value: item.planDateEnd,
+          item.totalCount = {
+            cellType: 'input',
+            value: item.totalCount,
             disabled: true
           }
-
+          item.completeCount = {
+            cellType: 'input',
+            value: item.completeCount,
+            disabled: true
+          }
           return item;
         });
 
@@ -180,10 +166,7 @@ const EditableDemoSection = connectEditableSectionApi({
       }).catch(err => {
         reject(err)
       })
-    })
-    // return Promise.resolve({
-    //   data: dataSource
-    // })    
+    })  
   },
   apiSave: function (record) {
     console.log('apiSave record ----', record);

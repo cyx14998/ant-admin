@@ -6,7 +6,8 @@ import React from 'react';
 import {
   Icon,
   Upload,
-  Modal
+  Modal,
+  Button
 } from 'antd';
 
 import {
@@ -84,6 +85,7 @@ class QiniuUploadFile extends React.Component {
     let {
       uploadedFileList,
       uploadTitle='上传',
+            acceptType='file/*',
       maxLength=1
     } = this.props;
 
@@ -104,10 +106,7 @@ class QiniuUploadFile extends React.Component {
             {
               uploadedFileList.length === maxLength ? null : 
               (
-                <div>
-                    <Icon type="plus" />
-                    <div className="ant-upload-text">{uploadTitle}</div>
-                </div>
+                <Button><Icon type="upload" /> Click to Upload </Button>
               )
             }
         </Upload>

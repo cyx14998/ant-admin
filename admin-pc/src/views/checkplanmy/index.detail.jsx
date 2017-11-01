@@ -25,6 +25,7 @@ const Option = Select.Option;
 import {
     getLocQueryByLabel, MyToast
 } from '../../common/utils';
+import QiniuUploadFile from '../../components/upload.file';
 
 const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 const uploadUrl = 'http://up.qiniu.com/';
@@ -33,21 +34,13 @@ const formItemLayout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
 }
-const uploadButton = (
-    <div>
-        <Icon type="plus" />
-        <div className="ant-upload-text">Upload</div>
-    </div>
-);
 
 import {
-    getMemberList,
     MyPlanModalEdit
 } from '../../common/api/api.checkplan.my';
 
 import {
     getQiNiuToken,
-    getCustomerList
 } from '../../common/api/api.customer';
 
 class CheckplanDetail extends React.Component {
@@ -55,16 +48,9 @@ class CheckplanDetail extends React.Component {
         super(props);
         this.state = ({
             data: {},
-            memberList: [],
-            prodPreviewImage: [], //反馈单
-            prodImgUrl: '',
             prodFileList: [],
-            positionPreviewImage: [], //检查单           
-            positionImgUrl: '',
             positionFileList: [], //检查单图
-            attachmentPreviewImage: [],//附件
-            attachmentImgUrl: '',
-            attachmentFileList: [],
+            reportFileList: [],
 
             getData: this.props.getData,
             TestCancel: this.props.TestCancel,
@@ -73,23 +59,15 @@ class CheckplanDetail extends React.Component {
         });
         this.beforeUpload = this.beforeUpload.bind(this);
         this.picReset = this.picReset.bind(this);
-        this.qiniuyunData = {
-            // key: Date.now(),
-            // token: 'xozWSPMxkMjIVoHg2JyXq4-7-oJaEADLOKHVR0vU:1AreAaaS0j5_bjgQsHSshM0zTZI=:eyJkZWxldGVBZnRlckRheXMiOjcsInNjb3BlIjoianNzZGsiLCJkZWFkbGluZSI6MTUwOTAxNTA3Mn0=',
-            // token:"W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:wxacrkBBNB8Pjby5ZJaQQd4NGLs=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDE1OTM2fQ==",
-        };
     }
 
     componentWillReceiveProps(nextProps) {
         var self = this;
-        self.beforeUpload();
+        // self.beforeUpload();
         self.setState({
             prodFileList: [],
-            prodImgUrl: '',
             positionFileList: [], //检查单图
-            positionImgUrl: '',
-            attachmentFileList: [],
-            attachmentImgUrl: '',
+            reportFileList: [],
         });
         if (self.state.recordEdit !== nextProps.recordEdit) {
             self.setState({
@@ -97,14 +75,13 @@ class CheckplanDetail extends React.Component {
             })
             self.picReset();
         }
-        self.picReset();
     }
     componentDidMount() {
         this.beforeUpload();
         this.setState({
             prodFileList: [],
             positionFileList: [], //检查单图
-            attachmentFileList: [],
+            reportFileList: [],
         })
         this.setState({
             recordEdit: this.props.recordEdit
@@ -120,16 +97,9 @@ class CheckplanDetail extends React.Component {
                 console.error('getqiniuyun uptoken error');
                 return;
             }
-
-            // this.setState({
-            //     uptoken: res.data.uptoken
-            // })
             this.setState({
                 token: res.data.uptoken
             })
-
-            console.log(res.data.uptoken);
-
         }).catch(err => console.log(err));
     }
     //图片、文件重置
@@ -144,12 +114,10 @@ class CheckplanDetail extends React.Component {
                     name: '反馈单',
                     url: recordEdit.feedbackSheetURL
                 }],
-                prodImgUrl: recordEdit.feedbackSheetURL
             });
         } else {
             self.setState({
-                prodFileList: null,
-                positionImgUrl: ''
+                prodFileList: [],
             });
         }
         if (recordEdit.regulatoryRecordURL) {
@@ -159,106 +127,112 @@ class CheckplanDetail extends React.Component {
                     name: '检查记录单',
                     url: recordEdit.regulatoryRecordURL
                 }],
-                positionImgUrl: recordEdit.regulatoryRecordURL
             });
         } else {
             self.setState({
-                positionFileList: null,
-                positionImgUrl: ''
+                positionFileList: [],
             });
         }
         if (recordEdit.rectificationReportURL) {
             self.setState({
-                attachmentFileList: [{
+                reportFileList: [{
                     uid: '1',
                     name: '整改报告',
                     url: recordEdit.rectificationReportURL
                 }],
-                attachmentImgUrl: recordEdit.rectificationReportURL
             });
         } else {
             self.setState({
-                attachmentFileList: null,
-                attachmentImgUrl: ''
+                reportFileList: [],
             });
         }
     }
-    //反馈表上传
-    handleProdPicChange({ fileList }) {
+
+    //反馈单
+    handleProdFileList({ fileList }) {
         this.setState({
             prodFileList: fileList,
         });
-
-        var index = fileList.length;
-        if (index > 0) {
-            if (fileList[index - 1].status === 'done') {
-                console.log(fileList[index - 1]);
-                console.log(fileList[index - 1].response);
-                // console.log(fileList[index - 1].response.result)
-                this.setState({
-                    prodImgUrl: downloadUrl + fileList[index - 1].response.filePath,
-                });
-            }
-        } else {
-            this.setState({
-                prodImgUrl: null,
-            });
-        }
     }
-
-    //检查单 上传
-    handlePositionPicChange({ fileList }) {
+    //检查表
+    handlePositionFileList({ fileList }) {
         this.setState({
             positionFileList: fileList,
         });
-        var tableId = this.state.recordEdit.tableId;
-        var index = fileList.length;
-        if (index > 0) {
-            if (fileList[index - 1].status === 'done') {
-                console.log(fileList[index - 1].response);
-                // console.log(fileList[index - 1].response.result)
-                this.setState({
-                    positionImgUrl: downloadUrl + fileList[index - 1].response.filePath,
-                });
-            }
-        } else {
-        }
     }
-    //附件上传
-    handleAttachmentPicChange({ fileList }) {
+    //整改报告
+    handleReportFileList({ fileList }) {
         this.setState({
-            attachmentFileList: fileList,
+            reportFileList: fileList,
         });
-
-        var index = fileList.length;
-        if (index > 0) {
-            if (fileList[index - 1].status === 'done') {
-                console.log(fileList[index - 1].response);
-                // console.log(fileList[index - 1].response.result)
-                this.setState({
-                    attachmentImgUrl: downloadUrl + fileList[index - 1].response.filePath,
-                });
-            }
-        } else {
-        }
     }
+
     // 基本信息保存
     saveDetail(e) {
         var self = this;
         e.preventDefault();
         const {
             form,
-        } = this.props;
+        } = self.props;
         form.validateFields((err, values) => {
             var data = { ...values };
             var data = {};
-            data.feedbackSheetURL = self.state.prodImgUrl;
-            data.regulatoryRecordURL = self.state.positionImgUrl;
-            data.rectificationReportURL = self.state.attachmentImgUrl;
+            //反馈单
+            var prodFileUrl = self.state.prodFileList[0];
+            if (!prodFileUrl) {
+                prodFileUrl = "";
+            } else {
+                prodFileUrl = prodFileUrl.url
+                // 上传
+                if (!prodFileUrl) {
+                    prodFileUrl = self.state.prodFileList[0].response.filePath;
+                }
+                if (!prodFileUrl) {
+                    prodFileUrl = ""
+                } else if (prodFileUrl.indexOf(downloadUrl) === -1) {
+                    prodFileUrl = downloadUrl + prodFileUrl;
+                }
+            }
+            //检查单
+            var positionFileUrl = self.state.positionFileList[0];
+            if (!positionFileUrl) {
+                positionFileUrl = "";
+            } else {
+                positionFileUrl = positionFileUrl.url
+                // 上传
+                if (!positionFileUrl) {
+                    positionFileUrl = self.state.positionFileList[0].response.filePath;
+                }
+                if (!positionFileUrl) {
+                    positionFileUrl = ""
+                } else if (positionFileUrl.indexOf(downloadUrl) === -1) {
+                    positionFileUrl = downloadUrl + positionFileUrl;
+                }
+            }
+            //整改报告
+            var reportFileUrl = self.state.reportFileList[0];
+            if (!reportFileUrl) {
+                reportFileUrl = "";
+            } else {
+                reportFileUrl = reportFileUrl.url
+                // 上传
+                if (!reportFileUrl) {
+                    reportFileUrl = self.state.reportFileList[0].response.filePath;
+                }
+                if (!reportFileUrl) {
+                    reportFileUrl = ""
+                } else if (reportFileUrl.indexOf(downloadUrl) === -1) {
+                    reportFileUrl = downloadUrl + reportFileUrl;
+                }
+            }
 
+            data.feedbackSheetURL = prodFileUrl;
+            data.regulatoryRecordURL = positionFileUrl;
+            data.rectificationReportURL = reportFileUrl;
             console.log(data)
+            
             if (err) return;
-            var myPlanSubTableId = this.state.recordEdit.tableId;
+            var myPlanSubTableId = self.state.recordEdit.tableId;
             if (myPlanSubTableId && myPlanSubTableId != undefined) {
                 MyPlanModalEdit({
                     ...data,
@@ -397,37 +371,21 @@ class CheckplanDetail extends React.Component {
                             <Col span={12}>
                                 <div className="baseinfo-section">
                                     <h2 className="yzy-tab-content-title">反馈单上传</h2>
-                                    <Upload
-                                        action='http://up.qiniup.com'
-                                        container="container"
-                                        fileList={this.state.prodFileList}
-                                        onChange={this.handleProdPicChange.bind(this)}
-
-                                        data={{
-                                            token: this.state.token,
-                                            key: Date.now()
-                                        }}
-                                    >
-                                        {(this.state.prodFileList && this.state.prodFileList.length) >= 1 ? null : <Button><Icon type="upload" /> Click to Upload </Button>}
-                                    </Upload>
+                                    <QiniuUploadFile
+                                        uploadTitle="反馈单上传"
+                                        uploadedFileList={this.state.prodFileList}
+                                        handleUploadedFileList={this.handleProdFileList.bind(this)}
+                                    />
                                 </div>
                             </Col>
                             <Col span={12}>
                                 <div className="baseinfo-section">
                                     <h2 className="yzy-tab-content-title">检查记录单</h2>
-                                    <Upload
-                                        action='http://up.qiniup.com'
-                                        container="container"
-                                        fileList={this.state.positionFileList}
-                                        onChange={this.handlePositionPicChange.bind(this)}
-
-                                        data={{
-                                            token: this.state.token,
-                                            key: Date.now()
-                                        }}
-                                    >
-                                        {(this.state.positionFileList && this.state.positionFileList.length) >= 1 ? null : <Button><Icon type="upload" /> Click to Upload </Button>}
-                                    </Upload>
+                                    <QiniuUploadFile
+                                        uploadTitle="检查记录单"
+                                        uploadedFileList={this.state.positionFileList}
+                                        handleUploadedFileList={this.handlePositionFileList.bind(this)}
+                                    />
                                 </div>
                             </Col>
                         </Row>
@@ -435,19 +393,11 @@ class CheckplanDetail extends React.Component {
                             <Col span={12}>
                                 <div className="baseinfo-section">
                                     <h2 className="yzy-tab-content-title">整改报告上传</h2>
-                                    <Upload
-                                        action='http://up.qiniup.com'
-                                        container="container"
-                                        fileList={this.state.attachmentFileList}
-                                        onChange={this.handleAttachmentPicChange.bind(this)}
-
-                                        data={{
-                                            token: this.state.token,
-                                            key: Date.now()
-                                        }}
-                                    >
-                                        {(this.state.attachmentFileList && this.state.attachmentFileList.length) >= 1 ? null : <Button><Icon type="upload" /> Click to Upload </Button>}
-                                    </Upload>
+                                    <QiniuUploadFile
+                                        uploadTitle="整改报告上传"
+                                        uploadedFileList={this.state.reportFileList}
+                                        handleUploadedFileList={this.handleReportFileList.bind(this)}
+                                    />
                                 </div>
                             </Col>
                         </Row>

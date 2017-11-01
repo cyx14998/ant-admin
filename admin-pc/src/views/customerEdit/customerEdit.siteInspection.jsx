@@ -11,7 +11,7 @@ import connectUneditableSectionApi from '../../components/hoc.uneditable.section
 //废气排放基本信息详情
 import SiteInspectionDetail from './customerEdit.siteinspection.detail';
 
-import { 
+import {
   getSiteInspectionList,
   getSiteInspectionDelete,
 } from '../../common/api/api.customer.plus.js';
@@ -25,16 +25,20 @@ import {
  */
 const columns = [{
   title: '文件名称',
-  dataIndex: 'theName',
+  dataIndex: 'fileName',
 }, {
   title: '文件类型',
   dataIndex: 'theType',
 }, {
   title: '文件大小',
-  dataIndex: 'theSize',
+  dataIndex: 'fileSize',
 }, {
   title: '文件路径',
   dataIndex: 'filePath',
+  type: 'downloadfile'
+}, {
+  title: '备注',
+  dataIndex: 'theRemarks',
 }, {
   title: '操作',
   dataIndex: 'operation',
@@ -49,7 +53,7 @@ const itemDataModel = {
   theName: '',
   theType: {
     value: '1',
-    options : [{
+    options: [{
       value: "1",
       label: '园区约谈情况'
     }, {
@@ -70,19 +74,20 @@ const itemDataModel = {
 const InnerComponent = ({
   editId,
 }) => (
-  <div>
-    <SiteInspectionDetail editId={editId} />
-  </div>
-);
+    <div>
+      <SiteInspectionDetail editId={editId} />
+    </div>
+  );
 
 const SiteInspection = connectUneditableSectionApi({
-  secTitle: '监管记录基本情况',
+  secTitle: '监管记录',
   columns: columns,
   apiLoader: function () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
       getSiteInspectionList({}).then(res => {
-        console.log('getAttachmentRecordList res ---', res);
+        console.log('getAttachmentRecordList res 监管记录列表 ---', res);
+
         if (res.data.result !== 'success') {
           resolve({
             code: -1,
@@ -92,12 +97,25 @@ const SiteInspection = connectUneditableSectionApi({
         }
 
         var data = res.data.customerSuperviseList;
-         data = data.map((item,index) => {
-          return {
-            ...item,
-            attachmentTypeId: item.attachmentType.tableId,
+
+        data.map((item, index) => {
+          if (item.theType == '0') {
+            item.theType = '整改报告'
+          } else if (item.theType == 1) {
+            item.theType = '园区约谈情况'
+          } else if (item.theType == 2) {
+            item.theType = '监察支队处理情况'
+          } else if (item.theType == 3) {
+            item.theType = '行政处罚情况'
+          } else if (item.theType == 4) {
+            item.theType = '信访记录'
           }
+          // return {
+          //   ...item,
+          //   attachmentTypeId: item.tableId,
+          // }
         })
+        console.log(data)
         resolve({
           code: 0,
           data,
