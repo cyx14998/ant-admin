@@ -74,6 +74,7 @@ export function getWastewaterDischargeRecordAdd({
 */
 export function getWastewaterDischargeRecordUpdate({
   tableId,
+  wasteWaterDischargePortId,
   emissionAmount,
   emissionDestination,
 }){
@@ -81,6 +82,7 @@ export function getWastewaterDischargeRecordUpdate({
     params: {
       token: getToken(),
       tableId,
+      wasteWaterDischargePortId,
       emissionAmount,
       emissionDestination,
     }
@@ -767,6 +769,23 @@ export function getBoundaryNoiseList({
   countPerPage=100
 }) {
   return axios.get('/uBoundaryNoiseList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      customerId: getCustomerId(),
+      pageNumber,
+      countPerPage
+    }
+  })
+}
+
+/**
+ * 固体废物列表  select.option 选项使用
+ */
+export function getWasteSolidList({
+  pageNumber=1,
+  countPerPage=100
+}) {
+  return axios.get('/uWasteSolidList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       customerId: getCustomerId(),

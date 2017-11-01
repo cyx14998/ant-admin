@@ -101,10 +101,10 @@ class Customerinfo extends React.Component {
                     <TabPane tab="企业内部环保管理制度" disabled={this.state.tabPaneDisabled} key="9">
                         <CustomerIEPS />
                     </TabPane>
-                    <TabPane tab="现场检查,监管信息" disabled={this.state.tabPaneDisabled} key="10">
+                    <TabPane tab="现场检查" disabled={this.state.tabPaneDisabled} key="10">
                         <CustomerInspectionPlanDtlFor />
                     </TabPane>
-                    <TabPane tab="检查记录" disabled={this.state.tabPaneDisabled} key="11">
+                    <TabPane tab="监管信息" disabled={this.state.tabPaneDisabled} key="11">
                         <CustomerSiteInspection />
                     </TabPane>
                 </Tabs>

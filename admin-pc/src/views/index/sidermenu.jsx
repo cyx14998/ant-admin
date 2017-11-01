@@ -26,6 +26,11 @@ const menuConfig = [
     icon: 'user-add',
     name: 'staffmanagement',
     key: '员工管理|/staffmanagement.html',
+  }, {
+    sub: '部门管理',
+    icon: 'bars',
+    name: 'department',
+    key: '部门管理|/department.html',
   }, 
   // {
   //   sub: '导航测试',

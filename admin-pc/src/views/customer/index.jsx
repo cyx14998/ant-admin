@@ -28,6 +28,10 @@ import {
   getCustomerList
 } from '../../common/api/api.customer';
 
+import {
+  MyToast
+} from '../../common/utils';
+
 const columns = [
   {
     title: '统一社会信用代码',
@@ -106,7 +110,7 @@ class CustomerList extends React.Component {
     getCustomerList(params).then(res => {
       console.log('getCustomerList ---', res)
       if (res.data.result !== 'success') {
-        alert(res.data.info || '接口失败')
+        MyToast(res.data.info || '接口失败')
         return;
       }
 
@@ -119,7 +123,7 @@ class CustomerList extends React.Component {
         })
       })
     }).catch(err => {
-      alert(res.data.info || '接口失败')
+      MyToast('接口失败')
     })
   }
 

@@ -19,7 +19,8 @@ const { Header, Sider, Content, Footer } = Layout;
 
 import {
   EditableDemoSection,
-  UneditableDemoSection
+  UneditableDemoSection,
+  EditableModalDemoSection
 } from '../customerEdit/customerEdit.wastewater.demosection';
 
 import SiderMenu from './sidermenu';
@@ -142,6 +143,11 @@ class Demo extends Component {
   }
 
   render() {
+    return (
+      <EditableModalDemoSection />
+    );
+
+
     return (
       <EditableDemoSection />
     )

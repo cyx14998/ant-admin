@@ -13,6 +13,7 @@ import ModalEdit from './modal.edit';
  * @params apiLoader
  * @params apiSave
  * @params apiDel
+ * @params itemDataModel
  * @params modalTitle
  * @params modalComponent
  */
@@ -35,6 +36,8 @@ function connectEditableModalSectionApi(options) {
      * show modaledit and pass tableId
      */
     onEdit(tableId) {
+      if (tableId === '') return;
+
       this.setState({
         modalShow: true,
         editId: tableId
@@ -57,6 +60,7 @@ function connectEditableModalSectionApi(options) {
             apiLoader={options.apiLoader}
             apiSave={options.apiSave}
             apiDel={options.apiDel}
+            itemDataModel={options.itemDataModel}
             onEdit={this.onEdit.bind(this)}
             hasModal={true} />
           <ModalEdit 
