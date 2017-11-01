@@ -81,7 +81,8 @@ class WasteWaterDischargeDetail extends React.Component {
           uploadedFileList: [{
             uid: '1',
             name: res.data.customerSupervise.fileName,
-            url: res.data.customerSupervise.filePath
+            size: res.data.customerSupervise.fileSize,
+            url: res.data.customerSupervise.filePath,
           }],
         });
       } else {
@@ -118,8 +119,8 @@ class WasteWaterDischargeDetail extends React.Component {
       console.log(fileOne)
       // 默认
       var uploadedFilePath = fileOne.url;
-      var fileSize = fileOne.fileSize;
-      var fileName = fileOne.fileName;
+      var fileSize = fileOne.size;
+      var fileName = fileOne.name;
 
       // 上传
       if (!uploadedFilePath) {
@@ -137,7 +138,7 @@ class WasteWaterDischargeDetail extends React.Component {
       if (tableId) {
         getSiteInspectionUpdate({
           tableId: tableId,
-          theType: values.theType,
+          theType: values.theType - 1,
           filePath: uploadedFilePath,
           fileName: fileName,
           fileSize: fileSize,
@@ -155,7 +156,7 @@ class WasteWaterDischargeDetail extends React.Component {
       } else {
         // 新增
         getSiteInspectionAdd({
-          theType: values.theType,
+          theType: values.theType - 1,
           filePath: uploadedFilePath,
           fileName: fileName,
           fileSize: fileSize,
@@ -188,17 +189,17 @@ class WasteWaterDischargeDetail extends React.Component {
               <Col span={8}>
                 <FormItem {...formItemLayout} label="文件类型">
                   {getFieldDecorator('theType', {
-                    initialValue: this.state.theType ? this.state.theType + "" : "0",
+                    initialValue: this.state.theType ? (this.state.theType + 1) + "" : "1",
                     rules: [{ required: true },
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
                     <Select>
-                      <Option value="0">整改报告</Option>                      
-                      <Option value="1">园区约谈情况</Option>
-                      <Option value="2">监察支队处理情况</Option>
-                      <Option value="3">行政处罚情况</Option>
-                      <Option value="4">信访记录</Option>
+                      <Option value="1">整改报告</Option>
+                      <Option value="2">园区约谈情况</Option>
+                      <Option value="3">监察支队处理情况</Option>
+                      <Option value="4">行政处罚情况</Option>
+                      <Option value="5">信访记录</Option>
                     </Select>
                     )}
                 </FormItem>
