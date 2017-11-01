@@ -44,6 +44,7 @@ class CheckplanSubDetail extends React.Component {
             data: {},
             prodImgUrl: '',
             positionImgUrl: '',
+            reportUrl: '',
 
             recordEdit: this.props.recordEdit || '',//新增子表返回的子表id用来显示底面的员工列表
         });
@@ -56,7 +57,7 @@ class CheckplanSubDetail extends React.Component {
             self.setState({
                 recordEdit: nextProps.recordEdit
             })
-            //图片
+            //文件
             if (nextProps.recordEdit.feedbackSheetURL) {
                 self.setState({
                     prodImgUrl: nextProps.recordEdit.feedbackSheetURL
@@ -75,6 +76,15 @@ class CheckplanSubDetail extends React.Component {
                     positionImgUrl: ''
                 });
             }
+            if (nextProps.recordEdit.rectificationReportURL) {
+                self.setState({
+                    reportUrl: nextProps.recordEdit.rectificationReportURL
+                });
+            } else {
+                self.setState({
+                    reportUrl: ''
+                });
+            }
         }
 
     }
@@ -88,7 +98,8 @@ class CheckplanSubDetail extends React.Component {
     render() {
         var recordEdit = this.state.recordEdit;
         var prodImgUrl = recordEdit.feedbackSheetURL;
-        var positionImgUrl=recordEdit.regulatoryRecordURL;
+        var positionImgUrl = recordEdit.regulatoryRecordURL;
+        var reportUrl = recordEdit.rectificationReportURL
         return (
             <div className="yzy-tab-content-item-wrap">
                 <div className="baseinfo-section">
@@ -100,12 +111,12 @@ class CheckplanSubDetail extends React.Component {
                         <Col span={8}>{recordEdit.theRemarks ? recordEdit.theRemarks : '无'}</Col>
                     </Row>
                     <h2 className="yzy-tab-content-title">反馈单下载</h2>
-                    <a href={prodImgUrl} style={{ marginLeft: 8 }}>{prodImgUrl?prodImgUrl:'无'}</a>
+                    <a target="_blank" download="图片" href={prodImgUrl} style={{ marginLeft: 8 }}>{prodImgUrl ? '下载地址' : '无'}</a>
                     <h2 className="yzy-tab-content-title">检查记录下载</h2>
-                    <a href={positionImgUrl} style={{ marginLeft: 8 }}>{positionImgUrl?positionImgUrl:'无'}</a>
+                    <a target="_blank" download="图片" href={positionImgUrl} style={{ marginLeft: 8 }}>{positionImgUrl ? '下载地址' : '无'}</a>
                     <h2 className="yzy-tab-content-title">整改报告</h2>
-                    <a href="#" style={{ marginLeft: 8 }}>整改报告地址</a>
-            </div>
+                    <a target="_blank" download="图片" href={reportUrl} style={{ marginLeft: 8 }}>{reportUrl ? '下载地址' : '无'}</a>
+                </div>
             </div >
         )
     }

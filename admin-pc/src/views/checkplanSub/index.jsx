@@ -42,7 +42,6 @@ import {
     getCheckplanSubPerformerMulti,
     getCheckplanSubAdd,
     getCheckplanSubAddAll,
-    getCheckplanSubComplete,
     getCustomerList,
 } from '../../common/api/api.checkplan';
 import CheckplanSubDetail from './index.detail'
@@ -141,9 +140,6 @@ class CustomerCheckPlanSub extends React.Component {
         this.getData({
             customerName: values.customerName,
             inspectionPlanMstId: checkplanId,
-            //   industryCategory: values.industryCategory,
-            //   uniformSocialCreditCode: values.uniformSocialCreditCode,
-            //   unitCategory: values.unitCategory
         });
     }
     //列表删除btn
@@ -160,11 +156,23 @@ class CustomerCheckPlanSub extends React.Component {
             self.setState({
                 checkplanSubList: self.state.checkplanSubList
             })
+            self.getCustomerList();
+
         }).catch(err => {
             alert(err || '接口失败')
         })
     }
-    //列表新增btn
+    //列表单个添加btn
+    subAddbtn() {
+        if (!this.state.customerList.length) {
+            MyToast('暂无可添加数据')
+        } else {
+            this.setState({
+                customerListModalVisible: true
+            })
+        }
+    }
+    //列表新增企业选择btn
     selectCustomer(record) {
         getCheckplanSubAdd({
             inspectionPlanMstId: checkplanId,//主表Id
@@ -187,40 +195,30 @@ class CustomerCheckPlanSub extends React.Component {
             MyToast("添加失败")
         });
     }
+    //全部新增btn
+    addAll() {
+        if (!this.state.customerList.length) {
+            MyToast('暂无可添加数据')
+        } else {
+            getCheckplanSubAddAll({ inspectionPlanMstId: checkplanId }).then(res => {
+                console.log('批量新增 res ---', res);
+                if (res.data.result !== 'success') {
+                    MyToast(res.data.info)
+                    return;
+                }
+                MyToast('批量新增成功');
+                this.getData({ inspectionPlanMstId: checkplanId });
+                this.getCustomerList();
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    }
     //列表单个执行者
     singlePerformSelect(tableId) {
         this.setState({
             multiModalVisible: true,
             checkSubId: tableId,
-        })
-    }
-    //列表完成btn
-    clickComplete(tableId) {
-        console.log(tableId)
-        getCheckplanSubComplete({ tableId: tableId }).then(res => {
-            console.log('getCheckplanSubComplete ---', res)
-            if (res.data.result !== 'success') {
-                alert(res.data.info || '接口失败')
-                return;
-            }
-            MyToast('完成');
-            this.getData({ inspectionPlanMstId: checkplanId })
-        }).catch(err => {
-            alert(err || '接口失败')
-        })
-    }
-    //全部新增btn
-    addAll() {
-        getCheckplanSubAddAll({ inspectionPlanMstId: checkplanId }).then(res => {
-            console.log('批量新增 res ---', res);
-            if (res.data.result !== 'success') {
-                MyToast(res.data.info)
-                return;
-            }
-            MyToast('批量新增成功');
-            this.getData({ inspectionPlanMstId: checkplanId })
-        }).catch(err => {
-            console.log(err)
         })
     }
     //执行者批量btn
@@ -301,20 +299,16 @@ class CustomerCheckPlanSub extends React.Component {
         const columns = [{
             title: '序号',
             dataIndex: 'num',
-            width: '10%',
             render: (text, record, index) => (index + 1)
         }, {
             title: '企业',
             dataIndex: 'customer.customerName',
-            width: '10%'
         }, {
             title: '执行者',
             dataIndex: 'performer.realName',
-            width: '10%',
         }, {
             title: '状态',
             dataIndex: 'theState',
-            width: '10%',
             render: (text, record, index) => (
                 <div>
                     {record.theState ? '已完成' : '执行中'}
@@ -323,15 +317,13 @@ class CustomerCheckPlanSub extends React.Component {
         }, {
             title: '备注',
             dataIndex: 'theRemarks',
-            width: '10%'
         }, {
             title: '创建时间',
             dataIndex: 'createDatetime',
-            width: '10%'
         }, {
             title: '操作',
             key: 'action',
-            width: '15%',
+            width: 120,
             render: (text, record, index) => (
                 <div>
                     <a onClick={this.showTestModal.bind(this, record)} style={{ marginRight: 8 }}>查看</a>
@@ -351,64 +343,66 @@ class CustomerCheckPlanSub extends React.Component {
                                 <a className="delete" href="#">删除</a>
                             </Popconfirm>
                         ) : null}
-                    <a style={{ marginLeft: 8 }} onClick={this.singlePerformSelect.bind(this, record.tableId)}>执行者</a>
-                    <a style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}>完成</a>
+                    <a style={{ marginLeft: 8 }} onClick={this.singlePerformSelect.bind(this, record.tableId)}>分配</a>
                 </div>
             )
         }];
         const memberData = [{
+            title: '序号',
+            dataIndex: 'num',
+            render: (text, record, index) => (index + 1)
+        }, {
             title: '姓名',
             dataIndex: 'realName',
-            width: '10%'
         }, {
             title: '性别',
             dataIndex: 'sex',
-            width: '10%'
+            render: (text, record, index) => (
+                <div>
+                    {record.theState == 1 ? '男' : '女'}
+                </div>
+            )
         }, {
             title: '年龄',
             dataIndex: 'age',
-            width: '10%'
         }, {
             title: '手机号',
             dataIndex: 'phoneNumber',
-            width: '10%'
         }, {
             title: '操作',
             dataIndex: 'operation',
-            width: '20%',
+            width: 60,
             render: (text, record) => (
                 <Button type="primary" onClick={this.selectPerformer.bind(this, record.tableId)} >选择</Button>
             )
         }];
         const customersData = [{
+            title: '序号',
+            dataIndex: 'num',
+            render: (text, record, index) => (index + 1)
+        }, {
             title: '企业名称',
             dataIndex: 'customerName',
-            width: '10%'
         }, {
             title: '统一社会信用代码',
             dataIndex: 'uniformSocialCreditCode',
-            width: '15%'
         }, {
             title: '单位地址',
             dataIndex: 'unitAddress',
-            width: '20%'
         }, {
             title: '传真',
             dataIndex: 'fax',
-            width: '5%'
         }, {
             title: '联系人',
             dataIndex: 'contactPerson',
             key: 'contactPerson',
-            width: '10%'
         }, {
             title: '电话',
             dataIndex: 'phoneNumber',
-            width: '10%'
         }, {
             title: '操作',
             dataIndex: 'operation',
-            width: '20%',
+            width: 60,
             render: (text, record) => (
                 <Button type="primary" onClick={this.selectCustomer.bind(this, record)} >选择</Button>
             )
@@ -417,7 +411,6 @@ class CustomerCheckPlanSub extends React.Component {
         const rowSelection = {
             onChange(selectedRowKeys) {
                 console.log(`selectedRowKeys changed: ${selectedRowKeys}`);
-                console.log(self.state.performerId)
                 self.state.checkSubIdArr = selectedRowKeys;
             },
             // onSelect(record, selected, selectedRows) {
@@ -448,13 +441,13 @@ class CustomerCheckPlanSub extends React.Component {
                     <div className="yzy-list-btns-wrap">
                         <Button type="primary">导出excel</Button>
                         <Button type="primary" style={{ marginLeft: 8 }}
-                            onClick={() => this.setState({ customerListModalVisible: true })}>新增</Button>
+                            onClick={this.subAddbtn.bind(this)}>新增</Button>
                         <Modal
                             title="子表数据新增，选择企业"
                             width='70%'
                             visible={this.state.customerListModalVisible}
                             onCancel={() => this.setState({ customerListModalVisible: false })}
-                            footer={null}                            
+                            footer={null}
                             className='modal'
                         >
                             <Table
@@ -465,7 +458,7 @@ class CustomerCheckPlanSub extends React.Component {
                         {/* <Popconfirm title="确定新增全部" onConfirm={this.addAll.bind(this)}>
                         </Popconfirm> */}
                         <Button type="primary" onClick={this.addAll.bind(this)} style={{ marginLeft: 8 }}>新增(全部)</Button>
-                        <Button type="primary" onClick={this.performerbtn.bind(this)} style={{ marginLeft: 8 }}>执行者管理</Button>
+                        <Button type="primary" onClick={this.performerbtn.bind(this)} style={{ marginLeft: 8 }}>批量分配任务</Button>
                         <Modal
                             title="执行者管理"
                             width='70%'

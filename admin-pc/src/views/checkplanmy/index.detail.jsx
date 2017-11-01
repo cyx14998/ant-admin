@@ -59,16 +59,11 @@ class CheckplanDetail extends React.Component {
         });
         this.beforeUpload = this.beforeUpload.bind(this);
         this.picReset = this.picReset.bind(this);
-        this.qiniuyunData = {
-            // key: Date.now(),
-            // token: 'xozWSPMxkMjIVoHg2JyXq4-7-oJaEADLOKHVR0vU:1AreAaaS0j5_bjgQsHSshM0zTZI=:eyJkZWxldGVBZnRlckRheXMiOjcsInNjb3BlIjoianNzZGsiLCJkZWFkbGluZSI6MTUwOTAxNTA3Mn0=',
-            // token:"W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:wxacrkBBNB8Pjby5ZJaQQd4NGLs=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDE1OTM2fQ==",
-        };
     }
 
     componentWillReceiveProps(nextProps) {
         var self = this;
-        self.beforeUpload();
+        // self.beforeUpload();
         self.setState({
             prodFileList: [],
             positionFileList: [], //检查单图
@@ -105,9 +100,6 @@ class CheckplanDetail extends React.Component {
             this.setState({
                 token: res.data.uptoken
             })
-
-            console.log(res.data.uptoken);
-
         }).catch(err => console.log(err));
     }
     //图片、文件重置
@@ -191,7 +183,6 @@ class CheckplanDetail extends React.Component {
                 prodFileUrl = "";
             } else {
                 prodFileUrl = prodFileUrl.url
-                console.log('prodFileUrl', prodFileUrl)
                 // 上传
                 if (!prodFileUrl) {
                     prodFileUrl = self.state.prodFileList[0].response.filePath;
@@ -208,7 +199,6 @@ class CheckplanDetail extends React.Component {
                 positionFileUrl = "";
             } else {
                 positionFileUrl = positionFileUrl.url
-                console.log('positionFileUrl', positionFileUrl)
                 // 上传
                 if (!positionFileUrl) {
                     positionFileUrl = self.state.positionFileList[0].response.filePath;
@@ -225,7 +215,6 @@ class CheckplanDetail extends React.Component {
                 reportFileUrl = "";
             } else {
                 reportFileUrl = reportFileUrl.url
-                console.log('reportFileUrl', reportFileUrl)
                 // 上传
                 if (!reportFileUrl) {
                     reportFileUrl = self.state.reportFileList[0].response.filePath;
@@ -236,12 +225,12 @@ class CheckplanDetail extends React.Component {
                     reportFileUrl = downloadUrl + reportFileUrl;
                 }
             }
-            console.log(reportFileUrl);
 
             data.feedbackSheetURL = prodFileUrl;
             data.regulatoryRecordURL = positionFileUrl;
             data.rectificationReportURL = reportFileUrl;
             console.log(data)
+            
             if (err) return;
             var myPlanSubTableId = self.state.recordEdit.tableId;
             if (myPlanSubTableId && myPlanSubTableId != undefined) {

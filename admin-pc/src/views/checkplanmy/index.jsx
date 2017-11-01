@@ -8,12 +8,9 @@ import {
     Pagination,
     Row,
     Col,
-    Popconfirm,
-    Checkbox,
     Modal,
     Form,
     Icon,
-    Upload
 } from 'antd';
 const FormItem = Form.Item;
 
@@ -37,14 +34,7 @@ import { getLocQueryByLabel } from '../../common/utils';
 
 import {
     MyPlanlist,
-    // getCheckplanDetail,
-    // getCheckplanSubDelete,
-    // getCheckplanSubPerformer,    
-    // getCheckplanSubPerformerMulti,
-    // getCheckplanSubAdd,
-    // getCheckplanSubAddAll,
     getCheckplanSubComplete,
-    // getCustomerList,
 } from '../../common/api/api.checkplan.my';
 import CheckplanDetailForm from './index.detail'
 
@@ -57,21 +47,10 @@ class CustomerCheckPlanMy extends React.Component {
             checkplanMyList: [], //子表数据列表
             editModalVisible: false,
             performerId: '',
-            // checkSubIdArr: [], //批量选择的key
-            checkSubId: [],
-            // multiModalVisible: false, //批量管理modal显隐
-            // customerList: [], //企业列表
-            // customerListModalVisible: false,
-            // checkplanDetail: {},
-
-            attachmentImgUrl: '', // 子组件 附件上传数据
-            prodImgUrl: '',  //  子组件  反馈单数据
-            positionImgUrl: '' // 子组件  检查记录表数据
-
+            checkSubIdArr: [],
         }
 
         this.getData = this.getData.bind(this);
-        // this.getCustomerList = this.getCustomerList.bind(this);
         this.showTestModal = this.showTestModal.bind(this);
     }
 
@@ -95,22 +74,6 @@ class CustomerCheckPlanMy extends React.Component {
             alert(err || '接口失败')
         })
     }
-    // //获取企业列表    
-    // getCustomerList() {
-    //     getCustomerList({ inspectionPlanMstId: checkplanId }).then(res => {
-    //         console.log('getCustomerList res ---', res);
-
-    //         if (res.data.result !== 'success') {
-    //             console.log(res.data.info, )
-    //             return;
-    //         }
-    //         this.setState({
-    //             customerList: res.data.customerList,
-    //         });
-    //     }).catch(err => {
-    //         console.log(err)
-    //     })
-    // }
     //头部搜索
     handleFormSearch(values) {
         console.log('handleSearch ---------', values);
@@ -142,6 +105,7 @@ class CustomerCheckPlanMy extends React.Component {
     saveFormRef(form) {
         this.form = form.props.form;
     }
+    //编辑Modal页面隐藏
     TestCancel() {
         this.form.resetFields();
         this.setState({ editModalVisible: false });
@@ -155,8 +119,6 @@ class CustomerCheckPlanMy extends React.Component {
         });
     }
     render() {
-        // const checkplanDetail = this.state.checkplanDetail;
-        // console.log(checkplanDetail)
         var self = this;
 
         const columns = [{
@@ -179,11 +141,7 @@ class CustomerCheckPlanMy extends React.Component {
             title: '备注',
             dataIndex: 'theRemarks',
             width: '10%'
-        }, {
-            title: '执行者',
-            dataIndex: 'performer.realName',
-            width: '10%',
-        }, {
+        },{
             title: '状态',
             dataIndex: 'theState',
             width: '10%',
@@ -199,14 +157,6 @@ class CustomerCheckPlanMy extends React.Component {
             render: (text, record, index) => (
                 <div>
                     <a onClick={() => self.showTestModal(record)} style={{ marginRight: 8 }}>编辑</a>
-
-                    {/* {this.state.checkplanMyList.length > 1 ?
-                        (
-                            <Popconfirm title="Sure to delete?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
-                                <a className="delete" href="#">删除</a>
-                            </Popconfirm>
-                        ) : null} */}
-                    {/* <a style={{ marginLeft: 8 }} onClick={this.singlePerformSelect.bind(this, record.tableId)}>执行者</a> */}
                     <a style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}>完成</a>
                 </div>
             )
@@ -218,11 +168,6 @@ class CustomerCheckPlanMy extends React.Component {
             onChange(selectedRowKeys) {
                 console.log(`selectedRowKeys changed: ${selectedRowKeys}`);
                 console.log(self.state.performerId)
-                // if (selectedRowKeys.length > 0) {
-                //     this.setState({
-                //         multi: true
-                //     })
-                // }
                 self.state.checkSubIdArr = selectedRowKeys;
             },
             // onSelect(record, selected, selectedRows) {
@@ -234,17 +179,6 @@ class CustomerCheckPlanMy extends React.Component {
         };
         return (
             <div className="yzy-page">
-                {/* <div className="yzy-tab-content-item-wrap">
-                    <div className="baseinfo-section">
-                        <h2 className="yzy-tab-content-title">检查计划子表信息详情</h2>
-                        <Row style={{ marginTop: 20, marginBottom: 20, fontSize: 12 }}>
-                            <Col span={8}>
-                                <Col span={8}>企业名称：</Col>
-                                <Col span={12}>{checkplanDetail.lotNumber}</Col>
-                            </Col>
-                        </Row>
-                    </div>
-                </div> */}
                 <div className="yzy-search-form-wrap">
                     <RcSearchForm {...rcsearchformData}
                         handleSearch={this.handleFormSearch.bind(this)} />
