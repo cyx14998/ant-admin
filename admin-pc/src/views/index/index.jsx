@@ -139,6 +139,11 @@ class Page extends React.Component {
         window.iframeHook.backToLogin = function () {
             window.location.replace('/login.html');
         }
+
+        /**
+         * fix issues for iframe bug
+         */
+        window.document.getElementById('root').style.height = '100%';
     }
 
     onCollapse(collapsed) {
@@ -221,7 +226,7 @@ class Page extends React.Component {
                             id='innerFrame' 
                             src={this.state.url} 
                             frameBorder="0" 
-                            style={{ width: '100%', height: '100%', borderLeft: '1px solid #e9e9e9' }}></iframe>
+                            style={{ width: '100%', height: '100%',  borderLeft: '1px solid #e9e9e9' }}></iframe>
                     </Content>
                 </Layout>
             </Layout>

@@ -115,7 +115,8 @@ class Dynamicinfo extends React.Component {
         
         return (
             <div className="yzy-page">
-                <div className="yzy-tab-content-item-wrap">
+                <div className="yzy-tab-content-item-wrap" 
+                    style={{padding: 20, backgroundColor: '#fff', marginBottom: 20}}>
                   <h2 className="yzy-tab-content-title">选择动态月份</h2>
                   <div style={{padding: '20px'}}>
                     <Select 
@@ -132,26 +133,28 @@ class Dynamicinfo extends React.Component {
                     <Button style={{marginLeft: '20px'}} type="primary" onClick={this.refreshDynamicId.bind(this)}>确定</Button>
                   </div>
                 </div>
-                <Tabs defaultActiveKey="1">
-                    <TabPane tab="生产信息" key="1">
-                         <CustomerEditBaseinfoDetail onBaseinfoSave={this.setTabPaneActive.bind(this)} /> 
-                    </TabPane>
-                    <TabPane tab="废水污染物基本情况" disabled={this.state.tabPaneDisabled} key="2">
-                        <CustomerEditDynamicinfoWasteWater />
-                    </TabPane>
-                    <TabPane tab="废气污染物基本情况" disabled={this.state.tabPaneDisabled} key="3">
-                        <CustomerEditDynamicinfoWasteGas />
-                    </TabPane>
-                    <TabPane tab="固体废物基本情况" disabled={this.state.tabPaneDisabled} key="4">
-                        <CustomerEditDynamicinfoWasteSolidRecord />
-                    </TabPane>
-                    <TabPane tab="边界噪声基本情况" disabled={this.state.tabPaneDisabled} key="5">
-                        <CustomerEditDynamicinfoBoundaryNoise />
-                    </TabPane>
-                    <TabPane tab="企业附件基本情况" disabled={this.state.tabPaneDisabled} key="6">
-                        <CustomerEditDynamicinfoAttachment />
-                    </TabPane>
-                </Tabs>
+                <div style={{padding: 20, backgroundColor: '#fff'}}>
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="生产信息" key="1">
+                             <CustomerEditBaseinfoDetail onBaseinfoSave={this.setTabPaneActive.bind(this)} /> 
+                        </TabPane>
+                        <TabPane tab="废水污染物基本情况" disabled={this.state.tabPaneDisabled} key="2">
+                            <CustomerEditDynamicinfoWasteWater />
+                        </TabPane>
+                        <TabPane tab="废气污染物基本情况" disabled={this.state.tabPaneDisabled} key="3">
+                            <CustomerEditDynamicinfoWasteGas />
+                        </TabPane>
+                        <TabPane tab="固体废物基本情况" disabled={this.state.tabPaneDisabled} key="4">
+                            <CustomerEditDynamicinfoWasteSolidRecord />
+                        </TabPane>
+                        <TabPane tab="边界噪声基本情况" disabled={this.state.tabPaneDisabled} key="5">
+                            <CustomerEditDynamicinfoBoundaryNoise />
+                        </TabPane>
+                        <TabPane tab="企业附件基本情况" disabled={this.state.tabPaneDisabled} key="6">
+                            <CustomerEditDynamicinfoAttachment />
+                        </TabPane>
+                    </Tabs>
+                </div>
             </div>
         )
     }

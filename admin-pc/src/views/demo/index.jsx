@@ -90,7 +90,7 @@ const columns = [{
   dataIndex: 'edit',
   render: (text, record) => (
     <div>
-      <Button type="primary" onClick={() => alert(record.name)}>编辑</Button>
+      <Button type="primary" onClick={() => alert(record.name)}><Icon type="edit" className="yzy-icon" /></Button>
     </div>)
 }];
 
@@ -143,9 +143,9 @@ class Demo extends Component {
   }
 
   render() {
-    return (
-      <EditableModalDemoSection />
-    );
+    // return (
+    //   <EditableModalDemoSection />
+    // );
 
 
     return (

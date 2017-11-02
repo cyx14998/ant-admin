@@ -20,7 +20,7 @@ export function postTest() {
 export function getCustomerList({
   pageNumber = 1,
   countPerPage = 1000,
-  companyName = '',
+  customerName = '',
   uniformSocialCreditCode = '',
 }) {
   return axios.get('/uCustomerList.uhtm?InterfaceVersion=' + apiVer, {
@@ -28,11 +28,12 @@ export function getCustomerList({
       token: getToken(),
       pageNumber,
       countPerPage,
-      companyName,
+      customerName,
       uniformSocialCreditCode,
     }
   })
 }
+
 //获取七牛uptoken
 export function getQiNiuToken({}) {
   return axios.get('/uQiNiuTokenGet.uhtm?InterfaceVersion=' + apiVer, {

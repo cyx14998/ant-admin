@@ -13,6 +13,7 @@ moment.locale('zh-cn');
 import { 
   Table,
   Button, 
+  Icon,
   Popconfirm,
   Modal,
   DatePicker
@@ -79,11 +80,11 @@ class CustomerDynamicList extends Component {
       return (
         <div>
           <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteItem(record.tableId)}>
-            <a href="#">删除</a>
+            <a href="#"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>
           <a style={{marginLeft: '10px'}} onClick={() => changeParentState({
             dynamicId: record.tableId
-          })}>查看</a>
+          })}><Icon type="edit" className="yzy-icon" /></a>
         </div>
       )
     } 

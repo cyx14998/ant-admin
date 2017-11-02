@@ -63,11 +63,16 @@ class UneditableTable extends Component {
             return text;
           }
 
+          // 空数据处理
+          if (text === undefined && columns[i].dataIndex !== 'operation') {
+            return '';
+          }
+
 
           if (text === undefined && cannotDeleteble) {
             return (
               <div>
-                <a href="#" onClick={() => onEdit(record.tableId)}>查看</a>
+                <a href="#" onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
               </div>
             )
           }
@@ -77,10 +82,10 @@ class UneditableTable extends Component {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
-                  <a href="#">删除</a>
+                  <a href="#"><Icon type="delete" className="yzy-icon" /></a>
                 </Popconfirm>
 
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => onEdit(record.tableId)}>查看</a>
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
               </div>
             )
           }
