@@ -8,6 +8,7 @@ import {
   Row,
   Col,
   Button,
+  Icon,
   Form,
   Input,
   Modal,
@@ -18,7 +19,6 @@ import {
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
-
 
 import EditDepartmentMember from './edit.department.member';
 
@@ -98,7 +98,7 @@ class DepartmentEdit extends Component {
       return (
         <div>
           <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteStaffFromDepartment(record.tableId)}>
-            <a href="#">删除</a>
+            <a href="#"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>          
         </div>
       )
@@ -256,7 +256,7 @@ class DepartmentEdit extends Component {
               <Col span={12}>
                 <FormItem {...formItemLayout} label="上级部门">
                   {getFieldDecorator('fatherId', {
-                    initialValue: record.fatherId + '',
+                    initialValue: record.fatherId ? record.fatherId : '',
                     rules: [{required: true}]
                   })(
                     <Select placeholder="上级部门">

@@ -342,7 +342,7 @@ class CheckplanDetail extends React.Component {
                         <Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
                     </div>
                 </Form>
-            </div >
+            </div>
         )
     }
 }

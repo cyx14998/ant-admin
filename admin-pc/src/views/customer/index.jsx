@@ -5,6 +5,7 @@ import './index.less';
 import { 
   Table,
   Button, 
+  Icon,
   Pagination 
 } from 'antd';
 
@@ -67,8 +68,8 @@ const columns = [
     width: 120,
     render: (text, record) => (
       <div>
-        <a type="primary" onClick={() => changeIframeToEdit(record.tableId)}>编辑</a>
-        <a style={{marginLeft: '10px'}} type="primary" onClick={() => changeIframeToDynamic(record.tableId)}>查看动态</a>
+        <a type="primary" onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
+        <a style={{marginLeft: '10px'}} type="primary" onClick={() => changeIframeToDynamic(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
       </div>
     )
   }
@@ -106,9 +107,12 @@ class CustomerList extends React.Component {
   }
 
   getData(params) {
+    this.setState({
+      loading: true
+    });
     //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
     getCustomerList(params).then(res => {
-      console.log('getCustomerList ---', res)
+      // console.log('getCustomerList ---', res)
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '接口失败')
         return;
@@ -116,21 +120,19 @@ class CustomerList extends React.Component {
 
       this.setState({
         loading: false,
-        customerList: res.data.customerList.map((item, i) => {
-
-          item.key = i;
-          return item;
-        })
+        customerList: res.data.customerList,
       })
     }).catch(err => {
-      MyToast('接口失败')
+      MyToast('接口失败');
+      this.setState({
+        loading: false
+      });
     })
   }
 
   handleFormSearch(values) {
-    console.log('handleSearch ---------', values);
     this.getData({
-      companyName: values.companyName,
+      customerName: values.customerName,
       uniformSocialCreditCode: values.uniformSocialCreditCode,
     });
   }
@@ -145,17 +147,23 @@ class CustomerList extends React.Component {
         </div>
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
-            <Button type="primary">导出excel</Button>
-            <Button type="primary" style={{marginLeft: 8}}
+            {/* <Button type="primary"  style={{marginRight: 8}}>导出excel</Button> */}
+            <Button type="primary"
               onClick={() => {
-                console.log('-=========------- onClick');
                 return changeIframeToEdit('');
               }}>新增</Button>
           </div>
           <Table
             columns={columns} 
             dataSource={this.state.customerList}
-            loading={this.state.loading}/>
+            loading={this.state.loading}
+            rowKey="tableId"
+            rowClassName={(record, index) => {
+              if (index % 2 !== 0) {
+                return 'active'
+              }
+            }}
+            pagination={true}/>
         </div>
       </div>
     )

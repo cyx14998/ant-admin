@@ -331,10 +331,10 @@ class CustomerCheckPlanSub extends React.Component {
                     {this.state.checkplanSubList.length > 1 ?
                         (
                             <Popconfirm title="Sure to delete?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
-                                <a className="delete" href="#">删除</a>
+                                <a className="delete" href="#"><Icon type="delete" className="yzy-icon" /></a>
                             </Popconfirm>
                         ) : null}
-                    <a onClick={this.showTestModal.bind(this, record)} style={{ marginLeft: 8 }}>查看</a>
+                    <a onClick={this.showTestModal.bind(this, record)} style={{ marginLeft: 8 }}><Icon type="eye-o" className="yzy-icon" /></a>
                     <Modal
                         title="检查子表查看页面"
                         width='70%'
@@ -345,7 +345,9 @@ class CustomerCheckPlanSub extends React.Component {
                     >
                         <CheckplanSubDetail recordEdit={this.state.recordEdit} />
                     </Modal>
-                    <a style={{ marginLeft: 8 }} onClick={this.singlePerformSelect.bind(this, record.tableId)}>分配</a>
+
+                    <a style={{ marginLeft: 8 }} onClick={this.singlePerformSelect.bind(this, record.tableId)}><Icon type="link" className="yzy-icon" /></a>
+
                 </div>
             )
         }];

@@ -149,7 +149,7 @@ class CustomerCheckPlanMy extends React.Component {
             width: 120,
             render: (text, record, index) => (
                 <div>
-                    <a onClick={() => self.showTestModal(record)} style={{ marginRight: 8 }}>编辑</a>
+                    <a onClick={() => self.showTestModal(record)} style={{ marginRight: 8 }}><Icon type="edit" className="yzy-icon" /></a>
                     <a style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}>完成</a>
                 </div>
             )
@@ -170,6 +170,11 @@ class CustomerCheckPlanMy extends React.Component {
                         onTestClick={this.onTestClick}
                         dataSource={this.state.checkplanMyList}
                         rowKey="tableId"
+                        rowClassName={(record, index) => {
+                          if (index % 2 !== 0) {
+                            return 'active'
+                          }
+                        }}
                         loading={this.state.loading} />
                 </div>
                 {

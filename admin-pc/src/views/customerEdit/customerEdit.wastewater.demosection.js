@@ -56,7 +56,7 @@ const itemDataModel = {
 const dataSource = [{
   tableId: 'id-001',
   theName: '名称--',
-  unitOfMeasurement: 'kg',
+  // unitOfMeasurement: 'kg',
   designAnnualOutput: {
     value: 'so',
     disabled: true,
