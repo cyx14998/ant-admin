@@ -302,8 +302,10 @@ class CustomerEditBaseinfoDetail extends React.Component {
                         MyToast(res.data.info);
                         return
                     }
+                    console.log('123456----------------',res.data)
                     MyToast('保存成功');
-                    self.state.onBaseinfoSave();
+                    self.state.onBaseinfoSave(); //控制其他tabs可用
+                    localStorage.setItem("yt-customerId", res.data.tableId);
                 }).catch(err =>
                     MyToast(err)
                     )
