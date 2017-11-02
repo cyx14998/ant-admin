@@ -4,7 +4,7 @@
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getWasteGasDischargeFactorRecordList,
   getWasteGasDischargeFactorRecordAdd,
   getWasteGasDischargeFactorRecordDelete,
@@ -82,7 +82,7 @@ const itemDataModel = {
   emissionAmount: '',
   isOverproof: {
     value: '1',
-    options : [{
+    options: [{
       value: "1",
       label: '是'
     }, {
@@ -95,14 +95,14 @@ const itemDataModel = {
 const WasteGasDemoSection = connectEditableSectionApi({
   secTitle: '废气排放因子基本情况',
   columns: columns,
-  apiLoader: function ({apiListItemId}) {
+  apiLoader: function ({ apiListItemId }) {
     var editId = apiListItemId;
-    if(editId === undefined){
+    if (editId === undefined) {
       editId = localStorage.getItem('wastewater-discharge-editId');
     }
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
-      getWasteGasDischargeFactorRecordList({wasteGasDischargeRecordId: editId}).then(res => {
+      getWasteGasDischargeFactorRecordList({ wasteGasDischargeRecordId: editId }).then(res => {
         console.log('getWasteGasDischargeFactorRecordList res ---', res);
 
         if (res.data.result !== 'success') {
@@ -114,18 +114,18 @@ const WasteGasDemoSection = connectEditableSectionApi({
         }
 
         var data = res.data.wasteGasDischargeFactorRecordList;
-        data = data.map((item,index) => {
+        data = data.map((item, index) => {
           return {
             ...item,
             isOverproof: {
-              value: item.isOverproof === true ? "1" : "0" ,
-              options : [{
+              value: item.isOverproof === true ? "1" : "0",
+              options: [{
                 value: "1",
                 label: "是"
               }, {
                 value: "0",
                 label: "否"
-              }] 
+              }]
             }
           }
         })
@@ -143,16 +143,18 @@ const WasteGasDemoSection = connectEditableSectionApi({
     console.log('apiSave record ----', record);
     record.isOverproof = record.isOverproof.value;
     var self = this;
-    if(record.apiListItemId === undefined){
+    if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     }
-    record.wasteGasDischargePortId = record.apiListItemId;
+    var wasteGasDischargeRecordId = record.apiListItemId;
+    delete record.apiListItemId;
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWasteGasDischargeFactorRecordAdd({
           ...record,
+           wasteGasDischargeRecordId
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({

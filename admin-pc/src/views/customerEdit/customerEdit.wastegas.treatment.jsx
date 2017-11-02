@@ -12,6 +12,9 @@ import {
   getWastewaterTreatmentUpdate,
 } from '../../common/api/api.customer.plus.js';
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 import {
   MyToast,
   convertObjectLabel
@@ -65,7 +68,7 @@ const itemDataModel = {
   governanceType: '',
   approachId: '',
   designProcessingPower: '',
-  putInUseDate: '',
+  putInUseDate:  moment(new Date()).format(dateFormat),
   standingBookURL: '',
 };
 
@@ -95,7 +98,7 @@ const WasteGasTreatment = connectEditableSectionApi({
           value: "1",
           options: convertObjectLabel(approachList)
         };
-        itemDataModel.approachId = approachData;  //噪声源性质
+        itemDataModel.approachId = approachData;  
         wwTreatmentData = wwTreatmentData.map( item => {
           return {
             ...item,
