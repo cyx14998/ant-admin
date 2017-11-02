@@ -12,7 +12,7 @@ import {
   Popconfirm
 } from 'antd';
 
-import Draggable from 'react-draggable'; // The default
+import DraggableModal from '../../components/modal.draggable';
 
 import './index.less';
 
@@ -229,7 +229,7 @@ class Department extends Component {
             loading={this.state.loading} />
         </div>
 
-        <Modal
+        <DraggableModal
           width="90%"
           visible={this.state.editModalVisible}
           title={this.state.editModalTitle}
@@ -244,7 +244,7 @@ class Department extends Component {
               addRecord={this.addNewDepartmentRecord.bind(this)}
               editRecord={this.editDepartmentRecord.bind(this)} />
           }
-        </Modal>
+        </DraggableModal>
       </div>
     )
   }
