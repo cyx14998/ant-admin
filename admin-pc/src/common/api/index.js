@@ -7,7 +7,7 @@ import {
   getLocQueryByLabel
 } from '../utils';
 
-axios.defaults.baseURL = 'http://ythb.zhiqifu.com';
+axios.defaults.baseURL = 'http://106.14.199.230:8080/ythb'; // 'http://ythb.zhiqifu.com';
 axios.defaults.timeout = 1000 * 5;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
