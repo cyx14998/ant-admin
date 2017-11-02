@@ -51,7 +51,14 @@ class StaffCertEdit extends React.Component {
     this.state = {
       uploadedFileList: [],
       
-      data: {},
+      data: {
+        theName: '',
+        serialNumber: '',
+        professionalCategory: '',
+        certificationUnit: '',
+        repetitionCycle: '',
+        expiryDatetime: new Date()
+      },
     }
 
     this._getStaffCertDetails = this._getStaffCertDetails.bind(this);
@@ -79,14 +86,17 @@ class StaffCertEdit extends React.Component {
 
       var memberCertification = res.data.memberCertification;
 
-      this.setState({
-        data: memberCertification,
+      this.setState(prev => ({
+        data: {
+          ...prev.data,
+          ...memberCertification
+        },
         uploadedFileList: [{
           uid: -1,
           status: 'done',
-          url: memberCertification.filePath
+          url: memberCertification.filePath || ''
         }]
-      })
+      }))
     }).catch(err => {
       MyToast('获取证照详情失败')
     })
@@ -241,7 +251,7 @@ class StaffCertEdit extends React.Component {
               <Col span={12}>
                 <FormItem {...formItemLayout} label="截止日期">
                   {getFieldDecorator('expiryDatetime', {
-                    initialValue: moment(this.state.data.expiryDatetime || new Date(), dateFormat),
+                    initialValue: moment(this.state.data.expiryDatetime, dateFormat),
                   })(
                     <DatePicker format={dateFormat} placeholder="截止日期" />
                     )}
