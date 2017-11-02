@@ -68,7 +68,13 @@ class CheckplanDetail extends React.Component {
             positionImgUrl: '',
             prodFileList: [], //反馈工艺流程图
             positionFileList: [], //检查单图
-            checkplanSubEditInfo: {},
+
+            // 表单默认数据
+            checkplanSubEditInfo: {
+                name: '',
+                performerId: ''
+            },
+
             customerList: [], //企业列表
 
             checkSubId: getLocQueryByLabel('checkSubId') || '',//新增子表返回的子表id用来显示底面的员工列表
@@ -140,9 +146,16 @@ class CheckplanDetail extends React.Component {
                     return;
                 }
                 var checkplanSubEdit = res.data.inspectionPlanDtl;
-                self.setState({
-                    checkplanSubEditInfo: checkplanSubEdit,
-                });
+
+                d.customer.tableId;
+                self.setState(prev => ({
+                    checkplanSubEditInfo: {
+                        ...prev.checkplanSubEditInfo,
+                        ...checkplanSubEdit,
+                        performerId: (checkplanSubEdit.customer && checkplanSubEdit.customer.tableId + '') || ''
+                    },
+                }));
+
                 //图片
                 if (checkplanSubEdit.feedbackSheetURL) {
                     self.setState({
@@ -201,7 +214,7 @@ class CheckplanDetail extends React.Component {
             var performerId = self.state.checkplanSubEditInfo.performer.tableId;
 
             if (memberList.length !== 0) {
-                
+
                 memberList = memberList.map((item) => {
                     item.checked = false;
                     if (performerId) {
@@ -540,7 +553,13 @@ class CheckplanDetail extends React.Component {
                                     columns={columns}
                                     dataSource={this.state.memberList}
                                     rowKey="tableId"
-                                    loading={this.state.loading} />
+                                    loading={this.state.loading}
+                                    rowClassName={(record, index) => {
+                                        if (index % 2 !== 0) {
+                                            return 'active'
+                                        }
+                                    }}
+                                />
                                 <div className="yzy-block-center">
                                     <Button type="primary" style={{ padding: '0 40px' }} onClick={this.performerSave.bind(this)}>确定</Button>
                                 </div>

@@ -353,7 +353,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="企业名称">
                                     {getFieldDecorator('customerName', {
                                         initialValue: customer.customerName ? customer.customerName : '',
-                                        rules: [{ required: true },
+                                        rules: [{ required: true,message: '必填!' },
                                             //{ pattern: /^[0-9]*$/ } 
                                         ],
                                     })(
@@ -365,7 +365,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="社会信用代码">
                                     {getFieldDecorator('uniformSocialCreditCode', {
                                         initialValue: customer.uniformSocialCreditCode ? customer.uniformSocialCreditCode : '',
-                                        rules: [{ required: true, message: 'Please input your uniformSocialCreditCode!' },
+                                        rules: [{ required: true, message: '必填!' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         ],
                                     })(
@@ -377,7 +377,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="单位类别">
                                     {getFieldDecorator('unitCategory', {
                                         initialValue: customer.unitCategory ? customer.unitCategory : '',
-                                        //rules: [{ required: true, message: 'Please input your unitCategory!' },
+                                        //rules: [{ required: true, message: '必填!' },
                                         // pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -392,7 +392,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="中心纬度">
                                     {getFieldDecorator('latitude', {
                                         initialValue: customer.latitude ? customer.latitude + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your latitude!' },
+                                        //rules: [{ required: true, message: '必填!' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -404,7 +404,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="中心经度">
                                     {getFieldDecorator('longitude', {
                                         initialValue: customer.longitude ? customer.longitude + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your longitude!' },
+                                        //rules: [{ required: true, message: '必填!' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -416,7 +416,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="邮政编码">
                                     {getFieldDecorator('postalCode', {
                                         initialValue: customer.postalCode ? customer.postalCode + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your postalCode!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -431,7 +431,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="联系人">
                                     {getFieldDecorator('contactPerson', {
                                         initialValue: customer.contactPerson ? customer.contactPerson : '',
-                                        rules: [{ required: true, message: 'Please input your contactPerson!' },
+                                        rules: [{ required: true, message: '必填' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         ],
                                     })(
@@ -443,7 +443,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="电话">
                                     {getFieldDecorator('phoneNumber', {
                                         initialValue: customer.phoneNumber ? customer.phoneNumber : '',
-                                        rules: [{ required: true, message: 'Please input your phoneNumber!' },
+                                        rules: [{ required: true, message: '必填' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         ],
                                     })(
@@ -455,7 +455,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="传真">
                                     {getFieldDecorator('fax', {
                                         initialValue: customer.fax ? customer.fax : '',
-                                        //rules: [{ required: true, message: 'Please input your fax!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -470,7 +470,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="企业规模">
                                     {getFieldDecorator('enterpriseScale', {
                                         initialValue: customer.enterpriseScale ? customer.enterpriseScale : '',
-                                        //rules: [{ required: true, message: 'Please input your enterpriseScale!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -482,7 +482,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="管辖归属">
                                     {getFieldDecorator('jurisdictionAscriptionId', {
                                         initialValue: customer.jurisdictionAscriptionId ? customer.jurisdictionAscriptionId + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your jurisdictionAscriptionId!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -498,7 +498,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('provinceId', {
                                         //initialValue: this.state.provinceList[0] ? this.state.provinceList[0].tableId : '',
                                         initialValue: (this.state.provinceList && customer.provinceId ? customer.provinceId : '') + "",
-                                        //rules: [{ required: true, message: 'Please input your provinceId!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -512,7 +512,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('cityId', {
                                         initialValue: (this.state.cityList && customer.cityId ? customer.cityId : '') + "",
-                                        //rules: [{ required: true, message: 'Please input your cityId!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //    //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' }
                                         //],
                                     })(
@@ -526,7 +526,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('areaId', {
                                         initialValue: (this.state.areaList && customer.areaId ? customer.areaId : '') + "",
-                                        //rules: [{ required: true, message: 'Please input your areaId!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -541,7 +541,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('townId', {
                                         //initialValue: this.state.townList[0] ? this.state.provinceList[0].tableId : '',
                                         initialValue: (this.state.townId ? customer.townId : '') + "",
-                                        ////rules: [{ required: true, message: 'Please input your townId!' },
+                                        ////rules: [{ required: true, message: '必填' },
                                         ////{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //// ],
                                     })(
@@ -555,7 +555,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('address', {
                                         initialValue: customer.address ? customer.address : '',
-                                        //rules: [{ required: true, message: 'Please input your address!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -573,7 +573,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="行业类别">
                                     {getFieldDecorator('industryCategory', {
                                         initialValue: customer.industryCategory ? customer.industryCategory : '',
-                                        //rules: [{ required: true, message: 'Please input your industryCategory!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -585,7 +585,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="企业规模">
                                     {getFieldDecorator('enterpriseScale', {
                                         initialValue: customer.enterpriseScale ? customer.enterpriseScale : '',
-                                        //rules: [{ required: true, message: 'Please input your enterpriseScale!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -621,7 +621,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="重点级别">
                                     {getFieldDecorator('priorityLevel', {
                                         initialValue: customer.priorityLevel ? customer.priorityLevel : '',
-                                        //rules: [{ required: true, message: 'Please input your priorityLevel!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -633,7 +633,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="重点类型">
                                     {getFieldDecorator('priorityType', {
                                         initialValue: customer.priorityType ? customer.priorityType : '',
-                                        //rules: [{ required: true, message: 'Please input your priorityType!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -659,7 +659,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="废水排放口数量">
                                     {getFieldDecorator('wastewaterDischargePorts', {
                                         initialValue: customer.wastewaterDischargePorts ? customer.wastewaterDischargePorts + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your wastewaterDischargePorts!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -671,7 +671,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     <FormItem {...formItemLayoutInner} label="是否燃气电厂">
                                         {getFieldDecorator('isGasPowerPlant', {
                                             initialValue: (customer.isGasPowerPlant ? customer.isGasPowerPlant : 'true') + "",
-                                            //rules: [{ required: true, message: 'Please input your isGasPowerPlant!' },
+                                            //rules: [{ required: true, message: '必填' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                             //],
                                         })(
@@ -686,7 +686,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     <FormItem {...formItemLayoutInner} label="是否央企">
                                         {getFieldDecorator('isCentralEnterprises', {
                                             initialValue: (customer.isCentralEnterprises ? customer.isCentralEnterprises : 'true') + "",
-                                            //rules: [{ required: true, message: 'Please input your isCentralEnterprises!' },
+                                            //rules: [{ required: true, message: '必填' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                             //],
                                         })(
@@ -704,7 +704,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} label="是否30万千瓦以上电力">
                                     {getFieldDecorator('isMoreThan30PowerEnterprise', {
                                         initialValue: (customer.isMoreThan30PowerEnterprise ? customer.isMoreThan30PowerEnterprise : 'true') + "",
-                                        //rules: [{ required: true, message: 'Please input your isMoreThan30PowerEnterprise!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -731,7 +731,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="氮氧">
                                     {getFieldDecorator('aiAmmoniaNitrogen', {
                                         initialValue: customer.aiAmmoniaNitrogen ? customer.aiAmmoniaNitrogen + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your aiAmmoniaNitrogen!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -745,7 +745,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="氮氧化物">
                                     {getFieldDecorator('aiNitrogenOxide', {
                                         initialValue: customer.aiNitrogenOxide ? customer.aiNitrogenOxide + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your aiNitrogenOxide!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -769,7 +769,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="二氧化硫">
                                     {getFieldDecorator('aiSulfurDioxide', {
                                         initialValue: customer.aiSulfurDioxide ? customer.aiSulfurDioxide + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your aiSulfurDioxide!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -783,7 +783,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="悬浮物">
                                     {getFieldDecorator('aiSuspendedSolids', {
                                         initialValue: customer.aiSuspendedSolids ? customer.aiSuspendedSolids + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your aiSuspendedSolids!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -795,7 +795,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="其他">
                                     {getFieldDecorator('aiOther', {
                                         initialValue: customer.aiOther ? customer.aiOther : '',
-                                        //rules: [{ required: true, message: 'Please input your aiOther!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(

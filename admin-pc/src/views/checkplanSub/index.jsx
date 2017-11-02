@@ -363,7 +363,7 @@ class CustomerCheckPlanSub extends React.Component {
             dataIndex: 'sex',
             render: (text, record, index) => (
                 <div>
-                    {record.theState == 1 ? '男' : '女'}
+                    {record.theState === 1 ? '男' : '女'}
                 </div>
             )
         }, {
@@ -377,7 +377,7 @@ class CustomerCheckPlanSub extends React.Component {
             dataIndex: 'operation',
             width: 60,
             render: (text, record) => (
-                <Button type="primary" onClick={this.selectPerformer.bind(this, record.tableId)} >选择</Button>
+                <Button type="primary" onClick={this.selectPerformer.bind(this, record.tableId)} ></Button>
             )
         }];
         const customersData = [{
@@ -423,14 +423,6 @@ class CustomerCheckPlanSub extends React.Component {
                 self.state.SubCusSelectedRowKeysArr = selectedRowKeys;
             }
         }
-        // serialNumber	编号
-        // lotNumber	批号
-        // planDateStart	检查开始日期
-        // planDateEnd	检查结束日期
-        // totalCount	需检查企业总数
-        // completeCount	已完成检查数量
-        // theRemarks	备注
-        // createDatetime	创建时间
 
         return (
             <div className="yzy-page">
@@ -500,7 +492,13 @@ class CustomerCheckPlanSub extends React.Component {
                                 rowSelection={customersDataRowSelection}
                                 columns={customersData}
                                 dataSource={this.state.customerList}
-                                rowKey="tableId" />
+                                rowKey="tableId"
+                                rowClassName={(record, index) => {
+                                    if (index % 2 !== 0) {
+                                        return 'active'
+                                    }
+                                }}
+                            />
                         </Modal>
                         <Popconfirm title="确定新增全部" onConfirm={this.addAll.bind(this)}>
                             <Button type="primary" style={{ marginLeft: 8 }}>新增(全部)</Button>
@@ -517,7 +515,13 @@ class CustomerCheckPlanSub extends React.Component {
                             <Table
                                 columns={memberData}
                                 dataSource={this.state.memberList}
-                                rowKey="tableId" />
+                                rowKey="tableId"
+                                rowClassName={(record, index) => {
+                                    if (index % 2 !== 0) {
+                                        return 'active'
+                                    }
+                                }}
+                            />
                         </Modal>
                     </div>
                     <Table
@@ -526,8 +530,13 @@ class CustomerCheckPlanSub extends React.Component {
                         onTestClick={this.onTestClick}
                         dataSource={this.state.checkplanSubList}
                         rowKey="tableId"
-                        loading={this.state.loading} />
-                    {/* <Pagination></Pagination> */}
+                        loading={this.state.loading}
+                        rowClassName={(record, index) => {
+                          if (index % 2 !== 0) {
+                            return 'active'
+                          }
+                        }}
+                        />
                 </div>
             </div>
         )

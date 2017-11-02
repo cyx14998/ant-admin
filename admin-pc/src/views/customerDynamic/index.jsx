@@ -10,9 +10,9 @@ import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
-import { 
+import {
   Table,
-  Button, 
+  Button,
   Icon,
   Popconfirm,
   Modal,
@@ -47,7 +47,7 @@ const columns = [
   {
     title: '年',
     dataIndex: 'theYear',
-  }, 
+  },
   // {
   //   title: '季度',
   //   dataIndex: 'theQuarter',
@@ -82,12 +82,12 @@ class CustomerDynamicList extends Component {
           <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteItem(record.tableId)}>
             <a href="#"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>
-          <a style={{marginLeft: '10px'}} onClick={() => changeParentState({
+          <a style={{ marginLeft: '10px' }} onClick={() => changeParentState({
             dynamicId: record.tableId
           })}><Icon type="edit" className="yzy-icon" /></a>
         </div>
       )
-    } 
+    }
   }
 
   componentDidMount() {
@@ -177,23 +177,28 @@ class CustomerDynamicList extends Component {
       <div className="yzy-page">
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
-            <Button type="primary" style={{marginLeft: 8}}
+            <Button type="primary" style={{ marginLeft: 8 }}
               onClick={this.showModal.bind(this)}>新增</Button>
           </div>
           <Table
-            columns={columns} 
+            columns={columns}
             dataSource={this.state.customerDynamicList}
-            loading={this.state.loading} />
-          {/* <Pagination></Pagination> */}
+            loading={this.state.loading}
+            rowClassName={(record, index) => {
+              if (index % 2 !== 0) {
+                return 'active'
+              }
+            }}
+          />
         </div>
 
         <Modal visible={this.state.modalVisible} footer={null} onCancel={this.closeModal.bind(this)}>
-          <div style={{padding: '20px 20px 200px 20px'}}>
-            <span style={{marginRight: '10px'}}>请选择动态数据区间：</span>
-            <MonthPicker 
+          <div style={{ padding: '20px 20px 200px 20px' }}>
+            <span style={{ marginRight: '10px' }}>请选择动态数据区间：</span>
+            <MonthPicker
               defaultValue={moment(new Date(), monthFormat)}
               onChange={this.onMonthChange.bind(this)} />
-            <Button style={{marginLeft: '20px'}} type="primary" onClick={this.addDynamicItem.bind(this)}>保存</Button>
+            <Button style={{ marginLeft: '20px' }} type="primary" onClick={this.addDynamicItem.bind(this)}>保存</Button>
           </div>
         </Modal>
       </div>

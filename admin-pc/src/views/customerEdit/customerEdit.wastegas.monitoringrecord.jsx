@@ -15,6 +15,9 @@ import {
   MyToast
 } from '../../common/utils';
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 /**
  * table head
  */
@@ -55,7 +58,7 @@ const options = [{
  */
 const itemDataModel = {
   serialNumber: '',
-  monitoringDatetime: '',
+  monitoringDatetime: moment(new Date()).format(dateFormat),
   monitoringDepart: '',
   monitoringResult: '',
   monitoringReportURL: '',

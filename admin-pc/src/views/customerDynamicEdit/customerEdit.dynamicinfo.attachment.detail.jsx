@@ -42,10 +42,8 @@ import {
   getAttachmentTypeList
 } from '../../common/api/api.customer.dynamic.plus.js';
 
-import {
-  getQiNiuToken
-} from '../../common/api/api.customer.js';
 
+import QiniuUploadFile from '../../components/upload.file';
 const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 const uploadUrl = 'http://up.qiniu.com/';
 
@@ -66,27 +64,15 @@ class WasteWaterDischargeDetail extends React.Component {
     this.state = {
       data: {},
       tableId: '',
-      prodPreviewImage: [], //生产工艺
-      prodPreviewVisible: false,
-      prodImgUrl: '',
-      theSize: '',
-      theName: '',
-      prodFileList: [], //生产工艺流程图
+      uploadedFileList: [], //生产工艺流程图
       attachmentTypeId: [],//附件类型id
       attachmentTypeItem: "",
     }
-    this.beforeUpload = this.beforeUpload.bind(this);
-    this.qiniuyunData = {
-      // key: Date.now(),
-      // token: 'xozWSPMxkMjIVoHg2JyXq4-7-oJaEADLOKHVR0vU:1AreAaaS0j5_bjgQsHSshM0zTZI=:eyJkZWxldGVBZnRlckRheXMiOjcsInNjb3BlIjoianNzZGsiLCJkZWFkbGluZSI6MTUwOTAxNTA3Mn0=',
-      // token: "W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:AuMz5nKqsSrEQ6Y6mb-gBpJunIQ=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDEzMTkxfQ=="
-      // token:"W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:wxacrkBBNB8Pjby5ZJaQQd4NGLs=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDE1OTM2fQ==",
-    };
+
   }
 
   componentDidMount() {
     var tableId = this.props.editId;
-    this.beforeUpload();
     //获取附件类型id
     getAttachmentTypeList({}).then(res => {
       console.log('getAttachmentTypeList res ---', res);
@@ -96,10 +82,10 @@ class WasteWaterDischargeDetail extends React.Component {
       }
       var data = res.data.attachmentTypeList;
       var attachmentTypeId = [];
-      data.map((item,index) => {
+      data.map((item, index) => {
         attachmentTypeId.push(item.tableId);
       })
-      this.setState({attachmentTypeId: attachmentTypeId})
+      this.setState({ attachmentTypeId: attachmentTypeId })
     }).catch(err => {
       MyToast('接口调用失败')
     })
@@ -110,11 +96,26 @@ class WasteWaterDischargeDetail extends React.Component {
         MyToast(res.data.info)
         return;
       }
-      this.setState({ 
-        data: res.data.attachmentDynamicDetail, 
+      this.setState({
+        data: res.data.attachmentDynamicDetail,
         tableId: res.data.attachmentDynamicDetail.tableId,
         attachmentTypeItem: res.data.attachmentDynamicDetail.attachmentType.tableId
       })
+      //文件初始化
+      if (res.data.customerSupervise.filePath) {
+        self.setState({
+          uploadedFileList: [{
+            uid: '1',
+            name: res.data.customerSupervise.theName,
+            size: res.data.customerSupervise.theSize,
+            url: res.data.customerSupervise.filePath,
+          }],
+        });
+      } else {
+        self.setState({
+          uploadedFileList: [],
+        });
+      }
     }).catch(err => {
       MyToast('接口调用失败')
     })
@@ -136,10 +137,28 @@ class WasteWaterDischargeDetail extends React.Component {
       }
       //编辑
       values.customerMonthDclarationId = dynamicId;
-      if(!(this.state.prodImgUrl&&this.state.theName&&this.state.theSize)) return;
-      values.filePath = this.state.prodImgUrl;
-      values.theName = this.state.theName;
-      values.theSize = this.state.theSize;
+
+      var fileOne = this.state.uploadedFileList[0];
+      // 默认
+      var uploadedFilePath = fileOne.url;
+      var theSize = fileOne.size;
+      var theName = fileOne.name;
+
+      // 上传
+      if (!uploadedFilePath) {
+        uploadedFilePath = fileOne.response.filePath;
+      }
+
+      if (!uploadedFilePath) return MyToast('请上传附件');
+
+      if (uploadedFilePath.indexOf(downloadUrl) === -1) {
+        uploadedFilePath = downloadUrl + uploadedFilePath;
+        theSize = fileOne.size;
+        theName = fileOne.name;
+      }
+      values.filePath = uploadedFilePath
+      values.theName = theSize
+      values.theSize = theName
       console.log(values);
       if (this.state.tableId) {
         getAttachmentRecordUpdate({
@@ -173,65 +192,11 @@ class WasteWaterDischargeDetail extends React.Component {
     })
   }
 
-  beforeUpload(file) {
-    console.log(file)
-    //获取uptoken
-    // if (this.state.uptoken == '') {
-    getQiNiuToken({}).then(res => {
-      console.log('uptoken res------------------------', res);
-
-      if (!res.data || !res.data.uptoken) {
-        console.error('getqiniuyun uptoken error');
-        return;
-      }
-
-      // this.setState({
-      //     uptoken: res.data.uptoken
-      // })
-
-      this.qiniuyunData.token = res.data.uptoken;
-
-    }).catch(err => console.log(err));
-    // }
-  }
-  //生产图片上传
-  handleProdPicChange({ fileList }) {
-    console.log('handlePropicchange -----------------', fileList);
+  handleUploadedFileList({ fileList }) {
     this.setState({
-      prodFileList: fileList,
+      uploadedFileList: fileList,
     });
-    var index = fileList.length;
-    if (index > 0) {
-      if (fileList[index - 1].status === 'done') {
-        console.log(fileList[index - 1]);
-        console.log(fileList[index - 1].response);
-        // console.log(fileList[index - 1].response.result)
-        this.setState({
-          prodImgUrl: downloadUrl + fileList[index - 1].response.filePath,
-          theSize: fileList[index-1].size,
-          theName: fileList[index-1].name
-        });
-      } else {
-        console.log(1)
-      }
-    }
-    console.log(this.state.prodImgUrl);
   }
-  //生产图片取消预览
-  prodPicModalCancel() {
-    this.setState({
-      prodPreviewImage: [],
-      prodPreviewVisible: false,
-    })
-  }
-  //生产图片预览
-  handleProdPicPreview(file) {
-    this.setState({
-      prodPreviewImage: file.url || file.thumbUrl,
-      prodPreviewVisible: true,
-    })
-  }
-
   render() {
     let { getFieldDecorator } = this.props.form;
     return (
@@ -241,48 +206,35 @@ class WasteWaterDischargeDetail extends React.Component {
             <h2 className="yzy-tab-content-title">企业附件基本信息</h2>
             <Row>
               <Col span={12}>
-              <FormItem {...formItemLayout} label="附件类型Id">
-									{getFieldDecorator('attachmentTypeId', {
-										initialValue: this.state.attachmentTypeItem+'' || this.state.attachmentTypeId[0]+'',
-										rules: [{ required: true },
-										{/* { pattern: /^[0-9]*$/ } */ }
-										],
-									})(
+                <FormItem {...formItemLayout} label="附件类型Id">
+                  {getFieldDecorator('attachmentTypeId', {
+                    initialValue: this.state.attachmentTypeItem + '' || this.state.attachmentTypeId[0] + '',
+                    rules: [{ required: true },
+                    {/* { pattern: /^[0-9]*$/ } */ }
+                    ],
+                  })(
                     <Select>
                       {
-                        this.state.attachmentTypeId.map((item,index) =>{
-                           return(
+                        this.state.attachmentTypeId.map((item, index) => {
+                          return (
                             <Option key={index} value={item.toString()}>{item.toString()}</Option>
-                          ) 
+                          )
                         })
                       }
                     </Select>
-										)}
-								</FormItem>
+                    )}
+                </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span={12}>
                 <div className="baseinfo-section">
-                  <h2 className="yzy-tab-content-title">企业附件信息</h2>
-                  <Upload
-                    action='http://up.qiniup.com'
-                    container="container"
-                    listType="picture-card"
-                    fileList={this.state.prodFileList}
-                    onPreview={this.handleProdPicPreview.bind(this)}
-                    onChange={this.handleProdPicChange.bind(this)}
-
-                    data={{
-                      ...this.qiniuyunData,
-                      key: Date.now()
-                    }}
-                  >
-                    {this.state.prodFileList.length >= 1 ? null : uploadButton}
-                  </Upload>
-                  <Modal visible={this.state.prodPreviewVisible} footer={null} onCancel={this.prodPicModalCancel.bind(this)}>
-                    <img alt="example" style={{ width: '100%' }} src={this.state.prodPreviewImage} />
-                  </Modal>
+                  <h2 className="yzy-tab-content-title">企业附件信息（必填）</h2>
+                  <QiniuUploadFile
+                    uploadTitle="文件上传"
+                    uploadedFileList={this.state.uploadedFileList}
+                    handleUploadedFileList={this.handleUploadedFileList.bind(this)}
+                  />
                 </div>
               </Col>
             </Row>

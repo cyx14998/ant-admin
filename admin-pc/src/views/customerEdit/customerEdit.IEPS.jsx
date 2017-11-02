@@ -23,6 +23,7 @@ const columns = [{
 }, {
   title: '下载路径',
   dataIndex: 'filePath',
+  type: 'downloadfile'
 }, {
   title: '操作',
   dataIndex: 'operation',
