@@ -33,6 +33,8 @@ import {
 
 const dynamicId = getLocQueryByLabel("dynamicId");
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
 
 /**
  * table head
@@ -72,7 +74,7 @@ const columns = [{
  */
 const itemDataModel = {
   measuredExhaustVolume: '',
-  emissionTime: '',
+  emissionTime: moment(new Date()).format(dateFormat),
   exhaustEmission: '',
   dataSources: '',
   fuel: '',
