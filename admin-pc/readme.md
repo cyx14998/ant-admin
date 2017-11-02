@@ -96,38 +96,11 @@
 
 * 出库单模块
 
-## 进度计划
-
-
-## 进度条
-
-#### 企业信息管理模块
-
-<table>
-  <thead>
-    <tr>
-      <th>页面</th>
-      <th>完成度</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>登录</td>
-      <td>100%</td>
-    </tr>
-    <tr>
-      <td>企业信息查询</td>
-      <td>60%</td>
-    </tr>
-    <tr>
-      <td>排污单位基本情况</td>
-      <td>20%</td>
-    </tr>
-  </tbody>
-</table>
-
-
-
+## antd style fix
+* theme
+  - /node_modules/antd/style/default    @primary-color
+* validate
+  - /node_modules/rc-form/lit/utils '请正确输入', 
 
 ## 遗留问题
 * 动态 

@@ -13,7 +13,8 @@ import {
 } from 'antd';
 
 import {
-  getDepartmentStaffList
+  getDepartmentStaffList,
+  getDepartmentStaffAddBatch
 } from '../../common/api/api.department';
 
 import {
@@ -27,9 +28,20 @@ const columns = [{
   title: '手机号码',
   dataIndex: 'phoneNumber',
 }, {
-  title: '操作',
-  width: 120
+  title: '当前所属部门',
+  dataIndex: 'address'
 }];
+
+// rowSelection object indicates the need for row selection
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  },
+  getCheckboxProps: record => ({
+    disabled: record.name === 'Disabled User', // Column configuration not to be checked
+  }),
+};
+
 
 
 /**
@@ -41,28 +53,17 @@ class EditDepartmentMember extends Component {
 
     this.state = {
       loading: true,
-      dataSource: []
+      dataSource: [],
+      selectedRowKeys: [],
     }
 
-    this.addMember = this.addMember.bind(this);
     this._getDepartmentStaffList = this._getDepartmentStaffList.bind(this);
-
-    columns[3].render = (text, record) => {
-      return (
-        <div>
-          <a href="#" onClick={() => this.addMember(record.name)}>添加</a>
-        </div>
-      )
-    }
   }
 
   componentDidMount() {
     this._getDepartmentStaffList();
   }
 
-  addMember(id) {
-    alert(id)
-  }
 
   _getDepartmentStaffList() {
     getDepartmentStaffList({}).then(res => {
@@ -72,6 +73,7 @@ class EditDepartmentMember extends Component {
       }
 
       let memberList = res.data.memberList;
+
       this.setState({
         loading: false,
         dataSource: memberList
@@ -79,12 +81,51 @@ class EditDepartmentMember extends Component {
     }).catch(err => MyToast(err));
   }
 
+  onSelectChange(selectedRowKeys) {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    this.setState({ selectedRowKeys });
+  }
+
+  addMemberToDepartment() {
+    let {
+      departmentId
+    } = this.props;
+   
+    if (!departmentId) {
+      MyToast('请确认当前所在部门')
+      // return;
+      departmentId = 2;
+    }
+    getDepartmentStaffAddBatch({
+      departmentId: departmentId,
+      staffArr: this.state.selectedRowKeys.join(',')
+    }).then(res => {
+      if (res.data.result !== 'success') {
+        MyToast(res.data.info || '添加员工失败');
+        return;
+      }
+
+      MyToast('添加员工成功');
+    }).catch(err => MyToast(err));
+  }
+
   render() {
+    let selectedMembers = this.state.selectedRowKeys.length;
+
     return (
       <div>
+        <div className="yzy-list-btns-wrap" style={{paddingBottom: 10}}>
+          <Button type="primary"
+            onClick={this.addMemberToDepartment.bind(this)}>添加员工</Button>
+          {
+            (selectedMembers !== 0) && <span style={{marginLeft: 10}}>{`已选择${selectedMembers}个员工`}</span>
+          }
+        </div>
         <Table 
+          rowSelection={{onChange: this.onSelectChange.bind(this)}}
           columns={columns} 
-          dataSource={dataSource} />
+          dataSource={this.state.dataSource}
+          rowKey="tableId" />
       </div>
     )
   }
