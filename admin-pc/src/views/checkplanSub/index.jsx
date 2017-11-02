@@ -40,7 +40,7 @@ import {
     getCheckplanSubDelete,
     getCheckplanSubPerformer,
     getCheckplanSubPerformerMulti,
-    getCheckplanSubAdd,
+    getCheckplanSubAddMulti,
     getCheckplanSubAddAll,
     getCustomerList,
 } from '../../common/api/api.checkplan';
@@ -60,6 +60,7 @@ class CustomerCheckPlanSub extends React.Component {
             multiModalVisible: false, //批量管理modal显隐
             customerList: [], //企业列表
             customerListModalVisible: false, //企业列表Modal显隐
+            SubCusSelectedRowKeysArr: [], //子表新增企业选择--批量
             checkplanDetail: {}, //根据主表id获取的子表详情,展现于头部基础信息
         }
 
@@ -172,11 +173,12 @@ class CustomerCheckPlanSub extends React.Component {
             })
         }
     }
-    //列表新增企业选择btn
-    selectCustomer(record) {
-        getCheckplanSubAdd({
+    //列表新增企业确定btn -- 可批量
+    customerListModalOk() {
+        var customerIdArr = this.state.SubCusSelectedRowKeysArr.join(',');
+        getCheckplanSubAddMulti({
             inspectionPlanMstId: checkplanId,//主表Id
-            customerId: record.tableId, //企业Id
+            customerIdArr: customerIdArr, //企业Id数组
         }).then(res => {
             this.setState({
                 customerListModalVisible: false,
@@ -326,7 +328,13 @@ class CustomerCheckPlanSub extends React.Component {
             width: 120,
             render: (text, record, index) => (
                 <div>
-                    <a onClick={this.showTestModal.bind(this, record)} style={{ marginRight: 8 }}>查看</a>
+                    {this.state.checkplanSubList.length > 1 ?
+                        (
+                            <Popconfirm title="Sure to delete?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
+                                <a className="delete" href="#">删除</a>
+                            </Popconfirm>
+                        ) : null}
+                    <a onClick={this.showTestModal.bind(this, record)} style={{ marginLeft: 8 }}>查看</a>
                     <Modal
                         title="检查子表查看页面"
                         width='70%'
@@ -337,12 +345,6 @@ class CustomerCheckPlanSub extends React.Component {
                     >
                         <CheckplanSubDetail recordEdit={this.state.recordEdit} />
                     </Modal>
-                    {this.state.checkplanSubList.length > 1 ?
-                        (
-                            <Popconfirm title="Sure to delete?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
-                                <a className="delete" href="#">删除</a>
-                            </Popconfirm>
-                        ) : null}
                     <a style={{ marginLeft: 8 }} onClick={this.singlePerformSelect.bind(this, record.tableId)}>分配</a>
                 </div>
             )
@@ -399,14 +401,7 @@ class CustomerCheckPlanSub extends React.Component {
         }, {
             title: '电话',
             dataIndex: 'phoneNumber',
-        }, {
-            title: '操作',
-            dataIndex: 'operation',
-            width: 60,
-            render: (text, record) => (
-                <Button type="primary" onClick={this.selectCustomer.bind(this, record)} >选择</Button>
-            )
-        }];
+        },];
         var self = this;
         const rowSelection = {
             onChange(selectedRowKeys) {
@@ -420,17 +415,66 @@ class CustomerCheckPlanSub extends React.Component {
             //     console.log(selected, selectedRows);
             // }
         };
+        const customersDataRowSelection = {
+            onChange(selectedRowKeys) {
+                console.log(`CustomerSelectedRowKeys changed: ${selectedRowKeys}`);
+                self.state.SubCusSelectedRowKeysArr = selectedRowKeys;
+            }
+        }
+        // serialNumber	编号
+        // lotNumber	批号
+        // planDateStart	检查开始日期
+        // planDateEnd	检查结束日期
+        // totalCount	需检查企业总数
+        // completeCount	已完成检查数量
+        // theRemarks	备注
+        // createDatetime	创建时间
+
         return (
             <div className="yzy-page">
                 <div className="yzy-tab-content-item-wrap">
                     <div className="baseinfo-section">
                         <h2 className="yzy-tab-content-title">检查计划子表基本信息</h2>
-                        <Row style={{ marginTop: 20, marginBottom: 20, marginLeft: 8, marginRight: 8, fontSize: 12 }}>
-                            <Col span={1}>批号：</Col>
-                            <Col span={6}>{checkplanDetail.lotNumber}</Col>
-                            <Col span={3}>已完成检查数量：</Col>
-                            <Col span={6}>{checkplanDetail.completeCount}</Col>
-                        </Row>
+                        <div style={{ lineHeight: 2, paddingTop: 10, paddingBottom: 10, paddingLeft: 8, paddingRight: 8, marginBottom: 10, fontSize: 12, backgroundColor: '#fff' }}>
+                            <Row>
+                                <Col span={8}>
+                                    <Col span={3}>编号：</Col>
+                                    <Col span={6}>{checkplanDetail.serialNumber}</Col>
+                                </Col>
+                                <Col span={8}>
+                                    <Col span={8}>需检查企业总数：</Col>
+                                    <Col span={10}>{checkplanDetail.totalCount}</Col>
+                                </Col>
+                                <Col span={8}>
+                                    <Col span={8}>检查开始日期：</Col>
+                                    <Col span={10}>{checkplanDetail.planDateStart}</Col>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col span={8}>
+                                    <Col span={3}>批号：</Col>
+                                    <Col span={6}>{checkplanDetail.lotNumber}</Col>
+                                </Col>
+                                <Col span={8}>
+                                    <Col span={8}>已完成检查数量：</Col>
+                                    <Col span={10}>{checkplanDetail.completeCount}</Col>
+                                </Col>
+                                <Col span={8}>
+                                    <Col span={8}>检查结束日期：</Col>
+                                    <Col span={10}>{checkplanDetail.planDateEnd}</Col>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col span={16}>
+                                    <Col span={3}>备注：</Col>
+                                    <Col span={6}>{checkplanDetail.theRemarks}</Col>
+                                </Col>
+                                <Col span={8}>
+                                    <Col span={8}>计划创建时间：</Col>
+                                    <Col span={10}>{checkplanDetail.createDatetime}</Col>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
                 </div>
                 <div className="yzy-search-form-wrap">
@@ -438,7 +482,7 @@ class CustomerCheckPlanSub extends React.Component {
                         handleSearch={this.handleFormSearch.bind(this)} />
                 </div>
                 <div className="yzy-list-wrap">
-                    <div className="yzy-list-btns-wrap">
+                    <div className="yzy-list-btns-wrap" style={{ paddingTop: 10 }}>
                         <Button type="primary">导出excel</Button>
                         <Button type="primary" style={{ marginLeft: 8 }}
                             onClick={this.subAddbtn.bind(this)}>新增</Button>
@@ -447,17 +491,18 @@ class CustomerCheckPlanSub extends React.Component {
                             width='70%'
                             visible={this.state.customerListModalVisible}
                             onCancel={() => this.setState({ customerListModalVisible: false })}
-                            footer={null}
+                            onOk={this.customerListModalOk.bind(this)}
                             className='modal'
                         >
                             <Table
+                                rowSelection={customersDataRowSelection}
                                 columns={customersData}
                                 dataSource={this.state.customerList}
                                 rowKey="tableId" />
                         </Modal>
-                        {/* <Popconfirm title="确定新增全部" onConfirm={this.addAll.bind(this)}>
-                        </Popconfirm> */}
-                        <Button type="primary" onClick={this.addAll.bind(this)} style={{ marginLeft: 8 }}>新增(全部)</Button>
+                        <Popconfirm title="确定新增全部" onConfirm={this.addAll.bind(this)}>
+                            <Button type="primary" style={{ marginLeft: 8 }}>新增(全部)</Button>
+                        </Popconfirm>
                         <Button type="primary" onClick={this.performerbtn.bind(this)} style={{ marginLeft: 8 }}>批量分配任务</Button>
                         <Modal
                             title="执行者管理"

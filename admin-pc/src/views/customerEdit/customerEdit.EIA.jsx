@@ -24,48 +24,38 @@ import EIADetail from './customerEdit.EIADetail';
 const columns = [{
   title: '环评建设项目名称',
   dataIndex: 'theName',
-  width: '8%'
-}, {
+  }, {
   title: '环评等级',
   dataIndex: 'theLevel',
-  width: '5%'
-}, {
+  }, {
   title: '编制日期',
   dataIndex: 'editDatetime',
-  width: '7%'
-}, {
+  }, {
   title: '试生产批复-环保部门审批文号',
-  dataIndex: 'DocumentNumberTPA',
-  width: '12%'
+  dataIndex: 'DocumentNumberTPA',  
 }, {
   title: '试生产批复-审批时间',
   dataIndex: 'approvalTimeTPA',
-  width: '8%'
-}, {
+  }, {
   title: '环评批复-环保部门审批文号',
   dataIndex: 'DocumentNumberEIA',
-  width: '11%'
 }, {
   title: '环评批复-审批时间',
   dataIndex: 'approvalTimeEIA',
-  width: '10%'
 }, {
   title: '竣工验收批复-环保部门审批文号',
   dataIndex: 'DocumentNumberFAA',
-  width: '12%'
 }, {
   title: '竣工验收批复-审批时间',
-  dataIndex: 'approvalTimeFAA',
-  width: '10%'
+  dataIndex: 'approvalTimeFAA', 
 }, {
   title: '自主验收文件',
   dataIndex: 'SelfAcceptanceURL',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '6%'
-}];
+  width: 120
+  }];
 
 /**
  * 可选项

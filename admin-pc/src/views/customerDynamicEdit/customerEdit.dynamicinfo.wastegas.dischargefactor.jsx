@@ -21,7 +21,6 @@ import {
 const columns = [{
   title: '污染物名称',
   dataIndex: 'pollutantName',
-  width: '10%'
 }, {
   title: '标准值',
   dataIndex: 'standardValue',
@@ -33,35 +32,28 @@ const columns = [{
 }, {
   title: '实测浓度-排放浓度',
   dataIndex: 'measuredConcentration',
-  width: '10%'
 }, {
   title: '折算浓度-排放浓度',
   dataIndex: 'conversionConcentration',
-  width: '10%'
 }, {
   title: '排放速率标准值-排放速率',
   dataIndex: 'emissionRateStandardValue',
-  width: '10%'
 }, {
   title: '实际排放速率-排放速率',
   dataIndex: 'emissionRateActual',
-  width: '10%'
 }, {
   title: '数据来源',
   dataIndex: 'dataSources',
-  width: '5%'
 }, {
   title: '排放量(千克)',
   dataIndex: 'emissionAmount',
-  width: '5%'
 }, {
   title: '是否存在某一天超标',
   dataIndex: 'isOverproof',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '5%'
+  width: 120
 }];
 
 /**

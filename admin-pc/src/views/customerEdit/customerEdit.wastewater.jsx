@@ -33,39 +33,31 @@ import {
 const columns = [{
   title: '排水口编号',
   dataIndex: 'serialNumber',
-  width: '10%'
 }, {
   title: '排放口名称',
   dataIndex: 'theName',
-  width: '10%'
 }, {
   title: '排放口位置',
   dataIndex: 'outletLocation',
-  width: '10%'
 }, {
   title: '排放口去向',
   dataIndex: 'emissionDestination',
-  width: '10%'
 }, {
   title: '水体名称',
   dataIndex: 'nameOfWaterBody',
-  width: '10%'
 }, {
   title: '污水排放规律',
   dataIndex: 'dischargeLaw',
-  width: '10%'
 }, {
   title: '功能区类别',
   dataIndex: 'functionalAreaCategory',
-  width: '10%'
 }, {
   title: '创建时间',
   dataIndex: 'createDatetime',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**

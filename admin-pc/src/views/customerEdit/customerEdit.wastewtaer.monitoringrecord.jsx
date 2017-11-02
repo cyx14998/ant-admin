@@ -21,27 +21,22 @@ import {
 const columns = [{
   title: '编号',
   dataIndex: 'serialNumber',
-  width: '10%'
 }, {
   title: '监测时间',
   dataIndex: 'monitoringDatetime',
-  width: '10%'
 }, {
   title: '监测部门',
   dataIndex: 'monitoringDepart',
-  width: '10%'
 }, {
   title: '监测结果',
   dataIndex: 'monitoringResult',
-  width: '10%'
 }, {
   title: '监测报告',
   dataIndex: 'monitoringReportURL',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**

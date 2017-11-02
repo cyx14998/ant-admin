@@ -155,9 +155,7 @@ class CustomerList extends React.Component {
           <Table
             columns={columns} 
             dataSource={this.state.customerList}
-            loading={this.state.loading}
-            pagination={false}/>
-          {/* <Pagination></Pagination> */}
+            loading={this.state.loading}/>
         </div>
       </div>
     )

@@ -1,4 +1,3 @@
-
 // 客户检查计划管理
 import axios, {
   getToken,
@@ -7,7 +6,7 @@ import axios, {
 } from './index';
 
 
- // 企业检查计划主表列表
+// 企业检查计划主表列表
 export function getCheckplanMainlist({
   pageNumber = 1,
   countPerPage = 1000,
@@ -22,7 +21,7 @@ export function getCheckplanMainlist({
     }
   })
 }
- // 企业检查计划详情
+// 企业检查计划详情
 export function getCheckplanDetail({
   tableId,
 }) {
@@ -34,7 +33,7 @@ export function getCheckplanDetail({
   })
 }
 
- // 企业检查计划主表增加
+// 企业检查计划主表增加
 export function getCheckplanMainAdd({
   serialNumber,
   lotNumber,
@@ -89,21 +88,35 @@ export function getCheckplanMainDelete({
 }
 /**************************** 检查计划子表 ***********************/
 
-
+// 企业检查计划子表增加--单条
+export function getCheckplanSubAdd({
+  inspectionPlanMstId,
+  customerId,
+}) {
+  return axios.get('/uInspectionPlanDtlAdd.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      inspectionPlanMstId,
+      customerId,
+    }
+  })
+}
 // 企业检查计划子表增加--批量
 export function getCheckplanSubAddMulti({
-inspectionPlanMstId
+  inspectionPlanMstId,
+  customerIdArr,
 }) {
   return axios.get('/uInspectionPlanDtlAddBatch.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       inspectionPlanMstId,
+      customerIdArr,
     }
   })
 }
 // 企业检查计划子表增加--全部
 export function getCheckplanSubAddAll({
-inspectionPlanMstId
+  inspectionPlanMstId
 }) {
   return axios.get('/uInspectionPlanDtlAddAll.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -112,7 +125,7 @@ inspectionPlanMstId
     }
   })
 }
- // 企业检查计划子表列表
+// 企业检查计划子表列表
 export function getCheckplanSublist({
   pageNumber = 1,
   countPerPage = 1000,
@@ -126,26 +139,6 @@ export function getCheckplanSublist({
       countPerPage,
       inspectionPlanMstId,
       customerName
-    }
-  })
-}
-
-// 企业检查计划子表增加
-export function getCheckplanSubAdd({
-  inspectionPlanMstId,
-  customerId,
-  feedbackSheetURL,
-  regulatoryRecordURL,
-  theRemarks,
-}) {
-  return axios.get('/uInspectionPlanDtlAdd.uhtm?InterfaceVersion=' + apiVer, {
-    params: {
-      token: getToken(),
-      inspectionPlanMstId,
-      customerId,
-      feedbackSheetURL,
-      regulatoryRecordURL,
-      theRemarks,
     }
   })
 }
@@ -208,7 +201,7 @@ export function getCheckplanSubComplete({
   })
 }
 
- // 企业检查计划子表分配执行者 
+// 企业检查计划子表分配执行者 
 export function getCheckplanSubPerformer({
   tableId,
   performerId
@@ -221,10 +214,9 @@ export function getCheckplanSubPerformer({
     }
   })
 }
-/**
- * 企业检查计划子表分配执行者--批量
- *  服务器内部错误
- */
+
+// 企业检查计划子表分配执行者--批量
+
 export function getCheckplanSubPerformerMulti({
   tableIdArr,
   performerId
@@ -252,7 +244,7 @@ export function getMemberList({
   })
 }
 
- // 企业检查计划子表获取企业列表
+// 企业检查计划子表获取企业列表
 export function getCustomerList({
   pageNumber = 1,
   countPerPage = 1000,

@@ -17,40 +17,32 @@ import {
 const columns = [{
     title: '编号',
     dataIndex: 'serialNumber',
-    width: '10%'
 }, {
     title: '名称',
     dataIndex: 'theName',
-    width: '10%'
 }, {
     title: '型号',
     dataIndex: 'theModel',
-    width: '10%'
 }, {
     title: '台套数',
     dataIndex: 'theQuantity',
-    width: '10%'
 }, {
     title: '对应工艺',
     dataIndex: 'processing',
-    width: '10%'
 }, {
     title: '使用能源',
     dataIndex: 'useEnergy',
-    width: '10%'
 }, {
     title: '生产污染物名称',
     dataIndex: 'pollutantName',
-    width: '10%'
 }, {
     title: '对应处理设施名称',
     dataIndex: 'facilitiesName',
-    width: '10%'
 },
 {
     title: '操作',
     dataIndex: 'operation',
-    width: '10%'
+    width: 120
 }];
 
 /**

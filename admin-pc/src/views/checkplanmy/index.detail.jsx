@@ -230,7 +230,7 @@ class CheckplanDetail extends React.Component {
             data.regulatoryRecordURL = positionFileUrl;
             data.rectificationReportURL = reportFileUrl;
             console.log(data)
-            
+
             if (err) return;
             var myPlanSubTableId = self.state.recordEdit.tableId;
             if (myPlanSubTableId && myPlanSubTableId != undefined) {
@@ -262,111 +262,47 @@ class CheckplanDetail extends React.Component {
                 <Form onSubmit={this.saveDetail.bind(this)}>
                     <div className="baseinfo-section">
                         <h2 className="yzy-tab-content-title">我的检查计划基本信息</h2>
+                        <div style={{backgroundColor: '#F7F7F7', padding: 15}}>
                         <Row>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="企业名称">
-                                    {getFieldDecorator('customerId', {
-                                        //initialValue: recordEdit.customer ? recordEdit.customer.customerName : '',
-                                        //rules: [{ required: true },
-                                        //],
-                                    })(this.state.recordEdit && this.state.recordEdit != undefined ?
-                                        <div>{recordEdit.customer ? recordEdit.customer.customerName : ''}</div> :
-                                        <Select>
-                                            {customerOptions}
-                                        </Select>
-                                        )}
-                                </FormItem>
+                                <Col span={6}>企业名称：</Col>
+                                <Col span={16}>{recordEdit.customer ? recordEdit.customer.customerName : '无'}</Col>
                             </Col>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="信用代码">
-                                    {getFieldDecorator('uniformSocialCreditCode', {
-                                        //initialValue: recordEdit.uniformSocialCreditCode,
-                                        //rules: [{ required: true },
-                                        //{ pattern: /^[0-9]*$/ } 
-                                        //],
-                                    })(
-                                        <div>{recordEdit.customer.uniformSocialCreditCode ? recordEdit.customer.uniformSocialCreditCode : '无'}</div>
-                                        )}
-                                </FormItem>
+                                <Col span={6}>信用代码:</Col>
+                                <Col span={16}>{recordEdit.customer.uniformSocialCreditCode ? recordEdit.customer.uniformSocialCreditCode : '无'}</Col>
                             </Col>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="批号">
-                                    {getFieldDecorator('lotNumber', {
-                                        //initialValue: recordEdit.lotNumber,
-                                        //rules: [{ required: true },
-                                        //{ pattern: /^[0-9]*$/ } 
-                                        //],
-                                    })(
-                                        <div>{recordEdit.inspectionPlanMst.lotNumber ? recordEdit.inspectionPlanMst.lotNumber : '无'}</div>
-                                        )}
-                                </FormItem>
+                                <Col span={6}>批号:</Col>
+                                <Col span={16}>{recordEdit.customer.lotNumber ? recordEdit.customer.lotNumber : '无'}</Col>
                             </Col>
                         </Row>
                         <Row>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="任务开始">
-                                    {getFieldDecorator('planDateStart', {
-                                        //initialValue: recordEdit.planDateStart,
-                                        //rules: [{ required: true },
-                                        //{ pattern: /^[0-9]*$/ } 
-                                        //],
-                                    })(
-                                        <div>{recordEdit.inspectionPlanMst.planDateStart ? recordEdit.inspectionPlanMst.planDateStart : '无'}</div>
-                                        )}
-                                </FormItem>
+                                <Col span={6}>任务开始:</Col>
+                                <Col span={16}>{recordEdit.inspectionPlanMst.planDateStart ? recordEdit.inspectionPlanMst.planDateStart : '无'}</Col>
                             </Col>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="任务结束">
-                                    {getFieldDecorator('planDateEnd', {
-                                        //initialValue: recordEdit.planDateEnd,
-                                        //rules: [{ required: true },
-                                        //{ pattern: /^[0-9]*$/ } 
-                                        //],
-                                    })(
-                                        <div>{recordEdit.inspectionPlanMst.planDateEnd ? recordEdit.inspectionPlanMst.planDateEnd : '无'}</div>
-                                        )}
-                                </FormItem>
+                                <Col span={6}>任务结束:</Col>
+                                <Col span={16}>{recordEdit.inspectionPlanMst.planDateEnd ? recordEdit.inspectionPlanMst.planDateEnd : '无'}</Col>
                             </Col>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="创建时间">
-                                    {getFieldDecorator('createDatetime', {
-                                        //initialValue: recordEdit.createDatetime,
-                                        //rules: [{ required: true },
-                                        //{ pattern: /^[0-9]*$/ } 
-                                        //],
-                                    })(
-                                        <div>{recordEdit.createDatetime ? recordEdit.createDatetime : '无'}</div>
-                                        )}
-                                </FormItem>
+                                <Col span={6}>创建时间:</Col>
+                                <Col span={16}>{recordEdit.createDatetime ? recordEdit.createDatetime : '无'}</Col>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={8}>
+                                <Col span={6}>状态:</Col>
+                                <Col span={16}>{recordEdit.theState ? '已完成' : '执行中'}</Col>
                             </Col>
 
-                        </Row>
-                        <Row>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="状态">
-                                    {getFieldDecorator('theState', {
-                                        //initialValue: recordEdit.theState,
-                                        //rules: [{ required: true },
-                                        //{ pattern: /^[0-9]*$/ } 
-                                        //],
-                                    })(
-                                        <div>{recordEdit.theState ? '已完成' : '执行中'}</div>
-                                        )}
-                                </FormItem>
-                            </Col>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label="备注">
-                                    {getFieldDecorator('theRemarks', {
-                                        //initialValue: recordEdit.theRemarks,
-                                        //rules: [{ required: true },
-                                        //{ pattern: /^[0-9]*$/ } 
-                                        //],
-                                    })(
-                                        <div>{recordEdit.theRemarks ? recordEdit.theRemarks : '无'}</div>
-                                        )}
-                                </FormItem>
+                                <Col span={6}>备注:</Col>
+                                <Col span={16}>{recordEdit.theRemarks ? recordEdit.theRemarks : '无'}</Col>
                             </Col>
                         </Row>
+                        </div>
                         <Row>
                             <Col span={12}>
                                 <div className="baseinfo-section">

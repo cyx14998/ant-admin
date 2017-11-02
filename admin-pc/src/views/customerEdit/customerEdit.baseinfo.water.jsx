@@ -17,15 +17,13 @@ import {
 const columns = [{
     title: '企业用水量',
     dataIndex: 'consumption',
-    width: '10%'
 }, {
     title: '年耗量',
     dataIndex: 'annualConsumption',
-    width: '10%'
 }, {
     title: '操作',
     dataIndex: 'operation',
-    width: '10%'
+    width: 120
 }];
 
 /**

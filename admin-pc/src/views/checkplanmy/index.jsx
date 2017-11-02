@@ -79,10 +79,7 @@ class CustomerCheckPlanMy extends React.Component {
         console.log('handleSearch ---------', values);
         this.getData({
             customerName: values.customerName,
-            inspectionPlanMstId: checkplanId,
-            //   industryCategory: values.industryCategory,
-            //   uniformSocialCreditCode: values.uniformSocialCreditCode,
-            //   unitCategory: values.unitCategory
+            inspectionPlanMstId: checkplanId
         });
     }
 
@@ -124,11 +121,9 @@ class CustomerCheckPlanMy extends React.Component {
         const columns = [{
             title: '企业',
             dataIndex: 'customer.customerName',
-            width: '10%'
         }, {
             title: '批号',
             dataIndex: 'inspectionPlanMst.lotNumber',
-            width: '10%'
         }, {
             title: '开始',
             width: '15%',
@@ -140,11 +135,9 @@ class CustomerCheckPlanMy extends React.Component {
         }, {
             title: '备注',
             dataIndex: 'theRemarks',
-            width: '10%'
         },{
             title: '状态',
             dataIndex: 'theState',
-            width: '10%',
             render: (text, record, index) => (
                 <div>
                     {record.theState ? '已完成' : '执行中'}
@@ -153,7 +146,7 @@ class CustomerCheckPlanMy extends React.Component {
         }, {
             title: '操作',
             key: 'action',
-            width: '15%',
+            width: 120,
             render: (text, record, index) => (
                 <div>
                     <a onClick={() => self.showTestModal(record)} style={{ marginRight: 8 }}>编辑</a>
@@ -162,21 +155,6 @@ class CustomerCheckPlanMy extends React.Component {
             )
         },
         ];
-
-        var self = this;
-        const rowSelection = {
-            onChange(selectedRowKeys) {
-                console.log(`selectedRowKeys changed: ${selectedRowKeys}`);
-                console.log(self.state.performerId)
-                self.state.checkSubIdArr = selectedRowKeys;
-            },
-            // onSelect(record, selected, selectedRows) {
-            //     console.log(record, selected, selectedRows);
-            // },
-            // onSelectAll(selected, selectedRows) {
-            //     console.log(selected, selectedRows);
-            // }
-        };
         return (
             <div className="yzy-page">
                 <div className="yzy-search-form-wrap">
@@ -188,7 +166,6 @@ class CustomerCheckPlanMy extends React.Component {
                         <Button type="primary">导出excel</Button>
                     </div>
                     <Table
-                        rowSelection={rowSelection}
                         columns={columns}
                         onTestClick={this.onTestClick}
                         dataSource={this.state.checkplanMyList}
@@ -203,7 +180,6 @@ class CustomerCheckPlanMy extends React.Component {
                         okText=''
                         footer={null}
                         onCancel={this.TestCancel.bind(this)}
-                        cancelText=''
                         className='modal editModal'
                     >
                         <CheckplanDetailForm recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)}wrappedComponentRef={this.saveFormRef.bind(this)} />
