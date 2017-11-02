@@ -16,6 +16,9 @@ import {
 const FormItem = Form.Item;
 const { Header, Sider, Content, Footer } = Layout;
 
+import Modal from 'react-modal';
+import Draggable from 'react-draggable';
+import DraggableModal from '../../components/modal.draggable';
 
 import {
   EditableDemoSection,
@@ -90,7 +93,7 @@ const columns = [{
   dataIndex: 'edit',
   render: (text, record) => (
     <div>
-      <Button type="primary" onClick={() => alert(record.name)}>编辑</Button>
+      <Button type="primary" onClick={() => alert(record.name)}><Icon type="edit" className="yzy-icon" /></Button>
     </div>)
 }];
 
@@ -102,7 +105,19 @@ for (let i = 0; i < 46; i++) {
     age: 32,
     address: `London, Park Lane no. ${i}`,
   });
-}
+};
+
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+  }
+};
 
 // rowSelection object indicates the need for row selection
 const rowSelection = {
@@ -126,7 +141,9 @@ class Demo extends Component {
 
       collapsed: false,
 
-      itemVisible: false
+      itemVisible: false,
+
+      modalVisible: false
     }
   }
 
@@ -143,9 +160,55 @@ class Demo extends Component {
   }
 
   render() {
+    // return (
+    //   <EditableModalDemoSection />
+    // );
+
     return (
-      <EditableModalDemoSection />
+      <div>
+        <Button onClick={() => this.setState({modalVisible: true})}>show visible</Button>
+        <DraggableModal
+          width="50%"
+          visible={this.state.modalVisible}
+          onCancel={() => this.setState({modalVisible: false})}>
+          <div>hello</div>
+        </DraggableModal>
+      </div>
     );
+
+    return (
+      <Modal
+        isOpen={true}
+        
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+      <div>
+        <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
+        <button onClick={this.closeModal}>close</button>
+        <div>I am a modal</div>
+        <form>
+          <input />
+          <button>tab navigation</button>
+          <button>stays</button>
+          <button>inside</button>
+          <button>the modal</button>
+        </form>
+        </div>
+      </Modal>
+    )
+
+    return (
+      
+        <Draggable
+          
+          >
+          <div style={{backgroundColor: '#aaa'}}>
+            <div className="handle">Drag from here</div>
+            <div>This readme is really dragging on...</div>
+          </div>
+        </Draggable>
+    )
 
 
     return (

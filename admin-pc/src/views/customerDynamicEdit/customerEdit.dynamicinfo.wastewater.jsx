@@ -25,7 +25,7 @@ import {
   getWastewaterDischargeList, // 选择废水排放口
 } from '../../common/api/api.customer.plus';
 
-import { 
+import {
   getWastewaterDischargeRecordList,
   getWastewaterDischargeRecordDelete,
   getWastewaterDischargeRecordAdd,
@@ -75,7 +75,7 @@ const WasteWaterDischargeRecordBase = connectEeditableSectionApi({
   secTitle: '废水排放基本信息列表',
   columns: columns,
   apiLoader: function () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
       if (!dynamicId) return;
 
@@ -93,7 +93,7 @@ const WasteWaterDischargeRecordBase = connectEeditableSectionApi({
         return wasteWaterDischargePortListOptions;
       }).then(wasteWaterDischargePortListOptions => {
         itemDataModel.portsNumber.options = wasteWaterDischargePortListOptions;
-
+        //获取废水列表
         getWastewaterDischargeRecordList({
           customerMonthDclarationId: dynamicId,
         }).then(res => {
@@ -126,8 +126,8 @@ const WasteWaterDischargeRecordBase = connectEeditableSectionApi({
           })
         }).catch(err => {
           MyToast('接口调用失败')
-        })        
-      }).catch(err => MyToast(err));      
+        })
+      }).catch(err => MyToast(err));
     })
   },
   apiSave: function (record) {
@@ -238,7 +238,7 @@ class WasteWaterDischargeRecord extends React.Component {
   render() {
     return (
       <div>
-        <WasteWaterDischargeRecordBase checkInNewpage={this.onCheckClick.bind(this)}  />
+        <WasteWaterDischargeRecordBase checkInNewpage={this.onCheckClick.bind(this)} />
 
         <Modal
           width="90%"
@@ -246,7 +246,7 @@ class WasteWaterDischargeRecord extends React.Component {
           title="废水排放因子"
           onCancel={this.handleCancel.bind(this)}
           footer={null}>
-          { this.state.eidtId === '' ? null : <WasteWaterDischargeFactor apiListItemId={this.state.eidtId} /> }
+          {this.state.eidtId === '' ? null : <WasteWaterDischargeFactor apiListItemId={this.state.eidtId} />}
         </Modal>
       </div>
     )

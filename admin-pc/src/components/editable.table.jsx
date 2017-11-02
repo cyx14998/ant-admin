@@ -11,7 +11,7 @@ import {
   Select,
   Form,
   Table,
-  Popconfirm
+  Popconfirm,
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -59,6 +59,7 @@ class EditableTable extends Component {
        */
       (function(i) {
         columns[i].render = (text, record) => {
+
           // select
           if (text !== undefined && Object.prototype.toString.call(text.options) === '[object Array]') {
             return (
@@ -100,6 +101,20 @@ class EditableTable extends Component {
             );
           }
 
+          // 空数据默认按input处理
+          if (text === undefined && columns[i].dataIndex !== 'operation') {
+            // input
+            return (
+              <EditableCell 
+                tableId={record.tableId}
+                dataIndex={columns[i].dataIndex}
+                cellType="input"
+                disabled={false}
+                value=''
+                onCellChange={onCellChange} />
+            );
+          }
+
           /**
            *  编辑/删除/新页面查看
            *  @hasModal  模态框查看
@@ -108,11 +123,11 @@ class EditableTable extends Component {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
-                  <a href="#">删除</a>
+                  <a href="#"><Icon type="delete" className="yzy-icon" /></a>
                 </Popconfirm>
 
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}>保存</a>
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => checkInNewpage(record.tableId)}>查看</a>
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="save" className="yzy-icon" /></a>
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
               </div>
             )
           }
@@ -128,8 +143,8 @@ class EditableTable extends Component {
                   <a href="#">删除</a>
                 </Popconfirm>
 
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}>保存</a>
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => onEdit(record.tableId)}>查看</a>
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="save" className="yzy-icon" /></a>
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
               </div>
             )
           }
@@ -139,10 +154,10 @@ class EditableTable extends Component {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
-                  <a href="#">删除</a>
+                  <a href="#"><Icon type="delete" className="yzy-icon" /></a>
                 </Popconfirm>
 
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}>保存</a>
+                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="save" className="yzy-icon" /></a>
               </div>
             )
           }

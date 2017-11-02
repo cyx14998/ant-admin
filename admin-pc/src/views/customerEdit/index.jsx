@@ -73,41 +73,43 @@ class Customerinfo extends React.Component {
         
         return (
             <div className="yzy-page">
-                <Tabs defaultActiveKey="1">
-                    <TabPane tab="排污单位基本情况" key="1">
-                        <CustomerEditBaseinfo onBaseinfoSave={this.setTabPaneActive.bind(this)} />
-                    </TabPane>
-                     <TabPane tab="排污单位基本情况-产品" disabled={this.state.tabPaneDisabled} key="2">
-                        <CustomerEditBaseinfoDetailProd />
-                    </TabPane>
-                    <TabPane tab="废水污染物基本情况" disabled={this.state.tabPaneDisabled} key="3">
-                        <CustomerEditWasteWater />
-                    </TabPane>
-                    <TabPane tab="废气污染物基本情况" disabled={this.state.tabPaneDisabled} key="4">
-                        <CustomerEditWasteGas />
-                    </TabPane>
-                    <TabPane tab="固体废物基本情况" disabled={this.state.tabPaneDisabled} key="5">
-                        <CustomerEditWasteSolid />
-                    </TabPane>
-                    <TabPane tab="边界噪声基本情况" disabled={this.state.tabPaneDisabled} key="6">
-                        <CustomerEditBoundaryNoise />
-                    </TabPane>
-                    <TabPane tab="企业遵守法律法规情况" disabled={this.state.tabPaneDisabled} key="7">
-                        <CustomerEditEIA />
-                    </TabPane>
-                    <TabPane tab="企业证照材料" disabled={this.state.tabPaneDisabled} key="8">
-                        <CustomerEditCertification />
-                    </TabPane>
-                    <TabPane tab="企业内部环保管理制度" disabled={this.state.tabPaneDisabled} key="9">
-                        <CustomerIEPS />
-                    </TabPane>
-                    <TabPane tab="现场检查" disabled={this.state.tabPaneDisabled} key="10">
-                        <CustomerInspectionPlanDtlFor />
-                    </TabPane>
-                    <TabPane tab="监管信息" disabled={this.state.tabPaneDisabled} key="11">
-                        <CustomerSiteInspection />
-                    </TabPane>
-                </Tabs>
+                <div style={{padding: 20, backgroundColor: '#fff'}}>
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="排污单位基本情况" key="1">
+                            <CustomerEditBaseinfo onBaseinfoSave={this.setTabPaneActive.bind(this)} />
+                        </TabPane>
+                         <TabPane tab="排污单位基本情况-产品" disabled={this.state.tabPaneDisabled} key="2">
+                            <CustomerEditBaseinfoDetailProd />
+                        </TabPane>
+                        <TabPane tab="废水污染物基本情况" disabled={this.state.tabPaneDisabled} key="3">
+                            <CustomerEditWasteWater />
+                        </TabPane>
+                        <TabPane tab="废气污染物基本情况" disabled={this.state.tabPaneDisabled} key="4">
+                            <CustomerEditWasteGas />
+                        </TabPane>
+                        <TabPane tab="固体废物基本情况" disabled={this.state.tabPaneDisabled} key="5">
+                            <CustomerEditWasteSolid />
+                        </TabPane>
+                        <TabPane tab="边界噪声基本情况" disabled={this.state.tabPaneDisabled} key="6">
+                            <CustomerEditBoundaryNoise />
+                        </TabPane>
+                        <TabPane tab="企业遵守法律法规情况" disabled={this.state.tabPaneDisabled} key="7">
+                            <CustomerEditEIA />
+                        </TabPane>
+                        <TabPane tab="企业证照材料" disabled={this.state.tabPaneDisabled} key="8">
+                            <CustomerEditCertification />
+                        </TabPane>
+                        <TabPane tab="企业内部环保管理制度" disabled={this.state.tabPaneDisabled} key="9">
+                            <CustomerIEPS />
+                        </TabPane>
+                        <TabPane tab="现场检查" disabled={this.state.tabPaneDisabled} key="10">
+                            <CustomerInspectionPlanDtlFor />
+                        </TabPane>
+                        <TabPane tab="监管信息" disabled={this.state.tabPaneDisabled} key="11">
+                            <CustomerSiteInspection />
+                        </TabPane>
+                    </Tabs>
+                </div>
             </div>
         )
     }

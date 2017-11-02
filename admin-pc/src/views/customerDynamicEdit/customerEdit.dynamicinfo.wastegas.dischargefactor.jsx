@@ -4,7 +4,7 @@
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getWasteGasDischargeFactorRecordList,
   getWasteGasDischargeFactorRecordAdd,
   getWasteGasDischargeFactorRecordDelete,
@@ -21,7 +21,6 @@ import {
 const columns = [{
   title: '污染物名称',
   dataIndex: 'pollutantName',
-  width: '10%'
 }, {
   title: '标准值',
   dataIndex: 'standardValue',
@@ -33,35 +32,28 @@ const columns = [{
 }, {
   title: '实测浓度-排放浓度',
   dataIndex: 'measuredConcentration',
-  width: '10%'
 }, {
   title: '折算浓度-排放浓度',
   dataIndex: 'conversionConcentration',
-  width: '10%'
 }, {
   title: '排放速率标准值-排放速率',
   dataIndex: 'emissionRateStandardValue',
-  width: '10%'
 }, {
   title: '实际排放速率-排放速率',
   dataIndex: 'emissionRateActual',
-  width: '10%'
 }, {
   title: '数据来源',
   dataIndex: 'dataSources',
-  width: '5%'
 }, {
   title: '排放量(千克)',
   dataIndex: 'emissionAmount',
-  width: '5%'
 }, {
   title: '是否存在某一天超标',
   dataIndex: 'isOverproof',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '5%'
+  width: 120
 }];
 
 /**
@@ -90,7 +82,7 @@ const itemDataModel = {
   emissionAmount: '',
   isOverproof: {
     value: '1',
-    options : [{
+    options: [{
       value: "1",
       label: '是'
     }, {
@@ -103,14 +95,14 @@ const itemDataModel = {
 const WasteGasDemoSection = connectEditableSectionApi({
   secTitle: '废气排放因子基本情况',
   columns: columns,
-  apiLoader: function ({apiListItemId}) {
+  apiLoader: function ({ apiListItemId }) {
     var editId = apiListItemId;
-    if(editId === undefined){
+    if (editId === undefined) {
       editId = localStorage.getItem('wastewater-discharge-editId');
     }
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
-      getWasteGasDischargeFactorRecordList({wasteGasDischargeRecordId: editId}).then(res => {
+      getWasteGasDischargeFactorRecordList({ wasteGasDischargeRecordId: editId }).then(res => {
         console.log('getWasteGasDischargeFactorRecordList res ---', res);
 
         if (res.data.result !== 'success') {
@@ -122,18 +114,18 @@ const WasteGasDemoSection = connectEditableSectionApi({
         }
 
         var data = res.data.wasteGasDischargeFactorRecordList;
-        data = data.map((item,index) => {
+        data = data.map((item, index) => {
           return {
             ...item,
             isOverproof: {
-              value: item.isOverproof === true ? "1" : "0" ,
-              options : [{
+              value: item.isOverproof === true ? "1" : "0",
+              options: [{
                 value: "1",
                 label: "是"
               }, {
                 value: "0",
                 label: "否"
-              }] 
+              }]
             }
           }
         })
@@ -151,16 +143,18 @@ const WasteGasDemoSection = connectEditableSectionApi({
     console.log('apiSave record ----', record);
     record.isOverproof = record.isOverproof.value;
     var self = this;
-    if(record.apiListItemId === undefined){
+    if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     }
-    record.wasteGasDischargePortId = record.apiListItemId;
+    var wasteGasDischargeRecordId = record.apiListItemId;
+    delete record.apiListItemId;
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWasteGasDischargeFactorRecordAdd({
           ...record,
+           wasteGasDischargeRecordId
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({

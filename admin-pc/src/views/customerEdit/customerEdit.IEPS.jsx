@@ -17,19 +17,17 @@ import {
 const columns = [{
   title: '制度名称',
   dataIndex: 'theName',
-  width: '10%'
 }, {
   title: '执行情况',
   dataIndex: 'implementation',
-  width: '10%'
 }, {
   title: '下载路径',
   dataIndex: 'filePath',
-  width: '10%'
+  type: 'downloadfile'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**

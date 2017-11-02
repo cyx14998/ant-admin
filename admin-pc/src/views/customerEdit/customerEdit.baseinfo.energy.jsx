@@ -17,19 +17,16 @@ import {
 const columns = [{
   title: '企业使用能源情况',
   dataIndex: 'theContent',
-  width: '10%'
 }, {
   title: '能源种类',
   dataIndex: 'theType',
-  width: '10%'
 }, {
   title: '年耗量',
   dataIndex: 'annualConsumption',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**

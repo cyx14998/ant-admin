@@ -12,6 +12,9 @@ import {
   getWastewaterTreatmentUpdate,
 } from '../../common/api/api.customer.plus.js';
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 import {
   MyToast,
   convertObjectLabel
@@ -25,31 +28,25 @@ import axios from '../../common/api';
 const columns = [{
   title: '治理设施名称',
   dataIndex: 'theName',
-  width: '10%'
 }, {
   title: '治理类型',
   dataIndex: 'governanceType',
-  width: '10%'
 }, {
   title: '处理方法ID',
   dataIndex: 'approachId',
-  width: '10%'
 }, {
   title: '设计处理能力',
   dataIndex: 'designProcessingPower',
-  width: '10%'
 }, {
   title: '投入使用日期',
   dataIndex: 'putInUseDate',
-  width: '5%'
 }, {
   title: '传台账记录',
   dataIndex: 'standingBookURL',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**
@@ -71,7 +68,7 @@ const itemDataModel = {
   governanceType: '',
   approachId: '',
   designProcessingPower: '',
-  putInUseDate: '',
+  putInUseDate:  moment(new Date()).format(dateFormat),
   standingBookURL: '',
 };
 
@@ -101,7 +98,7 @@ const WasteGasTreatment = connectEditableSectionApi({
           value: "1",
           options: convertObjectLabel(approachList)
         };
-        itemDataModel.approachId = approachData;  //噪声源性质
+        itemDataModel.approachId = approachData;  
         wwTreatmentData = wwTreatmentData.map( item => {
           return {
             ...item,

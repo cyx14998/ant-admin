@@ -119,6 +119,38 @@ export function setDepartmentStaffLeader({
 }
 
 /**
+ * 未加入部门员工列表
+ */
+export function getDepartmentStaffList({
+  pageNumber=1,
+  countPerPage=1000
+}) {
+  return axios.get('/uMemberListForJoinDepartment.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber,
+      countPerPage
+    }
+  })
+}
+
+/**
+ * 添加部门成员
+ */
+export function getDepartmentStaffAddBatch({
+  departmentId,
+  staffArr,
+}) {
+  return axios.get('/uDepartmentMemberRelationAddBatch.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      departmentId,
+      staffArr
+    }
+  })
+}
+
+/**
  * 删除部门成员
  */
 export function getDepartmentStaffDelete({

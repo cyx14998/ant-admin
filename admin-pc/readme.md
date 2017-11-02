@@ -96,38 +96,11 @@
 
 * 出库单模块
 
-## 进度计划
-
-
-## 进度条
-
-#### 企业信息管理模块
-
-<table>
-  <thead>
-    <tr>
-      <th>页面</th>
-      <th>完成度</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>登录</td>
-      <td>100%</td>
-    </tr>
-    <tr>
-      <td>企业信息查询</td>
-      <td>60%</td>
-    </tr>
-    <tr>
-      <td>排污单位基本情况</td>
-      <td>20%</td>
-    </tr>
-  </tbody>
-</table>
-
-
-
+## antd style fix
+* theme
+  - /node_modules/antd/style/default    @primary-color
+* validate
+  - /node_modules/rc-form/lit/utils '请正确输入', 
 
 ## 遗留问题
 * 动态 
@@ -137,16 +110,18 @@
   - 固体废物 [true]
     - 加一个字段(固体废物id)数据来自于编辑页的固体废物列表接口(getBoundaryNoiseList  uBoundaryNoiseList.uhtm)
 
-  - 废水和废气 
+  - 废水和废气 []
     - 采用模态框另加详情接口，或者promise方法直接获取对应id
     
-  - 废气基本情况 
+  - 废气基本情况 []
     - 废气排放因子 的新增会提示请选择废气排放记录，应该是接口问题。
 * 编辑 
-  - 废水污染物基本情况
+  - 废水污染物基本情况 []
     - 废水治理(处理方法id),该字段来自于处理方法列表接口(ApproachList   uApproachList.uhtm)
-  - 现场检查、监管信息 
+
+  - 现场检查、监管信息 [true]
     - 获取接口错误，原因还未排查，以前是好的。
-  - 检查记录 
+  - 检查记录 [true]
     - 增删改查接口未对接！
+
 * 样式问题，所有新增时间的type应该更改

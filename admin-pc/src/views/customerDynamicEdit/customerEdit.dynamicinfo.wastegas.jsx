@@ -12,9 +12,9 @@ import connectEeditableSectionApi from '../../components/hoc.editable.section';
 // import WasteGasDischargeDetail from './customerEdit.dynamicinfo.wastegas.discharge';
 
 //废气因子基本情况
-// import WasteGasDischargeFactor from './customerEdit.dynamicinfo.wastegas.dischargefactor';
+import WasteGasDischargeFactor from './customerEdit.dynamicinfo.wastegas.dischargefactor';
 
-import { 
+import {
   getWasteGasDischargeRecordList,
   getWasteGasDischargeRecordDelete,
   getWasteGasDischargeRecordAdd,
@@ -33,6 +33,8 @@ import {
 
 const dynamicId = getLocQueryByLabel("dynamicId");
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
 
 /**
  * table head
@@ -67,13 +69,12 @@ const columns = [{
   width: 120
 }];
 
-
 /**
  * 新数据默认值
  */
 const itemDataModel = {
   measuredExhaustVolume: '',
-  emissionTime: '',
+  emissionTime: moment(new Date()).format(dateFormat),
   exhaustEmission: '',
   dataSources: '',
   fuel: '',
@@ -89,7 +90,7 @@ const WasteGasDischargeRecordBase = connectEeditableSectionApi({
   secTitle: '废气排放基本信息列表',
   columns: columns,
   apiLoader: function () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
       if (!dynamicId) return;
 
@@ -99,8 +100,7 @@ const WasteGasDischargeRecordBase = connectEeditableSectionApi({
           MyToast(res.data.info)
           return;
         }
-
-        var data = res.data.getWasteGasDischargePortList;
+        var data = res.data.wasteGasDischargePortList;
 
         var wasteGasDischargePortListOptions = convertObjectLabel(data, 'tableId', 'serialNumber');
 
@@ -121,13 +121,13 @@ const WasteGasDischargeRecordBase = connectEeditableSectionApi({
             return;
           }
 
-          var data = res.data.WasteGasDischargeRecordList;
+          var data = res.data.wasteGasDischargeRecordList;
 
           data = data.map(item => {
             return {
               ...item,
               wasteGasDischargePortId: {
-                value: item.wasteGasDischargePort.tableId,
+                value: item.wasteGasDischargePort.tableId + '',
                 disabled: true,
                 options: wasteGasDischargePortListOptions
               }
@@ -140,8 +140,8 @@ const WasteGasDischargeRecordBase = connectEeditableSectionApi({
           })
         }).catch(err => {
           MyToast('接口调用失败')
-        })        
-      }).catch(err => MyToast(err));      
+        })
+      }).catch(err => MyToast(err));
     })
   },
   apiSave: function (record) {
@@ -256,14 +256,15 @@ class WasteGasDischargeRecord extends React.Component {
   render() {
     return (
       <div>
-        <WasteGasDischargeRecordBase checkInNewpage={this.onCheckClick.bind(this)}  />
+        <WasteGasDischargeRecordBase checkInNewpage={this.onCheckClick.bind(this)} />
 
         <Modal
           width="90%"
           visible={this.state.modalVisible}
-          title="废水排放因子"
+          title="废气排放因子"
           onCancel={this.handleCancel.bind(this)}
           footer={null}>
+          {this.state.eidtId === '' ? null : <WasteGasDischargeFactor apiListItemId={this.state.eidtId} />}
         </Modal>
       </div>
     )

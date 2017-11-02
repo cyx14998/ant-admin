@@ -21,23 +21,19 @@ import {
 const columns = [{
   title: '污染物名称',
   dataIndex: 'pollutantName',
-  width: '10%'
 }, {
   title: '输入执行标准文件号',
   dataIndex: 'executeStandardNumber',
-  width: '10%'
 }, {
   title: '标准值',
   dataIndex: 'standardValue',
-  width: '10%'
 }, {
   title: '污染源自动监控设施有/无',
   dataIndex: 'isAutoMOPS',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**

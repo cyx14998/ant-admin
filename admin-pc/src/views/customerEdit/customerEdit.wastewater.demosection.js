@@ -25,19 +25,16 @@ import {
 const columns = [{
   title: '主要产品名称',
   dataIndex: 'theName',
-  width: '10%'
 }, {
   title: '计量单位',
   dataIndex: 'unitOfMeasurement',
-  width: '10%'
 }, {
   title: '设计年产量',
   dataIndex: 'designAnnualOutput',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**
@@ -59,7 +56,7 @@ const itemDataModel = {
 const dataSource = [{
   tableId: 'id-001',
   theName: '名称--',
-  unitOfMeasurement: 'kg',
+  // unitOfMeasurement: 'kg',
   designAnnualOutput: {
     value: 'so',
     disabled: true,

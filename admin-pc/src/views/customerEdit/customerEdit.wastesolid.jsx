@@ -22,43 +22,34 @@ import {
 const columns = [{
   title: '编号',
   dataIndex: 'serialNumber',
-  width: '5%'
 }, {
   title: '是否危废',
   dataIndex: 'isHazardousWaste',
-  width: '5%'
 }, {
   title: '处置方式',
   dataIndex: 'disposalMethod',
-  width: '10%'
 }, {
   title: '废物名称',
   dataIndex: 'theName',
-  width: '10%'
 }, {
   title: '废物产生工艺',
   dataIndex: 'processing',
-  width: '10%'
 }, {
   title: '危险废物名称',
   dataIndex: 'hazardousWasteName',
-  width: '10%'
 }, {
   title: '贮存场所位置',
   dataIndex: 'storagePlaceAddress',
-  width: '15%'
 }, {
   title: '处置单位名称',
   dataIndex: 'disposeUnitName',
-  width: '15%'
 }, {
   title: '备案信息',
   dataIndex: 'filingInfoURL',
-  width: '15%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '5%'
+  width: 120
 }];
 
 /**

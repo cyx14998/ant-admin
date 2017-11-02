@@ -5,15 +5,22 @@
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 import { 
+  getApproachList,
   getWastewaterTreatmentList,
   getWastewaterTreatmentAdd,
   getWastewaterTreatmentDelete,
   getWastewaterTreatmentUpdate,
 } from '../../common/api/api.customer.plus.js';
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 import {
-  MyToast
+  MyToast,
+  convertObjectLabel
 } from '../../common/utils';
+
+import axios from '../../common/api';
 
 /**
  * table head
@@ -21,31 +28,36 @@ import {
 const columns = [{
   title: '治理设施名称',
   dataIndex: 'theName',
-  width: '10%'
 }, {
   title: '治理类型',
   dataIndex: 'governanceType',
-  width: '10%'
 }, {
   title: '处理方法ID',
-  dataIndex: 'approach',
-  width: '10%'
+  dataIndex: 'approachId',
 }, {
   title: '设计处理能力',
   dataIndex: 'designProcessingPower',
-  width: '10%'
 }, {
   title: '投入使用日期',
   dataIndex: 'putInUseDate',
-  width: '5%'
 }, {
   title: '传台账记录',
   dataIndex: 'standingBookURL',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
+}];
+
+/**
+ * 可选项
+ */
+const options = [{
+  value: 'sy',
+  label: '事业单位'
+}, {
+  value: 'qy',
+  label: '企业单位'
 }];
 
 /**
@@ -54,12 +66,15 @@ const columns = [{
 const itemDataModel = {
   theName: '',
   governanceType: '',
-  approach: '',
+  approachId: '',
   designProcessingPower: '',
-  putInUseDate: '',
+  putInUseDate: moment(new Date()).format(dateFormat),
   standingBookURL: '',
 };
 
+/**
+ * @params apiListItemId
+ */
 const WasteWaterTreatment = connectEditableSectionApi({
   secTitle: '废水治理基本情况',
   columns: columns,
@@ -69,48 +84,52 @@ const WasteWaterTreatment = connectEditableSectionApi({
       editId = localStorage.getItem('wastewater-discharge-editId');
     }
     return new Promise((resolve,reject) => {
-      //获取数据
-      getWastewaterTreatmentList({sourceType:0,sourceId:editId}).then(res => {
-        // console.log('getWastewaterTreatmentList res ---', res);
-        if (res.data.result !== 'success') {
-          resolve({
-            code: -1,
-            info: res.data.info,
-          })
-          return;
-        }
-
-        var data = res.data.controlFacilitiesList;
-        console.log(data);
-        data = data.map((item,index) => {
+      axios.all([
+        getApproachList({}),
+        getWastewaterTreatmentList({sourceType:0,sourceId:editId}),
+      ]).then(axios.spread((approachList, wwTreatmentList) => {
+        console.log("approachList=====================",approachList),
+        console.log("wwTreatmentList=====================",wwTreatmentList)
+        //废气治理列表
+        var wwTreatmentData = wwTreatmentList.data.controlFacilitiesList;
+        //处理方法列表
+        var approachList = approachList.data.approachList;
+        var approachData = {
+          value: "1",
+          options: convertObjectLabel(approachList)
+        };
+        itemDataModel.approachId = approachData;  
+        wwTreatmentData = wwTreatmentData.map( item => {
           return {
             ...item,
-            approach: item.approach.tableId
+            approachId: {
+              value: item.approach.tableId+'',
+              options: convertObjectLabel(approachList)
+            },
           }
-        })
+        });
+        //渲染页面
         resolve({
           code: 0,
-          data,
+          data: wwTreatmentData,
         })
-      }).catch(err => {
-        MyToast('接口调用失败')
-      })
+      }))
     })
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record -------------', record);
+    record.approachId = record.approachId.value;
     var self = this;
     if(record.apiListItemId === undefined){
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
-    }
+    };
     record.sourceId = record.apiListItemId;
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWastewaterTreatmentAdd({
           ...record,
-          sourceType:0,
+          sourceType:0
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -119,7 +138,6 @@ const WasteWaterTreatment = connectEditableSectionApi({
             });
             return;
           }
-
           resolve({
             code: 0 // success
           })

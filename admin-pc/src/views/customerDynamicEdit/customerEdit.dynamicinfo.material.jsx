@@ -17,19 +17,16 @@ import {
 const columns = [{
   title: '主要产品名称',
   dataIndex: 'theName',
-  width: '10%'
 }, {
   title: '计量单位',
   dataIndex: 'unitOfMeasurement',
-  width: '10%'
 }, {
   title: '设计用耗量',
   dataIndex: 'consumption',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**

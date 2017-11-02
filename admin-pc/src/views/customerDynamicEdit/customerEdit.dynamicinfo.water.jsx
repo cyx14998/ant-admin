@@ -17,27 +17,22 @@ import {
 const columns = [{
     title: '用水类型',
     dataIndex: 'useWaterType',
-    width: '10%'
 }, {
     title: '用水总量',
     dataIndex: 'totalWaterConsumption',
-    width: '10%'
 }, {
     title: '重复用水量',
     dataIndex: 'repeatedWaterConsumption',
-    width: '10%'
 }, {
     title: '用水来源',
     dataIndex: 'waterSource',
-    width: '10%'
 }, {
     title: '用电量',
     dataIndex: 'electricityConsumption',
-    width: '10%'
 }, {
     title: '操作',
     dataIndex: 'operation',
-    width: '10%'
+    width: 120
 }];
 
 /**

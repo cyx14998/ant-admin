@@ -11,37 +11,34 @@ import {
   getCertificationDelete,
 } from '../../common/api/api.customer.plus.js';
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 /**
  * table head
  */
 const columns = [{
   title: '名称',
   dataIndex: 'theName',
-  width: '10%'
 }, {
   title: '发放日期',
   dataIndex: 'releaseDatetime',
-  width: '10%'
 }, {
   title: '截止日期',
   dataIndex: 'expiryDatetime',
-  width: '10%'
 }, {
   title: '下载路径',
   dataIndex: 'filePath',
-  width: '10%'
 }, {
   title: '审批单位',
   dataIndex: 'approvalUnit',
-  width: '10%'
 }, {
   title: '备注',
   dataIndex: 'theRemarks',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**
@@ -60,8 +57,8 @@ const options = [{
  */
 const itemDataModel = {
   theName: '',
-  releaseDatetime: '',
-  expiryDatetime: '',
+  releaseDatetime: moment(new Date()).format(dateFormat),
+  expiryDatetime: moment(new Date()).format(dateFormat),
   filePath: '',
   approvalUnit: '',
   theRemarks: '',

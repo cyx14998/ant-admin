@@ -55,7 +55,7 @@ class CustomerCheckPlanMy extends React.Component {
     }
 
     componentDidMount() {
-        this.getData({ });
+        this.getData({});
     }
     //获取列表数据--封装
     getData(params) {
@@ -79,10 +79,7 @@ class CustomerCheckPlanMy extends React.Component {
         console.log('handleSearch ---------', values);
         this.getData({
             customerName: values.customerName,
-            inspectionPlanMstId: checkplanId,
-            //   industryCategory: values.industryCategory,
-            //   uniformSocialCreditCode: values.uniformSocialCreditCode,
-            //   unitCategory: values.unitCategory
+            inspectionPlanMstId: checkplanId
         });
     }
 
@@ -124,11 +121,9 @@ class CustomerCheckPlanMy extends React.Component {
         const columns = [{
             title: '企业',
             dataIndex: 'customer.customerName',
-            width: '10%'
         }, {
             title: '批号',
             dataIndex: 'inspectionPlanMst.lotNumber',
-            width: '10%'
         }, {
             title: '开始',
             width: '15%',
@@ -140,11 +135,9 @@ class CustomerCheckPlanMy extends React.Component {
         }, {
             title: '备注',
             dataIndex: 'theRemarks',
-            width: '10%'
-        },{
+        }, {
             title: '状态',
             dataIndex: 'theState',
-            width: '10%',
             render: (text, record, index) => (
                 <div>
                     {record.theState ? '已完成' : '执行中'}
@@ -153,30 +146,18 @@ class CustomerCheckPlanMy extends React.Component {
         }, {
             title: '操作',
             key: 'action',
-            width: '15%',
+            width: 120,
             render: (text, record, index) => (
                 <div>
-                    <a onClick={() => self.showTestModal(record)} style={{ marginRight: 8 }}>编辑</a>
-                    <a style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}>完成</a>
+                    <a onClick={() => self.showTestModal(record)} style={{ marginRight: 8 }}><Icon type="edit" className="yzy-icon" /></a>
+                    {record.theState ?
+                        <a style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}><Icon type="check" className="yzy-icon" /></a>
+                        : ''
+                    }
                 </div>
             )
         },
         ];
-
-        var self = this;
-        const rowSelection = {
-            onChange(selectedRowKeys) {
-                console.log(`selectedRowKeys changed: ${selectedRowKeys}`);
-                console.log(self.state.performerId)
-                self.state.checkSubIdArr = selectedRowKeys;
-            },
-            // onSelect(record, selected, selectedRows) {
-            //     console.log(record, selected, selectedRows);
-            // },
-            // onSelectAll(selected, selectedRows) {
-            //     console.log(selected, selectedRows);
-            // }
-        };
         return (
             <div className="yzy-page">
                 <div className="yzy-search-form-wrap">
@@ -188,11 +169,15 @@ class CustomerCheckPlanMy extends React.Component {
                         <Button type="primary">导出excel</Button>
                     </div>
                     <Table
-                        rowSelection={rowSelection}
                         columns={columns}
                         onTestClick={this.onTestClick}
                         dataSource={this.state.checkplanMyList}
                         rowKey="tableId"
+                        rowClassName={(record, index) => {
+                            if (index % 2 !== 0) {
+                                return 'active'
+                            }
+                        }}
                         loading={this.state.loading} />
                 </div>
                 {
@@ -203,10 +188,9 @@ class CustomerCheckPlanMy extends React.Component {
                         okText=''
                         footer={null}
                         onCancel={this.TestCancel.bind(this)}
-                        cancelText=''
                         className='modal editModal'
                     >
-                        <CheckplanDetailForm recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)}wrappedComponentRef={this.saveFormRef.bind(this)} />
+                        <CheckplanDetailForm recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)} />
                     </Modal> : null
                 }
             </div>

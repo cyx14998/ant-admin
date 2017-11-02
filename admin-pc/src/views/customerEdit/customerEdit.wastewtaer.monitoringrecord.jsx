@@ -15,33 +15,31 @@ import {
   MyToast
 } from '../../common/utils';
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 /**
  * table head
  */
 const columns = [{
   title: '编号',
   dataIndex: 'serialNumber',
-  width: '10%'
 }, {
   title: '监测时间',
   dataIndex: 'monitoringDatetime',
-  width: '10%'
 }, {
   title: '监测部门',
   dataIndex: 'monitoringDepart',
-  width: '10%'
 }, {
   title: '监测结果',
   dataIndex: 'monitoringResult',
-  width: '10%'
 }, {
   title: '监测报告',
   dataIndex: 'monitoringReportURL',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**
@@ -60,7 +58,7 @@ const options = [{
  */
 const itemDataModel = {
   serialNumber: '',
-  monitoringDatetime: '',
+  monitoringDatetime: moment(new Date()).format(dateFormat),
   monitoringDepart: '',
   monitoringResult: '',
   monitoringReportURL: '',

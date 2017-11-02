@@ -57,9 +57,16 @@ class StaffDetails extends React.Component {
 
       // 员工主信息
       data: {
-        age: '',
+        realName: '',
         sex: '',
+        age: '',
+        address: '',
+        idCard: '',
+        phoneNumber: '',
+        email: '',
         departmentId: '',
+        password: '',
+        isActivationLogin: false,
       },
 
       departmentList: []
@@ -117,14 +124,17 @@ class StaffDetails extends React.Component {
 
       var memberDetail = res.data.member;
 
-      this.setState({
-        data: memberDetail,
+      this.setState(prev => ({
+        data: {
+          ...prev.data,
+          ...memberDetail
+        },
         uploadedFileList: [{
           uid: -1,
           status: 'done',
-          url: memberDetail.headImagePath
+          url: memberDetail.headImagePath || ''
         }]
-      });
+      }));
     }).catch(err => {
       MyToast('获取员工详情失败')
     })
@@ -275,7 +285,7 @@ class StaffDetails extends React.Component {
               <Col span={8}>
                 <FormItem {...formItemLayout} label="部门ID">
                   {getFieldDecorator('departmentId', {
-                    initialValue: this.state.data.departmentId.toString(),
+                    initialValue: this.state.data.departmentId + '',
                     rules: [{ required: true },
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],

@@ -17,43 +17,34 @@ import {
 const columns = [{
     title: '燃料名称',
     dataIndex: 'theName',
-    width: '10%'
 }, {
     title: '产地',
     dataIndex: 'placeOfOrigin',
-    width: '10%'
 }, {
     title: '用量',
     dataIndex: 'consumption',
-    width: '10%'
 }, {
     title: '单位',
     dataIndex: 'theUnit',
-    width: '10%'
 },{
     title: '硫含量（%）',
     dataIndex: 'sulfurContent',
-    width: '10%'
 }, {
     title: '灰分（%）',
     dataIndex: 'ashContent',
-    width: '10%'
 }, {
     title: '热值',
     dataIndex: 'calorificValue',
-    width: '10%'
 },{
     title: '热值单位',
     dataIndex: 'calorificValueUnit',
-    width: '10%'
 },{
     title: '计量单位',
     dataIndex: 'unitOfMeasurement',
-    width: '10%'
 }, {
     title: '操作',
     dataIndex: 'operation',
-    width: '10%'
+    width: 120
 }];
 
 /**

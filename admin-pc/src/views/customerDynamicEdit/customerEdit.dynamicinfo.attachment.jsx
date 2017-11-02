@@ -28,23 +28,19 @@ import {
 const columns = [{
   title: '文件名称',
   dataIndex: 'theName',
-  width: '10%'
 }, {
   title: '附件类型Id',
   dataIndex: 'attachmentTypeId',
-  width: '10%'
 }, {
   title: '文件大小',
   dataIndex: 'theSize',
-  width: '10%'
 }, {
   title: '文件路径',
   dataIndex: 'filePath',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**

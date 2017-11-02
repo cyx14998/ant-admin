@@ -33,35 +33,28 @@ import {
 const columns = [{
   title: '排放口编号',
   dataIndex: 'serialNumber',
-  width: '10%'
 }, {
   title: '排放口名称',
   dataIndex: 'theName',
-  width: '10%'
 }, {
   title: '排放口位置',
   dataIndex: 'outletLocation',
-  width: '10%'
 }, {
   title: '排放规律',
   dataIndex: 'dischargeLaw',
-  width: '10%'
 }, {
   title: '功能区类别',
   dataIndex: 'functionalAreaCategory',
-  width: '10%'
 }, {
   title: '排放方式',
   dataIndex: 'dischargeMode',
-  width: '10%'
 }, {
   title: '排放口类型',
   dataIndex: 'dischargePortType',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**

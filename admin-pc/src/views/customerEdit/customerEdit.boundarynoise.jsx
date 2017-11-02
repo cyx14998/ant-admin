@@ -25,31 +25,25 @@ import axios from '../../common/api';
 const columns = [{
   title: '编号',
   dataIndex: 'serialNumber',
-  width: '10%'
 }, {
   title: '测点名称',
   dataIndex: 'measuringPointName',
-  width: '10%'
 }, {
   title: '测点位置',
   dataIndex: 'measuringPointPosition',
-  width: '10%'
 }, {
   title: '噪声源名称',
   dataIndex: 'noiseSourceName',
-  width: '10%'
 }, {
   title: '噪声源性质',
   dataIndex: 'noiseSourcePropertyId',
-  width: '10%'
 }, {
   title: '功能区类型',
   dataIndex: 'functionalAreaTypeId',
-  width: '10%'
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '10%'
+  width: 120
 }];
 
 /**

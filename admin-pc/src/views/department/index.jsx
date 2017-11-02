@@ -6,10 +6,13 @@ import ReactDOM from 'react-dom';
 
 import {
   Button,
+  Icon,
   Table,
   Modal,
   Popconfirm
 } from 'antd';
+
+import DraggableModal from '../../components/modal.draggable';
 
 import './index.less';
 
@@ -79,10 +82,10 @@ class Department extends Component {
     columns[2].render = (text, record) => {
       return (
         <div>
-          <a href="#" style={{marginRight: '10px'}} onClick={() => this.addNewDepartment(record.tableId)}>新增</a>
-          <a href="#" style={{marginRight: '10px'}} onClick={() => this.editDepartment(record)}>编辑</a>
+          <a href="#" style={{marginRight: '10px'}} onClick={() => this.addNewDepartment(record.tableId)}><Icon type="file-add" className="yzy-icon" /></a>
+          <a href="#" style={{marginRight: '10px'}} onClick={() => this.editDepartment(record)}><Icon type="edit" className="yzy-icon" /></a>
           <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteDepartment(record.tableId)}>
-            <a href="#">删除</a>
+            <a href="#"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>          
         </div>
       )
@@ -151,6 +154,11 @@ class Department extends Component {
   }
 
   editDepartment(record) {
+    if (this.state.departmentListOptions.length === 0) {
+      MyToast('部门列表请求中，请稍后再试');
+      return;
+    }
+
     this.setState({
       editModalVisible: true,
       editDepartmentRecord: record,
@@ -171,6 +179,11 @@ class Department extends Component {
   }
 
   addNewDepartment(fatherId) {
+    if (this.state.departmentListOptions.length === 0) {
+      MyToast('部门列表请求中，请稍后再试');
+      return;
+    }
+    
     this.setState({
       editModalVisible: true,
       editDepartmentRecord: {fatherId},
@@ -180,9 +193,6 @@ class Department extends Component {
 
   addNewDepartmentRecord({fatherId, theName}) {
     getDepartmentListAdd({fatherId, theName}).then(res => {
-      if (res.data.result !== 'success') {
-        MyToast(res.data.info || '新增部门失败')
-      }
 
       var departmentId = res.data.tableId;
 
@@ -226,7 +236,7 @@ class Department extends Component {
             loading={this.state.loading} />
         </div>
 
-        <Modal
+        <DraggableModal
           width="90%"
           visible={this.state.editModalVisible}
           title={this.state.editModalTitle}
@@ -241,7 +251,7 @@ class Department extends Component {
               addRecord={this.addNewDepartmentRecord.bind(this)}
               editRecord={this.editDepartmentRecord.bind(this)} />
           }
-        </Modal>
+        </DraggableModal>
       </div>
     )
   }

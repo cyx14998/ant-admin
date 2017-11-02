@@ -10,18 +10,18 @@ import {
     Button,
     Select,
     Popconfirm,
-    Upload,
-    Menu,
-    Alert,
     DatePicker,
-    message, Tabs, Dropdown, Checkbox, Pagination, Radio, Row, Col, Modal,
+    message,
+    Dropdown,
+    Row,
+    Col,
+    Modal,
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 import moment from 'moment';
 
 import { MyToast, getLocQueryByLabel } from '../../common/utils';
-import { getToken, } from '../../common/api/index';
 
 import {
     getCustomerInfoById,
@@ -32,8 +32,10 @@ import {
     getCityList,
     getAreaList,
     getTownList,
-    getQiNiuToken
 } from '../../common/api/api.customer';
+
+//引入上传图片组件
+import QiniuUpload from '../../components/upload';
 const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 const uploadUrl = 'http://up.qiniu.com/';
 
@@ -45,23 +47,11 @@ const formItemLayoutInner = {
     labelCol: { span: 16 },
     wrapperCol: { span: 8 },
 }
-const uploadButton = (
-    <div>
-        <Icon type="plus" />
-        <div className="ant-upload-text">Upload</div>
-    </div>
-);
 
 class CustomerEditBaseinfoDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
-            prodPreviewImage: [], //生产工艺
-            positionPreviewImage: [], //地理位置         
-            prodPreviewVisible: false,
-            positionPreviewVisible: false,
-            prodImgUrl: '',
-            positionImgUrl: '',
             prodFileList: [], //生产工艺流程图
             positionFileList: [], //地理位置图
             customer: {},
@@ -74,29 +64,16 @@ class CustomerEditBaseinfoDetail extends React.Component {
             areaId: '',
             townId: '',
             uptoken: '',
-            onBaseinfoSave: this.props.onBaseinfoSave||'',
+            onBaseinfoSave: this.props.onBaseinfoSave || '',
         });
-
-        this.beforeUpload = this.beforeUpload.bind(this);
-
-
-        this.qiniuyunData = {
-            // key: Date.now(),
-            // token: 'xozWSPMxkMjIVoHg2JyXq4-7-oJaEADLOKHVR0vU:1AreAaaS0j5_bjgQsHSshM0zTZI=:eyJkZWxldGVBZnRlckRheXMiOjcsInNjb3BlIjoianNzZGsiLCJkZWFkbGluZSI6MTUwOTAxNTA3Mn0=',
-            // token: "W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:AuMz5nKqsSrEQ6Y6mb-gBpJunIQ=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDEzMTkxfQ=="
-            // token:"W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:wxacrkBBNB8Pjby5ZJaQQd4NGLs=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTA5MDE1OTM2fQ==",
-        };
     }
 
     componentDidMount() {
-        // fetch data from api for FormItem initialValue
         //获取省份        
         getProvinceList({}).then(res => {
-            console.log('getProvinceList res', res);
             if (res.data.result !== 'success') {
                 return
             }
-            // console.log(res.data.customer)
             this.setState({
                 provinceList: res.data.provinceList,
             })
@@ -108,32 +85,37 @@ class CustomerEditBaseinfoDetail extends React.Component {
             if (res.data.result !== 'success') {
                 return
             }
-            // console.log(res.data.customer)
             this.setState({
                 customer: res.data.customer
             })
-            // data.productionFlowChartURL=this.state.prodImgUrl;
-            // data.factoryFloorPlanURL
+            //图片初始化
             if (res.data.customer.productionFlowChartURL) {
                 self.setState({
                     prodFileList: [{
                         uid: '1',
-                        name: '123',
+                        name: '生产流程图',
                         url: res.data.customer.productionFlowChartURL
                     }],
-                    prodImgUrl: res.data.customer.productionFlowChartURL,
+                });
+            } else {
+                self.setState({
+                    prodFileList: [],
                 });
             }
             if (res.data.customer.factoryFloorPlanURL) {
                 self.setState({
                     positionFileList: [{
                         uid: '1',
-                        name: '123',
+                        name: '地理位置图',
                         url: res.data.customer.factoryFloorPlanURL
                     }],
-                    positionImgUrl: res.data.customer.factoryFloorPlanURL
+                });
+            } else {
+                self.setState({
+                    positionFileList: [],
                 });
             }
+            //地址（省市区）初始化
             if (res.data.customer.cityId) {
                 self.changeProvince(res.data.customer.provinceId)
             }
@@ -144,8 +126,6 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 self.changeTown(res.data.customer.townId)
             }
         }).catch(err => console.log(err));
-
-        // this.beforeUpload();
     }
     //更改省份
     changeProvince(key) {
@@ -226,106 +206,23 @@ class CustomerEditBaseinfoDetail extends React.Component {
         //     townId: key,
         // })
     }
-    beforeUpload(file) {
-        console.log(file)
-        //获取uptoken
-        // if (this.state.uptoken == '') {
-        getQiNiuToken({}).then(res => {
-            console.log('uptoken res------------------------', res);
 
-            if (!res.data || !res.data.uptoken) {
-                console.error('getqiniuyun uptoken error');
-                return;
-            }
-
-            // this.setState({
-            //     uptoken: res.data.uptoken
-            // })
-
-            this.qiniuyunData.token = res.data.uptoken;
-
-        }).catch(err => console.log(err));
-        // }
-    }
-    //生产图片上传
-    handleProdPicChange({ fileList }) {
-        console.log('handlePropicchange -----------------', fileList);
+    //生产图片
+    handleProdFileList({ fileList }) {
         this.setState({
             prodFileList: fileList,
         });
-
-        var index = fileList.length;
-        if (index > 0) {
-            if (fileList[index - 1].status === 'done') {
-                console.log(fileList[index - 1]);
-                console.log(fileList[index - 1].response);
-                // console.log(fileList[index - 1].response.result)
-                this.setState({
-                    prodImgUrl: downloadUrl + fileList[index - 1].response.filePath,
-                });
-            } else {
-                console.log(1)
-            }
-        }
-        console.log(this.state.prodImgUrl);
     }
-    //生产图片取消预览
-    prodPicModalCancel() {
-        this.setState({
-            prodPreviewImage: [],
-            prodPreviewVisible: false,
-        })
-    }
-    //生产图片预览
-    handleProdPicPreview(file) {
-        this.setState({
-            prodPreviewImage: file.url || file.thumbUrl,
-            prodPreviewVisible: true,
-        })
-    }
-    //地理位置图片上传
-    handlePositionPicChange({ fileList }) {
-        console.log('handlePositionpicchange -----------------', fileList);
+    // 地理位置图片
+    handlePositionFileList({ fileList }) {
         this.setState({
             positionFileList: fileList,
         });
+    }
 
-        var index = fileList.length;
-        if (index > 0) {
-            if (fileList[index - 1].status === 'done') {
-                console.log(fileList[index - 1].response);
-                // console.log(fileList[index - 1].response.result)
-                this.setState({
-                    positionImgUrl: downloadUrl + fileList[index - 1].response.filePath,
-                });
-            }
-        }
-        console.log(this.state.positionImgUrl);
-    }
-    //地理位置图片预览
-    handlePositionPicPreview(file) {
-        this.setState({
-            positionPreviewImage: file.url || file.thumbUrl,
-            positionPreviewVisible: true,
-        })
-    }
-    //地理位置图片取消预览
-    positionPicModalCancel() {
-        this.setState({
-            positionPreviewImage: [],
-            positionPreviewVisible: false,
-        })
-    }
-    //地理位置图片取消预览
-    positionPicModalCancel() {
-        this.setState({
-            positionPreviewImage: [],
-            positionPreviewVisible: false,
-        })
-    }
     // 基本信息保存
     saveDetail(e) {
-        var self=this;
+        var self = this;
         e.preventDefault();
         const {
           form
@@ -335,7 +232,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             if (err) return;
 
             var data = { ...values };
-            // 地址
+            // 地址处理
             var provinceName = self.state.provinceId ? self.state.provinceList[data.provinceId - 1].theName : '';
             var cityName = '';
             self.state.cityId ?
@@ -356,12 +253,45 @@ class CustomerEditBaseinfoDetail extends React.Component {
                         townName = item.theName;
                 }) : '';
             data.unitAddress = provinceName + cityName + areaName + townName + data.address;
-            //时间
+            //时间处理
             data.openingDate = data.openingDate ? data.openingDate.format('YYYY-MM-DD') : new Date();
+            // 图片处理
+            //生产工艺流程图及排污环节
+            var prodFileUrl = self.state.prodFileList[0];
+            if (!prodFileUrl) {
+                prodFileUrl = "";
+            } else {
+                prodFileUrl = prodFileUrl.url
+                // 上传
+                if (!prodFileUrl) {
+                    prodFileUrl = self.state.prodFileList[0].response.filePath;
+                }
+                if (!prodFileUrl) {
+                    prodFileUrl = ""
+                } else if (prodFileUrl.indexOf(downloadUrl) === -1) {
+                    prodFileUrl = downloadUrl + prodFileUrl;
+                }
+            }
+            //企业地理位置图和厂区平面布局图
+            var positionFileUrl = self.state.positionFileList[0];
+            if (!positionFileUrl) {
+                positionFileUrl = "";
+            } else {
+                positionFileUrl = positionFileUrl.url
+                // 上传
+                if (!positionFileUrl) {
+                    positionFileUrl = self.state.positionFileList[0].response.filePath;
+                }
+                if (!positionFileUrl) {
+                    positionFileUrl = ""
+                } else if (positionFileUrl.indexOf(downloadUrl) === -1) {
+                    positionFileUrl = downloadUrl + positionFileUrl;
+                }
+            }
             //图片
-            data.productionFlowChartURL = self.state.prodImgUrl;
-            data.factoryFloorPlanURL = self.state.positionImgUrl;
-            console.log('when saveDetail ---', data);
+            data.productionFlowChartURL = prodFileUrl;
+            data.factoryFloorPlanURL = positionFileUrl;
+            console.log('when savebaseInfoDetail -------', data);
 
             var cusId = getLocQueryByLabel('id');
             if (cusId === '') {
@@ -369,10 +299,13 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 saveAddCustomerInfoById(data).then(res => {
                     console.log('saveCustomerInfoById res', res);
                     if (res.data.result !== 'success') {
+                        MyToast(res.data.info);
                         return
                     }
+                    console.log('123456----------------',res.data)
                     MyToast('保存成功');
-                    self.state.onBaseinfoSave();
+                    self.state.onBaseinfoSave(); //控制其他tabs可用
+                    localStorage.setItem("yt-customerId", res.data.tableId);
                 }).catch(err =>
                     MyToast(err)
                     )
@@ -390,7 +323,6 @@ class CustomerEditBaseinfoDetail extends React.Component {
         })
     }
     render() {
-        // const data = { token: this.state.uptoken }  
         let { getFieldDecorator } = this.props.form;
         var customer = this.state.customer;
 
@@ -410,7 +342,6 @@ class CustomerEditBaseinfoDetail extends React.Component {
         var townOptions = this.state.areaList ? this.state.townList.map((item, index) => {
             return <Option key={item.tableId}>{item.theName}</Option>
         }) : '';
-        // console.log('sss',provinceOptions);
 
         return (
             <div className="yzy-tab-content-item-wrap">
@@ -421,8 +352,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="企业名称">
                                     {getFieldDecorator('customerName', {
-                                        initialValue: customer.customerName,
-                                        rules: [{ required: true },
+                                        initialValue: customer.customerName ? customer.customerName : '',
+                                        rules: [{ required: true,message: '必填!' },
                                             //{ pattern: /^[0-9]*$/ } 
                                         ],
                                     })(
@@ -433,8 +364,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="社会信用代码">
                                     {getFieldDecorator('uniformSocialCreditCode', {
-                                        initialValue: customer.uniformSocialCreditCode,
-                                        rules: [{ required: true, message: 'Please input your uniformSocialCreditCode!' },
+                                        initialValue: customer.uniformSocialCreditCode ? customer.uniformSocialCreditCode : '',
+                                        rules: [{ required: true, message: '必填!' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         ],
                                     })(
@@ -445,8 +376,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="单位类别">
                                     {getFieldDecorator('unitCategory', {
-                                        initialValue: customer.unitCategory,
-                                        //rules: [{ required: true, message: 'Please input your unitCategory!' },
+                                        initialValue: customer.unitCategory ? customer.unitCategory : '',
+                                        //rules: [{ required: true, message: '必填!' },
                                         // pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -461,7 +392,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="中心纬度">
                                     {getFieldDecorator('latitude', {
                                         initialValue: customer.latitude ? customer.latitude + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your latitude!' },
+                                        //rules: [{ required: true, message: '必填!' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -473,7 +404,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="中心经度">
                                     {getFieldDecorator('longitude', {
                                         initialValue: customer.longitude ? customer.longitude + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your longitude!' },
+                                        //rules: [{ required: true, message: '必填!' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -485,7 +416,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="邮政编码">
                                     {getFieldDecorator('postalCode', {
                                         initialValue: customer.postalCode ? customer.postalCode + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your postalCode!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -499,8 +430,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="联系人">
                                     {getFieldDecorator('contactPerson', {
-                                        initialValue: customer.contactPerson,
-                                        rules: [{ required: true, message: 'Please input your contactPerson!' },
+                                        initialValue: customer.contactPerson ? customer.contactPerson : '',
+                                        rules: [{ required: true, message: '必填' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         ],
                                     })(
@@ -511,8 +442,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="电话">
                                     {getFieldDecorator('phoneNumber', {
-                                        initialValue: customer.phoneNumber,
-                                        rules: [{ required: true, message: 'Please input your phoneNumber!' },
+                                        initialValue: customer.phoneNumber ? customer.phoneNumber : '',
+                                        rules: [{ required: true, message: '必填' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         ],
                                     })(
@@ -523,8 +454,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="传真">
                                     {getFieldDecorator('fax', {
-                                        initialValue: customer.fax,
-                                        //rules: [{ required: true, message: 'Please input your fax!' },
+                                        initialValue: customer.fax ? customer.fax : '',
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -538,8 +469,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="企业规模">
                                     {getFieldDecorator('enterpriseScale', {
-                                        initialValue: customer.enterpriseScale,
-                                        //rules: [{ required: true, message: 'Please input your enterpriseScale!' },
+                                        initialValue: customer.enterpriseScale ? customer.enterpriseScale : '',
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -551,7 +482,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="管辖归属">
                                     {getFieldDecorator('jurisdictionAscriptionId', {
                                         initialValue: customer.jurisdictionAscriptionId ? customer.jurisdictionAscriptionId + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your jurisdictionAscriptionId!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -567,7 +498,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('provinceId', {
                                         //initialValue: this.state.provinceList[0] ? this.state.provinceList[0].tableId : '',
                                         initialValue: (this.state.provinceList && customer.provinceId ? customer.provinceId : '') + "",
-                                        //rules: [{ required: true, message: 'Please input your provinceId!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -581,7 +512,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('cityId', {
                                         initialValue: (this.state.cityList && customer.cityId ? customer.cityId : '') + "",
-                                        //rules: [{ required: true, message: 'Please input your cityId!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //    //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' }
                                         //],
                                     })(
@@ -595,7 +526,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('areaId', {
                                         initialValue: (this.state.areaList && customer.areaId ? customer.areaId : '') + "",
-                                        //rules: [{ required: true, message: 'Please input your areaId!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -610,7 +541,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('townId', {
                                         //initialValue: this.state.townList[0] ? this.state.provinceList[0].tableId : '',
                                         initialValue: (this.state.townId ? customer.townId : '') + "",
-                                        ////rules: [{ required: true, message: 'Please input your townId!' },
+                                        ////rules: [{ required: true, message: '必填' },
                                         ////{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //// ],
                                     })(
@@ -623,8 +554,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem>
                                     {getFieldDecorator('address', {
-                                        initialValue: customer.address,
-                                        //rules: [{ required: true, message: 'Please input your address!' },
+                                        initialValue: customer.address ? customer.address : '',
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -641,8 +572,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="行业类别">
                                     {getFieldDecorator('industryCategory', {
-                                        initialValue: customer.industryCategory,
-                                        //rules: [{ required: true, message: 'Please input your industryCategory!' },
+                                        initialValue: customer.industryCategory ? customer.industryCategory : '',
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -653,8 +584,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="企业规模">
                                     {getFieldDecorator('enterpriseScale', {
-                                        initialValue: customer.enterpriseScale,
-                                        //rules: [{ required: true, message: 'Please input your enterpriseScale!' },
+                                        initialValue: customer.enterpriseScale ? customer.enterpriseScale : '',
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -668,7 +599,6 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                         initialValue: moment(customer.openingDate || new Date(), 'YYYY-MM-DD'),
                                     })(
                                         //<DatePicker value={customer.openingDate ? moment(customer.openingDate, 'YYYY/MM/DD') : moment(new Date(), 'YYYY/MM/DD')} onChange={this.onChange.bind(this)} />
-                                        //<Input placeholder="投产日期" />
                                         <DatePicker />
                                         )}
                                 </FormItem>
@@ -678,7 +608,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="隶属关系">
                                     {getFieldDecorator('affiliation', {
-                                        initialValue: customer.affiliation,
+                                        initialValue: customer.affiliation ? customer.affiliation : '',
                                         //rules: [{ required: true },
                                         //{ pattern: /^[0-9]*$/ } 
                                         //],
@@ -690,8 +620,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="重点级别">
                                     {getFieldDecorator('priorityLevel', {
-                                        initialValue: customer.priorityLevel,
-                                        //rules: [{ required: true, message: 'Please input your priorityLevel!' },
+                                        initialValue: customer.priorityLevel ? customer.priorityLevel : '',
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -702,8 +632,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="重点类型">
                                     {getFieldDecorator('priorityType', {
-                                        initialValue: customer.priorityType,
-                                        //rules: [{ required: true, message: 'Please input your priorityType!' },
+                                        initialValue: customer.priorityType ? customer.priorityType : '',
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -729,7 +659,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="废水排放口数量">
                                     {getFieldDecorator('wastewaterDischargePorts', {
                                         initialValue: customer.wastewaterDischargePorts ? customer.wastewaterDischargePorts + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your wastewaterDischargePorts!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -741,7 +671,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     <FormItem {...formItemLayoutInner} label="是否燃气电厂">
                                         {getFieldDecorator('isGasPowerPlant', {
                                             initialValue: (customer.isGasPowerPlant ? customer.isGasPowerPlant : 'true') + "",
-                                            //rules: [{ required: true, message: 'Please input your isGasPowerPlant!' },
+                                            //rules: [{ required: true, message: '必填' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                             //],
                                         })(
@@ -756,7 +686,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     <FormItem {...formItemLayoutInner} label="是否央企">
                                         {getFieldDecorator('isCentralEnterprises', {
                                             initialValue: (customer.isCentralEnterprises ? customer.isCentralEnterprises : 'true') + "",
-                                            //rules: [{ required: true, message: 'Please input your isCentralEnterprises!' },
+                                            //rules: [{ required: true, message: '必填' },
                                             //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                             //],
                                         })(
@@ -774,7 +704,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} label="是否30万千瓦以上电力">
                                     {getFieldDecorator('isMoreThan30PowerEnterprise', {
                                         initialValue: (customer.isMoreThan30PowerEnterprise ? customer.isMoreThan30PowerEnterprise : 'true') + "",
-                                        //rules: [{ required: true, message: 'Please input your isMoreThan30PowerEnterprise!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -801,7 +731,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="氮氧">
                                     {getFieldDecorator('aiAmmoniaNitrogen', {
                                         initialValue: customer.aiAmmoniaNitrogen ? customer.aiAmmoniaNitrogen + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your aiAmmoniaNitrogen!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -815,7 +745,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="氮氧化物">
                                     {getFieldDecorator('aiNitrogenOxide', {
                                         initialValue: customer.aiNitrogenOxide ? customer.aiNitrogenOxide + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your aiNitrogenOxide!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -839,7 +769,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="二氧化硫">
                                     {getFieldDecorator('aiSulfurDioxide', {
                                         initialValue: customer.aiSulfurDioxide ? customer.aiSulfurDioxide + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your aiSulfurDioxide!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -853,7 +783,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="悬浮物">
                                     {getFieldDecorator('aiSuspendedSolids', {
                                         initialValue: customer.aiSuspendedSolids ? customer.aiSuspendedSolids + "" : '',
-                                        //rules: [{ required: true, message: 'Please input your aiSuspendedSolids!' },
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -864,8 +794,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="其他">
                                     {getFieldDecorator('aiOther', {
-                                        initialValue: customer.aiOther,
-                                        //rules: [{ required: true, message: 'Please input your aiOther!' },
+                                        initialValue: customer.aiOther ? customer.aiOther : '',
+                                        //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
@@ -879,46 +809,21 @@ class CustomerEditBaseinfoDetail extends React.Component {
                         <Col span={12}>
                             <div className="baseinfo-section">
                                 <h2 className="yzy-tab-content-title">生产工艺流程图及排污环节</h2>
-                                <Upload
-                                    action='http://up.qiniup.com'
-                                    container="container"
-                                    listType="picture-card"
-                                    fileList={this.state.prodFileList}
-                                    onPreview={this.handleProdPicPreview.bind(this)}
-                                    onChange={this.handleProdPicChange.bind(this)}
-
-                                    data={{
-                                        ...this.qiniuyunData,
-                                        key: Date.now()
-                                    }}
-                                >
-                                    {this.state.prodFileList.length >= 1 ? null : uploadButton}
-                                </Upload>
-                                <Modal visible={this.state.prodPreviewVisible} footer={null} onCancel={this.prodPicModalCancel.bind(this)}>
-                                    <img alt="example" style={{ width: '100%' }} src={this.state.prodPreviewImage} />
-                                </Modal>
+                                <QiniuUpload
+                                    uploadTitle="图片"
+                                    uploadedFileList={this.state.prodFileList}
+                                    handleUploadedFileList={this.handleProdFileList.bind(this)}
+                                />
                             </div>
                         </Col>
                         <Col span={12}>
                             <div className="baseinfo-section">
                                 <h2 className="yzy-tab-content-title">企业地理位置图和厂区平面布局图</h2>
-                                <Upload
-                                    action='http://up.qiniup.com'
-                                    container="container"
-                                    listType="picture-card"
-                                    fileList={this.state.positionFileList}
-                                    onPreview={this.handlePositionPicPreview.bind(this)}
-                                    onChange={this.handlePositionPicChange.bind(this)}
-                                    data={{
-                                        ...this.qiniuyunData,
-                                        key: Date.now()
-                                    }}
-                                >
-                                    {this.state.positionFileList.length >= 1 ? null : uploadButton}
-                                </Upload>
-                                <Modal visible={this.state.positionPreviewVisible} footer={null} onCancel={this.positionPicModalCancel.bind(this)}>
-                                    <img alt="example" style={{ width: '100%' }} src={this.state.positionPreviewImage} />
-                                </Modal>
+                                <QiniuUpload
+                                    uploadTitle="图片"
+                                    uploadedFileList={this.state.positionFileList}
+                                    handleUploadedFileList={this.handlePositionFileList.bind(this)}
+                                />
                             </div>
                         </Col>
                     </Row>

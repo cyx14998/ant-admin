@@ -6,7 +6,8 @@ import ReactDOM from 'react-dom';
 
 import {
   Button,
-  Table
+  Table,
+  Icon
 } from 'antd';
 
 import RcSearchForm from '../../components/rcsearchform';
@@ -91,7 +92,7 @@ class StaffManagement extends Component {
     columns[8].render = (text, record) => {
       return (
         <div>
-          <a onClick={() => changeParentState(record.tableId)}>查看</a>
+          <a onClick={() => changeParentState(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
         </div>
       )
     } 
@@ -135,7 +136,7 @@ class StaffManagement extends Component {
         staffList: data
       });
     }).catch(err => {
-      MyToast(res.data.info || '接口失败')
+      MyToast(err || '接口失败')
     });
   }
 
