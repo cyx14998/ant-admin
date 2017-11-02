@@ -6,10 +6,13 @@ import ReactDOM from 'react-dom';
 
 import {
   Button,
+  Icon,
   Table,
   Modal,
   Popconfirm
 } from 'antd';
+
+import Draggable from 'react-draggable'; // The default
 
 import './index.less';
 
@@ -79,10 +82,10 @@ class Department extends Component {
     columns[2].render = (text, record) => {
       return (
         <div>
-          <a href="#" style={{marginRight: '10px'}} onClick={() => this.addNewDepartment(record.tableId)}>新增</a>
-          <a href="#" style={{marginRight: '10px'}} onClick={() => this.editDepartment(record)}>编辑</a>
+          <a href="#" style={{marginRight: '10px'}} onClick={() => this.addNewDepartment(record.tableId)}><Icon type="file-add" className="yzy-icon" /></a>
+          <a href="#" style={{marginRight: '10px'}} onClick={() => this.editDepartment(record)}><Icon type="edit" className="yzy-icon" /></a>
           <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteDepartment(record.tableId)}>
-            <a href="#">删除</a>
+            <a href="#"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>          
         </div>
       )

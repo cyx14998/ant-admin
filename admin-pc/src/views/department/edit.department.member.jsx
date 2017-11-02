@@ -13,32 +13,23 @@ import {
 } from 'antd';
 
 import {
+  getDepartmentStaffList
+} from '../../common/api/api.department';
+
+import {
   MyToast,
 } from '../../common/utils';
 
 const columns = [{
-  title: 'Name',
-  dataIndex: 'name',
+  title: '姓名',
+  dataIndex: 'realName',
 }, {
-  title: 'Age',
-  dataIndex: 'age',
-}, {
-  title: 'Address',
-  dataIndex: 'address',
+  title: '手机号码',
+  dataIndex: 'phoneNumber',
 }, {
   title: '操作',
-  width: 100
+  width: 120
 }];
-
-const data = [];
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    name: `Edward King ${i}`,
-    age: 32,
-    address: `London, Park Lane no. ${i}`,
-  });
-}
 
 
 /**
@@ -49,10 +40,12 @@ class EditDepartmentMember extends Component {
     super(props);
 
     this.state = {
-      loading: false,
+      loading: true,
+      dataSource: []
     }
 
     this.addMember = this.addMember.bind(this);
+    this._getDepartmentStaffList = this._getDepartmentStaffList.bind(this);
 
     columns[3].render = (text, record) => {
       return (
@@ -63,19 +56,35 @@ class EditDepartmentMember extends Component {
     }
   }
 
+  componentDidMount() {
+    this._getDepartmentStaffList();
+  }
+
   addMember(id) {
     alert(id)
+  }
+
+  _getDepartmentStaffList() {
+    getDepartmentStaffList({}).then(res => {
+      if (res.data.result !== 'success') {
+        MyToast(res.data.info || '未加入部门员工列表获取失败');
+        return;
+      }
+
+      let memberList = res.data.memberList;
+      this.setState({
+        loading: false,
+        dataSource: memberList
+      });
+    }).catch(err => MyToast(err));
   }
 
   render() {
     return (
       <div>
-        <div style={{ marginBottom: 16 }}>
-          <Button type="primary" style={{float: 'right'}}>添加</Button>
-        </div>
         <Table 
           columns={columns} 
-          dataSource={data} />
+          dataSource={dataSource} />
       </div>
     )
   }

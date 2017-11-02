@@ -17,15 +17,15 @@ const menuConfig = [
     name: 'customer',
     key: '客户管理|/customer.html'
   }, {
-    sub: '客户检查计划管理',
+    sub: '计划管理',
     icon: 'schedule',
     name: 'checkplan',
-    key: '客户检查计划管理|/checkplan.html'
+    key: '计划管理|/checkplan.html'
   },{
-    sub: '我的检查任务',
+    sub: '我的任务',
     icon: 'solution',
     name: 'checkplanmy',
-    key: '我的检查任务|/checkplanmy.html'
+    key: '我的任务|/checkplanmy.html'
   },  {
     sub: '员工管理',
     icon: 'contacts',

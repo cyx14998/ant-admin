@@ -1,7 +1,20 @@
 @import './reset.less';
 @import './theme.less';
+@import './antd.fix.less';
 
+/**
+ * height: 100%
+ */
+html, body {
+  min-height: 100%;
+  min-width: 100%;
+  width: 100%;
+  background-color: @color-bg-gray;;
+}
 
+.yzy-icon {
+  font-size: 14px;
+}
 
 /**
  * button
@@ -41,7 +54,7 @@
 .yzy-search-form-wrap {
   background-color: #fff;
   padding: 20px;
-  // margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 /**
@@ -49,7 +62,8 @@
  */
 .yzy-list-wrap {
   background-color: #fff;
-  padding-bottom: 20px;
+  padding: 20px;
+
   .yzy-list-btns-wrap {
     display: flex;
     justify-content: 'flex-start';
@@ -65,13 +79,20 @@
 }
 
 
+.baseinfo-section {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
 /**
  * tab界面
  */
 .yzy-tab-content-wrap {
-  width: 100%;
+  width: 100%;  
 }
-.yzy-tab-content-item-wrap {
+.yzy-tab-content-item-wrap {  
+  background-color: #fff;
+
   .yzy-tab-content-title {
     font-size: 16px;
     border-left: 5px solid @primary-color;
