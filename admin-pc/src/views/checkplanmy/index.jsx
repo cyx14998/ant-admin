@@ -55,7 +55,7 @@ class CustomerCheckPlanMy extends React.Component {
     }
 
     componentDidMount() {
-        this.getData({ });
+        this.getData({});
     }
     //获取列表数据--封装
     getData(params) {
@@ -135,7 +135,7 @@ class CustomerCheckPlanMy extends React.Component {
         }, {
             title: '备注',
             dataIndex: 'theRemarks',
-        },{
+        }, {
             title: '状态',
             dataIndex: 'theState',
             render: (text, record, index) => (
@@ -150,7 +150,10 @@ class CustomerCheckPlanMy extends React.Component {
             render: (text, record, index) => (
                 <div>
                     <a onClick={() => self.showTestModal(record)} style={{ marginRight: 8 }}><Icon type="edit" className="yzy-icon" /></a>
-                    <a style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}>完成</a>
+                    {record.theState ?
+                        <a style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}><Icon type="check" className="yzy-icon" /></a>
+                        : ''
+                    }
                 </div>
             )
         },
@@ -171,9 +174,9 @@ class CustomerCheckPlanMy extends React.Component {
                         dataSource={this.state.checkplanMyList}
                         rowKey="tableId"
                         rowClassName={(record, index) => {
-                          if (index % 2 !== 0) {
-                            return 'active'
-                          }
+                            if (index % 2 !== 0) {
+                                return 'active'
+                            }
                         }}
                         loading={this.state.loading} />
                 </div>
@@ -187,7 +190,7 @@ class CustomerCheckPlanMy extends React.Component {
                         onCancel={this.TestCancel.bind(this)}
                         className='modal editModal'
                     >
-                        <CheckplanDetailForm recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)}wrappedComponentRef={this.saveFormRef.bind(this)} />
+                        <CheckplanDetailForm recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)} />
                     </Modal> : null
                 }
             </div>

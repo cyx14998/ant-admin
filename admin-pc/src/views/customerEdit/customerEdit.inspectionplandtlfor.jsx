@@ -92,7 +92,13 @@ class SiteInspection extends React.Component {
           <Table
             columns={columns}
             dataSource={this.state.dataSource}
-            rowKey="tableId" />
+            rowKey="tableId"
+            rowClassName={(record, index) => {
+              if (index % 2 !== 0) {
+                return 'active'
+              }
+            }}
+          />
         </div>
       </div>
     )

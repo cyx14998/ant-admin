@@ -11,6 +11,9 @@ import {
   getCertificationDelete,
 } from '../../common/api/api.customer.plus.js';
 
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+
 /**
  * table head
  */
@@ -54,8 +57,8 @@ const options = [{
  */
 const itemDataModel = {
   theName: '',
-  releaseDatetime: '',
-  expiryDatetime: '',
+  releaseDatetime: moment(new Date()).format(dateFormat),
+  expiryDatetime: moment(new Date()).format(dateFormat),
   filePath: '',
   approvalUnit: '',
   theRemarks: '',

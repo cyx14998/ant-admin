@@ -27,7 +27,7 @@ class Login extends React.Component {
             <div className="login">
                 <div className="loginInput">
                     <div className="login-top">
-                        <span>友通环保后台管理系统</span>
+                        <span style={{color: '#000'}}>友通环保后台管理系统</span>
                         <div style={{ fontSize: 6 }}>
                             You Tong Huan Bao Hou Tai Guan Li Xi Tong
                         </div>
