@@ -233,6 +233,11 @@ class DepartmentEdit extends Component {
       form,
     } = this.props;
 
+    var departentId = record.tableId;
+    if (!departentId) {
+      departentId = this.state.newAddDepartmentId
+    }
+
     let { getFieldDecorator } = form;
 
     return (
@@ -244,7 +249,7 @@ class DepartmentEdit extends Component {
               <Col span={12}>
                 <FormItem {...formItemLayout} label="部门名称">
                   {getFieldDecorator('theName', {
-                    initialValue: record.theName,
+                    initialValue: record.theName ? record.theName + '' : '',
                     rules: [{ required: true },
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
@@ -256,7 +261,7 @@ class DepartmentEdit extends Component {
               <Col span={12}>
                 <FormItem {...formItemLayout} label="上级部门">
                   {getFieldDecorator('fatherId', {
-                    initialValue: record.fatherId ? record.fatherId : '',
+                    initialValue: record.fatherId ? record.fatherId + '' : '',
                     rules: [{required: true}]
                   })(
                     <Select placeholder="上级部门">
@@ -305,7 +310,7 @@ class DepartmentEdit extends Component {
           footer={null}>
           {
             this.state.modalVisible &&
-            <EditDepartmentMember />
+            <EditDepartmentMember departentId={departentId} />
           }
         </Modal>
       </div>

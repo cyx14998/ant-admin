@@ -154,6 +154,11 @@ class Department extends Component {
   }
 
   editDepartment(record) {
+    if (this.state.departmentListOptions.length === 0) {
+      MyToast('部门列表请求中，请稍后再试');
+      return;
+    }
+
     this.setState({
       editModalVisible: true,
       editDepartmentRecord: record,
@@ -174,6 +179,11 @@ class Department extends Component {
   }
 
   addNewDepartment(fatherId) {
+    if (this.state.departmentListOptions.length === 0) {
+      MyToast('部门列表请求中，请稍后再试');
+      return;
+    }
+    
     this.setState({
       editModalVisible: true,
       editDepartmentRecord: {fatherId},
@@ -183,9 +193,6 @@ class Department extends Component {
 
   addNewDepartmentRecord({fatherId, theName}) {
     getDepartmentListAdd({fatherId, theName}).then(res => {
-      if (res.data.result !== 'success') {
-        MyToast(res.data.info || '新增部门失败')
-      }
 
       var departmentId = res.data.tableId;
 

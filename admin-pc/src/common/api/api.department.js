@@ -137,10 +137,17 @@ export function getDepartmentStaffList({
 /**
  * 添加部门成员
  */
-export function getDepartmentStaffAdd({
-
+export function getDepartmentStaffAddBatch({
+  departmentId,
+  staffArr,
 }) {
-
+  return axios.get('/uDepartmentMemberRelationAddBatch.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      departmentId,
+      staffArr
+    }
+  })
 }
 
 /**
