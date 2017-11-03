@@ -17,12 +17,8 @@ const rcsearchformData = {
   colspan: 2,
   fields: [{
     type: 'input',
-    label: '姓名',
-    name: 'realName',
-  }, {
-    type: 'input',
-    label: '手机号',
-    name: 'phoneNumber'
+    label: '关键字',
+    name: 'keyword',
   }]
 };
 
@@ -105,11 +101,10 @@ class StaffManagement extends Component {
 
   handleFormSearch(values) {
     console.log('handleSearch ---------', values);
-    if (!values.realName && !values.phoneNumber) return;
+    if (!values.keyword) return;
 
     this.getData({
-      realName: values.realName,
-      phoneNumber: values.phoneNumber,
+      keyword: values.keyword
     });
   }
 

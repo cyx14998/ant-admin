@@ -127,7 +127,11 @@ class QiniuUpload extends React.Component {
               )
             }
         </Upload>
-        <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancel.bind(this)}>
+        <Modal 
+          width="90%"
+          visible={this.state.previewVisible} 
+          footer={null} 
+          onCancel={this.handleCancel.bind(this)}>
           <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
         </Modal>
       </div>
