@@ -1,16 +1,17 @@
 /**
- * 废水治理基本情况
+ * 废气治理基本情况
  */
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getApproachList,
   getWastewaterTreatmentList,
   getWastewaterTreatmentAdd,
   getWastewaterTreatmentDelete,
   getWastewaterTreatmentUpdate,
 } from '../../common/api/api.customer.plus.js';
+const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
@@ -32,7 +33,7 @@ const columns = [{
   title: '治理类型',
   dataIndex: 'governanceType',
 }, {
-  title: '处理方法ID',
+  title: '处理方法',
   dataIndex: 'approachId',
 }, {
   title: '设计处理能力',
@@ -49,16 +50,6 @@ const columns = [{
   width: 120
 }];
 
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
 
 /**
  * 新数据默认值
@@ -68,8 +59,11 @@ const itemDataModel = {
   governanceType: '',
   approachId: '',
   designProcessingPower: '',
-  putInUseDate:  moment(new Date()).format(dateFormat),
-  standingBookURL: '',
+  putInUseDate: moment(new Date()).format(dateFormat),
+  standingBookURL: {
+    cellType: 'fileUpload',
+    fileList: []
+  },
 };
 
 /**
@@ -78,58 +72,85 @@ const itemDataModel = {
 const WasteGasTreatment = connectEditableSectionApi({
   secTitle: '废气治理基本情况',
   columns: columns,
-  apiLoader: function ({apiListItemId}) {
+  apiLoader: function ({ apiListItemId }) {
     var editId = apiListItemId;
-    if(editId === undefined){
+    if (editId === undefined) {
       editId = localStorage.getItem('wastewater-discharge-editId');
     }
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       axios.all([
         getApproachList({}),
-        getWastewaterTreatmentList({sourceType:1,sourceId:editId}),
+        getWastewaterTreatmentList({ sourceType: 1, sourceId: editId }),
       ]).then(axios.spread((approachList, wwTreatmentList) => {
-        console.log("approachList=====================",approachList),
-        console.log("wwTreatmentList=====================",wwTreatmentList)
+        console.log("approachList=====================", approachList),
+          console.log("wwTreatmentList=====================", wwTreatmentList)
         //废气治理列表
         var wwTreatmentData = wwTreatmentList.data.controlFacilitiesList;
+
         //处理方法列表
         var approachList = approachList.data.approachList;
+
         var approachData = {
           value: "1",
           options: convertObjectLabel(approachList)
         };
-        itemDataModel.approachId = approachData;  
-        wwTreatmentData = wwTreatmentData.map( item => {
+
+        itemDataModel.approachId = approachData;
+
+        var data = wwTreatmentData.map(item => {
+          var fileList = item.standingBookURL ? [{uid: -1, name: '文件', url: item.standingBookURL}] : [];
+         
           return {
             ...item,
             approachId: {
-              value: item.approach.tableId+'',
+              value: (item.approach && item.approach.tableId && item.approach.tableId + '') || '',
               options: convertObjectLabel(approachList)
             },
+            standingBookURL: {
+              cellType: 'fileUpload',
+              fileList,
+            }
           }
         });
+
         //渲染页面
         resolve({
           code: 0,
-          data: wwTreatmentData,
+          data,
         })
       }))
     })
   },
   apiSave: function (record) {
     // 新增
-    record.approachId = record.approachId.value;
     var self = this;
-    if(record.apiListItemId === undefined){
+    if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     };
-    record.sourceId = record.apiListItemId;
+
+    var file = record.standingBookURL.fileList[0];
+    var filePath = '';
+
+    if (file && file.url) {
+      filePath = file.url
+    }
+
+    if (file && file.response) {
+      filePath = downloadUrl + file.response.filePath;
+    }
+
+    const _record_for_save = {
+      ...record,
+      sourceId: record.apiListItemId,
+      approachId: record.approachId.value,
+      standingBookURL: filePath,
+    }
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWastewaterTreatmentAdd({
-          ...record,
-          sourceType:1
+          ..._record_for_save,
+          sourceType: 1
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -150,8 +171,8 @@ const WasteGasTreatment = connectEditableSectionApi({
       // 编辑
       return new Promise((resolve, reject) => {
         getWastewaterTreatmentUpdate({
-          ...record,
-          sourceType:1
+          ..._record_for_save,
+          sourceType: 1
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({

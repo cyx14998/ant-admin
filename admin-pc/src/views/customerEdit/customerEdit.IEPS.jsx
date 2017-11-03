@@ -4,12 +4,13 @@
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getIEPSList,
   getIEPSAdd,
   getIEPSUpdate,
   getIEPSDelete,
 } from '../../common/api/api.customer.plus.js';
+const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 
 /**
  * table head
@@ -23,7 +24,6 @@ const columns = [{
 }, {
   title: '下载路径',
   dataIndex: 'filePath',
-  type: 'downloadfile'
 }, {
   title: '操作',
   dataIndex: 'operation',
@@ -45,16 +45,20 @@ const options = [{
  * 新数据默认值
  */
 const itemDataModel = {
+  tableId: '',
   theName: '',
   implementation: '',
-  filePath: '',
+  filePath: {
+    cellType: 'fileUpload',
+    fileList: []
+  },
 };
 
 const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '企业内部环保管理制度基本情况',
   columns: columns,
   apiLoader: function () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
       getIEPSList({}).then(res => {
         console.log('getIEPSList res ---', res);
@@ -68,6 +72,18 @@ const WasteWaterDemoSection = connectEditableSectionApi({
         }
 
         var data = res.data.customerIEPSList;
+        data.map((item, index) => {
+          if (item.filePath) {
+            item.filePath = {
+              cellType: 'fileUpload',
+              fileList: [{
+                uid: -1,
+                name: 'file',
+                url: item.filePath,
+              }]
+            }
+          }
+        })
         resolve({
           code: 0,
           data,
@@ -81,14 +97,34 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     // 新增
     console.log('apiSave record ----', record);
     var self = this;
-
+    //制度
+    console.log(record)
+    var prodFileUrl = record.filePath.fileList[0];
+    if (!prodFileUrl) {
+      prodFileUrl = "";
+    } else {
+      prodFileUrl = prodFileUrl.url
+      // 上传
+      if (!prodFileUrl) {
+        prodFileUrl = record.filePath.fileList[0].response.filePath;
+      }
+      if (!prodFileUrl) {
+        prodFileUrl = ""
+      } else if (prodFileUrl.indexOf(downloadUrl) === -1) {
+        prodFileUrl = downloadUrl + prodFileUrl;
+      }
+    }
+    const _record_for_save = {
+      ...record,
+      filePath: prodFileUrl,
+    }
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getIEPSAdd({
-          ...record,
+          ..._record_for_save,
         }).then(res => {
-          console.log("getIEPSAdd res",res)
+          console.log("getIEPSAdd res", res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -109,9 +145,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       return new Promise((resolve, reject) => {
         console.log(record)
         getIEPSUpdate({
-          ...record,
+          ..._record_for_save,
         }).then(res => {
-          console.log("getIEPSUpdate res",res)
+          console.log("getIEPSUpdate res", res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,

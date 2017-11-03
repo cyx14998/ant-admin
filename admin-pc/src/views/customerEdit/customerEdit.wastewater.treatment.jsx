@@ -22,6 +22,9 @@ import {
 
 import axios from '../../common/api';
 
+const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+
+
 /**
  * table head
  */
@@ -43,21 +46,11 @@ const columns = [{
 }, {
   title: '传台账记录',
   dataIndex: 'standingBookURL',
+  width: 160,
 }, {
   title: '操作',
   dataIndex: 'operation',
   width: 120
-}];
-
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
 }];
 
 /**
@@ -66,10 +59,16 @@ const options = [{
 const itemDataModel = {
   theName: '',
   governanceType: '',
-  approachId: '',
+  approachId: {
+    value: '1',
+    options: []
+  },
   designProcessingPower: '',
   putInUseDate: moment(new Date()).format(dateFormat),
-  standingBookURL: '',
+  standingBookURL: {
+    cellType: 'fileUpload',
+    fileList: []
+  },
 };
 
 /**
@@ -88,12 +87,21 @@ const WasteWaterTreatment = connectEditableSectionApi({
         getApproachList({}),
         getWastewaterTreatmentList({ sourceType: 0, sourceId: editId }),
       ]).then(axios.spread((approachList, wwTreatmentList) => {
+<<<<<<< HEAD
         console.log("approachList=====================", approachList),
-        console.log("wwTreatmentList=====================",wwTreatmentList)
+          console.log("wwTreatmentList=====================", wwTreatmentList)
         //废气治理列表
+=======
+        // console.log("approachList=====================",approachList),
+        // console.log("wwTreatmentList=====================",wwTreatmentList)
+
+        //废水治理基本情况
+>>>>>>> zxk009
         var wwTreatmentData = wwTreatmentList.data.controlFacilitiesList;
+
         //处理方法列表
         var approachList = approachList.data.approachList;
+<<<<<<< HEAD
         var approachData = {
           value: "1",
           options: convertObjectLabel(approachList)
@@ -105,7 +113,26 @@ const WasteWaterTreatment = connectEditableSectionApi({
             approachId: {
               value: item.approach.tableId + '',
               options: convertObjectLabel(approachList)
+=======
+
+        const approachOptions = convertObjectLabel(approachList, 'tableId', 'theName');
+
+        itemDataModel.approachId.options = approachOptions;
+
+        wwTreatmentData = wwTreatmentData.map( item => {
+          let fileList = item.standingBookURL ? [{uid: -1, name: '文件', url: item.standingBookURL}] : [];
+
+          return {
+            ...item,
+            approachId: {
+              value: (item.approach && item.approach.tableId && item.approach.tableId + '') || '',
+              options: approachOptions
+>>>>>>> zxk009
             },
+            standingBookURL: {
+              cellType: 'fileUpload',
+              fileList
+            }
           }
         }) : [];
         //渲染页面
@@ -117,20 +144,57 @@ const WasteWaterTreatment = connectEditableSectionApi({
     })
   },
   apiSave: function (record) {
+<<<<<<< HEAD
     // 新增
-    record.approachId = record.approachId.value;
+=======
+>>>>>>> zxk009
     var self = this;
     if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     };
-    record.sourceId = record.apiListItemId;
+
+<<<<<<< HEAD
+    const _record_for_save = {
+      ...record,
+      sourceId: record.apiListItemId,
+      approachId: record.approachId.value,
+    }
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWastewaterTreatmentAdd({
-          ...record,
+          ..._record_for_save,
           sourceType: 0
         }).then(res => {
+=======
+    /**
+     * 处理fileList
+     */
+    var file = record.standingBookURL.fileList[0];
+
+    var filePath = '';
+
+    if (file && file.url) {
+      filePath = file.url;
+    }
+
+    if (file && file.response.filePath) {
+      filePath = downloadUrl + file.response.filePath
+    }
+
+
+    const record_for_save = {
+      ...record,
+      sourceId: record.apiListItemId,
+      approachId: parseInt(record.approachId.value),
+      standingBookURL: filePath
+    }
+
+    if (record.tableId === '') {
+      return new Promise((resolve, reject) => {
+        // 新增
+        getWastewaterTreatmentAdd(record_for_save).then(res => {
+>>>>>>> zxk009
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -148,10 +212,14 @@ const WasteWaterTreatment = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
+<<<<<<< HEAD
         getWastewaterTreatmentUpdate({
-          ...record,
+          ..._record_for_save,
           sourceType: 0
         }).then(res => {
+=======
+        getWastewaterTreatmentUpdate(record_for_save).then(res => {
+>>>>>>> zxk009
           if (res.data.result !== 'success') {
             resolve({
               code: 1,

@@ -98,14 +98,6 @@ const WasteWaterDischargeFactor = connectEditableSectionApi({
         }
 
         var data = res.data.wasteWaterDischargeFactorList || [];
-        // var isData = [{
-        //   'value': 'true',
-        //   'label': '是'
-        // }, {
-        //   'value': 'false',
-        //   'label': '否'
-        // }]
-        // var isAutoMOPSData = convertObjectLabel(isData, 'value', 'label');
 
         data = data.map((item, index) => {
           return {
@@ -120,10 +112,6 @@ const WasteWaterDischargeFactor = connectEditableSectionApi({
                 label: "否"
               }]
             }
-            // isAutoMOPS: {
-            //   value: item.isAutoMOPS + '',
-            //   options: isAutoMOPSData
-            // }
           }
         })
         resolve({

@@ -27,8 +27,8 @@ class Login extends React.Component {
             <div className="login">
                 <div className="loginInput">
                     <div className="login-top">
-                        <span style={{color: '#000'}}>友通环保后台管理系统</span>
-                        <div style={{ fontSize: 6 }}>
+                        <span style={{ color: '#000', fontSize: 32 }}>友通环保后台管理系统</span>
+                        <div style={{ fontSize: 12, color: '#000', marginTop: 8, wordSpacing: 5 }}>
                             You Tong Huan Bao Hou Tai Guan Li Xi Tong
                         </div>
                     </div>
@@ -108,20 +108,20 @@ class LoginForm extends React.Component {
         // console.log(phoneNumber);
         return (
             <div className="login-form">
-                <Input placeholder="请输入手机号码" value={this.state.phoneNumber} 
-                    addonAfter={<Icon type="user" 
-                    style={{ fontSize: 20 }} />} 
+                <Input placeholder="请输入手机号码" value={this.state.phoneNumber}
+                    addonAfter={<Icon type="user"
+                        style={{ fontSize: 20 }} />}
                     onChange={this.changePhoneNum.bind(this)} />
-                <Input type="password" placeholder="请输入密码" 
-                    addonAfter={<Icon type="lock" 
-                    style={{ fontSize: 20, backgroundCor: '#000', }} />} 
+                <Input type="password" placeholder="请输入密码"
+                    addonAfter={<Icon type="lock"
+                        style={{ fontSize: 20, backgroundCor: '#000', }} />}
                     onChange={this.changePsd.bind(this)} />
                 <div className="remember">
-                    <Checkbox 
-                        onChange={this.remember.bind(this)} 
+                    <Checkbox
+                        onChange={this.remember.bind(this)}
                         checked={this.state.remember}>记住用户名</Checkbox>
                 </div>
-                <Button type="primary" htmlType="submit" 
+                <Button type="primary" htmlType="submit"
                     onClick={this.handleSubmit.bind(this)} className="login-form-button">
                     登录
                 </Button>

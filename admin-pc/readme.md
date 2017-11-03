@@ -100,7 +100,7 @@
 * theme
   - /node_modules/antd/style/default    @primary-color
 * validate
-  - /node_modules/rc-form/lit/utils '请正确输入', 
+  - /node_modules/rc-form/lit/utils '请输入正确信息', 
 
 ## 遗留问题
 * 动态 

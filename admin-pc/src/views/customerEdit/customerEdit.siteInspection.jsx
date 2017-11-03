@@ -45,6 +45,20 @@ const columns = [{
   width: 120
 }];
 
+const typeOptions = [{
+    value: "1",
+    label: '园区约谈情况'
+  }, {
+    value: "2",
+    label: '监察支队处理情况'
+  }, {
+    value: "3",
+    label: '行政处罚情况'
+  }, {
+    value: "4",
+    label: '信访记录'
+  }];
+
 
 /**
  * 新数据默认值
@@ -53,19 +67,7 @@ const itemDataModel = {
   theName: '',
   theType: {
     value: '1',
-    options: [{
-      value: "1",
-      label: '园区约谈情况'
-    }, {
-      value: "2",
-      label: '监察支队处理情况'
-    }, {
-      value: "3",
-      label: '行政处罚情况'
-    }, {
-      value: "4",
-      label: '信访记录'
-    }]
+    options: typeOptions
   },
   theSize: '',
   filePath: '',
@@ -98,24 +100,18 @@ const SiteInspection = connectUneditableSectionApi({
 
         var data = res.data.customerSuperviseList;
 
-        data.map((item, index) => {
-          if (item.theType == '0') {
-            item.theType = '整改报告'
-          } else if (item.theType == 1) {
-            item.theType = '园区约谈情况'
-          } else if (item.theType == 2) {
-            item.theType = '监察支队处理情况'
-          } else if (item.theType == 3) {
-            item.theType = '行政处罚情况'
-          } else if (item.theType == 4) {
-            item.theType = '信访记录'
+        data = data.map(item => {
+          let index = item.theType - 1;
+          if (index < 0) {
+            index = 0;
           }
-          // return {
-          //   ...item,
-          //   attachmentTypeId: item.tableId,
-          // }
-        })
-        console.log(data)
+
+          return {
+            ...item,
+            theType: typeOptions[index].label
+          }
+        });
+        
         resolve({
           code: 0,
           data,

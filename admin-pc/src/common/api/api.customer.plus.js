@@ -586,7 +586,7 @@ export function getWasteGasMonitoringRecordList({
 * 新增废气排放检测记录
 */
 export function getWasteGasMonitoringRecordAdd({
-  DischargePortId,
+  dischargePortId,
   serialNumber,
   monitoringDatetime,
   monitoringDepart,
@@ -597,7 +597,7 @@ export function getWasteGasMonitoringRecordAdd({
     params: {
       token: getToken(),
       customerId: getCustomerId(),
-      wasteGasDischargePortId:DischargePortId,
+      wasteGasDischargePortId: dischargePortId,
       serialNumber,
       monitoringDatetime,
       monitoringDepart,
@@ -612,19 +612,22 @@ export function getWasteGasMonitoringRecordAdd({
 */
 export function getWasteGasMonitoringRecordUpdate({
   tableId,
-  pollutantName,
-  executeStandardNumber,
-  standardValue,
-  isAutoMOPS,
+  serialNumber,
+  monitoringDatetime,
+  monitoringDepart,
+  monitoringResult,
+  monitoringReportURL
 }){
   return axios.get('/uWasteGasMonitoringRecordUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      customerId: getCustomerId(),
       tableId,
-      pollutantName,
-      executeStandardNumber,
-      standardValue,
-      isAutoMOPS,
+      serialNumber,
+      monitoringDatetime,
+      monitoringDepart,
+      monitoringResult,
+      monitoringReportURL
     }
   })
 }
