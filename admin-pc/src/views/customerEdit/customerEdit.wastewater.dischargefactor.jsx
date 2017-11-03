@@ -97,7 +97,7 @@ const WasteWaterDischargeFactor = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.wasteWaterDischargeFactorList;
+        var data = res.data.wasteWaterDischargeFactorList || [];
         // var isData = [{
         //   'value': 'true',
         //   'label': '是'
@@ -140,17 +140,26 @@ const WasteWaterDischargeFactor = connectEditableSectionApi({
     // console.log('apiSave apiListItemId ----', record);
     // record.isAutoMOPS = record.isAutoMOPS.value;
     var self = this;
+
     if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     }
-    record.wasteWaterDischargePortId = record.apiListItemId;
-    record.isAutoMOPS = record.isAutoMOPS.value == 1 ? true : false;
-    console.log('废水因子保存', record)
+
+    // record.wasteWaterDischargePortId = record.apiListItemId;
+    // record.isAutoMOPS = record.isAutoMOPS.value === '1' ? true : false;
+
+    const _record_for_save = {
+      ...record,
+      wasteWaterDischargePortId: record.apiListItemId,
+      isAutoMOPS: record.isAutoMOPS.value === '1' ? true : false,
+    }
+
+    console.log('废水因子保存-------------', record)
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWastewaterDischargeFactorAdd({
-          ...record,
+          ..._record_for_save,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -171,7 +180,7 @@ const WasteWaterDischargeFactor = connectEditableSectionApi({
       // 编辑
       return new Promise((resolve, reject) => {
         getWastewaterDischargeFactorUpdate({
-          ...record,
+          ..._record_for_save,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({

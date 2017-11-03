@@ -150,6 +150,8 @@ class CustomerList extends React.Component {
             {/* <Button type="primary"  style={{marginRight: 8}}>导出excel</Button> */}
             <Button type="primary"
               onClick={() => {
+                localStorage.removeItem('yt-customerId');
+                
                 return changeIframeToEdit('');
               }}>新增</Button>
           </div>

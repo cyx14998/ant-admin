@@ -137,7 +137,7 @@ export function getMaterialDynamicInfoList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword = '',
-  customerMonthDclarationId = '1',
+  customerMonthDclarationId,
 }) {
   return axios.get('/uAuxiliaryMaterialsConsumptionList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -153,7 +153,7 @@ export function getMaterialDynamicInfoList({
 
 // 编辑页---首页-原辅材料新增 (success)
 export function getMaterialDynamicInfoAdd({
-  customerMonthDclarationId = '1',
+  customerMonthDclarationId,
   theName,
   unitOfMeasurement,
   consumption,
@@ -161,10 +161,10 @@ export function getMaterialDynamicInfoAdd({
   return axios.get('/uAuxiliaryMaterialsConsumptionAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      // customerId: getCustomerId(),
+      customerId: getCustomerId(),
       customerMonthDclarationId,
       theName,
-      UnitOfMeasurement,
+      unitOfMeasurement,
       consumption,
     }
   });

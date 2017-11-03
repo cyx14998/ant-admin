@@ -96,7 +96,8 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
             code: 0 // success
           })
         }).catch(err => {
-          reject(err)
+          console.log('err-------------------------', err)
+          // reject(err)
         });
       })
     } else {

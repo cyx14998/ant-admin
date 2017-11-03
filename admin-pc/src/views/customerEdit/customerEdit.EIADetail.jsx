@@ -13,9 +13,11 @@ import {
     Input,
     Button,
     Select,
+    DatePicker
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
+import moment from 'moment';
 
 import {
     MyToast
@@ -96,43 +98,40 @@ class WasteWaterDischargeDetail extends React.Component {
         form.validateFields((err, values) => {
             if (err) return;
             var self = this;
+            var data = { ...values }
             //自主验收文件
             var fileOne = this.state.uploadedFileList[0];
+            if (!fileOne) return MyToast('请上传自主验收文件');
+
             // 默认
             var uploadedFilePath = fileOne.url;
-
             // 上传
             if (!uploadedFilePath) {
-                uploadedFilePath = fileOne.length != 0 ? fileOne.response.filePath : '';
+                uploadedFilePath = fileOne.response.filePath;
             }
 
-            if (!uploadedFilePath) return MyToast('请上传附件');
+            if (!uploadedFilePath) return MyToast('请上传自主验收文件');
 
             if (uploadedFilePath.indexOf(downloadUrl) === -1) {
                 uploadedFilePath = downloadUrl + uploadedFilePath;
             }
-            values.SelfAcceptanceURL = uploadedFilePath
-            // var fileOne = self.state.prodFileList[0];
-            // // 默认
-            // console.log('777777777777777777', fileOne)
-            // var uploadedFilePath = fileOne.url;
+            data.SelfAcceptanceURL = uploadedFilePath;
 
-            // // 上传
-            // if (!uploadedFilePath) {
-            //     uploadedFilePath = fileOne.response.filePath;
-            // }
+            //             editDatetime	编制日期
+            // approvalTimeTPA	试生产批复-审批时间
+            // approvalTimeEIA	环评批复-审批时间
+            // approvalTimeFAA	竣工验收批复-审批时间
 
-            // if (!uploadedFilePath) return MyToast('请上传自主验收文件');
-
-            // if (uploadedFilePath.indexOf(downloadUrl) === -1) {
-            //     uploadedFilePath = downloadUrl + uploadedFilePath;
-            // }
-            // data.SelfAcceptanceURL = uploadedFilePath;
+            //时间
+            data.editDatetime = data.editDatetime ? data.editDatetime.format('YYYY-MM-DD') : new Date();
+            data.approvalTimeTPA = data.approvalTimeTPA ? data.approvalTimeTPA.format('YYYY-MM-DD') : new Date();
+            data.approvalTimeEIA = data.approvalTimeEIA ? data.approvalTimeEIA.format('YYYY-MM-DD') : new Date();
+            data.approvalTimeFAA = data.approvalTimeFAA ? data.approvalTimeFAA.format('YYYY-MM-DD') : new Date();
 
             var tableId = self.props.editId;
             if (tableId) {
                 getEIAUpdate({
-                    ...values,
+                    ...data,
                     tableId: tableId
                 }).then(res => {
                     if (res.data.result !== 'success') {
@@ -147,7 +146,7 @@ class WasteWaterDischargeDetail extends React.Component {
             } else {
                 // 新增
                 getEIAAdd({
-                    ...values,
+                    ...data,
                 }).then(res => {
                     if (res.data.result !== 'success') {
                         MyToast(res.data.info)
@@ -196,12 +195,9 @@ class WasteWaterDischargeDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="编制日期">
                                     {getFieldDecorator('editDatetime', {
-                                        initialValue: this.state.data.editDatetime,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
+                                        initialValue: moment(this.state.data.editDatetime || new Date(), 'YYYY-MM-DD'),
                                     })(
-                                        <Input placeholder="编制日期" />
+                                        <DatePicker />
                                         )}
                                 </FormItem>
                             </Col>
@@ -215,19 +211,16 @@ class WasteWaterDischargeDetail extends React.Component {
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
-                                        <Input placeholder="试生产批复-环保部门审批文号" />
+                                        <Input placeholder="试生产批复-环保部门审批文号" />                                                                               
                                         )}
                                 </FormItem>
                             </Col>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="试生产批复-审批时间">
                                     {getFieldDecorator('approvalTimeTPA', {
-                                        initialValue: this.state.data.approvalTimeTPA,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
+                                        initialValue: moment(this.state.data.approvalTimeTPA || new Date(), 'YYYY-MM-DD'),
                                     })(
-                                        <Input placeholder="试生产批复-审批时间" />
+                                        <DatePicker />                                                                                
                                         )}
                                 </FormItem>
                             </Col>
@@ -248,12 +241,9 @@ class WasteWaterDischargeDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="环评批复-审批时间">
                                     {getFieldDecorator('approvalTimeEIA', {
-                                        initialValue: this.state.data.approvalTimeEIA,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
+                                        initialValue: moment(this.state.data.approvalTimeEIA || new Date(), 'YYYY-MM-DD'),
                                     })(
-                                        <Input placeholder="环评批复-审批时间" />
+                                        <DatePicker />                                                                                
                                         )}
                                 </FormItem>
                             </Col>
@@ -272,12 +262,9 @@ class WasteWaterDischargeDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="竣工验收批复-审批时间">
                                     {getFieldDecorator('approvalTimeFAA', {
-                                        initialValue: this.state.data.approvalTimeFAA,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
+                                        initialValue: moment(this.state.data.approvalTimeFAA || new Date(), 'YYYY-MM-DD'),
                                     })(
-                                        <Input placeholder="竣工验收批复-审批时间" />
+                                        <DatePicker />                                                                                
                                         )}
                                 </FormItem>
                             </Col>

@@ -50,7 +50,10 @@ const columns = [{
 const itemDataModel = {
   tableId: '',
   theName: '',
-  fileUpload: '',
+  fileUpload: {
+    cellType: 'fileUpload',
+    fileList: []
+  },
   unitOfMeasurement: '',
   designAnnualOutput: {
     value: '',
@@ -68,7 +71,7 @@ const dataSource = [{
     cellType: 'fileUpload',
     fileList: [{
       uid: -1,
-      name: 'file',
+      name: 'file999.pdf',
       url: 'http://'
     }]
   },
@@ -159,6 +162,8 @@ const EditableDemoSection = connectEditableSectionApi({
     });
 
     var self = this;
+
+
 
     // 新增
     if (record.tableId === '') {
