@@ -135,17 +135,33 @@ export function getDepartmentStaffList({
 }
 
 /**
+ * 全部备选员工列表
+ */
+export function getDepartmentStaffListAll({
+  pageNumber=0,  // 默认取所有数据
+  countPerPage=1000
+}) {
+  return axios.get('/uMemberList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber,
+      countPerPage
+    }
+  })
+}
+
+/**
  * 添加部门成员
  */
 export function getDepartmentStaffAddBatch({
   departmentId,
-  staffArr,
+  staffIdArr,
 }) {
   return axios.get('/uDepartmentMemberRelationAddBatch.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       departmentId,
-      staffArr
+      staffIdArr
     }
   })
 }

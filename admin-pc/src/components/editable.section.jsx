@@ -101,6 +101,11 @@ class EditableSection extends Component {
             if (field && Object.prototype.toString.call(field.options) === '[object Array]') {
               item[dataIndex].value = value;
             }
+
+            // fileupload
+            if (field && field.cellType === 'fileUpload') {
+              item[dataIndex].fileList = value;
+            }
           }
 
           return item;
@@ -108,6 +113,8 @@ class EditableSection extends Component {
       }
     })
   }
+
+  
 
   addItem() {
     // 如果有未保存项，提示

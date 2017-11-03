@@ -20,6 +20,8 @@ import Modal from 'react-modal';
 import Draggable from 'react-draggable';
 import DraggableModal from '../../components/modal.draggable';
 
+import QiniuUploadFile from '../../components/upload.file';
+
 import {
   EditableDemoSection,
   UneditableDemoSection,
@@ -160,6 +162,14 @@ class Demo extends Component {
   }
 
   render() {
+
+    return (
+      <div>
+        <EditableDemoSection />
+        <QiniuDemo />
+      </div>
+    )
+    
     // return (
     //   <EditableModalDemoSection />
     // );
@@ -260,6 +270,40 @@ class Demo extends Component {
             dataSource={data}
             rowSelection={rowSelection} />
         </div>
+      </div>
+    )
+  }
+}
+
+class QiniuDemo extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      prodFileList: [{
+        uid: -1,
+        name: 'file',
+        url: 'http://'
+      }]
+    }
+  }
+
+  //反馈单
+  handleProdFileList({ fileList }) {
+      this.setState({
+          prodFileList: fileList,
+      });
+  }
+
+  render() {
+    return (
+      <div className="baseinfo-section">
+          <h2 className="yzy-tab-content-title">反馈单上传</h2>
+          <QiniuUploadFile
+              uploadTitle="反馈单上传"
+              uploadedFileList={this.state.prodFileList}
+              handleUploadedFileList={this.handleProdFileList.bind(this)}
+          />
       </div>
     )
   }

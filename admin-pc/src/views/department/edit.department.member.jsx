@@ -13,7 +13,8 @@ import {
 } from 'antd';
 
 import {
-  getDepartmentStaffList,
+  // getDepartmentStaffList,
+  getDepartmentStaffListAll, // 所有员工可选
   getDepartmentStaffAddBatch
 } from '../../common/api/api.department';
 
@@ -29,7 +30,7 @@ const columns = [{
   dataIndex: 'phoneNumber',
 }, {
   title: '当前所属部门',
-  dataIndex: 'address'
+  dataIndex: 'departmentName'
 }];
 
 // rowSelection object indicates the need for row selection
@@ -58,6 +59,7 @@ class EditDepartmentMember extends Component {
     }
 
     this._getDepartmentStaffList = this._getDepartmentStaffList.bind(this);
+    this.addMemberToDepartment = this.addMemberToDepartment.bind(this);
   }
 
   componentDidMount() {
@@ -66,7 +68,7 @@ class EditDepartmentMember extends Component {
 
 
   _getDepartmentStaffList() {
-    getDepartmentStaffList({}).then(res => {
+    getDepartmentStaffListAll({}).then(res => {
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '未加入部门员工列表获取失败');
         return;
@@ -74,9 +76,18 @@ class EditDepartmentMember extends Component {
 
       let memberList = res.data.memberList;
 
+      var data = memberList.map(list => {
+        return {
+          tableId: list.tableId,
+          realName: list.realName || '',
+          phoneNumber: list.phoneNumber || '',
+          departmentName: (list.department && list.department.theName) || ''
+        }
+      })
+
       this.setState({
         loading: false,
-        dataSource: memberList
+        dataSource: data
       });
     }).catch(err => MyToast(err));
   }
@@ -88,17 +99,18 @@ class EditDepartmentMember extends Component {
 
   addMemberToDepartment() {
     let {
-      departmentId
+      departmentId,
+      getStaffListByDeparentId,
+      handleModalCancel
     } = this.props;
    
     if (!departmentId) {
       MyToast('请确认当前所在部门')
-      // return;
-      departmentId = 2;
+      return;
     }
     getDepartmentStaffAddBatch({
       departmentId: departmentId,
-      staffArr: this.state.selectedRowKeys.join(',')
+      staffIdArr: this.state.selectedRowKeys.join(',')
     }).then(res => {
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '添加员工失败');
@@ -106,6 +118,12 @@ class EditDepartmentMember extends Component {
       }
 
       MyToast('添加员工成功');
+
+      // 刷新列表
+      getStaffListByDeparentId(departmentId);
+
+      // 关闭弹窗
+      setTimeout(handleModalCancel, 1000);
     }).catch(err => MyToast(err));
   }
 
