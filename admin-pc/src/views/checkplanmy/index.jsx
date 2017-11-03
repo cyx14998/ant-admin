@@ -150,7 +150,7 @@ class CustomerCheckPlanMy extends React.Component {
             render: (text, record, index) => (
                 <div>
                     <a onClick={() => self.showTestModal(record)} style={{ marginRight: 8 }}><Icon type="edit" className="yzy-icon" /></a>
-                    {record.theState ?
+                    {!record.theState ?
                         <a style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}><Icon type="check" className="yzy-icon" /></a>
                         : ''
                     }

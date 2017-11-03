@@ -4,7 +4,7 @@
 import React from 'react';
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getWastewaterDischargeFactorList,
   getWastewaterDischargeFactorAdd,
   getWastewaterDischargeFactorDelete,
@@ -12,7 +12,8 @@ import {
 } from '../../common/api/api.customer.plus.js';
 
 import {
-  MyToast
+  MyToast,
+  convertObjectLabel,
 } from '../../common/utils';
 
 /**
@@ -56,7 +57,7 @@ const itemDataModel = {
   standardValue: '',
   isAutoMOPS: {
     value: '1',
-    options : [{
+    options: [{
       value: "1",
       label: '是'
     }, {
@@ -66,7 +67,7 @@ const itemDataModel = {
   },
 };
 
-function getEditIdHook (id) {
+function getEditIdHook(id) {
   return id;
 }
 
@@ -76,17 +77,17 @@ function getEditIdHook (id) {
 const WasteWaterDischargeFactor = connectEditableSectionApi({
   secTitle: '废水排放因子基本情况',
   columns: columns,
-  apiLoader: function ({apiListItemId}) {
+  apiLoader: function ({ apiListItemId }) {
     var editId = apiListItemId;
-    if(editId === undefined){
+    if (editId === undefined) {
       editId = localStorage.getItem('wastewater-discharge-editId');
     }
 
     // console.log('apiLoader eidtId -----------', editId)
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
-      getWastewaterDischargeFactorList({wasteWaterDischargePortId:editId}).then(res => {
-        // console.log('getWastewaterDischargeFactorList res ---', res);
+      getWastewaterDischargeFactorList({ wasteWaterDischargePortId: editId }).then(res => {
+        // console.log('-------------getWastewaterDischargeFactorList res ---', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -97,19 +98,32 @@ const WasteWaterDischargeFactor = connectEditableSectionApi({
         }
 
         var data = res.data.wasteWaterDischargeFactorList;
-        data = data.map((item,index) => {
+        // var isData = [{
+        //   'value': 'true',
+        //   'label': '是'
+        // }, {
+        //   'value': 'false',
+        //   'label': '否'
+        // }]
+        // var isAutoMOPSData = convertObjectLabel(isData, 'value', 'label');
+
+        data = data.map((item, index) => {
           return {
             ...item,
             isAutoMOPS: {
-              value: item.isAutoMOPS === true ? "1" : "0" ,
-              options : [{
+              value: item.isAutoMOPS == true ? "1" : "0",
+              options: [{
                 value: "1",
                 label: "是"
               }, {
                 value: "0",
                 label: "否"
-              }] 
+              }]
             }
+            // isAutoMOPS: {
+            //   value: item.isAutoMOPS + '',
+            //   options: isAutoMOPSData
+            // }
           }
         })
         resolve({
@@ -124,12 +138,14 @@ const WasteWaterDischargeFactor = connectEditableSectionApi({
   apiSave: function (record) {
     // 新增
     // console.log('apiSave apiListItemId ----', record);
-    record.isAutoMOPS = record.isAutoMOPS.value;
+    // record.isAutoMOPS = record.isAutoMOPS.value;
     var self = this;
-    if(record.apiListItemId === undefined){
+    if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     }
     record.wasteWaterDischargePortId = record.apiListItemId;
+    record.isAutoMOPS = record.isAutoMOPS.value == 1 ? true : false;
+    console.log('废水因子保存', record)
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增

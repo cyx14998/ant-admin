@@ -20,6 +20,7 @@ const FormItem = Form.Item;
 import RcSearchForm from '../../components/rcsearchform';
 import { MyToast } from '../../common/utils';
 
+
 const checkplanId = getLocQueryByLabel('checkplanId');
 
 // RcSearchForm datablob
@@ -377,7 +378,7 @@ class CustomerCheckPlanSub extends React.Component {
             dataIndex: 'operation',
             width: 60,
             render: (text, record) => (
-                <Button type="primary" onClick={this.selectPerformer.bind(this, record.tableId)} ></Button>
+                <a href="#" title="选择" onClick={this.selectPerformer.bind(this, record.tableId)} ><Icon type="check" className="yzy-icon" /></a>
             )
         }];
         const customersData = [{

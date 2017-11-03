@@ -4,7 +4,7 @@
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getApproachList,
   getWastewaterTreatmentList,
   getWastewaterTreatmentAdd,
@@ -78,17 +78,17 @@ const itemDataModel = {
 const WasteWaterTreatment = connectEditableSectionApi({
   secTitle: '废水治理基本情况',
   columns: columns,
-  apiLoader: function ({apiListItemId}) {
+  apiLoader: function ({ apiListItemId }) {
     var editId = apiListItemId;
-    if(editId === undefined){
+    if (editId === undefined) {
       editId = localStorage.getItem('wastewater-discharge-editId');
     }
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       axios.all([
         getApproachList({}),
-        getWastewaterTreatmentList({sourceType:0,sourceId:editId}),
+        getWastewaterTreatmentList({ sourceType: 0, sourceId: editId }),
       ]).then(axios.spread((approachList, wwTreatmentList) => {
-        console.log("approachList=====================",approachList),
+        console.log("approachList=====================", approachList),
         console.log("wwTreatmentList=====================",wwTreatmentList)
         //废气治理列表
         var wwTreatmentData = wwTreatmentList.data.controlFacilitiesList;
@@ -98,16 +98,16 @@ const WasteWaterTreatment = connectEditableSectionApi({
           value: "1",
           options: convertObjectLabel(approachList)
         };
-        itemDataModel.approachId = approachData;  
-        wwTreatmentData = wwTreatmentData.map( item => {
+        itemDataModel.approachId = approachData;
+        wwTreatmentData = wwTreatmentData ? wwTreatmentData.map(item => {
           return {
             ...item,
             approachId: {
-              value: item.approach.tableId+'',
+              value: item.approach.tableId + '',
               options: convertObjectLabel(approachList)
             },
           }
-        });
+        }) : [];
         //渲染页面
         resolve({
           code: 0,
@@ -120,7 +120,7 @@ const WasteWaterTreatment = connectEditableSectionApi({
     // 新增
     record.approachId = record.approachId.value;
     var self = this;
-    if(record.apiListItemId === undefined){
+    if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     };
     record.sourceId = record.apiListItemId;
@@ -129,7 +129,7 @@ const WasteWaterTreatment = connectEditableSectionApi({
         // 新增
         getWastewaterTreatmentAdd({
           ...record,
-          sourceType:0
+          sourceType: 0
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -150,7 +150,7 @@ const WasteWaterTreatment = connectEditableSectionApi({
       return new Promise((resolve, reject) => {
         getWastewaterTreatmentUpdate({
           ...record,
-          sourceType:0
+          sourceType: 0
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({

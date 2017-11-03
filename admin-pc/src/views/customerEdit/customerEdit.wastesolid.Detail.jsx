@@ -42,74 +42,85 @@ class WasteWaterDischargeDetail extends React.Component {
             prodFileList: [],
             positionFileList: [],
             reportFileList: [],
+            imgFileList: [],
         }
-        // this.picReset = this.picReset.bind(this);
     }
 
     componentDidMount() {
-        var tableId = this.props.editId;
+        var self = this;
+        var tableId = self.props.editId;
         if (!tableId) {
             localStorage.setItem("wastewaterDischargeIsShow", "none");
             return;
         }
         localStorage.setItem("wastewaterDischargeIsShow", "block");
         getWasteSolidDetail({ tableId: tableId }).then(res => {
-            console.log('getWastewaterDischargeDetail res ---', res);
+            console.log('详情getWastewaterDischargeDetail res ---', res);
             if (res.data.result !== 'success') {
                 MyToast(res.data.info)
                 return;
             }
-            this.setState({ data: res.data.wasteSolid })
+            self.setState({ data: res.data.wasteSolid });
+
+            var data = res.data.wasteSolid;
+            if (data.standingBookURL) {
+                self.setState({
+                    prodFileList: [{
+                        uid: '1',
+                        name: '台账',
+                        url: data.standingBookURL
+                    }],
+                });
+            } else {
+                self.setState({
+                    prodFileList: [],
+                });
+            }
+            if (data.filingInfoURL) {
+                self.setState({
+                    positionFileList: [{
+                        uid: '1',
+                        name: '备案',
+                        url: data.filingInfoURL
+                    }],
+                });
+            } else {
+                self.setState({
+                    positionFileList: [],
+                });
+            }
+            if (data.transferManifestURL) {
+                self.setState({
+                    reportFileList: [{
+                        uid: '1',
+                        name: '转移单',
+                        url: data.transferManifestURL
+                    }],
+                });
+            } else {
+                self.setState({
+                    reportFileList: [],
+                });
+            }
+            if (data.storagePlaceImageURL) {
+                self.setState({
+                    imgFileList: [{
+                        uid: '1',
+                        name: '贮存场所照片',
+                        url: data.storagePlaceImageURL
+                    }],
+                });
+            } else {
+                self.setState({
+                    imgFileList: [],
+                });
+            }
+
         }).catch(err => {
-            MyToast('接口调用失败')
+            MyToast('接口调用失败');
+            console.log(err)
         })
-        // this.picReset();
     }
-    // //图片、文件重置
-    // picReset() {
-    //     var self = this;
-    //     var recordEdit = self.props.recordEdit
-    //     //图片
-    //     if (recordEdit.standingBookURL) {
-    //         self.setState({
-    //             prodFileList: [{
-    //                 uid: '1',
-    //                 name: '台账',
-    //                 url: recordEdit.standingBookURL
-    //             }],
-    //         });
-    //     } else {
-    //         self.setState({
-    //             prodFileList: [],
-    //         });
-    //     }
-    //     if (recordEdit.filingInfoURL) {
-    //         self.setState({
-    //             positionFileList: [{
-    //                 uid: '1',
-    //                 name: '备案',
-    //                 url: recordEdit.filingInfoURL
-    //             }],
-    //         });
-    //     } else {
-    //         self.setState({
-    //             positionFileList: [],
-    //         });
-    //     }
-    //     if (recordEdit.transferManifestURL) {
-    //         self.setState({
-    //             reportFileList: [{
-    //                 uid: '1',
-    //                 name: '转移单',
-    //                 url: recordEdit.transferManifestURL
-    //             }],
-    //         });
-    //     } else {
-    //         self.setState({
-    //             reportFileList: [],
-    //         });
-    //     }
-    // }
     //台账
     handleProdFileList({ fileList }) {
         this.setState({
@@ -128,6 +139,12 @@ class WasteWaterDischargeDetail extends React.Component {
             reportFileList: fileList,
         });
     }
+    //贮存场所照片
+    handleImgFileList({ fileList }) {
+        this.setState({
+            imgFileList: fileList,
+        });
+    }
     // 基本信息保存
     saveDetail(e) {
         var self = this;
@@ -140,7 +157,6 @@ class WasteWaterDischargeDetail extends React.Component {
             var data = { ...values };
 
             if (err) return;
-            var tableId = self.props.editId;
             //台账
             var prodFileUrl = self.state.prodFileList[0];
             if (!prodFileUrl) {
@@ -173,7 +189,7 @@ class WasteWaterDischargeDetail extends React.Component {
                     positionFileUrl = downloadUrl + positionFileUrl;
                 }
             }
-            //转移单
+            //转移单imgFileList
             var reportFileUrl = self.state.reportFileList[0];
             if (!reportFileUrl) {
                 reportFileUrl = "";
@@ -189,13 +205,33 @@ class WasteWaterDischargeDetail extends React.Component {
                     reportFileUrl = downloadUrl + reportFileUrl;
                 }
             }
-
+            //贮存场所照片
+            var imgFileUrl = self.state.imgFileList[0];
+            if (!imgFileUrl) {
+                imgFileUrl = "";
+            } else {
+                imgFileUrl = imgFileUrl.url
+                // 上传
+                if (!imgFileUrl) {
+                    imgFileUrl = self.state.imgFileList[0].response.filePath;
+                }
+                if (!imgFileUrl) {
+                    imgFileUrl = ""
+                } else if (imgFileUrl.indexOf(downloadUrl) === -1) {
+                    imgFileUrl = downloadUrl + imgFileUrl;
+                }
+            }
             data.standingBookURL = prodFileUrl;
             data.filingInfoURL = positionFileUrl;
             data.transferManifestURL = reportFileUrl;
+            data.storagePlaceImageURL = imgFileUrl;
+
+            console.log('2222222保存', data)
+
+            var tableId = self.props.editId;
             if (tableId) {
                 getWastesolidUpdate({
-                    ...values,
+                    ...data,
                     tableId: tableId
                 }).then(res => {
                     if (res.data.result !== 'success') {
@@ -362,32 +398,6 @@ class WasteWaterDischargeDetail extends React.Component {
                                 </FormItem>
                             </Col>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="贮存场所照片">
-                                    {getFieldDecorator('storagePlaceImageURL', {
-                                        initialValue: this.state.data.storagePlaceImageURL,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
-                                    })(
-                                        <Input placeholder="贮存场所照片" />
-                                        )}
-                                </FormItem>
-                            </Col>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label="台账记录">
-                                    {getFieldDecorator('standingBookURL', {
-                                        initialValue: this.state.data.standingBookURL,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
-                                    })(
-                                        <Input placeholder="台账记录" />
-                                        )}
-                                </FormItem>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span={8}>
                                 <FormItem {...formItemLayout} label="处置单位名称">
                                     {getFieldDecorator('disposeUnitName', {
                                         initialValue: this.state.data.disposeUnitName,
@@ -399,37 +409,13 @@ class WasteWaterDischargeDetail extends React.Component {
                                         )}
                                 </FormItem>
                             </Col>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label="备案信息">
-                                    {getFieldDecorator('filingInfoURL', {
-                                        initialValue: this.state.data.filingInfoURL,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
-                                    })(
-                                        <Input placeholder="备案信息" />
-                                        )}
-                                </FormItem>
-                            </Col>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label="转移联单">
-                                    {getFieldDecorator('transferManifestURL', {
-                                        initialValue: this.state.data.transferManifestURL,
-                                        rules: [{ required: true },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
-                                    })(
-                                        <Input placeholder="转移联单" />
-                                        )}
-                                </FormItem>
-                            </Col>
                         </Row>
                         <Row>
                             <Col span={12}>
                                 <div className="baseinfo-section">
-                                    <h2 className="yzy-tab-content-title">反馈单上传</h2>
+                                    <h2 className="yzy-tab-content-title">台账上传</h2>
                                     <QiniuUploadFile
-                                        uploadTitle="反馈单上传"
+                                        uploadTitle="台账上传"
                                         uploadedFileList={this.state.prodFileList}
                                         handleUploadedFileList={this.handleProdFileList.bind(this)}
                                     />
@@ -437,9 +423,9 @@ class WasteWaterDischargeDetail extends React.Component {
                             </Col>
                             <Col span={12}>
                                 <div className="baseinfo-section">
-                                    <h2 className="yzy-tab-content-title">检查记录单</h2>
+                                    <h2 className="yzy-tab-content-title">备案信息上传</h2>
                                     <QiniuUploadFile
-                                        uploadTitle="检查记录单"
+                                        uploadTitle="备案信息上传"
                                         uploadedFileList={this.state.positionFileList}
                                         handleUploadedFileList={this.handlePositionFileList.bind(this)}
                                     />
@@ -449,11 +435,21 @@ class WasteWaterDischargeDetail extends React.Component {
                         <Row>
                             <Col span={12}>
                                 <div className="baseinfo-section">
-                                    <h2 className="yzy-tab-content-title">整改报告上传</h2>
+                                    <h2 className="yzy-tab-content-title">转移单上传</h2>
                                     <QiniuUploadFile
-                                        uploadTitle="整改报告上传"
+                                        uploadTitle="转移单上传"
                                         uploadedFileList={this.state.reportFileList}
                                         handleUploadedFileList={this.handleReportFileList.bind(this)}
+                                    />
+                                </div>
+                            </Col>
+                            <Col span={12}>
+                                <div className="baseinfo-section">
+                                    <h2 className="yzy-tab-content-title">贮存场所照片</h2>
+                                    <QiniuUploadFile
+                                        uploadTitle="贮存场所照片"
+                                        uploadedFileList={this.state.imgFileList}
+                                        handleUploadedFileList={this.handleImgFileList.bind(this)}
                                     />
                                 </div>
                             </Col>

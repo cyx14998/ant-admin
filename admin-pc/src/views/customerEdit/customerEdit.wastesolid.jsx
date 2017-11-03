@@ -7,7 +7,7 @@ import connectUneditableSectionApi from '../../components/hoc.uneditable.section
 
 import CustomerWasteSolidDetail from './customerEdit.wastesolid.Detail';
 
-import { 
+import {
   getWasteSolidList,
   getWastesolidDelete,
 } from '../../common/api/api.customer.plus.js';
@@ -43,9 +43,22 @@ const columns = [{
 }, {
   title: '处置单位名称',
   dataIndex: 'disposeUnitName',
+},{
+  title: '贮存场所照片',
+  dataIndex: 'storagePlaceImageURL',
+  type: 'downloadfile'
+}, {
+  title: '台账',
+  dataIndex: 'standingBookURL',
+  type: 'downloadfile'
 }, {
   title: '备案信息',
   dataIndex: 'filingInfoURL',
+  type: 'downloadfile'
+}, {
+  title: '转移单',
+  dataIndex: 'transferManifestURL',
+  type: 'downloadfile'
 }, {
   title: '操作',
   dataIndex: 'operation',
@@ -66,10 +79,10 @@ const options = [{
 const InnerComponent = ({
   editId
 }) => (
-  <div>
-    <CustomerWasteSolidDetail editId={editId}/>
-  </div>
-);
+    <div>
+      <CustomerWasteSolidDetail editId={editId} />
+    </div>
+  );
 
 const WasteWaterDemoSection = connectUneditableSectionApi({
   secTitle: '固体废物基本信息列表',
@@ -89,10 +102,10 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
         }
 
         var data = res.data.wasteSolidList;
-        data = data.map((item,index) => {
+        data = data.map((item, index) => {
           return {
             ...item,
-            isHazardousWaste: item.isHazardousWaste === true ? "是" : "否" ,
+            isHazardousWaste: item.isHazardousWaste === true ? "是" : "否",
           }
         })
         resolve({
@@ -104,7 +117,7 @@ const WasteWaterDemoSection = connectUneditableSectionApi({
       })
     })
   },
-  
+
   apiDel: function (tableId) {
     console.log(`apiDel ${tableId}`);
 
