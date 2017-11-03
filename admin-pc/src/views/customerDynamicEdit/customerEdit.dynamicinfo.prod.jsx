@@ -83,7 +83,10 @@ export const CustomerEditDynamicinfoProd = connectEditableSectionApi({
     if (record.tableId === '') {
       // 新增      
       return new Promise((resolve, reject) => {
-        getProductDynamicInfoAdd({...record,customerMonthDclarationId: dynamicId}).then(res => {
+        getProductDynamicInfoAdd({
+          ...record,
+          customerMonthDclarationId: dynamicId
+        }).then(res => {
           console.log('AddProd res', res);
           if (res.data.result !== 'success') {
             resolve({

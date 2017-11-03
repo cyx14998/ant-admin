@@ -19,7 +19,9 @@ import {
 } from '../../common/utils';
 
 import {
-  getLocQueryByLabel
+	MyToast,
+  getLocQueryByLabel,
+  convertObjectLabel
 } from '../../common/utils';
 
 const cusMId = getLocQueryByLabel("dynamicId");
@@ -55,37 +57,44 @@ class WasteGasDischargeDetail extends React.Component {
 	}
 
 	componentDidMount() {
+		var tableId = this.props.editId;
+		if (tableId === '') return;
+
     //获取所有排放口
     getWasteGasDischargeList({}).then(res => {
 			if (res.data.result !== 'success') {
-				MyToast(res.data.info)
+				MyToast(res.data.info || '获取所有排放口失败')
 				return;
       }
-      var tableId = [];
-      res.data.wasteGasDischargePortList.map((item,index) => {
-        tableId.push(item.tableId);
-      })
-			this.setState({ dischargePort: tableId })
+
+      var wasteGasDischargePortList = res.data.wasteGasDischargePortList;
+
+      var wasteGasDischargePortListOptions = convertObjectLabel(wasteGasDischargePortList, 'tableId', 'serialNumber');
+
+      return wasteGasDischargePortListOptions;
+		})then(wasteGasDischargePortListOptions => {
+			getWasteGasDischargeRecordDetail({ tableId: tableId }).then(res => {
+	      console.log(res);
+				if (res.data.result !== 'success') {
+					MyToast(data.info)
+					return;
+	      }
+
+	      /**
+	       * fuck
+	       */
+				this.setState({ 
+	        data: res.data.wasteGasDischargeRecord, 
+	        tableId: res.data.wasteGasDischargeRecord.tableId,
+	        dischargePort: wasteGasDischargePortListOptions,
+	        dischargePortItem: res.data.wasteGasDischargeRecord.wasteGasDischargePort.tableId + ''
+	      })
+			}).catch(err => {
+				MyToast('接口调用失败')
+	    })
 		}).catch(err => {
-			MyToast('接口调用失败')
-    })
-    var tableId = this.props.editId;
-    if (tableId === '') return;
-		getWasteGasDischargeRecordDetail({ tableId: tableId }).then(res => {
-      console.log(res);
-			if (res.data.result !== 'success') {
-				MyToast(data.info)
-				return;
-      }
-			this.setState({ 
-        data: res.data.wasteGasDischargeRecord, 
-        tableId: res.data.wasteGasDischargeRecord.tableId,
-        dischargePortItem: res.data.wasteGasDischargeRecord.wasteGasDischargePort.tableId
-      })
-		}).catch(err => {
-			MyToast('接口调用失败')
-    })
-   
+			MyToast(err)
+    })   
 	}
 	// 基本信息保存
 	saveDetail(e) {
@@ -146,9 +155,9 @@ class WasteGasDischargeDetail extends React.Component {
 						<h2 className="yzy-tab-content-title">废水排放基本信息详情</h2>
 						<Row>
               <Col span={8}>
-								<FormItem {...formItemLayout} label="废水排放口ID">
+								<FormItem {...formItemLayout} label="废水排放口">
 									{getFieldDecorator('wasteGasDischargePortId', {
-										initialValue: this.state.dischargePortItem+'' || this.state.dischargePort[0]+'',
+										initialValue: this.state.dischargePortItem,
 										rules: [{ required: true },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
@@ -157,7 +166,7 @@ class WasteGasDischargeDetail extends React.Component {
                       {
                         this.state.dischargePort.map((item,index) =>{
                            return(
-                            <Option key={index} value={item.toString()}>{item.toString()}</Option>
+                            <Option key={index} value={item.value}>{item.label}</Option>
                           ) 
                         })
                       }

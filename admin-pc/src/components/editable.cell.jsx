@@ -15,6 +15,9 @@ import {
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+import QiniuUploadFile from './upload.file';
+
+
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
 
@@ -85,6 +88,22 @@ class EditableCell extends Component {
     )
   }
 
+  renderFileUpload() {
+    let {
+      tableId,
+      dataIndex,
+      fileList,
+      onCellChange
+    } = this.props;
+
+    return (
+      <QiniuUploadFile
+        uploadTitle="反馈单上传"
+        uploadedFileList={fileList}
+        handleUploadedFileList={({fileList}) => onCellChange(tableId, dataIndex, fileList)} />
+    );
+  }
+
   render() {
     let cellType = this.props.cellType;
 
@@ -98,6 +117,10 @@ class EditableCell extends Component {
 
     if (cellType === 'datepicker') {
       return this.renderDatepicker();
+    }
+
+    if (cellType === 'fileUpload') {
+      return this.renderFileUpload();
     }
 
     console.error('editable.cell not found type', cellType);

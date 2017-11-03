@@ -75,11 +75,15 @@ const columns = [{
  */
 const itemDataModel = {
   tableId: '',
-  serialNumber: '',
+  serialNumber: {
+    cellType: 'input',
+    value: '',
+    disabled: true
+  },
   lotNumber: '',
   planDateStart: moment(new Date()).format(dateFormat),
   planDateEnd: moment(new Date()).format(dateFormat),
-  totalCount:  {
+  totalCount: {
     cellType: 'input',
     value: '',
     disabled: true
@@ -140,7 +144,6 @@ const EditableDemoSection = connectEditableSectionApi({
         var data = res.data.inspectionPlanMstList;
 
         data = data.map(item => {
-
           item.serialNumber = {
             cellType: 'input',
             value: item.serialNumber,
@@ -166,7 +169,7 @@ const EditableDemoSection = connectEditableSectionApi({
       }).catch(err => {
         reject(err)
       })
-    })  
+    })
   },
   apiSave: function (record) {
     console.log('apiSave record ----', record);

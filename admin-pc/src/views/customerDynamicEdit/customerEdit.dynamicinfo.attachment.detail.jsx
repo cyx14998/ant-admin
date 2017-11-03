@@ -75,20 +75,21 @@ class WasteWaterDischargeDetail extends React.Component {
     var tableId = this.props.editId;
     //获取附件类型id
     getAttachmentTypeList({}).then(res => {
-      console.log('getAttachmentTypeList res ---', res);
+      console.log('类型getAttachmentTypeList res ---', res);
       if (res.data.result !== 'success') {
         MyToast(res.data.info)
         return;
       }
-      var data = res.data.attachmentTypeList;
-      var attachmentTypeId = [];
-      data.map((item, index) => {
-        attachmentTypeId.push(item.tableId);
-      })
-      this.setState({ attachmentTypeId: attachmentTypeId })
+      // var data = res.data.attachmentTypeList;
+      // // var attachmentTypeId = [];
+      // // data.map((item, index) => {
+      // //   attachmentTypeId.push(item.tableId);
+      // // })
+      this.setState({ attachmentTypeList: res.data.attachmentTypeList })
     }).catch(err => {
       MyToast('接口调用失败')
-    })
+    });
+    
     if (tableId === '') return;
     getAttachmentRecordDetail({ tableId: tableId }).then(res => {
       console.log('getAttachmentRecordDetail res ---', res);
@@ -139,6 +140,7 @@ class WasteWaterDischargeDetail extends React.Component {
       values.customerMonthDclarationId = dynamicId;
 
       var fileOne = this.state.uploadedFileList[0];
+      if (!fileOne) return MyToast('请上传附件');
       // 默认
       var uploadedFilePath = fileOne.url;
       var theSize = fileOne.size;
@@ -156,10 +158,10 @@ class WasteWaterDischargeDetail extends React.Component {
         theSize = fileOne.size;
         theName = fileOne.name;
       }
-      values.filePath = uploadedFilePath
-      values.theName = theSize
-      values.theSize = theName
-      console.log(values);
+      values.filePath = uploadedFilePath;
+      values.theName = theName;
+      values.theSize = theSize;
+      console.log('附件保存', values);
       if (this.state.tableId) {
         getAttachmentRecordUpdate({
           ...values,
@@ -193,6 +195,7 @@ class WasteWaterDischargeDetail extends React.Component {
   }
 
   handleUploadedFileList({ fileList }) {
+    console.log(fileList)
     this.setState({
       uploadedFileList: fileList,
     });
@@ -208,18 +211,17 @@ class WasteWaterDischargeDetail extends React.Component {
               <Col span={12}>
                 <FormItem {...formItemLayout} label="附件类型Id">
                   {getFieldDecorator('attachmentTypeId', {
-                    initialValue: this.state.attachmentTypeItem + '' || this.state.attachmentTypeId[0] + '',
+                    initialValue: this.state.attachmentTypeItem + '' || this.state.attachmentTypeList ? this.state.attachmentTypeList[0].tableId + '' : '',
                     rules: [{ required: true },
-                    {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
                     <Select>
                       {
-                        this.state.attachmentTypeId.map((item, index) => {
+                        this.state.attachmentTypeList ? this.state.attachmentTypeList.map((item, index) => {
                           return (
-                            <Option key={index} value={item.toString()}>{item.toString()}</Option>
+                            <Option key={item.tableId}>{item.theName}</Option>
                           )
-                        })
+                        }) : ''
                       }
                     </Select>
                     )}
@@ -229,7 +231,7 @@ class WasteWaterDischargeDetail extends React.Component {
             <Row>
               <Col span={12}>
                 <div className="baseinfo-section">
-                  <h2 className="yzy-tab-content-title">企业附件信息（必填）</h2>
+                  <h2 className="yzy-tab-content-title">企业附件信息（文件）</h2>
                   <QiniuUploadFile
                     uploadTitle="文件上传"
                     uploadedFileList={this.state.uploadedFileList}

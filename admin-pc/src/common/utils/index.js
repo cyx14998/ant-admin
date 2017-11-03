@@ -53,6 +53,10 @@ export function MyToast (info, timeout=1000) {
 export function convertObjectLabel(source, valueProp='tableId', labelProp='theName') {
   var dest = [];
 
+  if (!source || source.length === 0) {
+    return dest;
+  }
+
   var len = source.length,
       i;
   for (i=0; i<len; i++) {

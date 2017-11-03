@@ -20,6 +20,8 @@ import {
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+import DraggableModal from '../../components/modal.draggable';
+
 import EditDepartmentMember from './edit.department.member';
 
 import {
@@ -68,7 +70,7 @@ class DepartmentEdit extends Component {
     super(props);
 
     this.state = {
-      newAddDepartmentId: '', // 新增部门时保存 departentId
+      newAddDepartmentId: '', // 新增部门时保存 departmentId
       modalVisible: false,
       departmentMemberRelationList: []  // 部门员工
     }
@@ -98,7 +100,7 @@ class DepartmentEdit extends Component {
       return (
         <div>
           <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteStaffFromDepartment(record.tableId)}>
-            <a href="#"><Icon type="delete" className="yzy-icon" /></a>
+            <a title="删除" href="#"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>          
         </div>
       )
@@ -117,9 +119,9 @@ class DepartmentEdit extends Component {
   // 是否设置为领导
   setLeader(checked, tableId) {
     // console.log('setLeader--------', checked, tableId);
-    var departentId = this.props.record.tableId;
-    if (!departentId) {
-      departentId = this.state.newAddDepartmentId
+    var departmentId = this.props.record.tableId;
+    if (!departmentId) {
+      departmentId = this.state.newAddDepartmentId
     }
 
     setDepartmentStaffLeader({
@@ -129,7 +131,7 @@ class DepartmentEdit extends Component {
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '设置失败');
 
-        this._getStaffListByDeparentId(departentId);
+        this._getStaffListByDeparentId(departmentId);
         return;
       }
 
@@ -161,11 +163,10 @@ class DepartmentEdit extends Component {
   }
 
   deleteStaffFromDepartment(tableId) {
-    alert(tableId);
-    return;
-    var departentId = this.props.record.tableId;
-    if (!departentId) {
-      departentId = this.state.newAddDepartmentId
+    
+    var departmentId = this.props.record.tableId;
+    if (!departmentId) {
+      departmentId = this.state.newAddDepartmentId
     }
 
     getDepartmentStaffDelete({
@@ -177,7 +178,7 @@ class DepartmentEdit extends Component {
 
       MyToast('删除部门成员成功');
 
-      this._getStaffListByDeparentId(departentId);      
+      this._getStaffListByDeparentId(departmentId);      
     }).catch(err => MyToast(err));
   }
 
@@ -221,8 +222,6 @@ class DepartmentEdit extends Component {
     // 关闭Modal时，清除数据
     this.setState({
       modalVisible: false,
-      newAddDepartmentId: '',
-      departmentMemberRelationList: []
     })
   }
 
@@ -233,9 +232,9 @@ class DepartmentEdit extends Component {
       form,
     } = this.props;
 
-    var departentId = record.tableId;
-    if (!departentId) {
-      departentId = this.state.newAddDepartmentId
+    var departmentId = record.tableId;
+    if (!departmentId) {
+      departmentId = this.state.newAddDepartmentId
     }
 
     let { getFieldDecorator } = form;
@@ -310,7 +309,10 @@ class DepartmentEdit extends Component {
           footer={null}>
           {
             this.state.modalVisible &&
-            <EditDepartmentMember departentId={departentId} />
+            <EditDepartmentMember 
+              departmentId={departmentId}
+              getStaffListByDeparentId={this._getStaffListByDeparentId}
+              handleModalCancel={this.handleModalCancel.bind(this)}  />
           }
         </Modal>
       </div>

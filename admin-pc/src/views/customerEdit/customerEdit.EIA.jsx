@@ -5,7 +5,7 @@ import React from 'react';
 
 import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
 
-import { 
+import {
   getEIAList,
   getEIADelete,
 } from '../../common/api/api.customer.plus.js';
@@ -24,19 +24,19 @@ import EIADetail from './customerEdit.EIADetail';
 const columns = [{
   title: '环评建设项目名称',
   dataIndex: 'theName',
-  }, {
+}, {
   title: '环评等级',
   dataIndex: 'theLevel',
-  }, {
+}, {
   title: '编制日期',
   dataIndex: 'editDatetime',
-  }, {
+}, {
   title: '试生产批复-环保部门审批文号',
-  dataIndex: 'DocumentNumberTPA',  
+  dataIndex: 'DocumentNumberTPA',
 }, {
   title: '试生产批复-审批时间',
   dataIndex: 'approvalTimeTPA',
-  }, {
+}, {
   title: '环评批复-环保部门审批文号',
   dataIndex: 'DocumentNumberEIA',
 }, {
@@ -47,15 +47,16 @@ const columns = [{
   dataIndex: 'DocumentNumberFAA',
 }, {
   title: '竣工验收批复-审批时间',
-  dataIndex: 'approvalTimeFAA', 
+  dataIndex: 'approvalTimeFAA',
 }, {
   title: '自主验收文件',
   dataIndex: 'SelfAcceptanceURL',
+  type: 'downloadfile'
 }, {
   title: '操作',
   dataIndex: 'operation',
   width: 120
-  }];
+}];
 
 /**
  * 可选项
@@ -87,16 +88,16 @@ const itemDataModel = {
 const InnerComponent = ({
   editId
 }) => (
-  <div>
+    <div>
       <EIADetail editId={editId} />
-  </div>
-);
+    </div>
+  );
 
 const WasteWaterDemoSection = connectUneditableSectionApi({
   secTitle: '环评信息列表',
   columns: columns,
   apiLoader: function () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
       getEIAList({}).then(res => {
         console.log('getEIAList res ---', res);

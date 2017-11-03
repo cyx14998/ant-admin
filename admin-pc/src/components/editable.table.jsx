@@ -101,6 +101,18 @@ class EditableTable extends Component {
             );
           }
 
+          // 文件类型
+          if (text !== undefined && text.cellType === 'fileUpload') {
+            return (
+              <EditableCell
+                tableId={record.tableId}
+                dataIndex={columns[i].dataIndex}
+                cellType="fileUpload"
+                fileList={text.fileList}
+                onCellChange={onCellChange} />
+            )
+          }
+
           // 空数据默认按input处理
           if (text === undefined && columns[i].dataIndex !== 'operation') {
             // input
@@ -123,11 +135,11 @@ class EditableTable extends Component {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
-                  <a href="#"><Icon type="delete" className="yzy-icon" /></a>
+                  <a title="删除" href="#"><Icon type="delete" className="yzy-icon" /></a>
                 </Popconfirm>
 
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="save" className="yzy-icon" /></a>
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+                <a href="#" title="保存" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a>
+                <a href="#" title="查看" style={{marginLeft: '10px'}} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
               </div>
             )
           }
@@ -140,11 +152,11 @@ class EditableTable extends Component {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
-                  <a href="#">删除</a>
+                  <a href="#" title="删除">删除</a>
                 </Popconfirm>
 
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="save" className="yzy-icon" /></a>
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+                <a href="#" title="保存" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a>
+                <a href="#" title="查看" style={{marginLeft: '10px'}} onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
               </div>
             )
           }
@@ -154,10 +166,10 @@ class EditableTable extends Component {
             return (
               <div>
                 <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
-                  <a href="#"><Icon type="delete" className="yzy-icon" /></a>
+                  <a href="#" title="删除"><Icon type="delete" className="yzy-icon" /></a>
                 </Popconfirm>
 
-                <a href="#" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="save" className="yzy-icon" /></a>
+                <a href="#" title="保存" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a>
               </div>
             )
           }

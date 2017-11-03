@@ -52,7 +52,7 @@ const columns = [{
   dataIndex: 'noisePeriodEnd',
 }, {
   title: '边界超标超过100米',
-  dataIndex: 'IsBoundaryExceeding100',
+  dataIndex: 'isBoundaryExceeding100',
 }, {
   title: '操作',
   dataIndex: 'operation',
@@ -74,7 +74,7 @@ const itemDataModel = {
   exceedingStandardDays: '',
   noisePeriodStart: '',
   noisePeriodEnd: '',
-  IsBoundaryExceeding100: {
+  isBoundaryExceeding100: {
     value: '0',
     options : [{
       value: "1",
@@ -97,7 +97,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       // 获取边界噪声选项列表
       getBoundaryNoiseList({}).then(res => {
         if (res.data.result !== 'success') {
-          MyToast(res.data.info || '获取边界噪声ID失败');
+          MyToast(res.data.info || '获取边界噪声选项列表');
           return;
         }
 
@@ -128,11 +128,11 @@ const WasteWaterDemoSection = connectEditableSectionApi({
             return {
               ...item,
               boundaryNoiseId: {
-                value: item.boundaryNoiseId,
+                value: item.boundaryNoiseId ? item.boundaryNoiseId + '' : '',
                 options: boundaryNoiseListOptions
               },
-              IsBoundaryExceeding100: {
-                value: item.IsBoundaryExceeding100 === true ? "1" : "0" ,
+              isBoundaryExceeding100: {
+                value: item.isBoundaryExceeding100 === true ? "1" : "0" ,
                 options : [{
                   value: "1",
                   label: "是"
@@ -157,16 +157,23 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   apiSave: function (record) {
     // 新增
     console.log('apiSave record ----', record);
-    record.IsBoundaryExceeding100 = record.IsBoundaryExceeding100.value === '1' ? true : false;
-    record.boundaryNoiseId = parseInt(record.boundaryNoiseId.value);
+
+
+    // record.isBoundaryExceeding100 = record.isBoundaryExceeding100.value === '1' ? true : false;
+    // record.boundaryNoiseId = parseInt(record.boundaryNoiseId.value);
+
+    const _record_for_save = {
+      ...record,
+      boundaryNoiseId: parseInt(record.boundaryNoiseId.value),
+      isBoundaryExceeding100: record.isBoundaryExceeding100.value === '1' ? true : false
+    }
     var self = this;
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getBoundaryNoiseRecordAdd({
-          ...record,
-          boundaryNoiseId: record.boundaryNoiseId,
+          ..._record_for_save,
           customerMonthDclarationId: dynamicId,
         }).then(res => {
           console.log("getBoundaryNoiseRecordAdd res-------",res)
@@ -189,10 +196,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       // 编辑
       return new Promise((resolve, reject) => {
         console.log(record)
-        getBoundaryNoiseRecordUpdate({
-          ...record,
-          boundaryNoiseId: record.boundaryNoiseId,
-        }).then(res => {
+        getBoundaryNoiseRecordUpdate(_record_for_save).then(res => {
           console.log("getBoundaryNoiseRecordUpdate res",res)
           if (res.data.result !== 'success') {
             resolve({

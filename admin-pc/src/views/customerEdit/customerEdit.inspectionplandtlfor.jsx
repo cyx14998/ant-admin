@@ -39,10 +39,13 @@ const columns = [{
     <a target="_blank" download="文件" href={record.feedbackSheetURL}>{record.feedbackSheetURL ? '下载地址' : '无'}</a>
   )
 },
-//  {
-//   title: '整改报告',
-//   dataIndex: 'correctionReportURL',
-// },
+ {
+  title: '整改报告',
+  dataIndex: 'rectificationReportURL',
+  render: (text, record) => (
+    <a target="_blank" download="文件" href={record.rectificationReportURL}>{record.rectificationReportURL ? '下载地址' : '无'}</a>
+  )
+},
 {
   title: '执行状态',
   dataIndex: 'theState',
