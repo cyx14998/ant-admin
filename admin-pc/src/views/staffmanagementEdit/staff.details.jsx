@@ -22,7 +22,7 @@ import md5 from 'crypto-js/md5';
 import QiniuUpload from '../../components/upload';
 
 import {
-  getDepartmentList
+  getDepartmentListForSelect
 } from '../../common/api/api.department';
 
 import {
@@ -73,12 +73,12 @@ class StaffDetails extends React.Component {
     }
 
     this._getStaffDetails = this._getStaffDetails.bind(this);
-    this._getDepartmentList = this._getDepartmentList.bind(this);
+    this._getDepartmentListForSelect = this._getDepartmentListForSelect.bind(this);
   }
 
   componentDidMount() {
     // 获取部门列表
-    this._getDepartmentList();
+    this._getDepartmentListForSelect();
 
     var staffId = this.props.staffId;
 
@@ -87,9 +87,9 @@ class StaffDetails extends React.Component {
     }
   }
 
-  _getDepartmentList() {
-    getDepartmentList({}).then(res => {
-      console.log('getDepartmentList res', res)
+  _getDepartmentListForSelect() {
+    getDepartmentListForSelect({}).then(res => {
+      console.log('getDepartmentListForSelect res', res)
 
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '获取部门列表失败');
@@ -129,11 +129,11 @@ class StaffDetails extends React.Component {
           ...prev.data,
           ...memberDetail
         },
-        uploadedFileList: [{
+        uploadedFileList: memberDetail.headImagePath ? [{
           uid: -1,
           status: 'done',
-          url: memberDetail.headImagePath || ''
-        }]
+          url: memberDetail.headImagePath
+        }] : []
       }));
     }).catch(err => {
       MyToast('获取员工详情失败')
@@ -283,7 +283,7 @@ class StaffDetails extends React.Component {
             </Row>
             <Row>
               <Col span={8}>
-                <FormItem {...formItemLayout} label="部门ID">
+                <FormItem {...formItemLayout} label="部门">
                   {getFieldDecorator('departmentId', {
                     initialValue: this.state.data.departmentId + '',
                     rules: [{ required: true },

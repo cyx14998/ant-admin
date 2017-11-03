@@ -13,16 +13,14 @@ import axios, {
 export function getStaffList ({
   pageNumber=1,
   countPerPage=1000,
-  realName='',
-  phoneNumber=''
+  keyword=''
 }) {
   return axios.get('/uMemberList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
-      realName,
-      phoneNumber
+      keyword
     }
   })
 }

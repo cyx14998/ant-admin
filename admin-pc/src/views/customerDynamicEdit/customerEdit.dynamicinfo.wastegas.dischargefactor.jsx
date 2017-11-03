@@ -57,17 +57,6 @@ const columns = [{
 }];
 
 /**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
-
-/**
  * 新数据默认值
  */
 const itemDataModel = {
@@ -146,15 +135,19 @@ const WasteGasDemoSection = connectEditableSectionApi({
     if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     }
-    var wasteGasDischargeRecordId = record.apiListItemId;
-    delete record.apiListItemId;
+
+    var _record_for_save = {
+      ...record,
+      isOverproof: record.isOverproof.value === '1' ? true : false,
+      // wasteGasDischargeRecordId: record.apiListItemId
+    }
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWasteGasDischargeFactorRecordAdd({
-          ...record,
-           wasteGasDischargeRecordId
+          ..._record_for_save,
+           wasteGasDischargeRecordId: record.apiListItemId
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -175,7 +168,7 @@ const WasteGasDemoSection = connectEditableSectionApi({
       // 编辑
       return new Promise((resolve, reject) => {
         getWasteGasDischargeFactorRecordUpdate({
-          ...record,
+          ..._record_for_save,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
