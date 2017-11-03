@@ -40,10 +40,9 @@ class QiniuUploadFile extends React.Component {
     // }]
 
     this.state = {
-      previewImage: '',
+      uptoken: '',
     }
 
-    this.uptoken = '';
   }
 
   componentDidMount() {
@@ -53,7 +52,9 @@ class QiniuUploadFile extends React.Component {
             return;
         }
 
-        this.uptoken = res.data.uptoken;
+        this.setState({
+          uptoken: res.data.uptoken
+        });
     }).catch(err => console.log(err));
   }
 
@@ -100,7 +101,7 @@ class QiniuUploadFile extends React.Component {
             onChange={this.handleUploadChange.bind(this)}
             fileList={uploadedFileList}
             data={{
-              token: this.uptoken, 
+              token: this.state.uptoken, 
               key: Date.now()
             }}>
             {

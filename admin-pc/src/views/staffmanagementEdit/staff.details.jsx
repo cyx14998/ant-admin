@@ -184,7 +184,7 @@ class StaffDetails extends React.Component {
       if (password !== this.state.data.password) {
         onSave({
           ...values,
-          password: md5(password).toString(),
+          password: md5(password).toString().toUpperCase(),
           headImagePath: uploadedFilePath
         });
       } else {
