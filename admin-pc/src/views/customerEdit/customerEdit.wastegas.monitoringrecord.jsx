@@ -4,12 +4,13 @@
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getWasteGasMonitoringRecordList,
   getWasteGasMonitoringRecordAdd,
   getWasteGasMonitoringRecordDelete,
   getWasteGasMonitoringRecordUpdate,
 } from '../../common/api/api.customer.plus.js';
+const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 
 import {
   MyToast
@@ -23,7 +24,7 @@ const dateFormat = 'YYYY-MM-DD';
  */
 const columns = [{
   title: '编号',
-  dataIndex: 'serialNumber', 
+  dataIndex: 'serialNumber',
 }, {
   title: '监测时间',
   dataIndex: 'monitoringDatetime',
@@ -35,23 +36,13 @@ const columns = [{
   dataIndex: 'monitoringResult',
 }, {
   title: '监测报告',
-  dataIndex: 'monitoringReportURL', 
+  dataIndex: 'monitoringReportURL',
 }, {
   title: '操作',
   dataIndex: 'operation',
   width: 120
 }];
 
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
 
 /**
  * 新数据默认值
@@ -61,21 +52,24 @@ const itemDataModel = {
   monitoringDatetime: moment(new Date()).format(dateFormat),
   monitoringDepart: '',
   monitoringResult: '',
-  monitoringReportURL: '',
+  monitoringReportURL: {
+    cellType: 'fileUpload',
+    fileList: []
+  },
 };
 
 const WasteGasMonitoringRecord = connectEditableSectionApi({
   secTitle: '废气排放检测记录基本情况',
   columns: columns,
-  apiLoader: function ({apiListItemId}) {
+  apiLoader: function ({ apiListItemId }) {
     var editId = apiListItemId;
-    if(editId === undefined){
+    if (editId === undefined) {
       editId = localStorage.getItem('wastewater-discharge-editId');
     }
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
       console.log(editId);
-      getWasteGasMonitoringRecordList({id: editId}).then(res => {
+      getWasteGasMonitoringRecordList({ id: editId }).then(res => {
         console.log('getWasteGasMonitoringRecordList res ---', res);
 
         if (res.data.result !== 'success') {
@@ -87,6 +81,18 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
         }
 
         var data = res.data.wasteGasMonitoringRecordList;
+
+        data = data.map(item => {
+          var fileList = item.monitoringReportURL ? [{ uid: -1, name: '文件', url: item.monitoringReportURL }] : [];
+          return {
+            ...item,
+            monitoringReportURL: {
+              cellType: 'fileUpload',
+              fileList,
+            }
+          }
+        })
+
         resolve({
           code: 0,
           data,
@@ -96,14 +102,25 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
       })
     })
   },
+
   apiSave: function (record) {
     // 新增
     console.log('apiSave record ----', record);
     var self = this;
-    if(record.apiListItemId === undefined){
+    if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     }
-    record.DischargePortId = record.apiListItemId;
+    //
+    var file = record.monitoringReportURL.fileList[0];
+    var filePath = '';
+
+    if (file && file.url) {
+      filePath = file.url
+    }
+
+    if (file && file.response) {
+      filePath = downloadUrl + file.response.filePath;
+    }
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
@@ -111,6 +128,8 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
         console.log(record);
         getWasteGasMonitoringRecordAdd({
           ...record,
+          monitoringReportURL: filePath,
+          dischargePortId: record.apiListItemId
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -132,6 +151,8 @@ const WasteGasMonitoringRecord = connectEditableSectionApi({
       return new Promise((resolve, reject) => {
         getWasteGasMonitoringRecordUpdate({
           ...record,
+          monitoringReportURL: filePath,
+          dischargePortId: record.apiListItemId
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
