@@ -1,7 +1,9 @@
 /**
  * 可拖动的Modal组件
+ * bug: input 输入框不能输入！！！
  */
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Draggable from 'react-draggable';
 
 import './modal.draggable.less';
@@ -10,18 +12,27 @@ import './modal.draggable.less';
 class DraggableModal extends React.Component {
   constructor(props) {
     super(props);
+
+    this.node = null;
   }
 
-  render() {
+  componentDidMount() {
+    this.node = document.createElement('div');
+    this.node.className = 'ReactModal';
+    document.getElementsByTagName('body')[0].appendChild(this.node);
+  }
+
+  componentWillReceiveProps(nextProps) {
     let {
       visible,
       onCancel,
       title,
       width,
       children
-    } = this.props;
+    } = nextProps;
 
-    return (
+
+    const modal = (
       <div 
         className={visible ? "yzy-modal visible" : "yzy-modal"}
         onClick={onCancel}>
@@ -33,7 +44,9 @@ class DraggableModal extends React.Component {
             onClick={(e) => {
               e.stopPropagation();
             }}>
-            <button onClick={onCancel} aria-label="Close" className="ant-modal-close"><span className="ant-modal-close-x"></span></button>
+            <button onClick={onCancel} aria-label="Close" className="yzy-modal-close">
+              <span className="yzy-modal-close-x"></span>
+            </button>
             <h2 className="yzy-modal-title">{title || '标题'}</h2>
             <div className="yzy-modal-content">
               { children }
@@ -42,6 +55,12 @@ class DraggableModal extends React.Component {
         </Draggable>
       </div>
     )
+
+    ReactDOM.render(modal, this.node);
+  }
+
+  render() {
+    return null;
   }
 }
 
