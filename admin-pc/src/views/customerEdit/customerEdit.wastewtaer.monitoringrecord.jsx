@@ -18,6 +18,13 @@ import {
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
 
+<<<<<<< HEAD
+=======
+const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+
+
+
+>>>>>>> zxk009
 /**
  * table head
  */
@@ -36,22 +43,13 @@ const columns = [{
 }, {
   title: '监测报告',
   dataIndex: 'monitoringReportURL',
+  width: 160,
 }, {
   title: '操作',
   dataIndex: 'operation',
   width: 120
 }];
 
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
 
 /**
  * 新数据默认值
@@ -61,7 +59,10 @@ const itemDataModel = {
   monitoringDatetime: moment(new Date()).format(dateFormat),
   monitoringDepart: '',
   monitoringResult: '',
-  monitoringReportURL: '',
+  monitoringReportURL:  {
+    cellType: 'fileUpload',
+    fileList: []
+  },
 };
 
 /**
@@ -75,6 +76,7 @@ const WasteWaterMonitoringRecord = connectEditableSectionApi({
     if(editId === undefined){
       editId = localStorage.getItem('wastewater-discharge-editId');
     }
+
     return new Promise((resolve,reject) => {
       //获取数据
       getWastewaterMonitoringRecordList({wasteWaterDischargePortId: editId}).then(res => {
@@ -89,6 +91,19 @@ const WasteWaterMonitoringRecord = connectEditableSectionApi({
         }
 
         var data = res.data.wasteWaterMonitoringRecordList;
+
+        data = data.map(item => {
+          let fileList = item.monitoringReportURL ? [{uid: -1, name: '文件', url: item.monitoringReportURL}] : [];
+
+          return {
+            ...item,
+            monitoringReportURL: {
+              cellType: 'fileUpload',
+              fileList
+            }
+          }
+        });
+
         resolve({
           code: 0,
           data,
@@ -105,13 +120,30 @@ const WasteWaterMonitoringRecord = connectEditableSectionApi({
     if(record.apiListItemId === undefined){
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     }
-    record.wasteWaterDischargePortId = record.apiListItemId;
+
+    /**
+     * 处理fileList
+     */
+    var file = record.monitoringReportURL.fileList[0];
+
+    var filePath = '';
+
+    if (file && file.url) {
+      filePath = file.url;
+    }
+
+    if (file && file.response.filePath) {
+      filePath = downloadUrl + file.response.filePath
+    }
+
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWastewaterMonitoringRecordAdd({
           ...record,
+          wasteWaterDischargePortId: record.apiListItemId,
+          monitoringReportURL: filePath
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -133,6 +165,8 @@ const WasteWaterMonitoringRecord = connectEditableSectionApi({
       return new Promise((resolve, reject) => {
         getWastewaterMonitoringRecordUpdate({
           ...record,
+          wasteWaterDischargePortId: record.apiListItemId,
+          monitoringReportURL: filePath
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
