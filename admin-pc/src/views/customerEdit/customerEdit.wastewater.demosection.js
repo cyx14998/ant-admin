@@ -2,6 +2,9 @@ import React from 'react';
 import {
   Button
 } from 'antd';
+
+import QiniuUploadFile from '../../components/upload.file';
+
 /**
  * 模块测试
  */
@@ -29,6 +32,10 @@ const columns = [{
   title: '计量单位',
   dataIndex: 'unitOfMeasurement',
 }, {
+  title: '文件上传',
+  dataIndex: 'fileUpload',
+  width: 180,
+}, {
   title: '设计年产量',
   dataIndex: 'designAnnualOutput',
 }, {
@@ -43,6 +50,7 @@ const columns = [{
 const itemDataModel = {
   tableId: '',
   theName: '',
+  fileUpload: '',
   unitOfMeasurement: '',
   designAnnualOutput: {
     value: '',
@@ -56,6 +64,14 @@ const itemDataModel = {
 const dataSource = [{
   tableId: 'id-001',
   theName: '名称--',
+  fileUpload: {
+    cellType: 'fileUpload',
+    fileList: [{
+      uid: -1,
+      name: 'file',
+      url: 'http://'
+    }]
+  },
   // unitOfMeasurement: 'kg',
   designAnnualOutput: {
     value: 'so',
