@@ -89,7 +89,7 @@ const WasteWaterTreatment = connectEditableSectionApi({
         getWastewaterTreatmentList({ sourceType: 0, sourceId: editId }),
       ]).then(axios.spread((approachList, wwTreatmentList) => {
         console.log("approachList=====================", approachList),
-        console.log("wwTreatmentList=====================",wwTreatmentList)
+          console.log("wwTreatmentList=====================", wwTreatmentList)
         //废气治理列表
         var wwTreatmentData = wwTreatmentList.data.controlFacilitiesList;
         //处理方法列表
@@ -118,17 +118,21 @@ const WasteWaterTreatment = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    record.approachId = record.approachId.value;
     var self = this;
     if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     };
-    record.sourceId = record.apiListItemId;
+
+    const _record_for_save = {
+      ...record,
+      sourceId: record.apiListItemId,
+      approachId: record.approachId.value,
+    }
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWastewaterTreatmentAdd({
-          ...record,
+          ..._record_for_save,
           sourceType: 0
         }).then(res => {
           if (res.data.result !== 'success') {
@@ -149,7 +153,7 @@ const WasteWaterTreatment = connectEditableSectionApi({
       // 编辑
       return new Promise((resolve, reject) => {
         getWastewaterTreatmentUpdate({
-          ...record,
+          ..._record_for_save,
           sourceType: 0
         }).then(res => {
           if (res.data.result !== 'success') {
