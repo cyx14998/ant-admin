@@ -149,7 +149,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排放量">
 									{getFieldDecorator('emissionAmount', {
 										initialValue: this.state.data.emissionAmount,
-										rules: [{ required: true },
+										rules: [{ required: true,message: '请输入排放量' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -161,7 +161,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排放去向">
 									{getFieldDecorator('emissionDestination', {
 										initialValue: this.state.data.emissionDestination,
-										rules: [{ required: true },
+										rules: [{ required: true ,message: '请输入排放去向'},
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -170,10 +170,10 @@ class WasteGasDischargeDetail extends React.Component {
 								</FormItem>
 							</Col>
               <Col span={8}>
-								<FormItem {...formItemLayout} label="废水排放口ID">
+								<FormItem {...formItemLayout} label="废水排放口">
 									{getFieldDecorator('wasteWaterDischargePortId', {
 										initialValue: this.state.dischargePortItem+'' || this.state.dischargePort[0]+'',
-										rules: [{ required: true },
+										rules: [{ required: true ,message: '请选择废水排放口'},
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(

@@ -112,14 +112,14 @@ class WasteGasDischargeDetail extends React.Component {
 						<h2 className="yzy-tab-content-title">排放口基本信息</h2>
 						<Row>
 							<Col span={8}>
-								<FormItem {...formItemLayout} label="排水口编号">
+								<FormItem {...formItemLayout} label="排气口编号">
 									{getFieldDecorator('serialNumber', {
 										initialValue: this.state.data.serialNumber,
-										rules: [{ required: true },
+										rules: [{ required: true,message:'请输入排放口编号' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
-										<Input placeholder="排水口编号" />
+										<Input placeholder="排气口编号" />
 										)}
 								</FormItem>
 							</Col>
@@ -127,7 +127,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排放口名称">
 									{getFieldDecorator('theName', {
 										initialValue: this.state.data.theName,
-										rules: [{ required: true },
+										rules: [{ required: true ,message: '请输入排放口名称'},
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -139,7 +139,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排放口位置">
 									{getFieldDecorator('outletLocation', {
 										initialValue: this.state.data.outletLocation,
-										rules: [{ required: true },
+										rules: [{ required: true,message: '请输入排放口位置' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -153,7 +153,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="经度">
 									{getFieldDecorator('longitude', {
 										initialValue: this.state.data.longitude ? this.state.data.longitude + "" : "",
-										rules: [{ required: true },
+										rules: [{ required: true,message: '请输入经度' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -162,14 +162,14 @@ class WasteGasDischargeDetail extends React.Component {
 								</FormItem>
 							</Col>
 							<Col span={8}>
-								<FormItem {...formItemLayout} label="维度">
+								<FormItem {...formItemLayout} label="纬度">
 									{getFieldDecorator('latitude', {
 										initialValue: this.state.data.latitude ? this.state.data.latitude + "" : "",
-										rules: [{ required: true },
+										rules: [{ required: true,message:'请输入纬度' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
-										<Input placeholder="维度" />
+										<Input placeholder="纬度" />
 										)}
 								</FormItem>
 							</Col>
@@ -191,7 +191,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="功能区类别">
 									{getFieldDecorator('functionalAreaCategory', {
 										initialValue: this.state.data.functionalAreaCategory,
-										rules: [{ required: true },
+										rules: [{ required: true,message:'请输入功能区类别' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -203,7 +203,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排放方式">
 									{getFieldDecorator('dischargeMode', {
 										initialValue: this.state.data.dischargeMode,
-										rules: [{ required: true },
+										rules: [{ required: true,message:'请输入排放方式' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -215,7 +215,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排放口类型">
 									{getFieldDecorator('dischargePortType', {
 										initialValue: this.state.data.dischargePortType,
-										rules: [{ required: true },
+										rules: [{ required: true,message: '请输入排放口类型' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(

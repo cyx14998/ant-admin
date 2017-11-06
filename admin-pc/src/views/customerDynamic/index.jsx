@@ -79,12 +79,10 @@ class CustomerDynamicList extends Component {
     columns[2].render = (text, record) => {
       return (
         <div>
+          <a title="编辑" onClick={() => changeParentState({dynamicId: record.tableId})}><Icon type="edit" className="yzy-icon" /></a>
           <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteItem(record.tableId)}>
-            <a href="#"><Icon type="delete" className="yzy-icon" /></a>
+            <a title="删除" style={{ marginLeft: '10px' }} href="#"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>
-          <a style={{ marginLeft: '10px' }} onClick={() => changeParentState({
-            dynamicId: record.tableId
-          })}><Icon type="edit" className="yzy-icon" /></a>
         </div>
       )
     }

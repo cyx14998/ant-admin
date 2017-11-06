@@ -146,6 +146,7 @@ export function getWastewaterTreatmentAdd({
   putInUseDate,
   standingBookURL,
 }){
+  console.log('-----',sourceId)
   return axios.get('/uControlFacilitiesAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
@@ -953,13 +954,13 @@ export function getEIAAdd({
   theName,
   theLevel,
   editDatetime,
-  DocumentNumberTPA,
+  documentNumberTPA,
   approvalTimeTPA,
-  DocumentNumberEIA,
+  documentNumberEIA,
   approvalTimeEIA,
-  DocumentNumberFAA,
+  documentNumberFAA,
   approvalTimeFAA,
-  SelfAcceptanceURL,
+  selfAcceptanceURL,
 }){
   return axios.get('/uCustomerEIAAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -968,13 +969,13 @@ export function getEIAAdd({
       theName,
       theLevel,
       editDatetime,
-      DocumentNumberTPA,
+      documentNumberTPA,
       approvalTimeTPA,
-      DocumentNumberEIA,
+      documentNumberEIA,
       approvalTimeEIA,
-      DocumentNumberFAA,
+      documentNumberFAA,
       approvalTimeFAA,
-      SelfAcceptanceURL,
+      selfAcceptanceURL,
     }
   })
 }
@@ -987,13 +988,13 @@ export function getEIAUpdate({
   theName,
   theLevel,
   editDatetime,
-  DocumentNumberTPA,
+  documentNumberTPA,
   approvalTimeTPA,
-  DocumentNumberEIA,
+  documentNumberEIA,
   approvalTimeEIA,
-  DocumentNumberFAA,
+  documentNumberFAA,
   approvalTimeFAA,
-  SelfAcceptanceURL,
+  selfAcceptanceURL,
 }){
   return axios.get('/uCustomerEIAUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -1002,13 +1003,13 @@ export function getEIAUpdate({
       theName,
       theLevel,
       editDatetime,
-      DocumentNumberTPA,
+      documentNumberTPA,
       approvalTimeTPA,
-      DocumentNumberEIA,
+      documentNumberEIA,
       approvalTimeEIA,
-      DocumentNumberFAA,
+      documentNumberFAA,
       approvalTimeFAA,
-      SelfAcceptanceURL,
+      selfAcceptanceURL,
     }
   })
 }

@@ -8,8 +8,8 @@ import {
 	Row,
 	Col,
 	Input,
-  Button,
-  Select,
+	Button,
+	Select,
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -20,8 +20,8 @@ import {
 
 import {
 	MyToast,
-  getLocQueryByLabel,
-  convertObjectLabel
+	getLocQueryByLabel,
+	convertObjectLabel
 } from '../../common/utils';
 
 const cusMId = getLocQueryByLabel("dynamicId");
@@ -38,7 +38,7 @@ import {
 } from '../../common/api/api.customer.dynamic.plus.js';
 
 import {
-  getWasteGasDischargeList
+	getWasteGasDischargeList
 } from '../../common/api/api.customer.plus.js';
 
 /**
@@ -50,9 +50,9 @@ class WasteGasDischargeDetail extends React.Component {
 		super(props);
 		this.state = {
 			data: {},
-      tableId:"",
-      dischargePort:[],
-      dischargePortItem: ""
+			tableId: "",
+			dischargePort: [],
+			dischargePortItem: ""
 		}
 	}
 
@@ -60,41 +60,41 @@ class WasteGasDischargeDetail extends React.Component {
 		var tableId = this.props.editId;
 		if (tableId === '') return;
 
-    //获取所有排放口
-    getWasteGasDischargeList({}).then(res => {
+		//获取所有排放口
+		getWasteGasDischargeList({}).then(res => {
 			if (res.data.result !== 'success') {
 				MyToast(res.data.info || '获取所有排放口失败')
 				return;
-      }
+			}
 
-      var wasteGasDischargePortList = res.data.wasteGasDischargePortList;
+			var wasteGasDischargePortList = res.data.wasteGasDischargePortList;
 
-      var wasteGasDischargePortListOptions = convertObjectLabel(wasteGasDischargePortList, 'tableId', 'serialNumber');
+			var wasteGasDischargePortListOptions = convertObjectLabel(wasteGasDischargePortList, 'tableId', 'serialNumber');
 
-      return wasteGasDischargePortListOptions;
+			return wasteGasDischargePortListOptions;
 		})then(wasteGasDischargePortListOptions => {
 			getWasteGasDischargeRecordDetail({ tableId: tableId }).then(res => {
-	      console.log(res);
+				console.log(res);
 				if (res.data.result !== 'success') {
 					MyToast(data.info)
 					return;
-	      }
+				}
 
-	      /**
-	       * fuck
-	       */
-				this.setState({ 
-	        data: res.data.wasteGasDischargeRecord, 
-	        tableId: res.data.wasteGasDischargeRecord.tableId,
-	        dischargePort: wasteGasDischargePortListOptions,
-	        dischargePortItem: res.data.wasteGasDischargeRecord.wasteGasDischargePort.tableId + ''
-	      })
+				/**
+				 * fuck
+				 */
+				this.setState({
+					data: res.data.wasteGasDischargeRecord,
+					tableId: res.data.wasteGasDischargeRecord.tableId,
+					dischargePort: wasteGasDischargePortListOptions,
+					dischargePortItem: res.data.wasteGasDischargeRecord.wasteGasDischargePort.tableId + ''
+				})
 			}).catch(err => {
 				MyToast('接口调用失败')
-	    })
+			})
 		}).catch(err => {
 			MyToast(err)
-    })   
+		})
 	}
 	// 基本信息保存
 	saveDetail(e) {
@@ -107,14 +107,14 @@ class WasteGasDischargeDetail extends React.Component {
 			if (err) return;
 			console.log('when saveDetail ---', values);
 			var tableId = this.props.editId;
-			if(!tableId){
+			if (!tableId) {
 				tableId = this.state.tableId;
-      }
+			}
 			//编辑
-			if(this.state.tableId){
+			if (this.state.tableId) {
 				getWasteGasDischargeRecordUpdate({
 					...values,
-					tableId:tableId,
+					tableId: tableId,
 				}).then(res => {
 					if (res.data.result !== 'success') {
 						MyToast(res.data.info)
@@ -127,15 +127,15 @@ class WasteGasDischargeDetail extends React.Component {
 			} else {
 				// 新增
 				getWasteGasDischargeRecordAdd({
-          ...values,
-          customerMonthDclarationId: cusMId,
+					...values,
+					customerMonthDclarationId: cusMId,
 				}).then(res => {
 					if (res.data.result !== 'success') {
 						MyToast(res.data.info)
 						return;
 					}
 					localStorage.setItem('wastewater-discharge-editId', res.data.tableId);
-					this.setState({tableId:res.data.tableId});
+					this.setState({ tableId: res.data.tableId });
 					this.props.showItemVisible();
 					MyToast("新增成功")
 				}).catch(err => {
@@ -154,31 +154,31 @@ class WasteGasDischargeDetail extends React.Component {
 					<div className="baseinfo-section">
 						<h2 className="yzy-tab-content-title">废水排放基本信息详情</h2>
 						<Row>
-              <Col span={8}>
+							<Col span={8}>
 								<FormItem {...formItemLayout} label="废水排放口">
 									{getFieldDecorator('wasteGasDischargePortId', {
 										initialValue: this.state.dischargePortItem,
-										rules: [{ required: true },
+										rules: [{ required: true,message: '请选择废水排放口' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
-                    <Select>
-                      {
-                        this.state.dischargePort.map((item,index) =>{
-                           return(
-                            <Option key={index} value={item.value}>{item.label}</Option>
-                          ) 
-                        })
-                      }
-                    </Select>
+										<Select>
+											{
+												this.state.dischargePort.map((item, index) => {
+													return (
+														<Option key={index} value={item.value}>{item.label}</Option>
+													)
+												})
+											}
+										</Select>
 										)}
 								</FormItem>
 							</Col>
 							<Col span={8}>
 								<FormItem {...formItemLayout} label="实测排放量">
 									{getFieldDecorator('measuredExhaustVolume', {
-										initialValue: this.state.data.measuredExhaustVolume?this.state.data.measuredExhaustVolume+'':'',
-										rules: [{ required: true },
+										initialValue: this.state.data.measuredExhaustVolume ? this.state.data.measuredExhaustVolume + '' : '',
+										rules: [{ required: true ,message: '请输入实测排放量'},
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -189,8 +189,8 @@ class WasteGasDischargeDetail extends React.Component {
 							<Col span={8}>
 								<FormItem {...formItemLayout} label="排放时间">
 									{getFieldDecorator('emissionTime', {
-										initialValue: this.state.data.emissionTime?this.state.data.emissionTime+'':'',
-										rules: [{ required: true },
+										initialValue: this.state.data.emissionTime ? this.state.data.emissionTime + '' : '',
+										rules: [{ required: true,message: '请选择排放时间' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -199,12 +199,12 @@ class WasteGasDischargeDetail extends React.Component {
 								</FormItem>
 							</Col>
 						</Row>
-            <Row>
-              <Col span={8}>
+						<Row>
+							<Col span={8}>
 								<FormItem {...formItemLayout} label="废气排放量">
 									{getFieldDecorator('exhaustEmission', {
-										initialValue: this.state.data.exhaustEmission?this.state.data.exhaustEmission+'':'',
-										rules: [{ required: true },
+										initialValue: this.state.data.exhaustEmission ? this.state.data.exhaustEmission + '' : '',
+										rules: [{ required: true,message: '请输入废气排放量' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -216,7 +216,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="数据来源">
 									{getFieldDecorator('dataSources', {
 										initialValue: this.state.data.dataSources,
-										rules: [{ required: true },
+										rules: [{ required: true,message: '请输入数据来源' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -227,8 +227,8 @@ class WasteGasDischargeDetail extends React.Component {
 							<Col span={8}>
 								<FormItem {...formItemLayout} label="燃料">
 									{getFieldDecorator('fuel', {
-										initialValue: this.state.data.fuel?this.state.data.fuel+'':'',
-										rules: [{ required: true },
+										initialValue: this.state.data.fuel ? this.state.data.fuel + '' : '',
+										rules: [{ required: true,message: '请输入燃料' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -237,12 +237,12 @@ class WasteGasDischargeDetail extends React.Component {
 								</FormItem>
 							</Col>
 						</Row>
-            <Row>
-              <Col span={8}>
+						<Row>
+							<Col span={8}>
 								<FormItem {...formItemLayout} label="林格曼黑度">
 									{getFieldDecorator('ringermanBlackness', {
-										initialValue: this.state.data.ringermanBlackness?this.state.data.ringermanBlackness+'':'',
-										rules: [{ required: true },
+										initialValue: this.state.data.ringermanBlackness ? this.state.data.ringermanBlackness + '' : '',
+										rules: [{ required: true,message: '请输入林格曼黑度' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -254,7 +254,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="废气类型">
 									{getFieldDecorator('exhaustGasType', {
 										initialValue: this.state.data.exhaustGasType,
-										rules: [{ required: true },
+										rules: [{ required: true,message: '请输入废气类型' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(

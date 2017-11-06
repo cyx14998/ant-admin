@@ -568,7 +568,7 @@ export function getBoundaryNoiseRecordAdd({
   exceedingStandardDays,
   noisePeriodStart,
   noisePeriodEnd,
-  IsBoundaryExceeding100,
+  isBoundaryExceeding100,
 }) {
   return axios.get('/uBoundaryNoiseRecordAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -582,7 +582,7 @@ export function getBoundaryNoiseRecordAdd({
       exceedingStandardDays,
       noisePeriodStart,
       noisePeriodEnd,
-      IsBoundaryExceeding100,
+      isBoundaryExceeding100,
     }
   })
 }
@@ -600,7 +600,7 @@ export function getBoundaryNoiseRecordUpdate({
   exceedingStandardDays,
   noisePeriodStart,
   noisePeriodEnd,
-  IsBoundaryExceeding100,
+  isBoundaryExceeding100,
 }) {
   return axios.get('/uBoundaryNoiseRecordUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -614,7 +614,7 @@ export function getBoundaryNoiseRecordUpdate({
       exceedingStandardDays,
       noisePeriodStart,
       noisePeriodEnd,
-      IsBoundaryExceeding100,
+      isBoundaryExceeding100,
     }
   })
 }
@@ -726,7 +726,7 @@ export function getAttachmentRecordAdd({
 //   exceedingStandardDays,
 //   noisePeriodStart,
 //   noisePeriodEnd,
-//   IsBoundaryExceeding100,
+//   isBoundaryExceeding100,
 // }){
 //   return axios.get('/uBoundaryNoiseRecordUpdate.uhtm?InterfaceVersion=' + apiVer, {
 //     params: {
@@ -740,7 +740,7 @@ export function getAttachmentRecordAdd({
 //       exceedingStandardDays,
 //       noisePeriodStart,
 //       noisePeriodEnd,
-//       IsBoundaryExceeding100,
+//       isBoundaryExceeding100,
 //     }
 //   })
 // }

@@ -209,10 +209,10 @@ class WasteWaterDischargeDetail extends React.Component {
             <h2 className="yzy-tab-content-title">企业附件基本信息</h2>
             <Row>
               <Col span={12}>
-                <FormItem {...formItemLayout} label="附件类型Id">
+                <FormItem {...formItemLayout} label="附件类型">
                   {getFieldDecorator('attachmentTypeId', {
                     initialValue: this.state.attachmentTypeItem + '' || this.state.attachmentTypeList ? this.state.attachmentTypeList[0].tableId + '' : '',
-                    rules: [{ required: true },
+                    rules: [{ required: true,message: '请选择附件类型' },
                     ],
                   })(
                     <Select>

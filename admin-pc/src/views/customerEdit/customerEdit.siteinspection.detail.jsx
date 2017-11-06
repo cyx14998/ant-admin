@@ -53,8 +53,9 @@ class WasteWaterDischargeDetail extends React.Component {
     super(props);
     this.state = {
       data: {},
-      theType: '',  // 文件类型
+      theType: 1,  // 文件类型
       uploadedFileList: [],
+      tableId: '', //新增的Id
     }
   }
 
@@ -113,8 +114,12 @@ class WasteWaterDischargeDetail extends React.Component {
       if (err) return;
 
       var tableId = this.props.editId;
+      if (!tableId) {
+        tableId = this.state.tableId;
+      }
 
       var fileOne = this.state.uploadedFileList[0];
+      console.log(fileOne)
       if (!fileOne) return MyToast('请上传附件');
       console.log(fileOne)
       // 默认
@@ -134,11 +139,11 @@ class WasteWaterDischargeDetail extends React.Component {
         fileSize = fileOne.size;
         fileName = fileOne.name;
       }
-      // console.log('tableId', tableId, 'theType', values.theType, 'filePath', uploadedFilePath, 'fileSize', fileSize, 'fileName', fileName);
+      console.log('tableId', tableId, 'theType', values.theType, 'filePath', uploadedFilePath, 'fileSize', fileSize, 'fileName', fileName);
       if (tableId) {
         getSiteInspectionUpdate({
           tableId: tableId,
-          theType: values.theType - 1,
+          theType: values.theType,
           filePath: uploadedFilePath,
           fileName: fileName,
           fileSize: fileSize,
@@ -149,14 +154,15 @@ class WasteWaterDischargeDetail extends React.Component {
             MyToast(res.data.info)
             return;
           }
-          MyToast("保存成功")
+          MyToast("保存成功");
+          this.setState({ tableId: res.data.tableId });
         }).catch(err => {
           MyToast('接口调用失败')
         });
       } else {
         // 新增
         getSiteInspectionAdd({
-          theType: values.theType - 1,
+          theType: values.theType,
           filePath: uploadedFilePath,
           fileName: fileName,
           fileSize: fileSize,
@@ -189,8 +195,8 @@ class WasteWaterDischargeDetail extends React.Component {
               <Col span={8}>
                 <FormItem {...formItemLayout} label="文件类型">
                   {getFieldDecorator('theType', {
-                    initialValue: this.state.theType ? (this.state.theType + 1) + "" : "1",
-                    rules: [{ required: true },
+                    initialValue: this.state.theType + '',
+                    rules: [{ required: true, message: '请选择文件类型' },
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(

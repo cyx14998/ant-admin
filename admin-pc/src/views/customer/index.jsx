@@ -68,8 +68,8 @@ const columns = [
     width: 120,
     render: (text, record) => (
       <div>
-        <a type="primary" onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
-        <a style={{marginLeft: '10px'}} type="primary" onClick={() => changeIframeToDynamic(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+        <a title="编辑基本信息" onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
+        <a title="编辑动态信息" style={{marginLeft: '10px'}} onClick={() => changeIframeToDynamic(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
       </div>
     )
   }

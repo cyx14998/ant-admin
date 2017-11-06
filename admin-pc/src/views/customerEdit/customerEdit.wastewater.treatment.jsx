@@ -98,8 +98,8 @@ const WasteWaterTreatment = connectEditableSectionApi({
 
         itemDataModel.approachId.options = approachOptions;
 
-        var data = wwTreatmentData.map( item => {
-          let fileList = item.standingBookURL ? [{uid: -1, name: '文件', url: item.standingBookURL}] : [];
+        var data = wwTreatmentData.map(item => {
+          let fileList = item.standingBookURL ? [{ uid: -1, name: '文件', url: item.standingBookURL }] : [];
 
           return {
             ...item,
@@ -139,7 +139,7 @@ const WasteWaterTreatment = connectEditableSectionApi({
       filePath = file.url;
     }
 
-    if (file && file.response.filePath) {
+    if (file && file.response) {
       filePath = downloadUrl + file.response.filePath
     }
 
@@ -150,11 +150,14 @@ const WasteWaterTreatment = connectEditableSectionApi({
       approachId: parseInt(record.approachId.value),
       standingBookURL: filePath
     }
-
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
+        console.log('新增',record_for_save)
         // 新增
-        getWastewaterTreatmentAdd(record_for_save).then(res => {
+        getWastewaterTreatmentAdd({
+          ...record_for_save,
+          sourceType: 0,
+        }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -172,7 +175,10 @@ const WasteWaterTreatment = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        getWastewaterTreatmentUpdate(record_for_save).then(res => {
+        getWastewaterTreatmentUpdate({
+          ...record_for_save,
+          sourceType: 0,
+        }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
               code: 1,

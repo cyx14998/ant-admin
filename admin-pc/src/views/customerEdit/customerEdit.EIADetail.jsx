@@ -1,9 +1,7 @@
 /**
  * 企业遵守法律法规情况
  */
-/**
- * 固体废物基本情况详情
- */
+
 import React from 'react';
 
 import {
@@ -44,16 +42,18 @@ class WasteWaterDischargeDetail extends React.Component {
         this.state = {
             data: {},
             uploadedFileList: [],
+
+            tableId: '', // 新增的tableId
         }
+
+        this.saveDetail = this.saveDetail.bind(this);
     }
 
     componentDidMount() {
         var tableId = this.props.editId;
-        if (!tableId) {
-            localStorage.setItem("wastewaterDischargeIsShow", "none");
-            return;
-        }
-        localStorage.setItem("wastewaterDischargeIsShow", "block");
+
+        if (!tableId) return;
+
         getEIADetail({ tableId: tableId }).then(res => {
             var self = this;
             console.log('getWastewaterDischargeDetail res ---', res);
@@ -63,12 +63,12 @@ class WasteWaterDischargeDetail extends React.Component {
             }
             self.setState({ data: res.data.customerEIA })
             var data = res.data.customerEIA;
-            if (data.SelfAcceptanceURL) {
+            if (data.selfAcceptanceURL) {
                 self.setState({
                     uploadedFileList: [{
                         uid: '1',
                         name: '自主验收文件',
-                        url: data.SelfAcceptanceURL,
+                        url: data.selfAcceptanceURL,
                     }],
                 });
             } else {
@@ -91,6 +91,7 @@ class WasteWaterDischargeDetail extends React.Component {
     // 基本信息保存
     saveDetail(e) {
         e.preventDefault();
+
         const {
             form
         } = this.props;
@@ -115,20 +116,20 @@ class WasteWaterDischargeDetail extends React.Component {
             if (uploadedFilePath.indexOf(downloadUrl) === -1) {
                 uploadedFilePath = downloadUrl + uploadedFilePath;
             }
-            data.SelfAcceptanceURL = uploadedFilePath;
-
-            //             editDatetime	编制日期
-            // approvalTimeTPA	试生产批复-审批时间
-            // approvalTimeEIA	环评批复-审批时间
-            // approvalTimeFAA	竣工验收批复-审批时间
+            data.selfAcceptanceURL = uploadedFilePath;
 
             //时间
-            data.editDatetime = data.editDatetime ? data.editDatetime.format('YYYY-MM-DD') : new Date();
-            data.approvalTimeTPA = data.approvalTimeTPA ? data.approvalTimeTPA.format('YYYY-MM-DD') : new Date();
-            data.approvalTimeEIA = data.approvalTimeEIA ? data.approvalTimeEIA.format('YYYY-MM-DD') : new Date();
-            data.approvalTimeFAA = data.approvalTimeFAA ? data.approvalTimeFAA.format('YYYY-MM-DD') : new Date();
+            data.editDatetime = data.editDatetime ? data.editDatetime.format('YYYY-MM-DD') : new Date().format('YYYY-MM-DD');
+            data.approvalTimeTPA = data.approvalTimeTPA ? data.approvalTimeTPA.format('YYYY-MM-DD') : new Date().format('YYYY-MM-DD');
+            data.approvalTimeEIA = data.approvalTimeEIA ? data.approvalTimeEIA.format('YYYY-MM-DD') : new Date().format('YYYY-MM-DD');
+            data.approvalTimeFAA = data.approvalTimeFAA ? data.approvalTimeFAA.format('YYYY-MM-DD') : new Date().format('YYYY-MM-DD');
 
             var tableId = self.props.editId;
+
+            if (!tableId) {
+                tableId = self.state.tableId
+            }
+
             if (tableId) {
                 getEIAUpdate({
                     ...data,
@@ -153,7 +154,10 @@ class WasteWaterDischargeDetail extends React.Component {
                         return;
                     }
                     MyToast("新增成功")
-                    localStorage.setItem("wastewaterDischargeIsShow", "block");
+                   
+                    this.setState({
+                        tableId: res.data.tableId
+                    });
                 }).catch(err => {
                     MyToast('接口调用失败')
                 });
@@ -172,7 +176,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="环评建设项目名称">
                                     {getFieldDecorator('theName', {
                                         initialValue: this.state.data.theName,
-                                        rules: [{ required: true },
+                                        rules: [{ required: true ,message: '请输入环评建设项目名称'},
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
@@ -184,7 +188,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="环评等级">
                                     {getFieldDecorator('theLevel', {
                                         initialValue: this.state.data.theLevel,
-                                        rules: [{ required: true },
+                                        rules: [{ required: true,message: '请输入环评等级' },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
@@ -205,8 +209,8 @@ class WasteWaterDischargeDetail extends React.Component {
                         <Row>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="试生产批复-环保部门审批文号">
-                                    {getFieldDecorator('DocumentNumberTPA', {
-                                        initialValue: this.state.data.DocumentNumberTPA,
+                                    {getFieldDecorator('documentNumberTPA', {
+                                        initialValue: this.state.data.documentNumberTPA,
                                         rules: [{ required: true },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
@@ -226,8 +230,8 @@ class WasteWaterDischargeDetail extends React.Component {
                             </Col>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="环评批复-环保部门审批文号">
-                                    {getFieldDecorator('DocumentNumberEIA', {
-                                        initialValue: this.state.data.DocumentNumberEIA,
+                                    {getFieldDecorator('documentNumberEIA', {
+                                        initialValue: this.state.data.documentNumberEIA,
                                         rules: [{ required: true },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
@@ -249,8 +253,8 @@ class WasteWaterDischargeDetail extends React.Component {
                             </Col>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="竣工验收批复-环保部门审批文号">
-                                    {getFieldDecorator('DocumentNumberFAA', {
-                                        initialValue: this.state.data.DocumentNumberFAA,
+                                    {getFieldDecorator('documentNumberFAA', {
+                                        initialValue: this.state.data.documentNumberFAA,
                                         rules: [{ required: true },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],

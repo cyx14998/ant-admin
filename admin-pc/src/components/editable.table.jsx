@@ -134,12 +134,12 @@ class EditableTable extends Component {
           if (text === undefined && (typeof checkInNewpage === 'function')) {
             return (
               <div>
-                <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
-                  <a title="删除" href="#"><Icon type="delete" className="yzy-icon" /></a>
-                </Popconfirm>
-
+                <a href="#" title="查看" onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
                 <a href="#" title="保存" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a>
-                <a href="#" title="查看" style={{marginLeft: '10px'}} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+                
+                <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
+                  <a title="删除" href="#" style={{marginLeft: '10px'}}><Icon type="delete" className="yzy-icon" /></a>
+                </Popconfirm>
               </div>
             )
           }
@@ -151,12 +151,12 @@ class EditableTable extends Component {
           if ((text === undefined) && (hasModal === true)) {
             return (
               <div>
-                <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
-                  <a href="#" title="删除">删除</a>
-                </Popconfirm>
-
+                <a href="#" title="查看" onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
                 <a href="#" title="保存" style={{marginLeft: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a>
-                <a href="#" title="查看" style={{marginLeft: '10px'}} onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+                
+                <Popconfirm title="Sure to delete?" onConfirm={() => onDelete(record.tableId)}>
+                  <a href="#" title="删除" style={{marginLeft: '10px'}}>删除</a>
+                </Popconfirm>
               </div>
             )
           }

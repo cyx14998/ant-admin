@@ -88,7 +88,7 @@ class StaffManagement extends Component {
     columns[8].render = (text, record) => {
       return (
         <div>
-          <a onClick={() => changeParentState(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
+          <a title="编辑" onClick={() => changeParentState(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
         </div>
       )
     } 

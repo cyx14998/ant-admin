@@ -103,7 +103,7 @@ const CustomerEditBaseinfo = ({
                             <FormItem {...formItemLayout} label="企业名称">
                                 {getFieldDecorator('customerName', {
                                     initialValue: customerBaseinfo.customer.customerName,
-                                    rules: [{ required: true },
+                                    rules: [{ required: true ,message:'请输入企业名称'},
                                     {/* { pattern: /^[0-9]*$/ } */ }
                                     ],
                                 })(
@@ -115,7 +115,7 @@ const CustomerEditBaseinfo = ({
                             <FormItem {...formItemLayout} label="社会信用代码">
                                 {getFieldDecorator('uniformSocialCreditCode', {
                                     initialValue: customerBaseinfo.customer.uniformSocialCreditCode,
-                                    rules: [{ required: true, message: 'Please input your GameCode!' },
+                                    rules: [{ required: true, message: '请输入社会信用代码' },
                                     {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                     ],
                                 })(
@@ -127,7 +127,7 @@ const CustomerEditBaseinfo = ({
                             <FormItem {...formItemLayout} label="单位类别">
                                 {getFieldDecorator('unitCategory', {
                                     initialValue: customerBaseinfo.customer.unitCategory ? customerBaseinfo.customer.unitCategory : '单位类别',
-                                    rules: [{ required: true, message: 'Please input your GameCode!' },
+                                    rules: [{ required: true, message: '请选择单位类别' },
                                     {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
                                     ],
                                 })(

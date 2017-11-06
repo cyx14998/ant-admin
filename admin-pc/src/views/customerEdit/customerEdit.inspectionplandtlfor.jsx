@@ -24,6 +24,9 @@ const columns = [{
   title: '企业名称',
   dataIndex: 'customer.customerName',
 }, {
+  title: '批次',
+  dataIndex: 'inspectionPlanMst.lotNumber',
+}, {
   title: '执行者名称',
   dataIndex: 'performer.realName',
 }, {
@@ -39,7 +42,7 @@ const columns = [{
     <a target="_blank" download="文件" href={record.feedbackSheetURL}>{record.feedbackSheetURL ? '下载地址' : '无'}</a>
   )
 },
- {
+{
   title: '整改报告',
   dataIndex: 'rectificationReportURL',
   render: (text, record) => (
@@ -49,6 +52,7 @@ const columns = [{
 {
   title: '执行状态',
   dataIndex: 'theState',
+  render: (text, record) => (record.theState ? '完成' : '执行中')
 },
 {
   title: '创建时间',
