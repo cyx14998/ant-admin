@@ -29,7 +29,7 @@ const rcsearchformData = {
     fields: [{
         type: 'input',
         label: '企业名称',
-        name: 'customerName',
+        name: 'keyword',
     }]
 }
 import { getLocQueryByLabel } from '../../common/utils';
@@ -39,6 +39,7 @@ import {
     getCheckplanSublist,
     getCheckplanDetail,
     getCheckplanSubDelete,
+    getCheckplanSubDeleteMulti,
     getCheckplanSubPerformer,
     getCheckplanSubPerformerMulti,
     getCheckplanSubAddMulti,
@@ -140,7 +141,7 @@ class CustomerCheckPlanSub extends React.Component {
     handleFormSearch(values) {
         console.log('handleSearch ---------', values);
         this.getData({
-            customerName: values.customerName,
+            keyword: values.keyword,
             inspectionPlanMstId: checkplanId,
         });
     }
@@ -228,11 +229,32 @@ class CustomerCheckPlanSub extends React.Component {
     performerbtn() {
         if (this.state.checkSubIdArr.length > 0) {
             this.setState({ multiModalVisible: true })
+            //批量选择
+            console.log(this.state.checkSubIdArr);
+            var param = this.state.checkSubIdArr.join(',');
+            getCheckplanSubPerformerMulti({ tableIdArr: param, performerId: tableId }).then(res => {
+                console.log('perfomerMultiSave res ---', res);
+                this.setState({
+                    multiModalVisible: false,
+                });
+                if (res.data.result !== 'success') {
+                    MyToast(res.data.info)
+                    return;
+                }
+                MyToast('批量选择成功');
+                this.getData({ inspectionPlanMstId: checkplanId });
+                this.setState({
+                    checkSubId: '',
+                });
+            }).catch(err => {
+                console.log(err)
+                MyToast('批量选择失败')
+            })
         } else {
             MyToast('请先选择要管理的数据');
         }
     }
-    //Modal选择执行人员
+    //Modal分配执行人员 
     selectPerformer(tableId) {
         console.log('performerSelect = ', tableId);
         //单个选择
@@ -279,6 +301,28 @@ class CustomerCheckPlanSub extends React.Component {
             })
         } else {
             MyToast('请选择数据')
+        }
+    }
+    //批量删除
+    multiDelete() {
+        if (this.state.checkSubIdArr.length > 0) {
+            var param = this.state.checkSubIdArr.join(',');
+
+            getCheckplanSubDeleteMulti({ tableIdArr: param, inspectionPlanMstId: checkplanId }).then(res => {
+                console.log('批量删除 res ---', res);
+                if (res.data.result !== 'success') {
+                    MyToast(res.data.info)
+                    return;
+                }
+                MyToast('批量删除成功');
+                this.getData({ inspectionPlanMstId: checkplanId });
+                this.getCustomerList();
+            }).catch(err => {
+                console.log(err)
+                MyToast('批量删除失败')
+            })
+        } else {
+            MyToast('请先选择要管理的数据');
         }
     }
     //编辑Modal确定取消
@@ -329,14 +373,11 @@ class CustomerCheckPlanSub extends React.Component {
             width: 120,
             render: (text, record, index) => (
                 <div>
-                    <a title="查看" onClick={this.showTestModal.bind(this, record)}><Icon type="eye-o" className="yzy-icon" /></a>                    
-                    <a title="执行者选择" style={{ marginLeft: 8 }} onClick={this.singlePerformSelect.bind(this, record.tableId)}><Icon type="link" className="yzy-icon" /></a>                    
-                    {this.state.checkplanSubList.length > 1 ?
-                        (
-                            <Popconfirm title="确定要删除吗？" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
-                                <a className="delete" href="#"><Icon type="delete" className="yzy-icon" /></a>
-                            </Popconfirm>
-                        ) : null}
+                    <a title="查看" onClick={this.showTestModal.bind(this, record)}><Icon type="eye-o" className="yzy-icon" /></a>
+                    <a title="执行者选择" style={{ marginLeft: 8 }} onClick={this.singlePerformSelect.bind(this, record.tableId)}><Icon type="link" className="yzy-icon" /></a>
+                    <Popconfirm title="Sure to delete?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
+                        <a title="删除" className="delete" href="#" style={{ marginLeft: 8 }}><Icon type="delete" className="yzy-icon" /></a>
+                    </Popconfirm>
                     <Modal
                         title="检查子表查看页面"
                         width='70%'
@@ -426,9 +467,9 @@ class CustomerCheckPlanSub extends React.Component {
         return (
             <div className="yzy-page">
                 <div className="yzy-tab-content-item-wrap">
-                    <div className="baseinfo-section">
+                    <div className="baseinfo-section checkSubHeadInfoBox">
                         <h2 className="yzy-tab-content-title">检查计划子表基本信息</h2>
-                        <div style={{ lineHeight: 2, paddingTop: 10, paddingBottom: 10, paddingLeft: 8, paddingRight: 8, marginBottom: 10, fontSize: 12, backgroundColor: '#fff' }}>
+                        <div className="checkSubHeadInfo">
                             <Row>
                                 <Col span={8}>
                                     <Col span={3}>编号：</Col>
@@ -522,6 +563,9 @@ class CustomerCheckPlanSub extends React.Component {
                                 }}
                             />
                         </Modal>
+                        <Popconfirm title="确定删除所选项" onConfirm={this.multiDelete.bind(this)}>
+                            <Button type="primary" style={{ marginLeft: 8 }}>删除（批量）</Button>
+                        </Popconfirm>
                     </div>
                     <Table
                         rowSelection={rowSelection}
@@ -531,11 +575,11 @@ class CustomerCheckPlanSub extends React.Component {
                         rowKey="tableId"
                         loading={this.state.loading}
                         rowClassName={(record, index) => {
-                          if (index % 2 !== 0) {
-                            return 'active'
-                          }
+                            if (index % 2 !== 0) {
+                                return 'active'
+                            }
                         }}
-                        />
+                    />
                 </div>
             </div>
         )

@@ -27,7 +27,7 @@ const rcsearchformData = {
     fields: [{
         type: 'input',
         label: '企业名称',
-        name: 'customerName',
+        name: 'keyword',
     }]
 }
 import { getLocQueryByLabel } from '../../common/utils';
@@ -78,7 +78,7 @@ class CustomerCheckPlanMy extends React.Component {
     handleFormSearch(values) {
         console.log('handleSearch ---------', values);
         this.getData({
-            customerName: values.customerName,
+            keyword: values.keyword,
             inspectionPlanMstId: checkplanId
         });
     }

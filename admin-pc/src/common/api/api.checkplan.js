@@ -130,7 +130,7 @@ export function getCheckplanSublist({
   pageNumber = 1,
   countPerPage = 1000,
   inspectionPlanMstId,
-  customerName,
+  keyword,
 }) {
   return axios.get('/uInspectionPlanDtlList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -138,7 +138,7 @@ export function getCheckplanSublist({
       pageNumber,
       countPerPage,
       inspectionPlanMstId,
-      customerName
+      keyword
     }
   })
 }
@@ -188,15 +188,14 @@ export function getCheckplanSubDelete({
     }
   })
 }
-
-// 企业检查计划子表完成
-export function getCheckplanSubComplete({
-  tableId,
+// 企业检查计划子表删除 --批量
+export function getCheckplanSubDeleteMulti({
+  tableIdArr,
 }) {
-  return axios.get('/uInspectionPlanDtlComplete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uInspectionPlanDtlDeleteBacth.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      tableId,
+      tableIdArr,
     }
   })
 }
