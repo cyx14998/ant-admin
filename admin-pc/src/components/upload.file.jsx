@@ -86,7 +86,7 @@ class QiniuUploadFile extends React.Component {
     let {
       uploadedFileList,
       uploadTitle='上传',
-      acceptType='application/*',
+      acceptType='*/*',
       maxLength=1
     } = this.props;
 

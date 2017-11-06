@@ -9,12 +9,14 @@
  export function MyPlanlist({
      pageNumber = 1,
      countPerPage = 1000,
+     keyword,
  }) {
      return axios.get('/uInspectionPlanDtlForMeList.uhtm?InterfaceVersion=' + apiVer, {
          params: {
              token: getToken(),
              pageNumber,
              countPerPage,
+             keyword
          }
      })
  }
