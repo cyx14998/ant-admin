@@ -15,7 +15,7 @@ const rcsearchformData = {
   fields: [{
     type: 'input',
     label: '批号',
-    name: 'lotNumber',
+    name: 'keyword',
     rules: [{ required: true, message: '请输入批号' }],
   },
   ]
@@ -174,12 +174,15 @@ const EditableDemoSection = connectEditableSectionApi({
   apiSave: function (record) {
     console.log('apiSave record ----', record);
     var self = this;
-
+    var _record_for_save= {
+      ...record,
+      serialNumber: record.value,
+    }
     // 新增
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         getCheckplanMainAdd({
-          ...record,
+          ..._record_for_save,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -200,7 +203,7 @@ const EditableDemoSection = connectEditableSectionApi({
       // 编辑
       return new Promise((resolve, reject) => {
         getCheckplanMainEdit({
-          ...record,
+          ..._record_for_save,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -214,6 +217,7 @@ const EditableDemoSection = connectEditableSectionApi({
             code: 0 // success
           })
         }).catch(err => {
+          console.log(err)
           reject(err)
         });
       });
