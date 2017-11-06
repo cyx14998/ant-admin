@@ -143,7 +143,12 @@ class EditDepartmentMember extends Component {
           rowSelection={{onChange: this.onSelectChange.bind(this)}}
           columns={columns} 
           dataSource={this.state.dataSource}
-          rowKey="tableId" />
+          rowKey="tableId"
+          rowClassName={(record, index) => {
+            if (index % 2 !== 0) {
+              return 'active'
+            }
+          }} />
       </div>
     )
   }

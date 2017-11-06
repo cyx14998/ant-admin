@@ -29,8 +29,8 @@ const columns = [{
   title: '文件名称',
   dataIndex: 'theName',
 }, {
-  title: '附件类型Id',
-  dataIndex: 'attachmentTypeId',
+  title: '附件类型',
+  dataIndex: 'attachmentTypeName',
 }, {
   title: '文件大小',
   dataIndex: 'theSize',
@@ -43,16 +43,6 @@ const columns = [{
   width: 120
 }];
 
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
 
 /**
  * 新数据默认值
@@ -63,6 +53,7 @@ const itemDataModel = {
   theSize: '',
   filePath: '',
 };
+
 const InnerComponent = ({
   editId,
   itemVisible,
@@ -92,9 +83,20 @@ const AttachmentRecord = connectUneditableSectionApi({
 
         var data = res.data.attachmentDynamicList;
         data = data.map((item,index) => {
+          var fsize = parseInt(item.theSize);
+          var _fsize = '0M';
+
+          if (fsize > 0) {
+            _fsize = (fsize * 100) / (1024 * 1024)
+          }
+
+          _fsize = (parseInt(_fsize) / 100) + 'M';
+
           return {
             ...item,
-            attachmentTypeId: item.attachmentType.tableId,
+            theSize: _fsize,
+            filePath: <a href={item.filePath} target="_blank" download="file">文件下载</a>,
+            attachmentTypeName: (item.attachmentType && item.attachmentType.theName) || ''
           }
         })
         resolve({

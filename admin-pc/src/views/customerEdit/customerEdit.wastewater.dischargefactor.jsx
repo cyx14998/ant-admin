@@ -83,6 +83,11 @@ const WasteWaterDischargeFactor = connectEditableSectionApi({
       editId = localStorage.getItem('wastewater-discharge-editId');
     }
 
+    if (!editId) {
+      MyToast('获取废水排放口失败，请关闭后重新编辑');
+      return;
+    }
+
     // console.log('apiLoader eidtId -----------', editId)
     return new Promise((resolve, reject) => {
       //获取数据

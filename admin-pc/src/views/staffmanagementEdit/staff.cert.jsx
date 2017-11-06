@@ -56,10 +56,6 @@ const columns = [
   }
 ];
 
-const dataBlob = [{
-  tableId: 1,
-  theName: '证券从业证'
-}];
 
 /**
  * 证照信息

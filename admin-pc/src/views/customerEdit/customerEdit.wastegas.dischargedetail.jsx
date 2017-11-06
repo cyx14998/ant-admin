@@ -36,7 +36,7 @@ class WasteGasDischargeDetail extends React.Component {
 		super(props);
 		this.state = {
 			data: {},
-			tableId:"",
+			tableId: "", // 新增后的tableId
 		}
 	}
 
@@ -49,7 +49,7 @@ class WasteGasDischargeDetail extends React.Component {
 				MyToast(res.data.info)
 				return;
 			}
-			this.setState({ data: res.data.wasteGasDischargePort, tableId: res.data.wasteGasDischargePort.tableId })
+			this.setState({ data: res.data.wasteGasDischargePort })
 		}).catch(err => {
 			MyToast('接口调用失败')
 		})
@@ -68,6 +68,7 @@ class WasteGasDischargeDetail extends React.Component {
 			if(!tableId){
 				tableId = this.state.tableId;
 			}
+			
 			//编辑
 			if(this.state.tableId){
 				getWasteGasDischargeUpdate({

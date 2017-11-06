@@ -35,7 +35,7 @@ class WasteWaterDischargeDetail extends React.Component {
 		super(props);
 		this.state = {
 			data: {},
-			tableId: "",
+			tableId: "", // 新增后的tableId
 		}
 	}
 
@@ -43,15 +43,16 @@ class WasteWaterDischargeDetail extends React.Component {
 		var tableId = this.props.editId;
 
 		if (tableId === '') return;
+
 		getWastewaterDischargeDetail({ tableId: tableId }).then(res => {
 			console.log('getWastewaterDischargeDetail res ---', res);
 			if (res.data.result !== 'success') {
 				MyToast(res.data.info)
 				return;
 			}
-			this.setState({ data: res.data.wasteWaterDischargePort, tableId: res.data.wasteWaterDischargePort.tableId})
+			this.setState({ data: res.data.wasteWaterDischargePort})
 		}).catch(err => {
-			MyToast('接口调用失败')
+			MyToast('接口调用失败');
 		})
 	}
 
@@ -65,10 +66,13 @@ class WasteWaterDischargeDetail extends React.Component {
 
 		form.validateFields((err, values) => {
 			if (err) return;
+
 			var tableId = this.props.editId;
+
 			if(!tableId){
 				tableId = this.state.tableId;
 			}
+
 			//编辑
 			if(this.state.tableId){
 				getWastewaterDischargeUpdate({
@@ -92,8 +96,11 @@ class WasteWaterDischargeDetail extends React.Component {
 						MyToast(res.data.info)
 						return;
 					}
+
 					localStorage.setItem('wastewater-discharge-editId', res.data.tableId);
-					this.setState({tableId:res.data.tableId});
+
+					this.setState({tableId: res.data.tableId});
+
 					this.props.showItemVisible();
 					MyToast("新增成功")
 				}).catch(err => {

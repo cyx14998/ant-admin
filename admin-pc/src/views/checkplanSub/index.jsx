@@ -331,7 +331,7 @@ class CustomerCheckPlanSub extends React.Component {
                 <div>
                     {this.state.checkplanSubList.length > 1 ?
                         (
-                            <Popconfirm title="Sure to delete?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
+                            <Popconfirm title="确定要删除吗？" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
                                 <a className="delete" href="#"><Icon type="delete" className="yzy-icon" /></a>
                             </Popconfirm>
                         ) : null}
