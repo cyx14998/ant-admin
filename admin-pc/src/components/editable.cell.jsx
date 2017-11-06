@@ -21,6 +21,7 @@ import QiniuUploadFile from './upload.file';
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
 
+
 class EditableCell extends Component {
   constructor(props) {
     super(props)

@@ -62,7 +62,7 @@ const columns = [{
 }, {
   title: '操作',
   dataIndex: 'operation',
-  width: '100px'
+  width: '100px',
 }];
 
 
@@ -151,8 +151,12 @@ class StaffManagement extends Component {
             columns={columns} 
             dataSource={this.state.staffList}
             rowKey="tableId"
-            loading={this.state.loading} />
-          {/* <Pagination></Pagination> */}
+            loading={this.state.loading}
+            rowClassName={(record, index) => {
+              if (index % 2 !== 0) {
+                return 'active'
+              }
+            }} />
         </div>
       </div>
     )

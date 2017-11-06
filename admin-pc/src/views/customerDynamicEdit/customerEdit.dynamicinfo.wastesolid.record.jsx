@@ -28,7 +28,7 @@ const columns = [{
   title: '废物名称',
   dataIndex: 'theName',
 }, {
-  title: '所属固体废物Id',
+  title: '所属固体废物',
   dataIndex: 'wasteSolidId',
   width: 80,
 }, {
@@ -48,7 +48,7 @@ const columns = [{
   dataIndex: 'disposalCapacityLawful',
 }, {
   title: '贮存量-符合环保标准的量(吨)',
-  dataIndex: 'StorageCapacityLawful',
+  dataIndex: 'storageCapacityLawful',
 }, {
   title: '处置量-不符合环保标准的量(吨)',
   dataIndex: 'disposalCapacityUnLawful',
@@ -78,7 +78,7 @@ const itemDataModel = {
   comprehensiveUtilization: '',
   disposeWhereabouts: '',
   disposalCapacityLawful: '',
-  StorageCapacityLawful: '',
+  storageCapacityLawful: '',
   disposalCapacityUnLawful: '',
   storageCapacityUnLawful: '',
   emissionAmount: '',
@@ -126,7 +126,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
             return {
               ...item,
               wasteSolidId: {
-                value: item.wasteSolidId + '',
+                value: (item.wasteSolidId && item.wasteSolidId + '') || '',
                 options: wasteSolidListOptions
               }
             }

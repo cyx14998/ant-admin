@@ -79,9 +79,11 @@ class CustomerDynamicList extends Component {
     columns[2].render = (text, record) => {
       return (
         <div>
-          <a title="编辑" onClick={() => changeParentState({dynamicId: record.tableId})}><Icon type="edit" className="yzy-icon" /></a>
-          <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteItem(record.tableId)}>
-            <a title="删除" style={{ marginLeft: '10px' }} href="#"><Icon type="delete" className="yzy-icon" /></a>
+          <a style={{ marginRight: '10px' }} title="编辑" onClick={() => changeParentState({
+            dynamicId: record.tableId
+          })}><Icon type="edit" className="yzy-icon" /></a>
+          <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteItem(record.tableId)}>
+            <a title="删除" href="#"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>
         </div>
       )
@@ -191,7 +193,7 @@ class CustomerDynamicList extends Component {
         </div>
 
         <Modal visible={this.state.modalVisible} footer={null} onCancel={this.closeModal.bind(this)}>
-          <div style={{ padding: '20px 20px 200px 20px' }}>
+          <div>
             <span style={{ marginRight: '10px' }}>请选择动态数据区间：</span>
             <MonthPicker
               defaultValue={moment(new Date(), monthFormat)}

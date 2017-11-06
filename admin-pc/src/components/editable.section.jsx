@@ -76,7 +76,11 @@ class EditableSection extends Component {
         dataSource: res.data
       }));
     }).catch(err => {
-      MyToast('接口调用失败')
+      MyToast('接口调用失败');
+
+      this.setState({
+        loading: false
+      });
     })
   }
 
@@ -138,7 +142,7 @@ class EditableSection extends Component {
     // 新增项 tableId: ''
     this.setState(prev => {
       return {
-        dataSource: [...prev.dataSource, {...this.props.itemDataModel, tableId: ''}]
+        dataSource: [{...this.props.itemDataModel, tableId: ''}, ...prev.dataSource ]
       }
     })
   }
