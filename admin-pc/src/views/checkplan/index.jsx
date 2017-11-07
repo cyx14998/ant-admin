@@ -16,7 +16,6 @@ const rcsearchformData = {
     type: 'input',
     label: '批号',
     name: 'keyword',
-    rules: [{ required: true, message: '请输入批号' }],
   },
   ]
 };
@@ -97,30 +96,30 @@ const itemDataModel = {
   theRemarks: '',
 };
 //搜索功能未实现
-function getData(params) {
-  //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
-  return new Promise((resolve, reject) => {
-    getCheckplanMainlist(params).then(res => {
-      console.log('getCheckplanMainlist res ---', res);
+// function getData(params) {
+//   //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
+//   return new Promise((resolve, reject) => {
+//     getCheckplanMainlist(params).then(res => {
+//       console.log('getCheckplanMainlist res ---', res);
 
-      if (res.data.result !== 'success') {
-        resolve({
-          code: -1,
-          info: res.data.info,
-        })
-        return;
-      }
+//       if (res.data.result !== 'success') {
+//         resolve({
+//           code: -1,
+//           info: res.data.info,
+//         })
+//         return;
+//       }
 
-      var data = res.data.inspectionPlanMstList;
-      resolve({
-        code: 0,
-        data,
-      })
-    }).catch(err => {
-      reject(err)
-    })
-  })
-}
+//       var data = res.data.inspectionPlanMstList;
+//       resolve({
+//         code: 0,
+//         data,
+//       })
+//     }).catch(err => {
+//       reject(err)
+//     })
+//   })
+// }
 
 /**
  * 可编辑模块
@@ -128,10 +127,11 @@ function getData(params) {
 const EditableDemoSection = connectEditableSectionApi({
   secTitle: '',
   columns: columns,
-  apiLoader: function () {
-
+  apiLoader: function ({apiListItemId}) {
+    console.log('apiListItemId-----', apiListItemId)
     return new Promise((resolve, reject) => {
-      getCheckplanMainlist({}).then(res => {
+      // var keyword = this.state.keyword ? this.state.keyword : '';
+      getCheckplanMainlist({keyword: apiListItemId}).then(res => {
         console.log('getCheckplanMainlist res ---', res);
 
         if (res.data.result !== 'success') {
@@ -175,7 +175,7 @@ const EditableDemoSection = connectEditableSectionApi({
   apiSave: function (record) {
     console.log('apiSave record ----', record);
     var self = this;
-    var _record_for_save= {
+    var _record_for_save = {
       ...record,
       serialNumber: record.value,
     }
@@ -262,15 +262,18 @@ const EditableDemoSection = connectEditableSectionApi({
 class CustomerCheckPlan extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      keyword: '',
+    };
+    this.handleFormSearch.bind(this);
   }
   // 搜索功能未实现
   handleFormSearch(values) {
-    if (!values.lotNumber) return;
-
+    if (!values.keyword) return;
     console.log('handleFormSearch--------', values)
-    getData({
-      lotNumber: values.lotNumber
-    })
+    this.setState({
+      keyword: values.keyword,
+    });
   }
 
   render() {
@@ -281,7 +284,7 @@ class CustomerCheckPlan extends Component {
             handleSearch={this.handleFormSearch.bind(this)} />
         </div>
         <div className="yzy-list-wrap">
-          <EditableDemoSection />
+          <EditableDemoSection apiListItemId={this.state.keyword} />
         </div>
       </div>
     )
