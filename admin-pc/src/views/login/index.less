@@ -9,54 +9,57 @@ html {
     height: 100%;
     .login {
         height: 100%;
-        background: url('../../media/login_bg.png');
+        background: #d8ecde url('../../media/login_bg1.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
         position: relative;
-        .loginInput {
-            width: 370px;
-            height: 494px;
+        .login-input-box {
+            width: 560px;
+            // height: 470px;
             position: absolute;
             top: 50%;
             left: 50%;
-            margin-left: -185px;
-            margin-top: -247px;
+            margin-left: -280px;
+            margin-top: -159px;
             // border: 2px solid #000;
-            .login-top {
-                margin: 20px 0 68px 0;                
-                height: 82px;
-                font-size: 22px;
-                color: #fff;
-                text-align: center;
-            }
+            // .login-top {
+            //     margin: 20px 0 68px 0;                
+            //     height: 82px;
+            //     font-size: 22px;
+            //     color: #fff;
+            //     text-align: center;
+            // }
             .login-main {
                 position: relative;
-                height: 324px;
-                background-color: rgba(255,255,255,0.4);
+                height: 470px;
+                // background-color: rgba(255,255,255,0.4);
+                background-color: #fff;
                 padding: 0 30px;                                
-                &>div {
-                    height: 60px;
-                    line-height: 60px;
-                    font-size: 14px;
-                    font-weight: bold;
+                .login-title {
+                    height: 138px;
+                    line-height: 138px;
+                    font-size: 22px;
+                    text-align: center;                    
                 }
                 .login-form {
+                    .ant-input-affix-wrapper {
+                        margin-bottom: 40px;
+                    }
                     .ant-input {
-                        width: 276px;
                         height: 50px;
-                        // border: 1px solid #cbc7c6;
-                        border: none;
+                        border: 1px solid #999;
                         border-radius: 0;
                         color: #9b9b9b;
                         font-size: 14px;
-                    }
-                    .ant-input-group-addon {
-                        // border-radius: 0;
-                        background-color: #fff;
-                        border: none;
-                    }                   
+                        padding-left: 30px;
+                    }                  
                     .remember{
+                        height: 50px;
+                        line-height: 50px;
                         .ant-checkbox-checked .ant-checkbox-inner{
-                            border-color: #2db7f5;
-                            // background-color: #2db7f5;
+                            border-color: #8eb74a;
+                            background-color: #8eb74a;
                         }
                         .ant-checkbox-inner{
                             border-color: #9b9b9b;
@@ -64,11 +67,12 @@ html {
                     }
                     .login-form-button{
                         margin: 20px 0;
-                        background-color: #2db7f5;
+                        background-color: #8eb74a;
                         border: none;
-                        border-radius: 0;
-                        width: 308px;
+                        border-radius: 3px;
+                        width: 100%;
                         height: 50px;
+                        font-size: 20px;
                     }
                 }
             }
