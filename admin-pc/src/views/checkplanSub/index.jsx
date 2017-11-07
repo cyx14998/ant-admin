@@ -17,6 +17,8 @@ import {
 } from 'antd';
 const FormItem = Form.Item;
 
+import DraggableModal from '../../components/modal.draggable';
+
 import RcSearchForm from '../../components/rcsearchform';
 import { MyToast } from '../../common/utils';
 
@@ -71,7 +73,6 @@ class CustomerCheckPlanSub extends React.Component {
     }
 
     componentDidMount() {
-        console.log(checkplanId)
         this.getData({ inspectionPlanMstId: checkplanId });
         this.getCustomerList();
         //根据主表id获取子表基本信息
@@ -123,6 +124,7 @@ class CustomerCheckPlanSub extends React.Component {
     }
     //获取企业列表--封装    
     getCustomerList() {
+        console.log('获取企业列表');
         getCustomerList({ inspectionPlanMstId: checkplanId }).then(res => {
             console.log('getCustomerList res ---', res);
 
@@ -175,7 +177,7 @@ class CustomerCheckPlanSub extends React.Component {
             })
         }
     }
-    //列表新增企业确定btn -- 可批量
+    //列表新增企业 -- 可批量  ->确定btn
     customerListModalOk() {
         var customerIdArr = this.state.SubCusSelectedRowKeysArr.join(',');
         getCheckplanSubAddMulti({
@@ -296,6 +298,9 @@ class CustomerCheckPlanSub extends React.Component {
                 MyToast('批量删除成功');
                 this.getData({ inspectionPlanMstId: checkplanId });
                 this.getCustomerList();
+                this.setState({
+                    checkSubIdArr: [],
+                });
             }).catch(err => {
                 console.log(err)
                 MyToast('批量删除失败')
@@ -354,7 +359,7 @@ class CustomerCheckPlanSub extends React.Component {
                 <div>
                     <a title="查看" onClick={this.showTestModal.bind(this, record)}><Icon type="eye-o" className="yzy-icon" /></a>
                     <a title="执行者选择" style={{ marginLeft: 8 }} onClick={this.singlePerformSelect.bind(this, record.tableId)}><Icon type="link" className="yzy-icon" /></a>
-                    <Popconfirm title="Sure to delete?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
+                    <Popconfirm title="确定删除么?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
                         <a title="删除" className="delete" href="#" style={{ marginLeft: 8 }}><Icon type="delete" className="yzy-icon" /></a>
                     </Popconfirm>
                     <Modal
@@ -496,9 +501,10 @@ class CustomerCheckPlanSub extends React.Component {
                 </div>
                 <div className="yzy-list-wrap">
                     <div className="yzy-list-btns-wrap" style={{ paddingTop: 10 }}>
-                        <Button type="primary">导出excel</Button>
+                        {/* <Button type="primary">导出excel</Button> */}
                         <Button type="primary" style={{ marginLeft: 8 }}
                             onClick={this.subAddbtn.bind(this)}>新增</Button>
+                        {/* 顶部新增 */}
                         <Modal
                             title="子表数据新增，选择企业"
                             width='70%'
@@ -519,10 +525,13 @@ class CustomerCheckPlanSub extends React.Component {
                                 }}
                             />
                         </Modal>
+                        {/* 顶部新增-----全部 */}
                         <Popconfirm title="确定新增全部" onConfirm={this.addAll.bind(this)}>
                             <Button type="primary" style={{ marginLeft: 8 }}>新增(全部)</Button>
                         </Popconfirm>
+                        {/* 批量分配任务 */}
                         <Button type="primary" onClick={this.performerbtn.bind(this)} style={{ marginLeft: 8 }}>批量分配任务</Button>
+                        {/* 执行者管理----批量 */}
                         <Modal
                             title="执行者管理"
                             width='70%'
@@ -542,6 +551,7 @@ class CustomerCheckPlanSub extends React.Component {
                                 }}
                             />
                         </Modal>
+                        {/* 批量删除 */}
                         <Popconfirm title="确定删除所选项" onConfirm={this.multiDelete.bind(this)}>
                             <Button type="primary" style={{ marginLeft: 8 }}>删除（批量）</Button>
                         </Popconfirm>

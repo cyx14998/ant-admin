@@ -110,12 +110,12 @@ class CheckplanSubDetail extends React.Component {
         var prodImgUrl = this.state.prodImgUrl;
         var positionImgUrl = this.state.positionImgUrl;
         var reportUrl = this.state.reportUrl
-        console.log('123123',prodImgUrl)
+        console.log('prodImgUrl----------',prodImgUrl)
         return (
             <div className="yzy-tab-content-item-wrap">
                 <div className="baseinfo-section">
                     <h2 className="yzy-tab-content-title">检查计划子表信息详情</h2>
-                    <Row>
+                    <Row style={{fontSize: 12}}>
                         <Col span={2}> 企业名称：</Col>
                         <Col span={8}>{recordEdit.customer ? recordEdit.customer.customerName : ''}</Col>
                         <Col span={2}>备注：</Col>

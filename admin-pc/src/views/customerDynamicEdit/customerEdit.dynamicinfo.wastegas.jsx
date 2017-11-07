@@ -6,6 +6,8 @@ import {
   Modal
 } from 'antd';
 
+import DraggableModal from '../../components/modal.draggable';
+
 import connectEeditableSectionApi from '../../components/hoc.editable.section';
 
 //废气排放基本信息详情
@@ -257,14 +259,14 @@ class WasteGasDischargeRecord extends React.Component {
       <div>
         <WasteGasDischargeRecordBase checkInNewpage={this.onCheckClick.bind(this)} />
 
-        <Modal
+        <DraggableModal
           width="90%"
           visible={this.state.modalVisible}
           title="废气排放因子"
           onCancel={this.handleCancel.bind(this)}
           footer={null}>
           {this.state.eidtId === '' ? null : <WasteGasDischargeFactor apiListItemId={this.state.eidtId} />}
-        </Modal>
+        </DraggableModal>
       </div>
     )
   }

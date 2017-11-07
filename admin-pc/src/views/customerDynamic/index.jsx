@@ -19,6 +19,8 @@ import {
   DatePicker
 } from 'antd';
 
+import DraggableModal from '../../components/modal.draggable';
+
 import {
   getCustomerDynamicList,
   getCustomerDynamicListAdd,
@@ -192,15 +194,15 @@ class CustomerDynamicList extends Component {
           />
         </div>
 
-        <Modal visible={this.state.modalVisible} footer={null} onCancel={this.closeModal.bind(this)}>
+        <DraggableModal visible={this.state.modalVisible} footer={null} onCancel={this.closeModal.bind(this)}>
           <div>
-            <span style={{ marginRight: '10px' }}>请选择动态数据区间：</span>
+            <span style={{ marginRight: '10px', fontSize: 12 }}>请选择动态数据区间：</span>
             <MonthPicker
               defaultValue={moment(new Date(), monthFormat)}
               onChange={this.onMonthChange.bind(this)} />
             <Button style={{ marginLeft: '20px' }} type="primary" onClick={this.addDynamicItem.bind(this)}>保存</Button>
           </div>
-        </Modal>
+        </DraggableModal>
       </div>
     )
   }

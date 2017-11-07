@@ -262,7 +262,7 @@ class CheckplanDetail extends React.Component {
                 <Form onSubmit={this.saveDetail.bind(this)}>
                     <div className="baseinfo-section">
                         <h2 className="yzy-tab-content-title">我的检查计划基本信息</h2>
-                        <div style={{backgroundColor: '#F7F7F7', padding: 15}}>
+                        <div style={{backgroundColor: '#F7F7F7', padding: 15, fontSize: 12}}>
                         <Row>
                             <Col span={8}>
                                 <Col span={6}>企业名称：</Col>

@@ -17,7 +17,7 @@ const rcsearchformData = {
   colspan: 2,
   fields: [{
     type: 'input',
-    label: '关键字',
+    label: '姓名/手机号',
     name: 'keyword',
   }]
 };

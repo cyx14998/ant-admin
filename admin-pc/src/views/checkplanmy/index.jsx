@@ -14,6 +14,8 @@ import {
 } from 'antd';
 const FormItem = Form.Item;
 
+import DraggableModal from '../../components/modal.draggable';
+
 import RcSearchForm from '../../components/rcsearchform';
 import { MyToast } from '../../common/utils';
 
@@ -150,6 +152,17 @@ class CustomerCheckPlanMy extends React.Component {
             render: (text, record, index) => (
                 <div>
                     <a title="编辑" onClick={() => self.showTestModal(record)}><Icon type="edit" className="yzy-icon" /></a>
+                    <DraggableModal
+                        visible={this.state.editModalVisible}
+                        title="编辑页面"
+                        width='70%'
+                        okText=''
+                        footer={null}
+                        onCancel={this.TestCancel.bind(this)}
+                        className='modal editModal'
+                    >
+                        <CheckplanDetailForm recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)} />
+                    </DraggableModal>
                     {!record.theState ?
                         <a title="完成" style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}><Icon type="check" className="yzy-icon" /></a>
                         : ''
@@ -180,19 +193,6 @@ class CustomerCheckPlanMy extends React.Component {
                         }}
                         loading={this.state.loading} />
                 </div>
-                {
-                    this.state.editModalVisible ? <Modal
-                        visible={true}
-                        title="编辑页面"
-                        width='70%'
-                        okText=''
-                        footer={null}
-                        onCancel={this.TestCancel.bind(this)}
-                        className='modal editModal'
-                    >
-                        <CheckplanDetailForm recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)} />
-                    </Modal> : null
-                }
             </div>
         )
     }
