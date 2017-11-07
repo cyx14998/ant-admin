@@ -19,6 +19,7 @@ const rcsearchformData = {
     type: 'input',
     label: '关键字',
     name: 'keyword',
+    placeholder: '请输入真实姓名或手机号码',
   }]
 };
 

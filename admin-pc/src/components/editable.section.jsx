@@ -139,6 +139,8 @@ class EditableSection extends Component {
       return false;
     }
 
+    // console.log('addItem itemDataModel-----------', this.props.itemDataModel)
+
     // 新增项 tableId: ''
     this.setState(prev => {
       return {

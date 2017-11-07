@@ -189,12 +189,43 @@ class EditableTable extends Component {
            *  @hasModal  模态框查看
            */
           if (text === undefined && (typeof checkInNewpage === 'function')) {
+            // 新添加行
+            if (record.tableId === '') {
+              return (
+                <div>
+                  <a title="取消" style={{marginRight: '10px'}} onClick={() => onDelete(record.tableId)}><Icon type="close" className="yzy-icon" /></a>
+                  <a title="保存" style={{marginRight: '10px'}} onClick={() => {
+                    onSave(record);
+                    // 保存成功后，禁用编辑功能
+                    self.setState({editableTableId: 0}); 
+                  }}><Icon type="check" className="yzy-icon" /></a>
+                </div>
+              )
+            }
+
+            /**
+             * 不可编辑状态
+             */
+            if (!self.getEditable(record)) {
+              return (
+                <div>
+                  <a title="查看" style={{marginRight: '10px'}} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+                  <a title="编辑" style={{marginRight: '10px'}} onClick={() => self.setState({editable: true, editableTableId: record.tableId})}><Icon type="edit" className="yzy-icon" /></a>
+                  <Popconfirm title="确定要删除吗？" onConfirm={() => onDelete(record.tableId)}>
+                    <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
+                  </Popconfirm>
+                </div>
+              )
+            }
+
+            // 可编辑状态
             return (
               <div>
-                <a href="#" title="查看" style={{marginRight: '10px'}} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
-                <a href="#" title="保存" style={{marginRight: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a>
+                <a title="查看" style={{marginRight: '10px'}} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+                <a title="取消" style={{marginRight: '10px'}} onClick={() => self.setState({editableTableId: 0})}><Icon type="close" className="yzy-icon" /></a>
+                <a title="保存" style={{marginRight: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a>
                 <Popconfirm title="确定要删除吗？" onConfirm={() => onDelete(record.tableId)}>
-                  <a title="删除" href="#"><Icon type="delete" className="yzy-icon" /></a>
+                  <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
                 </Popconfirm>
               </div>
             )
@@ -207,10 +238,10 @@ class EditableTable extends Component {
           if ((text === undefined) && (hasModal === true)) {
             return (
               <div>
-                <a href="#" title="查看" style={{marginRight: '10px'}} onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
-                <a href="#" title="保存" style={{marginRight: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a>
+                <a title="查看" style={{marginRight: '10px'}} onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+                <a title="保存" style={{marginRight: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a>
                 <Popconfirm title="确定要删除吗？" onConfirm={() => onDelete(record.tableId)}>
-                  <a href="#" title="删除">删除</a>
+                  <a title="删除">删除</a>
                 </Popconfirm>
               </div>
             )
@@ -218,6 +249,20 @@ class EditableTable extends Component {
 
           // 编辑/删除
           if (text === undefined) {
+            // 新添加行
+            if (record.tableId === '') {
+              return (
+                <div>
+                  <a title="取消" style={{marginRight: '10px'}} onClick={() => onDelete(record.tableId)}><Icon type="close" className="yzy-icon" /></a>
+                  <a title="保存" style={{marginRight: '10px'}} onClick={() => {
+                    onSave(record);
+                    // 保存成功后，禁用编辑功能
+                    self.setState({editableTableId: 0}); 
+                  }}><Icon type="check" className="yzy-icon" /></a>
+                </div>
+              )
+            }
+
             /**
              * 默认不可编辑
              * 非可编辑tableId，不可编辑
@@ -225,10 +270,10 @@ class EditableTable extends Component {
             if (!self.getEditable(record)) {
               return (
                 <div>
-                  <a href="#" title="编辑" style={{marginRight: '10px'}} onClick={() => self.setState({editable: true, editableTableId: record.tableId})}><Icon type="edit" className="yzy-icon" /></a>
-                  {/* <a href="#" title="保存" style={{marginRight: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a> */}
+                  <a title="编辑" style={{marginRight: '10px'}} onClick={() => self.setState({editable: true, editableTableId: record.tableId})}><Icon type="edit" className="yzy-icon" /></a>
+                  {/* <a title="保存" style={{marginRight: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a> */}
                   <Popconfirm title="确定要删除吗？" onConfirm={() => onDelete(record.tableId)}>
-                    <a href="#" title="删除"><Icon type="delete" className="yzy-icon" /></a>
+                    <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
                   </Popconfirm>
                 </div>
               )
@@ -236,14 +281,14 @@ class EditableTable extends Component {
 
             return (
               <div>
-                <a href="#" title="取消" style={{marginRight: '10px'}} onClick={() => self.setState({editableTableId: 0})}><Icon type="close" className="yzy-icon" /></a>
-                <a href="#" title="保存" style={{marginRight: '10px'}} onClick={() => {
+                <a title="取消" style={{marginRight: '10px'}} onClick={() => self.setState({editableTableId: 0})}><Icon type="close" className="yzy-icon" /></a>
+                <a title="保存" style={{marginRight: '10px'}} onClick={() => {
                   onSave(record);
                   // 保存成功后，禁用编辑功能
                   self.setState({editableTableId: 0}); 
                 }}><Icon type="check" className="yzy-icon" /></a>
                 <Popconfirm title="确定要删除吗？" onConfirm={() => onDelete(record.tableId)}>
-                  <a href="#" title="删除"><Icon type="delete" className="yzy-icon" /></a>
+                  <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
                 </Popconfirm>
               </div>
             )
@@ -264,7 +309,12 @@ class EditableTable extends Component {
         pagination={false}
         columns={this.renderColumns()}
         dataSource={this.props.dataSource}
-        rowKey="tableId" />
+        rowKey="tableId"
+        rowClassName={(record, index) => {
+          if (index % 2 !== 0) {
+            return 'active'
+          }
+        }} />
     )
   }
 }

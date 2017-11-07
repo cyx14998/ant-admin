@@ -334,7 +334,7 @@ class CustomerCheckPlanSub extends React.Component {
                     {this.state.checkplanSubList.length > 1 ?
                         (
                             <Popconfirm title="确定要删除吗？" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
-                                <a className="delete" href="#"><Icon type="delete" className="yzy-icon" /></a>
+                                <a className="delete"><Icon type="delete" className="yzy-icon" /></a>
                             </Popconfirm>
                         ) : null}
                     <Modal
@@ -376,7 +376,7 @@ class CustomerCheckPlanSub extends React.Component {
             dataIndex: 'operation',
             width: 60,
             render: (text, record) => (
-                <a href="#" title="选择" onClick={this.selectPerformer.bind(this, record.tableId)} ><Icon type="check" className="yzy-icon" /></a>
+                <a title="选择" onClick={this.selectPerformer.bind(this, record.tableId)} ><Icon type="check" className="yzy-icon" /></a>
             )
         }];
         const customersData = [{

@@ -31,17 +31,6 @@ const columns = [{
 }];
 
 /**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
-
-/**
  * 新数据默认值
  */
 const itemDataModel = {
@@ -95,11 +84,11 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    console.log('apiSave record ----', record);
     var self = this;
     //制度
     console.log(record)
     var prodFileUrl = record.filePath.fileList[0];
+
     if (!prodFileUrl) {
       prodFileUrl = "";
     } else {
@@ -108,16 +97,28 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       if (!prodFileUrl) {
         prodFileUrl = record.filePath.fileList[0].response.filePath;
       }
+
       if (!prodFileUrl) {
         prodFileUrl = ""
       } else if (prodFileUrl.indexOf(downloadUrl) === -1) {
         prodFileUrl = downloadUrl + prodFileUrl;
       }
     }
+
     const _record_for_save = {
       ...record,
       filePath: prodFileUrl,
     }
+
+
+    /**
+     * fix bug 
+     * 文件上传后，新增项带有文件
+     */
+    itemDataModel.filePath.fileList = [];
+
+    
+
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增

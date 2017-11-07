@@ -83,7 +83,7 @@ class CustomerDynamicList extends Component {
             dynamicId: record.tableId
           })}><Icon type="edit" className="yzy-icon" /></a>
           <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteItem(record.tableId)}>
-            <a title="删除" href="#"><Icon type="delete" className="yzy-icon" /></a>
+            <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>
         </div>
       )

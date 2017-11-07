@@ -77,10 +77,11 @@ const options = [{
 }];
 
 const InnerComponent = ({
-  editId
+  editId,
+  closeModal,
 }) => (
     <div>
-      <CustomerWasteSolidDetail editId={editId} />
+      <CustomerWasteSolidDetail editId={editId} closeModal={closeModal} />
     </div>
   );
 

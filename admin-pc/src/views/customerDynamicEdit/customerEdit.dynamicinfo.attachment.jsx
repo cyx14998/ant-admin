@@ -57,9 +57,10 @@ const itemDataModel = {
 const InnerComponent = ({
   editId,
   itemVisible,
+  closeModal
 }) => (
   <div>
-    <AttachmentRecordDetail editId={editId} />
+    <AttachmentRecordDetail editId={editId} closeModal={closeModal} />
   </div>
 );
 

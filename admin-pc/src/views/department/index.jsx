@@ -84,10 +84,10 @@ class Department extends Component {
     columns[1].render = (text, record) => {
       return (
         <div>
-          <a href="#" title="新增" style={{marginRight: '10px'}} onClick={() => this.addNewDepartment(record.tableId)}><Icon type="pushpin-o" className="yzy-icon" /></a>
-          <a href="#" title="编辑" style={{marginRight: '10px'}} onClick={() => this.editDepartment(record)}><Icon type="edit" className="yzy-icon" /></a>
+          <a title="新增" style={{marginRight: '10px'}} onClick={() => this.addNewDepartment(record.tableId)}><Icon type="pushpin-o" className="yzy-icon" /></a>
+          <a title="编辑" style={{marginRight: '10px'}} onClick={() => this.editDepartment(record)}><Icon type="edit" className="yzy-icon" /></a>
           <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteDepartment(record.tableId)}>
-            <a href="#" title="删除"><Icon type="delete" className="yzy-icon" /></a>
+            <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>          
         </div>
       )
