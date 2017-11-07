@@ -10,14 +10,14 @@ import axios, {
 export function getCheckplanMainlist({
   pageNumber = 1,
   countPerPage = 1000,
-  lotNumber
+  keyword,
 }) {
   return axios.get('/uInspectionPlanMstList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
-      lotNumber
+      keyword,
     }
   })
 }
