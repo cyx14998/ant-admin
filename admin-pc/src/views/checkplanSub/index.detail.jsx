@@ -46,7 +46,7 @@ class CheckplanSubDetail extends React.Component {
             positionImgUrl: '',
             reportUrl: '',
 
-            recordEdit: this.props.recordEdit || '',//新增子表返回的子表id用来显示底面的员工列表
+            recordEdit: this.props.recordEdit || {},//新增子表返回的子表id用来显示底面的员工列表
         });
         this.resetFile.bind(this);
     }

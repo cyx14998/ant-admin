@@ -21,7 +21,37 @@ import { MyToast } from '../../common/utils';
 
 const checkplanId = getLocQueryByLabel('checkplanId');
 
-const clou = [{}, {}, {}]
+const columns = [{
+    title: '企业',
+    dataIndex: 'customer.customerName',
+}, {
+    title: '批号',
+    dataIndex: 'inspectionPlanMst.lotNumber',
+}, {
+    title: '开始',
+    width: '15%',
+    dataIndex: 'inspectionPlanMst.planDateStart',
+}, {
+    title: '结束',
+    width: '15%',
+    dataIndex: 'inspectionPlanMst.planDateEnd',
+}, {
+    title: '备注',
+    dataIndex: 'theRemarks',
+}, {
+    title: '状态',
+    dataIndex: 'theState',
+    render: (text, record, index) => (
+        <div>
+            {record.theState ? '已完成' : '执行中'}
+        </div>
+    )
+}, {
+    title: '操作',
+    key: 'action',
+    width: 120,
+},
+];
 
 // RcSearchForm datablob
 const rcsearchformData = {
@@ -50,6 +80,7 @@ class CustomerCheckPlanMy extends React.Component {
             editModalVisible: false,
             performerId: '',
             checkSubIdArr: [],
+            recordEdit: {},
         }
 
         this.getData = this.getData.bind(this);
@@ -58,6 +89,15 @@ class CustomerCheckPlanMy extends React.Component {
 
     componentDidMount() {
         this.getData({});
+        columns[6].render = (text, record, index) => (
+            <div>
+                <a title="编辑" onClick={() => this.showTestModal(record)}><Icon type="edit" className="yzy-icon" /></a>
+                {!record.theState ?
+                    <a title="完成" style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}><Icon type="check" className="yzy-icon" /></a>
+                    : ''
+                }
+            </div>
+        )
     }
     //获取列表数据--封装
     getData(params) {
@@ -118,59 +158,6 @@ class CustomerCheckPlanMy extends React.Component {
         });
     }
     render() {
-        var self = this;
-
-        const columns = [{
-            title: '企业',
-            dataIndex: 'customer.customerName',
-        }, {
-            title: '批号',
-            dataIndex: 'inspectionPlanMst.lotNumber',
-        }, {
-            title: '开始',
-            width: '15%',
-            dataIndex: 'inspectionPlanMst.planDateStart',
-        }, {
-            title: '结束',
-            width: '15%',
-            dataIndex: 'inspectionPlanMst.planDateEnd',
-        }, {
-            title: '备注',
-            dataIndex: 'theRemarks',
-        }, {
-            title: '状态',
-            dataIndex: 'theState',
-            render: (text, record, index) => (
-                <div>
-                    {record.theState ? '已完成' : '执行中'}
-                </div>
-            )
-        }, {
-            title: '操作',
-            key: 'action',
-            width: 120,
-            render: (text, record, index) => (
-                <div>
-                    <a title="编辑" onClick={() => self.showTestModal(record)}><Icon type="edit" className="yzy-icon" /></a>
-                    <DraggableModal
-                        visible={this.state.editModalVisible}
-                        title="编辑页面"
-                        width='70%'
-                        okText=''
-                        footer={null}
-                        onCancel={this.TestCancel.bind(this)}
-                        className='modal editModal'
-                    >
-                        <CheckplanDetailForm recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)} />
-                    </DraggableModal>
-                    {!record.theState ?
-                        <a title="完成" style={{ marginLeft: 8 }} onClick={this.clickComplete.bind(this, record.tableId)}><Icon type="check" className="yzy-icon" /></a>
-                        : ''
-                    }
-                </div>
-            )
-        },
-        ];
         return (
             <div className="yzy-page">
                 <div className="yzy-search-form-wrap">
@@ -193,6 +180,17 @@ class CustomerCheckPlanMy extends React.Component {
                         }}
                         loading={this.state.loading} />
                 </div>
+                <DraggableModal
+                    visible={this.state.editModalVisible}
+                    title="编辑页面"
+                    width='70%'
+                    okText=''
+                    footer={null}
+                    onCancel={this.TestCancel.bind(this)}
+                    className='modal editModal'
+                >
+                    <CheckplanDetailForm recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)} />
+                </DraggableModal>
             </div>
         )
     }
