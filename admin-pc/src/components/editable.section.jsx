@@ -55,14 +55,24 @@ class EditableSection extends Component {
    * 注意接口的数据格式！！！
    */
   componentDidMount() {
-    this.getDataSource();
+    this.getDataSource({});
   }
 
-  getDataSource() {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.apiListItemId !== this.props.apiListItemId) {
+      this.getDataSource({nextApiListItemId: nextProps.apiListItemId});
+    }
+  }
+
+  getDataSource({nextApiListItemId}) {
     let {
       apiListItemId,
       apiLoader
     } = this.props;
+
+    if (nextApiListItemId) {
+      apiListItemId = nextApiListItemId
+    }
 
     apiLoader({apiListItemId}).then(res => {
       if (res.code !== 0) {

@@ -195,7 +195,8 @@ class Page extends React.Component {
     }
 
     logout() {
-        localStorage.removeItem('token');
+        // localStorage.removeItem('token');
+        localStorage.clear();
         window.location.replace('/login.html');
     }
 
