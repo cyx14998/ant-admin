@@ -426,7 +426,7 @@ class CustomerCheckPlanSub extends React.Component {
     }
     render() {
         var checkplanDetail = this.state.checkplanDetail;
-        
+
         var self = this;
         const rowSelection = {
             onChange(selectedRowKeys) {

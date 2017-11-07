@@ -75,9 +75,10 @@ const itemDataModel = {
 
 const InnerComponent = ({
   editId,
+  closeModal
 }) => (
     <div>
-      <SiteInspectionDetail editId={editId} />
+      <SiteInspectionDetail editId={editId} closeModal={closeModal} />
     </div>
   );
 

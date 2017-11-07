@@ -47,7 +47,8 @@ class ModalEdit extends React.Component {
             <InnerComponent 
               editId={editId} 
               itemVisible={itemVisible}
-              showItemVisible={showItemVisible} />
+              showItemVisible={showItemVisible}
+              closeModal={closeModalEdit} />
           }
       </DraggableModal>
     )

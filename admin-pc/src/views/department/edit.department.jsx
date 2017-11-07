@@ -100,7 +100,7 @@ class DepartmentEdit extends Component {
       return (
         <div>
           <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteStaffFromDepartment(record.tableId)}>
-            <a title="删除" href="#"><Icon type="delete" className="yzy-icon" /></a>
+            <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>          
         </div>
       )

@@ -72,7 +72,7 @@ class UneditableTable extends Component {
           if (text === undefined && cannotDeleteble) {
             return (
               <div>
-                <a href="#" title="查看" onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+                <a title="查看" onClick={() => onEdit(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
               </div>
             )
           }
@@ -81,9 +81,9 @@ class UneditableTable extends Component {
           if (text === undefined) {
             return (
               <div>
-                <a title="编辑" href="#" style={{marginRight: '10px'}} onClick={() => onEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
+                <a title="编辑" style={{marginRight: '10px'}} onClick={() => onEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
                 <Popconfirm title="确定要删除吗？" onConfirm={() => onDelete(record.tableId)}>
-                  <a title="删除" href="#"><Icon type="delete" className="yzy-icon" /></a>
+                  <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
                 </Popconfirm>
               </div>
             )
@@ -104,7 +104,12 @@ class UneditableTable extends Component {
         pagination={false}
         columns={this.renderColumns()}
         dataSource={this.props.dataSource}
-        rowKey="tableId" />
+        rowKey="tableId"
+        rowClassName={(record, index) => {
+          if (index % 2 !== 0) {
+            return 'active'
+          }
+        }} />
     )
   }
 }
