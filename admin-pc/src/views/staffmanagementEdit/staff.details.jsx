@@ -201,7 +201,7 @@ class StaffDetails extends React.Component {
 
     return (
       <div>
-        <Form onSubmit={this.saveDetail.bind(this)}>
+        <Form onSubmit={this.saveDetail.bind(this)} autoComplete="off">
           <div className="baseinfo-section">
             <h2 className="yzy-list-content-title">员工基本信息</h2>
             <Row>
@@ -276,7 +276,7 @@ class StaffDetails extends React.Component {
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
-                    <Input placeholder="邮箱" />
+                    <Input placeholder="邮箱" autoComplete="off" />
                     )}
                 </FormItem>
               </Col>
@@ -290,7 +290,7 @@ class StaffDetails extends React.Component {
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
-                    <Select placeholder="部门ID">
+                    <Select placeholder="部门">
                       {
                         this.state.departmentList.map(item => {
                           return <Option key={item.value} value={item.value.toString()}>{item.label}</Option>
@@ -308,7 +308,10 @@ class StaffDetails extends React.Component {
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
-                    <Input type="password" placeholder="密码" />
+                    <Input 
+                      type="password" 
+                      placeholder="密码"
+                      autoComplete="new-password" />
                     )}
                 </FormItem>
               </Col>

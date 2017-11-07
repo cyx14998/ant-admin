@@ -117,7 +117,7 @@ class CheckplanSubDetail extends React.Component {
                     <h2 className="yzy-tab-content-title">整改报告</h2>
                     <a target="_blank" download="图片" href={reportUrl} style={{ marginLeft: 8 }}>{reportUrl ? '下载地址' : '无'}</a>
                 </div>
-            </div >
+            </div>
         )
     }
 }

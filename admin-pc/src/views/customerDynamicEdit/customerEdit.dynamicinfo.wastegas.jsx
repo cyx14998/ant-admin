@@ -74,7 +74,7 @@ const columns = [{
  */
 const itemDataModel = {
   measuredExhaustVolume: '',
-  emissionTime: moment(new Date()).format(dateFormat),
+  emissionTime: '',
   exhaustEmission: '',
   dataSources: '',
   fuel: '',
@@ -151,14 +151,13 @@ const WasteGasDischargeRecordBase = connectEeditableSectionApi({
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
-        console.log('==============================')
         // 新增
         getWasteGasDischargeRecordAdd({
           ...record,
           customerMonthDclarationId: dynamicId,
           wasteGasDischargePortId: record.wasteGasDischargePortId.value,
         }).then(res => {
-          console.log('getWasteGasDischargeRecordAdd res----------', res)
+          // console.log('getWasteGasDischargeRecordAdd res----------', res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -171,7 +170,7 @@ const WasteGasDischargeRecordBase = connectEeditableSectionApi({
             code: 0 // success
           })
         }).catch(err => {
-          console.log('getWasteGasDischargeRecordAdd err----------', err)
+          // console.log('getWasteGasDischargeRecordAdd err----------', err)
           reject(err)
         });
       });

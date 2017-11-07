@@ -49,9 +49,13 @@ table {
 
 
 
+/**
+ * https://stackoverflow.com/questions/2781549/removing-input-background-colour-for-chrome-autocomplete
+ * https://stackoverflow.com/questions/15738259/disabling-chrome-autofill  autocomplete="new-password"
+ */
 input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
-  background-color: #FFFFFF;
-  background-image: none;
+  -webkit-box-shadow:0 0 0 50px white inset; /* Change the color to your own background color */
+  -webkit-text-fill-color: #333;
   // color: #333;
   /* -webkit-text-fill-color: red; //这个私有属性是有效的 */
 }

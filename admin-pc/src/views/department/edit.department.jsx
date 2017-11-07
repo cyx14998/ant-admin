@@ -99,7 +99,7 @@ class DepartmentEdit extends Component {
     columns[3].render = (text, record) => {
       return (
         <div>
-          <Popconfirm title="Sure to delete?" onConfirm={() => this.deleteStaffFromDepartment(record.tableId)}>
+          <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteStaffFromDepartment(record.tableId)}>
             <a title="删除" href="#"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>          
         </div>
@@ -296,7 +296,12 @@ class DepartmentEdit extends Component {
                 columns={columns} 
                 dataSource={this.state.departmentMemberRelationList}
                 rowKey="tableId"
-                loading={false} />
+                loading={false}
+                rowClassName={(record, index) => {
+                  if (index % 2 !== 0) {
+                    return 'active'
+                  }
+                }} />
             </div>
           </div>
         }

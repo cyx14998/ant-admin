@@ -125,10 +125,12 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           var data = res.data.boundaryNoiseRecordList;
 
           data = data.map((item,index) => {
+            let boundaryNoiseId = (item.boundaryNoise && item.boundaryNoise.tableId) || '';
+
             return {
               ...item,
               boundaryNoiseId: {
-                value: item.boundaryNoiseId ? item.boundaryNoiseId + '' : '',
+                value: boundaryNoiseId + '',
                 options: boundaryNoiseListOptions
               },
               isBoundaryExceeding100: {
@@ -167,6 +169,8 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       boundaryNoiseId: parseInt(record.boundaryNoiseId.value),
       isBoundaryExceeding100: record.isBoundaryExceeding100.value === '1' ? true : false
     }
+
+    
     var self = this;
 
     if (record.tableId === '') {

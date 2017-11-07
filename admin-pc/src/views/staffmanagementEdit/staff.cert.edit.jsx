@@ -244,7 +244,7 @@ class StaffCertEdit extends React.Component {
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
-                    <Input addonAfter="年" placeholder="复证周期" />
+                    <Input type="number" addonAfter="年" placeholder="复证周期" />
                     )}
                 </FormItem>
               </Col>
