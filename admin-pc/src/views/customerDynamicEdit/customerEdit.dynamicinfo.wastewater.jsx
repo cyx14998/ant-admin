@@ -6,6 +6,8 @@ import {
   Modal
 } from 'antd';
 
+import DraggableModal from '../../components/modal.draggable';
+
 import connectEeditableSectionApi from '../../components/hoc.editable.section';
 
 /**
@@ -240,14 +242,14 @@ class WasteWaterDischargeRecord extends React.Component {
       <div>
         <WasteWaterDischargeRecordBase checkInNewpage={this.onCheckClick.bind(this)} />
 
-        <Modal
+        <DraggableModal
           width="90%"
           visible={this.state.modalVisible}
           title="废水排放因子"
           onCancel={this.handleCancel.bind(this)}
           footer={null}>
           {this.state.eidtId === '' ? null : <WasteWaterDischargeFactor apiListItemId={this.state.eidtId} />}
-        </Modal>
+        </DraggableModal>
       </div>
     )
   }

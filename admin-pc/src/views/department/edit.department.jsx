@@ -100,7 +100,7 @@ class DepartmentEdit extends Component {
       return (
         <div>
           <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteStaffFromDepartment(record.tableId)}>
-            <a title="删除" href="#"><Icon type="delete" className="yzy-icon" /></a>
+            <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>          
         </div>
       )
@@ -306,7 +306,7 @@ class DepartmentEdit extends Component {
           </div>
         }
 
-        <Modal
+        <DraggableModal
           width="90%"
           visible={this.state.modalVisible}
           title="选择部门员工"
@@ -319,7 +319,7 @@ class DepartmentEdit extends Component {
               getStaffListByDeparentId={this._getStaffListByDeparentId}
               handleModalCancel={this.handleModalCancel.bind(this)}  />
           }
-        </Modal>
+        </DraggableModal>
       </div>
     )
   }

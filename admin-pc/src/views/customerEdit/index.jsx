@@ -75,10 +75,10 @@ class Customerinfo extends React.Component {
             <div className="yzy-page">
                 <div style={{padding: 20, backgroundColor: '#fff'}}>
                     <Tabs defaultActiveKey="1">
-                        <TabPane tab="排污单位基本情况" key="1">
+                        <TabPane tab="企业概况" key="1">
                             <CustomerEditBaseinfo onBaseinfoSave={this.setTabPaneActive.bind(this)} />
                         </TabPane>
-                         <TabPane tab="排污单位基本情况-产品" disabled={this.state.tabPaneDisabled} key="2">
+                         <TabPane tab="排污单位基本情况" disabled={this.state.tabPaneDisabled} key="2">
                             <CustomerEditBaseinfoDetailProd />
                         </TabPane>
                         <TabPane tab="废水污染物基本情况" disabled={this.state.tabPaneDisabled} key="3">

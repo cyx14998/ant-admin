@@ -54,7 +54,7 @@ class CheckplanDetail extends React.Component {
 
             getData: this.props.getData,
             TestCancel: this.props.TestCancel,
-            recordEdit: this.props.recordEdit || '',//新增子表返回的子表id用来显示底面的员工列表
+            recordEdit: this.props.recordEdit || {},//新增子表返回的子表id用来显示底面的员工列表
             uptoken: '',
         });
         this.beforeUpload = this.beforeUpload.bind(this);
@@ -262,7 +262,7 @@ class CheckplanDetail extends React.Component {
                 <Form onSubmit={this.saveDetail.bind(this)}>
                     <div className="baseinfo-section">
                         <h2 className="yzy-tab-content-title">我的检查计划基本信息</h2>
-                        <div style={{backgroundColor: '#F7F7F7', padding: 15}}>
+                        <div style={{backgroundColor: '#F7F7F7', padding: 15, fontSize: 12}}>
                         <Row>
                             <Col span={8}>
                                 <Col span={6}>企业名称：</Col>
@@ -270,21 +270,21 @@ class CheckplanDetail extends React.Component {
                             </Col>
                             <Col span={8}>
                                 <Col span={6}>信用代码:</Col>
-                                <Col span={16}>{recordEdit.customer.uniformSocialCreditCode ? recordEdit.customer.uniformSocialCreditCode : '无'}</Col>
+                                <Col span={16}>{recordEdit.customer ? recordEdit.customer.uniformSocialCreditCode : '无'}</Col>
                             </Col>
                             <Col span={8}>
                                 <Col span={6}>批号:</Col>
-                                <Col span={16}>{recordEdit.customer.lotNumber ? recordEdit.customer.lotNumber : '无'}</Col>
+                                <Col span={16}>{recordEdit.customer ? recordEdit.customer.lotNumber : '无'}</Col>
                             </Col>
                         </Row>
                         <Row>
                             <Col span={8}>
                                 <Col span={6}>任务开始:</Col>
-                                <Col span={16}>{recordEdit.inspectionPlanMst.planDateStart ? recordEdit.inspectionPlanMst.planDateStart : '无'}</Col>
+                                <Col span={16}>{recordEdit.inspectionPlanMst ? recordEdit.inspectionPlanMst.planDateStart : '无'}</Col>
                             </Col>
                             <Col span={8}>
                                 <Col span={6}>任务结束:</Col>
-                                <Col span={16}>{recordEdit.inspectionPlanMst.planDateEnd ? recordEdit.inspectionPlanMst.planDateEnd : '无'}</Col>
+                                <Col span={16}>{recordEdit.inspectionPlanMst ? recordEdit.inspectionPlanMst.planDateEnd : '无'}</Col>
                             </Col>
                             <Col span={8}>
                                 <Col span={6}>创建时间:</Col>

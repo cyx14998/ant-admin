@@ -7,13 +7,11 @@
   bottom: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;  
-
   opacity: 0;
-  top: 10000px;
+  top: 100%;
+  z-index: 1000;
 
+  overflow-y: scroll;
 
   &.visible {
     top: 0;
@@ -28,6 +26,7 @@
   border-radius: 4px;
   position: relative;
   user-select: text;
+  margin: 20px auto;
 }
 
 .yzy-modal-title {

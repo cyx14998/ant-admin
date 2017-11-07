@@ -159,7 +159,7 @@ class StaffDetails extends React.Component {
       if (err) return;
 
       var fileOne = this.state.uploadedFileList[0];
-      if (!fileOne) return MyToast('请上传证件图片');
+      if (!fileOne) return MyToast('请上传头像');
 
       // 默认
       var uploadedFilePath = fileOne.url;
@@ -168,7 +168,7 @@ class StaffDetails extends React.Component {
         uploadedFilePath = fileOne.response.filePath;
       }
 
-      if (!uploadedFilePath) return MyToast('请上传证件图片');
+      if (!uploadedFilePath) return MyToast('请上传头像');
 
       if (uploadedFilePath.indexOf(downloadUrl) === -1) {
         uploadedFilePath = downloadUrl + uploadedFilePath;

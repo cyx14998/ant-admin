@@ -46,8 +46,9 @@ class CheckplanSubDetail extends React.Component {
             positionImgUrl: '',
             reportUrl: '',
 
-            recordEdit: this.props.recordEdit || '',//新增子表返回的子表id用来显示底面的员工列表
+            recordEdit: this.props.recordEdit || {},//新增子表返回的子表id用来显示底面的员工列表
         });
+        this.resetFile.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -57,54 +58,64 @@ class CheckplanSubDetail extends React.Component {
             self.setState({
                 recordEdit: nextProps.recordEdit
             })
-            //文件
-            if (nextProps.recordEdit.feedbackSheetURL) {
-                self.setState({
-                    prodImgUrl: nextProps.recordEdit.feedbackSheetURL
-                });
-            } else {
-                self.setState({
-                    prodImgUrl: ''
-                });
-            }
-            if (nextProps.recordEdit.regulatoryRecordURL) {
-                self.setState({
-                    positionImgUrl: nextProps.recordEdit.regulatoryRecordURL
-                });
-            } else {
-                self.setState({
-                    positionImgUrl: ''
-                });
-            }
-            if (nextProps.recordEdit.rectificationReportURL) {
-                self.setState({
-                    reportUrl: nextProps.recordEdit.rectificationReportURL
-                });
-            } else {
-                self.setState({
-                    reportUrl: ''
-                });
-            }
+            console.log('1-------------', nextProps.recordEdit);
+            self.resetFile();
+
         }
 
     }
     componentDidMount() {
         var self = this;
-        console.log(self.props.recordEdit);
+        console.log('2-------------------', self.props.recordEdit);
         self.setState({
             recordEdit: self.props.recordEdit
         });
+        self.resetFile();
+    }
+    //文件重置
+    resetFile() {
+        var self = this;
+        var recordEdit = self.state.recordEdit;
+        console.log(recordEdit)
+        if (recordEdit.feedbackSheetURL) {
+            self.setState({
+                prodImgUrl: recordEdit.feedbackSheetURL
+            });
+        } else {
+            self.setState({
+                prodImgUrl: ''
+            });
+        }
+        if (recordEdit.regulatoryRecordURL) {
+            self.setState({
+                positionImgUrl: recordEdit.regulatoryRecordURL
+            });
+        } else {
+            self.setState({
+                positionImgUrl: ''
+            });
+        }
+        if (recordEdit.rectificationReportURL) {
+            self.setState({
+                reportUrl: recordEdit.rectificationReportURL
+            });
+        } else {
+            self.setState({
+                reportUrl: ''
+            });
+        }
     }
     render() {
         var recordEdit = this.state.recordEdit;
-        var prodImgUrl = recordEdit.feedbackSheetURL;
-        var positionImgUrl = recordEdit.regulatoryRecordURL;
-        var reportUrl = recordEdit.rectificationReportURL
+        var prodImgUrl = this.state.prodImgUrl;
+        var positionImgUrl = this.state.positionImgUrl;
+        var reportUrl = this.state.reportUrl
+        console.log('prodImgUrl----------',prodImgUrl)
         return (
             <div className="yzy-tab-content-item-wrap">
                 <div className="baseinfo-section">
                     <h2 className="yzy-tab-content-title">检查计划子表信息详情</h2>
-                    <Row>
+                    <Row style={{fontSize: 12}}>
                         <Col span={2}> 企业名称：</Col>
                         <Col span={8}>{recordEdit.customer ? recordEdit.customer.customerName : ''}</Col>
                         <Col span={2}>备注：</Col>

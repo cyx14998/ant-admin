@@ -34,6 +34,10 @@ import QiniuUploadFile from '../../components/upload.file';
 const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 const uploadUrl = 'http://up.qiniu.com/';
 
+/**
+ * editId
+ * closeModal
+ */
 class WasteWaterDischargeDetail extends React.Component {
     constructor(props) {
         super(props);
@@ -244,6 +248,10 @@ class WasteWaterDischargeDetail extends React.Component {
                     }
                     MyToast("保存成功")
                     localStorage.setItem("wastewaterDischargeIsShow", "block");
+
+                    setTimeout(() => {
+                        this.props.closeModal()
+                    }, 500);
                 }).catch(err => {
                     MyToast('接口调用失败')
                 });
@@ -259,6 +267,10 @@ class WasteWaterDischargeDetail extends React.Component {
                     self.setState({ tableId: res.data.tableId });
                     MyToast("新增成功")
                     localStorage.setItem("wastewaterDischargeIsShow", "block");
+
+                    setTimeout(() => {
+                        this.props.closeModal()
+                    }, 500);
                 }).catch(err => {
                     MyToast('接口调用失败')
                 });

@@ -47,6 +47,7 @@ const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 /**
  * @params editId
  * @params showItemVisible
+ * @params closeModal
  */
 class WasteWaterDischargeDetail extends React.Component {
   constructor(props) {
@@ -156,6 +157,10 @@ class WasteWaterDischargeDetail extends React.Component {
           }
           MyToast("保存成功");
           this.setState({ tableId: res.data.tableId });
+
+          setTimeout(() => {
+              this.props.closeModal()
+          }, 500);
         }).catch(err => {
           MyToast('接口调用失败')
         });
@@ -173,7 +178,11 @@ class WasteWaterDischargeDetail extends React.Component {
             return;
           }
 
-          MyToast("新增成功")
+          MyToast("新增成功");
+
+          setTimeout(() => {
+              this.props.closeModal()
+          }, 500);
         }).catch(err => {
           MyToast('接口调用失败')
         });
@@ -222,7 +231,7 @@ class WasteWaterDischargeDetail extends React.Component {
             <Row>
               <Col span={12}>
                 <div className="baseinfo-section">
-                  <h2 className="yzy-tab-content-title">企业附件上传(必填)</h2>
+                  <h2 className="yzy-tab-content-title">企业附件上传(文件)</h2>
                   <QiniuUploadFile
                     uploadTitle="文件上传"
                     uploadedFileList={this.state.uploadedFileList}

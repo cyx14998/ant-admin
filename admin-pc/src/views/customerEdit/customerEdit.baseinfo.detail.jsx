@@ -71,7 +71,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
     componentDidMount() {
         //获取省份        
         getProvinceList({}).then(res => {
-            console.log('省',res.data.provinceList)
+            console.log('省', res.data.provinceList)
             if (res.data.result !== 'success') {
                 return
             }
@@ -117,14 +117,19 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 });
             }
             //地址（省市区）初始化
+            if (res.data.customer.provinceId) {
+                self.changeProvince(res.data.customer.provinceId);
+            }
             if (res.data.customer.cityId) {
-                self.changeProvince(res.data.customer.provinceId)
+                self.changeProvince(res.data.customer.provinceId);
+                self.changeCity(res.data.customer.cityId);
             }
             if (res.data.customer.areaId) {
-                self.changeCity(res.data.customer.cityId)
+                self.changeCity(res.data.customer.cityId);
+                self.changeTown(res.data.customer.townId);
             }
             if (res.data.customer.townId) {
-                self.changeTown(res.data.customer.townId)
+                self.changeTown(res.data.customer.townId);
             }
         }).catch(err => console.log(err));
     }
@@ -133,7 +138,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
         this.setState({
             provinceId: key,
             cityList: [],
-            cityId: '',
+            cityId: '市',
         })
         console.log('provinceId');
 
@@ -147,7 +152,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 console.log(res.data.cityList)
                 this.setState({
                     cityList: res.data.cityList,
-                    cityId: res.data.cityList[0].tableId,
+                    // cityId: res.data.cityList[0].tableId,
                 })
             }).catch(err => console.log(err));
         })
@@ -157,8 +162,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
         this.setState({
             cityId: key,
             areaList: [],
-            areaId: '',
-
+            areaId: '区',
         })
         console.log('cityId', key);
 
@@ -172,7 +176,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 // console.log(res.data.customer)
                 this.setState({
                     areaList: res.data.areaList,
-                    areaId: res.data.areaList[0].tableId,
+                    // areaId: res.data.areaList[0].tableId,
                 })
             }).catch(err => console.log(err));
         })
@@ -196,7 +200,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 // console.log(res.data.customer)
                 this.setState({
                     townList: res.data.townList,
-                    townId: res.data.areaList[0].townId,
+                    // townId: res.data.areaList[0].townId,
                 })
             }).catch(err => console.log(err));
         })
@@ -510,12 +514,12 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem labelCol={{ span: 13 }} wrapperCol={{ span: 11 }} label="企业地址">
                                     {getFieldDecorator('provinceId', {
                                         //initialValue: this.state.provinceList[0] ? this.state.provinceList[0].tableId : '',
-                                        initialValue: (this.state.provinceList && customer.provinceId ? customer.provinceId : '省') + "",
+                                        initialValue: (this.state.provinceList && customer.provinceId ? customer.provinceId : '') + "",
                                         //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
-                                        <Select onChange={this.changeProvince.bind(this)}>
+                                        <Select onChange={this.changeProvince.bind(this)} placeholder="Select a person">
                                             {provinceOptions}
                                         </Select>
                                         )}
@@ -524,7 +528,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={3} style={{ marginRight: '10px' }}>
                                 <FormItem>
                                     {getFieldDecorator('cityId', {
-                                        initialValue: (this.state.cityList && customer.cityId ? customer.cityId : '市') + "",
+                                        initialValue: (this.state.cityList && customer.cityId ? customer.cityId : '') + "",
                                         //rules: [{ required: true, message: '必填' },
                                         //    //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' }
                                         //],
@@ -538,7 +542,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={3} style={{ marginRight: '10px' }}>
                                 <FormItem>
                                     {getFieldDecorator('areaId', {
-                                        initialValue: (this.state.areaList && customer.areaId ? customer.areaId : '区') + "",
+                                        initialValue: (this.state.areaList && customer.areaId ? customer.areaId : '') + "",
                                         //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
@@ -553,7 +557,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator('townId', {
                                         //initialValue: this.state.townList[0] ? this.state.provinceList[0].tableId : '',
-                                        initialValue: (this.state.townId ? customer.townId : '镇') + "",
+                                        initialValue: (this.state.townId ? customer.townId : '') + "",
                                         ////rules: [{ required: true, message: '必填' },
                                         ////{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //// ],

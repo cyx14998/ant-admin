@@ -57,6 +57,7 @@ const uploadButton = (
 /**
  * @params editId
  * @params showItemVisible
+ * @params closeModal
  */
 class WasteWaterDischargeDetail extends React.Component {
   constructor(props) {
@@ -171,7 +172,11 @@ class WasteWaterDischargeDetail extends React.Component {
             MyToast(res.data.info)
             return;
           }
-          MyToast("保存成功")
+          MyToast("保存成功");
+
+          setTimeout(() => {
+              this.props.closeModal()
+          }, 500);
         }).catch(err => {
           MyToast('接口调用失败')
         });
@@ -186,7 +191,11 @@ class WasteWaterDischargeDetail extends React.Component {
           }
           localStorage.setItem('wastewater-discharge-editId', res.data.tableId);
           this.setState({ tableId: res.data.tableId });
-          MyToast("新增成功")
+          MyToast("新增成功");
+
+          setTimeout(() => {
+              this.props.closeModal()
+          }, 500);
         }).catch(err => {
           MyToast('接口调用失败')
         });
@@ -208,7 +217,7 @@ class WasteWaterDischargeDetail extends React.Component {
           <div className="baseinfo-section">
             <h2 className="yzy-tab-content-title">企业附件基本信息</h2>
             <Row>
-              <Col span={12}>
+              <Col span={8}>
                 <FormItem {...formItemLayout} label="附件类型">
                   {getFieldDecorator('attachmentTypeId', {
                     initialValue: this.state.attachmentTypeItem + '' || this.state.attachmentTypeList ? this.state.attachmentTypeList[0].tableId + '' : '',

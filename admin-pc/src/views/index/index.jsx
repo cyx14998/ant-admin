@@ -27,7 +27,7 @@ const MenuTop = ({
     <div className="yzy-avatar-wrap">
         <img src={imgCircle} alt="" className="avatar" />
         <div className="avatar-info">
-            <span>友通管理员</span>
+            <span>{localStorage.getItem('userName')?localStorage.getItem('userName'): '友通管理员'}</span>
             <div className="controls">
               <span className="username">游客</span>
               <span className="split">|</span>
