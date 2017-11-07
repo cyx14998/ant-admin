@@ -222,7 +222,7 @@ class WasteWaterDischargeDetail extends React.Component {
             <Row>
               <Col span={12}>
                 <div className="baseinfo-section">
-                  <h2 className="yzy-tab-content-title">企业附件上传(必填)</h2>
+                  <h2 className="yzy-tab-content-title">企业附件上传(文件)</h2>
                   <QiniuUploadFile
                     uploadTitle="文件上传"
                     uploadedFileList={this.state.uploadedFileList}

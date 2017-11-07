@@ -229,32 +229,11 @@ class CustomerCheckPlanSub extends React.Component {
     performerbtn() {
         if (this.state.checkSubIdArr.length > 0) {
             this.setState({ multiModalVisible: true })
-            //批量选择
-            console.log(this.state.checkSubIdArr);
-            var param = this.state.checkSubIdArr.join(',');
-            getCheckplanSubPerformerMulti({ tableIdArr: param, performerId: tableId }).then(res => {
-                console.log('perfomerMultiSave res ---', res);
-                this.setState({
-                    multiModalVisible: false,
-                });
-                if (res.data.result !== 'success') {
-                    MyToast(res.data.info)
-                    return;
-                }
-                MyToast('批量选择成功');
-                this.getData({ inspectionPlanMstId: checkplanId });
-                this.setState({
-                    checkSubId: '',
-                });
-            }).catch(err => {
-                console.log(err)
-                MyToast('批量选择失败')
-            })
         } else {
             MyToast('请先选择要管理的数据');
         }
     }
-    //Modal分配执行人员 
+    //Modal--批量分配执行人员 
     selectPerformer(tableId) {
         console.log('performerSelect = ', tableId);
         //单个选择
@@ -380,7 +359,7 @@ class CustomerCheckPlanSub extends React.Component {
                     </Popconfirm>
                     <Modal
                         title="检查子表查看页面"
-                        width='70%'
+                        width="70%"
                         visible={this.state.editModalVisible}
                         onCancel={this.editModalCancel.bind(this)}
                         onOk={this.editModalCancel.bind(this)}
@@ -403,7 +382,7 @@ class CustomerCheckPlanSub extends React.Component {
             dataIndex: 'sex',
             render: (text, record, index) => (
                 <div>
-                    {record.theState === 1 ? '男' : '女'}
+                    {record.sex === 1 ? '男' : '女'}
                 </div>
             )
         }, {
