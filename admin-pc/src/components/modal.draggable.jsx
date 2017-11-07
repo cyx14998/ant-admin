@@ -28,6 +28,7 @@ class DraggableModal extends React.Component {
       onCancel,
       title,
       width,
+      defaultPositionY=80,
       children
     } = nextProps;
 
@@ -37,7 +38,8 @@ class DraggableModal extends React.Component {
         className={visible ? "yzy-modal visible" : "yzy-modal"}
         onClick={onCancel}>
         <Draggable
-          defaultPosition={{x: 0, y: -50}}>
+          defaultPosition={{x: 0, y: defaultPositionY}}
+          handle=".yzy-modal-title">
           <div 
             className="yzy-modal-container" 
             style={width ? {width: width} : null}

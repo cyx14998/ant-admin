@@ -306,7 +306,7 @@ class DepartmentEdit extends Component {
           </div>
         }
 
-        <Modal
+        <DraggableModal
           width="90%"
           visible={this.state.modalVisible}
           title="选择部门员工"
@@ -319,7 +319,7 @@ class DepartmentEdit extends Component {
               getStaffListByDeparentId={this._getStaffListByDeparentId}
               handleModalCancel={this.handleModalCancel.bind(this)}  />
           }
-        </Modal>
+        </DraggableModal>
       </div>
     )
   }
