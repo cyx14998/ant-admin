@@ -85,7 +85,7 @@ class UneditableSection extends Component {
     if (tableId === '') {
       this.setState(prev => {
         return {
-          dataSource: prev.dataSource.slice(0, -1)
+          dataSource: prev.dataSource.slice(1)
         }
       });
 

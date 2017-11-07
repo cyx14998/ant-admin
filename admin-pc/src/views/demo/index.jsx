@@ -161,27 +161,57 @@ class Demo extends Component {
     console.log('handleSearch ---------', values)
   }
 
+  eventLogger (e: MouseEvent, data: Object) {
+    console.log('Event: ', e);
+    console.log('Data: ', data);
+  }
+
   render() {
 
-    return (
-      <div>
-        <EditableDemoSection />
-        <QiniuDemo />
-      </div>
-    )
+    // return (
+    //   <div>
+    //     <EditableDemoSection />
+    //     <QiniuDemo />
+    //   </div>
+    // )
     
     // return (
     //   <EditableModalDemoSection />
+    // );
+
+    // return (
+    //   <Draggable
+    //     axis="both"
+    //     handle=".handle"
+    //     defaultPosition={{x: 0, y: 100}}
+    //     // position={{x: 200, y: 200}}
+    //     // grid={[25, 25]}
+    //     onStart={this.eventLogger.bind(this)}
+    //     onDrag={this.eventLogger.bind(this)}
+    //     onStop={this.eventLogger.bind(this)}>
+    //     <div style={{backgroundColor: '#0aa'}}>
+    //       <div className="handle">Drag from here</div>
+    //       <div>This readme is really dragging on...</div>
+    //       <div>This readme is really dragging on...</div>
+    //       <div>This readme is really dragging on...</div>
+    //       <div>This readme is really dragging on...</div>
+    //       <input />
+    //     </div>
+    //   </Draggable>
     // );
 
     return (
       <div>
         <Button onClick={() => this.setState({modalVisible: true})}>show visible</Button>
         <DraggableModal
-          width="50%"
+          // width="50%"
           visible={this.state.modalVisible}
           onCancel={() => this.setState({modalVisible: false})}>
-          <div>hello</div>
+          <div style={{height: 1000}}>
+            <form>
+              <input type="text" placeholder="input" autoFocus />
+            </form>
+          </div>
         </DraggableModal>
       </div>
     );

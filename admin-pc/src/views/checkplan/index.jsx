@@ -24,7 +24,7 @@ const rcsearchformData = {
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
+// import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
 
 import './index.less';
 
