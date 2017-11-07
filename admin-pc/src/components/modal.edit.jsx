@@ -2,6 +2,9 @@
  * 模态编辑
  */
 import React from 'react';
+
+import DraggableModal from './modal.draggable';
+
 import {
   Modal
 } from 'antd';
@@ -30,20 +33,23 @@ class ModalEdit extends React.Component {
       showItemVisible,
     } = this.props;
 
-    if (!modalShow) return null;
+    // if (!modalShow) return null;
 
     return (
-      <Modal
+      <DraggableModal
         width="90%"
-        visible={true}
+        visible={modalShow}
         title={modalTitle}
         onCancel={closeModalEdit}
         footer={null}>
-          <InnerComponent 
-            editId={editId} 
-            itemVisible={itemVisible}
-            showItemVisible={showItemVisible} />
-      </Modal>
+          {
+            modalShow && 
+            <InnerComponent 
+              editId={editId} 
+              itemVisible={itemVisible}
+              showItemVisible={showItemVisible} />
+          }
+      </DraggableModal>
     )
   }
 }
