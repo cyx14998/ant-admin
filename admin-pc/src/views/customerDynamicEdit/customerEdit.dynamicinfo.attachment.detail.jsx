@@ -68,29 +68,25 @@ class WasteWaterDischargeDetail extends React.Component {
       uploadedFileList: [], //生产工艺流程图
       attachmentTypeId: [],//附件类型id
       attachmentTypeItem: "",
+      attachmentTypeList: [],
     }
-
-  }
-
-  componentDidMount() {
-    var tableId = this.props.editId;
-    //获取附件类型id
+    //获取附件类型列表
     getAttachmentTypeList({}).then(res => {
-      console.log('类型getAttachmentTypeList res ---', res);
       if (res.data.result !== 'success') {
         MyToast(res.data.info)
         return;
       }
-      // var data = res.data.attachmentTypeList;
-      // // var attachmentTypeId = [];
-      // // data.map((item, index) => {
-      // //   attachmentTypeId.push(item.tableId);
-      // // })
       this.setState({ attachmentTypeList: res.data.attachmentTypeList })
     }).catch(err => {
       MyToast('接口调用失败')
     });
-    
+  }
+
+  componentDidMount() {
+    var self = this;
+    var tableId = self.props.editId;
+
+    //获取附件详情
     if (tableId === '') return;
     getAttachmentRecordDetail({ tableId: tableId }).then(res => {
       console.log('getAttachmentRecordDetail res ---', res);
@@ -98,19 +94,21 @@ class WasteWaterDischargeDetail extends React.Component {
         MyToast(res.data.info)
         return;
       }
-      this.setState({
-        data: res.data.attachmentDynamicDetail,
-        tableId: res.data.attachmentDynamicDetail.tableId,
-        attachmentTypeItem: res.data.attachmentDynamicDetail.attachmentType.tableId
+
+      self.setState({
+        data: res.data.attachmentDynamic,
+        tableId: res.data.attachmentDynamic.tableId,
+        attachmentTypeItem: res.data.attachmentDynamic.attachmentType.tableId
       })
+
       //文件初始化
-      if (res.data.customerSupervise.filePath) {
+      if (res.data.attachmentDynamic.filePath) {
         self.setState({
           uploadedFileList: [{
             uid: '1',
-            name: res.data.customerSupervise.theName,
-            size: res.data.customerSupervise.theSize,
-            url: res.data.customerSupervise.filePath,
+            name: res.data.attachmentDynamic.theName,
+            size: res.data.attachmentDynamic.theSize,
+            url: res.data.attachmentDynamic.filePath,
           }],
         });
       } else {
@@ -118,6 +116,7 @@ class WasteWaterDischargeDetail extends React.Component {
           uploadedFileList: [],
         });
       }
+
     }).catch(err => {
       MyToast('接口调用失败')
     })
@@ -175,7 +174,7 @@ class WasteWaterDischargeDetail extends React.Component {
           MyToast("保存成功");
 
           setTimeout(() => {
-              this.props.closeModal()
+            this.props.closeModal()
           }, 500);
         }).catch(err => {
           MyToast('接口调用失败')
@@ -194,7 +193,7 @@ class WasteWaterDischargeDetail extends React.Component {
           MyToast("新增成功");
 
           setTimeout(() => {
-              this.props.closeModal()
+            this.props.closeModal()
           }, 500);
         }).catch(err => {
           MyToast('接口调用失败')
@@ -204,7 +203,6 @@ class WasteWaterDischargeDetail extends React.Component {
   }
 
   handleUploadedFileList({ fileList }) {
-    console.log(fileList)
     this.setState({
       uploadedFileList: fileList,
     });
@@ -220,8 +218,8 @@ class WasteWaterDischargeDetail extends React.Component {
               <Col span={8}>
                 <FormItem {...formItemLayout} label="附件类型">
                   {getFieldDecorator('attachmentTypeId', {
-                    initialValue: this.state.attachmentTypeItem + '' || this.state.attachmentTypeList ? this.state.attachmentTypeList[0].tableId + '' : '',
-                    rules: [{ required: true,message: '请选择附件类型' },
+                    initialValue: this.state.attachmentTypeItem && this.state.attachmentTypeList[0] ? this.state.attachmentTypeItem + '' : '',
+                    rules: [{ required: true, message: '请选择附件类型' },
                     ],
                   })(
                     <Select>

@@ -712,6 +712,27 @@ export function getAttachmentRecordAdd({
     }
   })
 }
+/* 
+ * 编辑企业附件
+ */
+export function getAttachmentRecordUpdate({
+  tableId,
+  theName,
+  attachmentTypeId,
+  theSize,
+  filePath,
+}) {
+  return axios.get('/uAttachmentDynamicUpdate.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+      theName,
+      attachmentTypeId,
+      theSize,
+      filePath,
+    }
+  })
+}
 
 // /* 
 // * 编辑边界噪声
