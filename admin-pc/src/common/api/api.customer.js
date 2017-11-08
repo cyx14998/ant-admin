@@ -92,7 +92,21 @@ export function getTownList({
   });
 }
 // 编辑页**********
-
+//编辑页---首页-管辖归属获取
+export function getJurisdictionList({
+  pageNumber = 1,
+  countPerPage = 1000,
+  keyword = '',
+}) {
+  return axios.get('/uJurisdictionAscriptionList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber,
+      countPerPage,
+      keyword,
+    }
+  });
+}
 //编辑页---首页-基本信息获取
 export function getCustomerInfoById() {
   return axios.get('/uCustomerDetail.uhtm?InterfaceVersion=' + apiVer, {
@@ -103,7 +117,7 @@ export function getCustomerInfoById() {
   });
 }
 
- // 编辑页---首页-基本信息增加保存add
+// 编辑页---首页-基本信息增加保存add
 export function saveAddCustomerInfoById(data) {
   return axios.get('/uCustomerAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {

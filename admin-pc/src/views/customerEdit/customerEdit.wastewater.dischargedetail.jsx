@@ -50,7 +50,7 @@ class WasteWaterDischargeDetail extends React.Component {
 				MyToast(res.data.info)
 				return;
 			}
-			this.setState({ data: res.data.wasteWaterDischargePort})
+			this.setState({ data: res.data.wasteWaterDischargePort })
 		}).catch(err => {
 			MyToast('接口调用失败');
 		})
@@ -69,15 +69,15 @@ class WasteWaterDischargeDetail extends React.Component {
 
 			var tableId = this.props.editId;
 
-			if(!tableId){
+			if (!tableId) {
 				tableId = this.state.tableId;
 			}
 
 			//编辑
-			if(this.state.tableId){
+			if (this.state.tableId) {
 				getWastewaterDischargeUpdate({
 					...values,
-					tableId:tableId,
+					tableId: tableId,
 				}).then(res => {
 					if (res.data.result !== 'success') {
 						MyToast(res.data.info)
@@ -87,7 +87,7 @@ class WasteWaterDischargeDetail extends React.Component {
 				}).catch(err => {
 					MyToast('接口调用失败')
 				});
-			}else{
+			} else {
 				// 新增
 				getWastewaterDischargeAdd({
 					...values,
@@ -99,7 +99,7 @@ class WasteWaterDischargeDetail extends React.Component {
 
 					localStorage.setItem('wastewater-discharge-editId', res.data.tableId);
 
-					this.setState({tableId: res.data.tableId});
+					this.setState({ tableId: res.data.tableId });
 
 					this.props.showItemVisible();
 					MyToast("新增成功")
@@ -123,8 +123,8 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排水口编号">
 									{getFieldDecorator('serialNumber', {
 										initialValue: this.state.data.serialNumber,
-										rules: [{ required: true },
-										{/* { pattern: /^[0-9]*$/ } */ }
+										rules: [{ required: true, message: '必填' },
+										{ pattern: /^[0-9]*$/, message: '请输入数值' }
 										],
 									})(
 										<Input placeholder="排水口编号" />
@@ -135,7 +135,7 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排放口名称">
 									{getFieldDecorator('theName', {
 										initialValue: this.state.data.theName,
-										rules: [{ required: true },
+										rules: [{ required: true, message: '必填' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -147,7 +147,7 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排放口位置">
 									{getFieldDecorator('outletLocation', {
 										initialValue: this.state.data.outletLocation,
-										rules: [{ required: true },
+										rules: [{ required: true, message: '必填' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -161,8 +161,8 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="经度">
 									{getFieldDecorator('longitude', {
 										initialValue: this.state.data.longitude ? this.state.data.longitude + "" : "",
-										rules: [{ required: true },
-										{/* { pattern: /^[0-9]*$/ } */ }
+										rules: [{ required: true, message: '必填' },
+										{ pattern: /^-?(([1-9]\d?)|(1[1-7]\d)|180)(\.\d{1,6})?$/, message: '请输入正确的经度' }
 										],
 									})(
 										<Input placeholder="经度" />
@@ -173,8 +173,8 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="维度">
 									{getFieldDecorator('latitude', {
 										initialValue: this.state.data.latitude ? this.state.data.latitude + "" : "",
-										rules: [{ required: true },
-										{/* { pattern: /^[0-9]*$/ } */ }
+										rules: [{ required: true, message: '必填' },
+										{ pattern: /^-?(([1-8]\d?)|([1-8]\d)|90)(\.\d{1,6})?$/, message: '请输入正确的纬度!' }
 										],
 									})(
 										<Input placeholder="维度" />
@@ -185,7 +185,7 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排放口去向">
 									{getFieldDecorator('emissionDestination', {
 										initialValue: this.state.data.emissionDestination,
-										rules: [{ required: true },
+										rules: [{ required: true, message: '必填' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -199,7 +199,7 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="水体名称">
 									{getFieldDecorator('nameOfWaterBody', {
 										initialValue: this.state.data.nameOfWaterBody,
-										rules: [{ required: true },
+										rules: [{ required: true, message: '必填' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -211,7 +211,7 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="污水排放规律">
 									{getFieldDecorator('dischargeLaw', {
 										initialValue: this.state.data.dischargeLaw,
-										rules: [{ required: true },
+										rules: [{ required: true, message: '必填' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -223,7 +223,7 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="功能区类别">
 									{getFieldDecorator('functionalAreaCategory', {
 										initialValue: this.state.data.functionalAreaCategory,
-										rules: [{ required: true },
+										rules: [{ required: true, message: '必填' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(

@@ -290,7 +290,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                     {getFieldDecorator('serialNumber', {
                                         initialValue: this.state.data.serialNumber,
                                         rules: [{ required: true, message: '请输入编号' },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
+                                        { pattern: /^[0-9]*$/, message: '请输入数值' }
                                         ],
                                     })(
                                         <Input placeholder="编号" />
@@ -393,7 +393,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                     {getFieldDecorator('annualProduction', {
                                         initialValue: this.state.data.annualProduction ? this.state.data.annualProduction + '' : '',
                                         rules: [{ required: true, message: '请输入危险废物年产生量' },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
+                                        { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' }
                                         ],
                                     })(
                                         <Input placeholder="危险废物年产生量" />
