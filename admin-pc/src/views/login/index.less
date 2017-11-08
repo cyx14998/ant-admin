@@ -9,32 +9,35 @@ html {
     height: 100%;
     .login {
         height: 100%;
-        background: #d8ecde url('../../media/login_bg1.png');
+        background: #d8ecde url('../../media/login_bg3.png');
         // background-position: center;
         background-repeat: no-repeat;
         background-size: 100% 100%;
         position: relative;
         .login-input-box {
             width: 690px;
-            // height: 470px;
+            height: 581px;
             position: absolute;
             top: 50%;
             left: 50%;
             margin-left: -345px;
-            margin-top: -159px;
+            margin-top: -290px;
             // border: 2px solid #000;
-            // .login-top {
-            //     margin: 20px 0 68px 0;                
-            //     height: 82px;
-            //     font-size: 22px;
-            //     color: #fff;
-            //     text-align: center;
-            // }
+            .login-top {
+                text-align: center;                
+                i {
+                    display: inline-block;
+                    background: url('../../media/login_title.png') no-repeat;  
+                    width: 539px;              
+                    height: 52px;
+                    margin-bottom: 55px;
+                }
+            }
             .login-main {
                 position: relative;
                 height: 470px;
-                // background-color: rgba(255,255,255,0.4);
-                background-color: #fff;
+                background-color: rgba(255,255,255,0);
+                // background-color: #fff;
                 padding: 0 30px;                                
                 .login-title {
                     height: 138px;
@@ -54,6 +57,7 @@ html {
                         color: #9b9b9b;
                         font-size: 14px;
                         padding-left: 30px;
+                        background-color: rgba(255,255,255,0);                        
                     }                  
                     .remember{
                         height: 50px;

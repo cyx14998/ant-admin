@@ -24,29 +24,36 @@ const columns = [{
 }, {
   title: '标准值',
   dataIndex: 'standardValue',
+  validateType: 'number',
   width: '5%'
 }, {
   title: '特别排放限值',
   dataIndex: 'specialEmissionLimits',
+  validateType: 'number',
   width: '5%'
 }, {
   title: '实测浓度-排放浓度',
   dataIndex: 'measuredConcentration',
+    validateType: 'number',
 }, {
   title: '折算浓度-排放浓度',
   dataIndex: 'conversionConcentration',
+    validateType: 'number',
 }, {
   title: '排放速率标准值-排放速率',
   dataIndex: 'emissionRateStandardValue',
+  validateType: 'number',
 }, {
   title: '实际排放速率-排放速率',
   dataIndex: 'emissionRateActual',
+  validateType: 'number',  
 }, {
   title: '数据来源',
   dataIndex: 'dataSources',
 }, {
   title: '排放量(千克)',
   dataIndex: 'emissionAmount',
+  validateType: 'number',
 }, {
   title: '是否存在某一天超标',
   dataIndex: 'isOverproof',
@@ -147,7 +154,7 @@ const WasteGasDemoSection = connectEditableSectionApi({
         // 新增
         getWasteGasDischargeFactorRecordAdd({
           ..._record_for_save,
-           wasteGasDischargeRecordId: record.apiListItemId
+          wasteGasDischargeRecordId: record.apiListItemId
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({

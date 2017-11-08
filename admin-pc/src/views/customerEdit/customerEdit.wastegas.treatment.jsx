@@ -122,7 +122,7 @@ const WasteGasTreatment = connectEditableSectionApi({
     })
   },
   apiSave: function (record) {
-    // 新增
+ 
     var self = this;
     if (record.apiListItemId === undefined) {
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
@@ -151,6 +151,7 @@ const WasteGasTreatment = connectEditableSectionApi({
       approachId: record.approachId.value,
       standingBookURL: filePath,
     }
+    
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增

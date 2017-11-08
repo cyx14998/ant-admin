@@ -4,7 +4,7 @@
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getBoundaryNoiseRecordList,
   getBoundaryNoiseRecordAdd,
   getBoundaryNoiseRecordUpdate,
@@ -32,24 +32,31 @@ const columns = [{
 }, {
   title: '执行标准',
   dataIndex: 'implementationStandards',
+  validateType: 'number',
 }, {
   title: '等效声级',
   dataIndex: 'equivalentSoundLevel',
+  validateType: 'number',
 }, {
   title: '峰值声级',
   dataIndex: 'peakSoundLevel',
+  validateType: 'number',
 }, {
   title: '超标分贝数',
   dataIndex: 'exceedingDecibels',
+  validateType: 'number',
 }, {
   title: '超标天数',
   dataIndex: 'exceedingStandardDays',
+  validateType: 'onlyNum',
 }, {
   title: '噪声时段 开始时刻（时）',
   dataIndex: 'noisePeriodStart',
+  validateType: 'onlyNum',
 }, {
   title: '噪声时段 结束时刻（时）',
   dataIndex: 'noisePeriodEnd',
+  validateType: 'onlyNum',
 }, {
   title: '边界超标超过100米',
   dataIndex: 'isBoundaryExceeding100',
@@ -76,7 +83,7 @@ const itemDataModel = {
   noisePeriodEnd: '',
   isBoundaryExceeding100: {
     value: '0',
-    options : [{
+    options: [{
       value: "1",
       label: '是'
     }, {
@@ -90,9 +97,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '边界噪声基本情况',
   columns: columns,
   apiLoader: function () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
-      if(!dynamicId) return;
+      if (!dynamicId) return;
 
       // 获取边界噪声选项列表
       getBoundaryNoiseList({}).then(res => {
@@ -103,7 +110,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
 
         var data = res.data.boundaryNoiseList;
 
-        var boundaryNoiseListOptions = convertObjectLabel(data, 'tableId', 'noiseSourceName');  
+        var boundaryNoiseListOptions = convertObjectLabel(data, 'tableId', 'noiseSourceName');
 
         return boundaryNoiseListOptions;
       }).then(boundaryNoiseListOptions => {
@@ -111,7 +118,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
 
         itemDataModel.boundaryNoiseId.options = boundaryNoiseListOptions;
 
-        getBoundaryNoiseRecordList({customerMonthDclarationId: dynamicId}).then(res => {
+        getBoundaryNoiseRecordList({ customerMonthDclarationId: dynamicId }).then(res => {
           // console.log('getBoundaryNoiseRecordList res ---', res);
 
           if (res.data.result !== 'success') {
@@ -124,7 +131,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
 
           var data = res.data.boundaryNoiseRecordList;
 
-          data = data.map((item,index) => {
+          data = data.map((item, index) => {
             let boundaryNoiseId = (item.boundaryNoise && item.boundaryNoise.tableId) || '';
 
             return {
@@ -134,14 +141,14 @@ const WasteWaterDemoSection = connectEditableSectionApi({
                 options: boundaryNoiseListOptions
               },
               isBoundaryExceeding100: {
-                value: item.isBoundaryExceeding100 === true ? "1" : "0" ,
-                options : [{
+                value: item.isBoundaryExceeding100 === true ? "1" : "0",
+                options: [{
                   value: "1",
                   label: "是"
                 }, {
                   value: "0",
                   label: "否"
-                }] 
+                }]
               }
             }
           });
@@ -170,7 +177,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       isBoundaryExceeding100: record.isBoundaryExceeding100.value === '1' ? true : false
     }
 
-    
+
     var self = this;
 
     if (record.tableId === '') {
@@ -180,7 +187,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           ..._record_for_save,
           customerMonthDclarationId: dynamicId,
         }).then(res => {
-          console.log("getBoundaryNoiseRecordAdd res-------",res)
+          console.log("getBoundaryNoiseRecordAdd res-------", res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -201,7 +208,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       return new Promise((resolve, reject) => {
         console.log(record)
         getBoundaryNoiseRecordUpdate(_record_for_save).then(res => {
-          console.log("getBoundaryNoiseRecordUpdate res",res)
+          console.log("getBoundaryNoiseRecordUpdate res", res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,

@@ -23,6 +23,7 @@ const columns = [{
 }, {
   title: '设计用耗量',
   dataIndex: 'designConsumption',
+  validateType: 'number',
 }, {
   title: '操作',
   dataIndex: 'operation',
@@ -59,7 +60,7 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       if (!cusId) return;
 
       getMaterialBaseInfoList({}).then(res => {
-        console.log('materiallist res',res)        
+        console.log('materiallist res', res)
         if (res.data.result !== 'success') {
           resolve({
             code: -1,
@@ -127,15 +128,15 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       getMaterialBaseInfoDelete(tableId).then(res => {
         console.log('DeleteMaterial res', res);
         if (res.data.result !== 'success') {
-            resolve({
-              code: -1,
-              info: res.data.info,
-            });
-            return
-          }
           resolve({
-            code: 0 // success
-          })
+            code: -1,
+            info: res.data.info,
+          });
+          return
+        }
+        resolve({
+          code: 0 // success
+        })
       }).catch(err => {
         reject(err)
       });

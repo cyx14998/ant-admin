@@ -104,7 +104,7 @@ export function getProductDynamicInfoEdit({
   tableId,
   theName,
   unitOfMeasurement,
-  theYield
+  theYield,
 }) {
   return axios.get('/uMainProductOutputUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {

@@ -23,6 +23,7 @@ const columns = [{
 }, {
   title: '设计用耗量',
   dataIndex: 'consumption',
+    validateType: 'number',
 }, {
   title: '操作',
   dataIndex: 'operation',

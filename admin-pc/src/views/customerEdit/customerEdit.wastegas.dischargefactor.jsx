@@ -24,9 +24,11 @@ const columns = [{
 }, {
   title: '输入执行标准文件号',
   dataIndex: 'executeStandardNumber',
+  validateType: 'onlyNum',
 }, {
   title: '标准值',
   dataIndex: 'standardValue',
+  validateType: 'number',
 }, {
   title: '污染源自动监控设施有/无',
   dataIndex: 'isAutoMOPS',
@@ -121,7 +123,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       record.apiListItemId = localStorage.getItem('wastewater-discharge-editId')
     }
     // record.DischargePortId = record.apiListItemId;
-     const _record_for_save = {
+    const _record_for_save = {
       ...record,
       DischargePortId: record.apiListItemId,
       isAutoMOPS: record.isAutoMOPS.value === '1' ? true : false,

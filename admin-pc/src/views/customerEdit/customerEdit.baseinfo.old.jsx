@@ -36,6 +36,7 @@ const columns = [{
 }, {
   title: '设计年产量',
   dataIndex: 'address',
+  validateType: 'number',
   key: 'address',
 },
 //  {

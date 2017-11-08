@@ -25,9 +25,11 @@ const columns = [{
 }, {
   title: '输入执行标准文件号',
   dataIndex: 'executeStandardNumber',
+  validateType: 'onlyNum',
 }, {
   title: '标准值',
   dataIndex: 'standardValue',
+  validateType: 'number',
 }, {
   title: '污染源自动监控设施有/无',
   dataIndex: 'isAutoMOPS',

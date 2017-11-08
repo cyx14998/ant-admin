@@ -20,6 +20,7 @@ const columns = [{
 }, {
     title: '年耗量',
     dataIndex: 'annualConsumption',
+    validateType: 'number',
 }, {
     title: '操作',
     dataIndex: 'operation',

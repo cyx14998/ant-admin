@@ -47,12 +47,14 @@ const columns = [{
 }, {
   title: '实测排放量',
   dataIndex: 'measuredExhaustVolume',
+  validateType: 'number',
 }, {
   title: '排放时间',
   dataIndex: 'emissionTime',
 }, {
   title: '废气排放量',
   dataIndex: 'exhaustEmission',
+  validateType: 'number',
 }, {
   title: '数据来源',
   dataIndex: 'dataSources',
@@ -62,6 +64,7 @@ const columns = [{
 }, {
   title: '林格曼黑度',
   dataIndex: 'ringermanBlackness',
+  validateType: 'number',
 }, {
   title: '废气类型',
   dataIndex: 'exhaustGasType',

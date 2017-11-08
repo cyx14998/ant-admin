@@ -4,7 +4,7 @@
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getWasteWaterDischargeFactorRecordList,
   getWasteWaterDischargeFactorRecordAdd,
   getWasteWaterDischargeFactorRecordDelete,
@@ -24,18 +24,22 @@ const columns = [{
 }, {
   title: '标准值',
   dataIndex: 'standardValue',
+  validateType: 'number',
 }, {
   title: '特别排放限值',
   dataIndex: 'specialEmissionLimits',
+  validateType: 'number',
 }, {
   title: '排放浓度',
   dataIndex: 'emissionConcentration',
+  validateType: 'number',
 }, {
   title: '数据来源',
   dataIndex: 'dataSources',
 }, {
   title: '排放量(千克)',
   dataIndex: 'emissionAmount',
+  validateType: 'number',
 }, {
   title: '是否存在某一天超标',
   dataIndex: 'isOverproof',
@@ -57,7 +61,7 @@ const itemDataModel = {
   emissionAmount: '',
   isOverproof: {
     value: '1',
-    options : [{
+    options: [{
       value: "1",
       label: '是'
     }, {
@@ -70,9 +74,9 @@ const itemDataModel = {
 const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '废水排放因子基本情况',
   columns: columns,
-  apiLoader: function ({apiListItemId}) {
+  apiLoader: function ({ apiListItemId }) {
     var editId = apiListItemId;
-    if(editId === undefined){
+    if (editId === undefined) {
       Promise.resolve({
         code: -1,
         info: '缺失废水排放口参数',
@@ -80,9 +84,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
       return;
     }
 
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
-      getWasteWaterDischargeFactorRecordList({wasteWaterDischargeRecordId: editId}).then(res => {
+      getWasteWaterDischargeFactorRecordList({ wasteWaterDischargeRecordId: editId }).then(res => {
         console.log('getWasteWaterDischargeFactorRecordList res ---', res);
 
         if (res.data.result !== 'success') {
@@ -95,18 +99,18 @@ const WasteWaterDemoSection = connectEditableSectionApi({
 
         var data = res.data.wasteWaterDischargeFactorRecordList;
 
-        data = data.map((item,index) => {
+        data = data.map((item, index) => {
           return {
             ...item,
             isOverproof: {
-              value: item.isOverproof === true ? "1" : "0" ,
-              options : [{
+              value: item.isOverproof === true ? "1" : "0",
+              options: [{
                 value: "1",
                 label: "是"
               }, {
                 value: "0",
                 label: "否"
-              }] 
+              }]
             }
           }
         })
@@ -126,13 +130,13 @@ const WasteWaterDemoSection = connectEditableSectionApi({
 
     var wasteWaterDischargeRecordId = record.apiListItemId;
     delete record.apiListItemId;
-    
+
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getWasteWaterDischargeFactorRecordAdd({
           ...record,
-          wasteWaterDischargeRecordId, 
+          wasteWaterDischargeRecordId,
           isOverproof: record.isOverproof.value === '1' ? true : false,
         }).then(res => {
           if (res.data.result !== 'success') {

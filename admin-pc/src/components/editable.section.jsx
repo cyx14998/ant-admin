@@ -19,6 +19,7 @@ const Option = Select.Option;
 
 import EditableTable from './editable.table';
 
+import RULES from '../common/utils/validate';
 import { MyToast } from '../common/utils';
 
 /**
@@ -189,7 +190,7 @@ class EditableSection extends Component {
   }
 
   // 
-  saveItem(record) {
+  saveItem(record, validateTypes, callback) {
     let {
       apiListItemId,
       apiSave
@@ -197,6 +198,36 @@ class EditableSection extends Component {
 
     if (apiListItemId !== undefined) {
       record.apiListItemId = apiListItemId;
+    }
+
+    // 数据校验
+    var _validateItems = Object.keys(validateTypes);
+    var validatePass = true;
+    var validateMsg = '';
+
+    if (_validateItems.length !== 0) {
+      for(let i=0, len=_validateItems.length; i<len; i++) {
+        let validateKey = _validateItems[i];
+        let validateType = validateTypes[validateKey].type;
+        let validateTitle = validateTypes[validateKey].title;
+
+        if (RULES[validateType] === undefined) {
+          console.error('validate.js 没有配置校验规则')
+        }
+
+        if (!RULES[validateType].reg.test(record[validateKey])) {
+          validatePass = false;
+          // 字段名称 + 校验失败信息
+          validateMsg = validateTitle + '，' +  RULES[validateType].msg;
+
+          break;
+        }
+      }
+    }
+
+    if (!validatePass) {
+      MyToast(validateMsg)
+      return;
     }
 
     apiSave(record).then(res => {
@@ -207,11 +238,17 @@ class EditableSection extends Component {
 
       MyToast('保存成功');
 
-      // 新增刷新，为了获取 tableId
+      // bug fix for edit
+      callback && callback({result: 'success'});
+
+      /**
+       * 新增刷新，为了获取 tableId
+       * 
+       */
       if (record.tableId === '') {
         setTimeout(() => {
           this.getDataSource({});
-        }, 500);
+        }, 20);
       }      
     }).catch(err => {
       MyToast('接口调用失败');

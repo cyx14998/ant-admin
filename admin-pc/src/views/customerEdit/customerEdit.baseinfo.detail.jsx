@@ -32,6 +32,7 @@ import {
     getCityList,
     getAreaList,
     getTownList,
+    getJurisdictionList,
 } from '../../common/api/api.customer';
 
 //引入上传图片组件
@@ -55,6 +56,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             prodFileList: [], //生产工艺流程图
             positionFileList: [], //地理位置图
             customer: {},
+            jurisdictionList: [],
             provinceList: [],
             cityList: [],
             areaList: [],
@@ -69,6 +71,16 @@ class CustomerEditBaseinfoDetail extends React.Component {
     }
 
     componentDidMount() {
+        //获取管辖归属列表
+        getJurisdictionList({}).then(res => {
+            console.log('管辖归属', res.data.jurisdictionAscriptionList)
+            if (res.data.result !== 'success') {
+                return
+            }
+            this.setState({
+                jurisdictionList: res.data.jurisdictionAscriptionList,
+            })
+        }).catch(err => console.log(err));
         //获取省份        
         getProvinceList({}).then(res => {
             console.log('省', res.data.provinceList)
@@ -132,6 +144,10 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 self.changeTown(res.data.customer.townId);
             }
         }).catch(err => console.log(err));
+    }
+    //改变管辖归属
+    changejurisdiction(key) {
+        console.log(key);
     }
     //更改省份
     changeProvince(key) {
@@ -259,7 +275,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 }) : '';
             data.unitAddress = provinceName + cityName + areaName + townName + data.address;
             //时间处理
-            data.openingDate = data.openingDate ? data.openingDate.format('YYYY-MM-DD') : new Date();
+            data.openingDate = data.openingDate ? data.openingDate.format('YYYY-MM-DD') : new Date().format('YYYY-MM-DD');
             // 图片处理
             //生产工艺流程图及排污环节
             var prodFileUrl = self.state.prodFileList[0];
@@ -330,7 +346,10 @@ class CustomerEditBaseinfoDetail extends React.Component {
     render() {
         let { getFieldDecorator } = this.props.form;
         var customer = this.state.customer;
-
+        //管辖归属option
+        var jurisdictionOptions = this.state.jurisdictionList.map((item, index) => {
+            return <Option key={item.tableId}>{item.theName}</Option>
+        });
         //省option
         var provinceOptions = this.state.provinceList.map((item, index) => {
             return <Option key={item.tableId}>{item.theName}</Option>
@@ -410,7 +429,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('phoneNumber', {
                                         initialValue: customer.phoneNumber ? customer.phoneNumber : '',
                                         rules: [{ required: true, message: '必填' },
-                                            //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
+                                        { pattern: /^(13[0-9]|15[0|1|3|6|7|8|9]|18[8|9])\d{8}$/, message: '请输入正确的电话号码!' }
                                         ],
                                     })(
                                         <Input placeholder="电话" />
@@ -421,9 +440,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="邮政编码">
                                     {getFieldDecorator('postalCode', {
                                         initialValue: customer.postalCode ? customer.postalCode + "" : '',
-                                        //rules: [{ required: true, message: '必填' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
+                                        rules: [
+                                            { pattern: /^[1-9][0-9]{5}$/, message: '请输入正确的邮编!' }
+                                        ],
                                     })(
                                         <Input placeholder="邮政编码" />
                                         )}
@@ -433,26 +452,26 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
                         <Row>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="中心纬度">
-                                    {getFieldDecorator('latitude', {
-                                        initialValue: customer.latitude ? customer.latitude + "" : '',
-                                        //rules: [{ required: true, message: '必填!' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
+                                <FormItem {...formItemLayout} label="中心经度">
+                                    {getFieldDecorator('longitude', {
+                                        initialValue: customer.longitude ? customer.longitude + "" : '',
+                                        rules: [
+                                            { pattern: /^-?(([1-9]\d?)|(1[1-7]\d)|180)(\.\d{1,6})?$/, message: '请输入正确的经度!' }
+                                        ],
                                     })(
-                                        <Input placeholder="中心纬度" />
+                                        <Input placeholder="中心经度" />
                                         )}
                                 </FormItem>
                             </Col>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="中心经度">
-                                    {getFieldDecorator('longitude', {
-                                        initialValue: customer.longitude ? customer.longitude + "" : '',
-                                        //rules: [{ required: true, message: '必填!' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
+                                <FormItem {...formItemLayout} label="中心纬度">
+                                    {getFieldDecorator('latitude', {
+                                        initialValue: customer.latitude ? customer.latitude + "" : '',
+                                        rules: [
+                                            { pattern: /^-?(([1-8]\d?)|([1-8]\d)|90)(\.\d{1,6})?$/, message: '请输入正确的纬度!' }
+                                        ],
                                     })(
-                                        <Input placeholder="中心经度" />
+                                        <Input placeholder="中心纬度" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -460,9 +479,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="传真">
                                     {getFieldDecorator('fax', {
                                         initialValue: customer.fax ? customer.fax : '',
-                                        //rules: [{ required: true, message: '必填' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
+                                        rules: [
+                                        { pattern:  /^(\d{3,4}-)?\d{7,8}$/, message: '请输入正确格式的传真' } 
+                                        ],
                                     })(
                                         <Input placeholder="传真" />
                                         )}
@@ -486,12 +505,11 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="管辖归属">
                                     {getFieldDecorator('jurisdictionAscriptionId', {
-                                        initialValue: customer.jurisdictionAscriptionId ? customer.jurisdictionAscriptionId + "" : '',
-                                        //rules: [{ required: true, message: '必填' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
+                                        initialValue: this.state.jurisdictionList && customer.jurisdictionAscriptionId ? customer.jurisdictionAscriptionId + "" : '',
                                     })(
-                                        <Input placeholder="管辖归属" />
+                                        <Select onChange={this.changejurisdiction.bind(this)} >
+                                            {jurisdictionOptions}
+                                        </Select>
                                         )}
                                 </FormItem>
                             </Col>
@@ -513,13 +531,12 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             <Col span={5} style={{ marginRight: '10px' }}>
                                 <FormItem labelCol={{ span: 13 }} wrapperCol={{ span: 11 }} label="企业地址">
                                     {getFieldDecorator('provinceId', {
-                                        //initialValue: this.state.provinceList[0] ? this.state.provinceList[0].tableId : '',
                                         initialValue: (this.state.provinceList && customer.provinceId ? customer.provinceId : '') + "",
                                         //rules: [{ required: true, message: '必填' },
                                         //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                         //],
                                     })(
-                                        <Select onChange={this.changeProvince.bind(this)} placeholder="Select a person">
+                                        <Select onChange={this.changeProvince.bind(this)}>
                                             {provinceOptions}
                                         </Select>
                                         )}
@@ -638,9 +655,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="废气排放口数量">
                                     {getFieldDecorator('exhaustEmissionsPorts', {
                                         initialValue: customer.exhaustEmissionsPorts ? customer.exhaustEmissionsPorts + "" : '',
-                                        //rules: [{ required: true },
-                                        //{ pattern: /^[0-9]*$/ } 
-                                        //],
+                                        rules: [
+                                        { pattern: /^[0-9]*$/,message: '数量为纯数字!' } 
+                                        ],
                                     })(
                                         <Input placeholder="废气排放口数量" addonAfter="个" />
                                         )}
@@ -650,9 +667,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="废水排放口数量">
                                     {getFieldDecorator('wastewaterDischargePorts', {
                                         initialValue: customer.wastewaterDischargePorts ? customer.wastewaterDischargePorts + "" : '',
-                                        //rules: [{ required: true, message: '必填' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
+                                        rules: [
+                                        { pattern: /^[0-9]*$/, message: '数量为纯数字!' } 
+                                        ],
                                     })(
                                         <Input placeholder="废水排放口数量" addonAfter="个" />
                                         )}
@@ -721,13 +738,14 @@ class CustomerEditBaseinfoDetail extends React.Component {
                             </Col>
                         </Row>
                         <Row>
+                            {/*含小数点的正则： /^-?\d+\.\d+$/ */}
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="氮氧化物">
                                     {getFieldDecorator('aiNitrogenOxide', {
                                         initialValue: customer.aiNitrogenOxide ? customer.aiNitrogenOxide + "" : '',
-                                        //rules: [{ required: true, message: '必填' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
+                                        rules: [
+                                        { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' } 
+                                        ],
                                     })(
                                         <Input placeholder="氮氧化物" />
                                         )}
@@ -737,9 +755,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="烟尘">
                                     {getFieldDecorator('aiSmoke', {
                                         initialValue: customer.aiSmoke ? customer.aiSmoke + "" : '',
-                                        //rules: [{ required: true },
-                                        //{ pattern: /^[0-9]*$/ } 
-                                        //],
+                                        rules: [
+                                        { pattern: /^\d+$|^\d+\.\d+$/g,message: '请输入数值' } 
+                                        ],
                                     })(
                                         <Input placeholder="烟尘" />
                                         )}
@@ -749,9 +767,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="二氧化硫">
                                     {getFieldDecorator('aiSulfurDioxide', {
                                         initialValue: customer.aiSulfurDioxide ? customer.aiSulfurDioxide + "" : '',
-                                        //rules: [{ required: true, message: '必填' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
+                                        rules: [
+                                        { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' }
+                                        ],
                                     })(
                                         <Input placeholder="二氧化硫" />
                                         )}
@@ -763,9 +781,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="悬浮物">
                                     {getFieldDecorator('aiSuspendedSolids', {
                                         initialValue: customer.aiSuspendedSolids ? customer.aiSuspendedSolids + "" : '',
-                                        //rules: [{ required: true, message: '必填' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
+                                        rules: [
+                                        { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' } 
+                                        ],
                                     })(
                                         <Input placeholder="悬浮物" />
                                         )}
@@ -775,9 +793,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="氮氧">
                                     {getFieldDecorator('aiAmmoniaNitrogen', {
                                         initialValue: customer.aiAmmoniaNitrogen ? customer.aiAmmoniaNitrogen + "" : '',
-                                        //rules: [{ required: true, message: '必填' },
-                                        //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                        //],
+                                        rules: [
+                                        { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' } 
+                                        ],
                                     })(
                                         <Input placeholder="氮氧" />
                                         )}
@@ -787,9 +805,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="化学需氧量">
                                     {getFieldDecorator('aiChemicalOxygenDemand', {
                                         initialValue: customer.aiChemicalOxygenDemand ? customer.aiChemicalOxygenDemand + "" : '',
-                                        //rules: [{ required: true },
-                                        //{ pattern: /^[0-9]*$/ } 
-                                        //],
+                                        rules: [
+                                        { pattern: /^\d+$|^\d+\.\d+$/g ,message: '请输入数值'} 
+                                        ],
                                     })(
                                         <Input placeholder="化学需氧量" />
                                         )}

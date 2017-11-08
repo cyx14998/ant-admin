@@ -23,22 +23,26 @@ const columns = [{
 }, {
     title: '用量',
     dataIndex: 'consumption',
+    validateType: 'number',
 }, {
     title: '单位',
     dataIndex: 'theUnit',
-},{
+}, {
     title: '硫含量（%）',
     dataIndex: 'sulfurContent',
+    validateType: 'number',
 }, {
     title: '灰分（%）',
     dataIndex: 'ashContent',
+    validateType: 'number',
 }, {
     title: '热值',
     dataIndex: 'calorificValue',
-},{
+    validateType: 'number',
+}, {
     title: '热值单位',
     dataIndex: 'calorificValueUnit',
-},{
+}, {
     title: '计量单位',
     dataIndex: 'unitOfMeasurement',
 }, {
@@ -84,7 +88,7 @@ export const CustomerEditDynamicinfoFuel = connectEditableSectionApi({
             var cusId = getLocQueryByLabel('id');
             if (!cusId) return;
 
-            getFuelDynamicInfoList({customerMonthDclarationId: dynamicId}).then(res => {
+            getFuelDynamicInfoList({ customerMonthDclarationId: dynamicId }).then(res => {
                 console.log('fuellist res', res)
                 if (res.data.result !== 'success') {
                     resolve({
@@ -109,7 +113,7 @@ export const CustomerEditDynamicinfoFuel = connectEditableSectionApi({
         if (record.tableId === '') {
             // 新增      
             return new Promise((resolve, reject) => {
-                getFuelDynamicInfoAdd({...record,customerMonthDclarationId: dynamicId}).then(res => {
+                getFuelDynamicInfoAdd({ ...record, customerMonthDclarationId: dynamicId }).then(res => {
                     console.log('AddFuel res', res);
                     if (res.data.result !== 'success') {
                         resolve({
@@ -128,7 +132,7 @@ export const CustomerEditDynamicinfoFuel = connectEditableSectionApi({
         } else {
             // 编辑
             return new Promise((resolve, reject) => {
-                getFuelDynamicInfoEdit({...record,customerMonthDclarationId: dynamicId}).then(res => {
+                getFuelDynamicInfoEdit({ ...record, customerMonthDclarationId: dynamicId }).then(res => {
                     console.log('AddFuel res', res);
                     if (res.data.result !== 'success') {
                         resolve({

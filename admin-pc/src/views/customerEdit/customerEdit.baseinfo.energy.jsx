@@ -23,6 +23,7 @@ const columns = [{
 }, {
   title: '年耗量',
   dataIndex: 'annualConsumption',
+  validateType: 'number',
 }, {
   title: '操作',
   dataIndex: 'operation',
@@ -59,7 +60,7 @@ export const CustomerEditBaseinfoEnergy = connectEditableSectionApi({
       if (!cusId) return;
 
       getEnergyBaseInfoList({}).then(res => {
-        console.log('Energyllist res',res)        
+        console.log('Energyllist res', res)
         if (res.data.result !== 'success') {
           console.log(res.data.info)
           resolve({
@@ -127,15 +128,15 @@ export const CustomerEditBaseinfoEnergy = connectEditableSectionApi({
       getEnergyBaseInfoDelete(tableId).then(res => {
         console.log('DeleteEnergyl res', res);
         if (res.data.result !== 'success') {
-            resolve({
-              code: -1,
-              info: res.data.info,
-            });
-            return
-          }
           resolve({
-            code: 0 // success
-          })
+            code: -1,
+            info: res.data.info,
+          });
+          return
+        }
+        resolve({
+          code: 0 // success
+        })
       }).catch(err => {
         reject(err)
       });

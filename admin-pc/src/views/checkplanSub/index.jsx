@@ -375,9 +375,6 @@ class CustomerCheckPlanSub extends React.Component {
                 }
                 MyToast('批量选择成功');
                 this.getData({ inspectionPlanMstId: checkplanId });
-                this.setState({
-                    checkSubId: '',
-                });
             }).catch(err => {
                 console.log(err)
                 MyToast('批量选择失败')
