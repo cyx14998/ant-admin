@@ -139,6 +139,12 @@ const WasteGasTreatment = connectEditableSectionApi({
       filePath = downloadUrl + file.response.filePath;
     }
 
+    /**
+     * fix bug 
+     * 文件上传后，新增项带有文件
+     */
+    itemDataModel.standingBookURL.fileList = [];
+
     const _record_for_save = {
       ...record,
       sourceId: record.apiListItemId,

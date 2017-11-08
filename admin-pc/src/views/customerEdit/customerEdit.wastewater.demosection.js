@@ -163,6 +163,12 @@ const EditableDemoSection = connectEditableSectionApi({
 
     var self = this;
 
+    /**
+     * fix bug 
+     * 文件上传后，新增项带有文件
+     */
+    itemDataModel.fileUpload.fileList = [];
+
 
 
     // 新增

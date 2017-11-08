@@ -143,6 +143,12 @@ const WasteWaterTreatment = connectEditableSectionApi({
       filePath = downloadUrl + file.response.filePath
     }
 
+    /**
+     * fix bug 
+     * 文件上传后，新增项带有文件
+     */
+    itemDataModel.standingBookURL.fileList = [];
+
 
     const record_for_save = {
       ...record,
