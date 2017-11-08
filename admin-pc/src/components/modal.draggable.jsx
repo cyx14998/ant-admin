@@ -58,7 +58,11 @@ class DraggableModal extends React.Component {
       </div>
     )
 
-    ReactDOM.render(modal, this.node);
+    if (visible) {
+      ReactDOM.render(modal, this.node);
+    } else {
+      ReactDOM.unmountComponentAtNode(this.node);
+    }
   }
 
   render() {

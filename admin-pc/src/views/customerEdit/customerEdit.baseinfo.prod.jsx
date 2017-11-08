@@ -23,6 +23,7 @@ const columns = [{
 }, {
   title: '设计年产量',
   dataIndex: 'designAnnualOutput',
+  validateType: 'number'
 }, {
   title: '操作',
   dataIndex: 'operation',

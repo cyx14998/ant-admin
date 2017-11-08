@@ -35,12 +35,14 @@ class EditableCell extends Component {
       tableId,
       dataIndex,
       disabled,
+      inputType,
       value,
       onCellChange
     } = this.props;
 
     return (
       <Input
+        type={inputType || 'text'}
         disabled={disabled}
         value={value}
         onChange={(e) => onCellChange(tableId, dataIndex, e.target.value)} />
