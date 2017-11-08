@@ -181,7 +181,7 @@ class EditableSection extends Component {
       MyToast('删除成功');
 
       setTimeout(() => {
-        this.getDataSource();
+        this.getDataSource({});
       }, 500);
     }).catch(err => {
       MyToast('接口调用失败');
@@ -210,7 +210,7 @@ class EditableSection extends Component {
       // 新增刷新，为了获取 tableId
       if (record.tableId === '') {
         setTimeout(() => {
-          this.getDataSource();
+          this.getDataSource({});
         }, 500);
       }      
     }).catch(err => {

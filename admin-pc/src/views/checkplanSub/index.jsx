@@ -52,7 +52,7 @@ const columns = [{
 }, {
     title: '操作',
     key: 'action',
-    width: 120,    
+    width: 120,
 }];
 
 const memberData = [{
@@ -79,7 +79,7 @@ const memberData = [{
 }, {
     title: '操作',
     dataIndex: 'operation',
-    width: 60,    
+    width: 60,
 }];
 
 const customersData = [{
@@ -166,7 +166,7 @@ class CustomerCheckPlanSub extends React.Component {
             </div>
         );
 
-        memberData[5].render =  (text, record) => (
+        memberData[5].render = (text, record) => (
             <a href="#" title="选择" onClick={this.selectPerformer.bind(this, record.tableId)} ><Icon type="check" className="yzy-icon" /></a>
         )
     }
@@ -295,6 +295,9 @@ class CustomerCheckPlanSub extends React.Component {
             MyToast("添加成功");
             this.getData({ inspectionPlanMstId: checkplanId });
             this.getCustomerList();
+            this.setState({
+                SubCusSelectedRowKeysArr: []
+            })
         }).catch(err => {
             console.log(err);
             MyToast("添加失败")
@@ -509,7 +512,6 @@ class CustomerCheckPlanSub extends React.Component {
                             width='70%'
                             visible={this.state.customerListModalVisible}
                             onCancel={() => this.setState({ customerListModalVisible: false })}
-                            onOk={this.customerListModalOk.bind(this)}
                             className='modal'
                         >
                             <Table
@@ -523,6 +525,9 @@ class CustomerCheckPlanSub extends React.Component {
                                     }
                                 }}
                             />
+                            <div className="yzy-block-center">
+                                <Button type="primary" style={{ padding: '0 40px', margin: '20px 0' }} onClick={this.customerListModalOk.bind(this)}>确定</Button>
+                            </div>
                         </DraggableModal>
                         {/* 顶部新增-----全部 */}
                         <Popconfirm title="确定新增全部" onConfirm={this.addAll.bind(this)}>

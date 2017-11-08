@@ -234,6 +234,7 @@ class EditableTable extends Component {
           /**
            *  编辑/删除/新页面查看
            *  @hasModal  模态框查看
+           *  弃用
            */
           if ((text === undefined) && (hasModal === true)) {
             return (
