@@ -102,26 +102,8 @@
 * validate
   - /node_modules/rc-form/lit/utils '请输入正确信息', 
 
-## 遗留问题
-* 动态 
-  - 边界噪声 [true]
-    - 加一个字段(边界噪声id)数据来自于编辑页的边界噪声列表(getWasteSolidList    uWasteSolidList.uhtm)
-
-  - 固体废物 [true]
-    - 加一个字段(固体废物id)数据来自于编辑页的固体废物列表接口(getBoundaryNoiseList  uBoundaryNoiseList.uhtm)
-
-  - 废水和废气 []
-    - 采用模态框另加详情接口，或者promise方法直接获取对应id
-    
-  - 废气基本情况 []
-    - 废气排放因子 的新增会提示请选择废气排放记录，应该是接口问题。
-* 编辑 
-  - 废水污染物基本情况 []
-    - 废水治理(处理方法id),该字段来自于处理方法列表接口(ApproachList   uApproachList.uhtm)
-
-  - 现场检查、监管信息 [true]
-    - 获取接口错误，原因还未排查，以前是好的。
-  - 检查记录 [true]
-    - 增删改查接口未对接！
-
-* 样式问题，所有新增时间的type应该更改
+## editable.table
+* hoc
+* section
+* table
+* cell

@@ -131,6 +131,12 @@ const WasteWaterMonitoringRecord = connectEditableSectionApi({
       filePath = downloadUrl + file.response.filePath
     }
 
+    /**
+     * fix bug 
+     * 文件上传后，新增项带有文件
+     */
+    itemDataModel.monitoringReportURL.fileList = [];
+
 
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
