@@ -20,15 +20,18 @@ const columns = [{
 }, {
     title: '用水总量',
     dataIndex: 'totalWaterConsumption',
+    validateType: 'number',
 }, {
     title: '重复用水量',
     dataIndex: 'repeatedWaterConsumption',
+    validateType: 'number',
 }, {
     title: '用水来源',
     dataIndex: 'waterSource',
 }, {
     title: '用电量',
     dataIndex: 'electricityConsumption',
+    validateType: 'number',
 }, {
     title: '操作',
     dataIndex: 'operation',
@@ -69,7 +72,7 @@ export const CustomerEditDynamicinfoWater = connectEditableSectionApi({
             var cusId = getLocQueryByLabel('id');
             if (!cusId) return;
 
-            getWaterDynamicInfoList({customerMonthDclarationId: dynamicId}).then(res => {
+            getWaterDynamicInfoList({ customerMonthDclarationId: dynamicId }).then(res => {
                 console.log('Waterlist res', res)
                 if (res.data.result !== 'success') {
                     console.log(res.data.info)
@@ -95,7 +98,7 @@ export const CustomerEditDynamicinfoWater = connectEditableSectionApi({
         if (record.tableId === '') {
             // 新增      
             return new Promise((resolve, reject) => {
-                getWaterDynamicInfoAdd({...record,customerMonthDclarationId: dynamicId}).then(res => {
+                getWaterDynamicInfoAdd({ ...record, customerMonthDclarationId: dynamicId }).then(res => {
                     console.log('AddWater res', res);
                     if (res.data.result !== 'success') {
                         resolve({
@@ -114,7 +117,7 @@ export const CustomerEditDynamicinfoWater = connectEditableSectionApi({
         } else {
             // 编辑
             return new Promise((resolve, reject) => {
-                getWaterDynamicInfoEdit({...record,customerMonthDclarationId: dynamicId}).then(res => {
+                getWaterDynamicInfoEdit({ ...record, customerMonthDclarationId: dynamicId }).then(res => {
                     console.log('AddWater res', res);
                     if (res.data.result !== 'success') {
                         resolve({

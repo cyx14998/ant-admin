@@ -48,6 +48,7 @@ const dynamicId = getLocQueryByLabel("dynamicId");
 const columns = [{
   title: '排放量',
   dataIndex: 'emissionAmount',
+  validateType: 'number',
 }, {
   title: '排放去向',
   dataIndex: 'emissionDestination',

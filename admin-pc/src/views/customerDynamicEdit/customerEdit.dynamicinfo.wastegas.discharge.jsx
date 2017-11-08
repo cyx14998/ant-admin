@@ -158,7 +158,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="废水排放口">
 									{getFieldDecorator('wasteGasDischargePortId', {
 										initialValue: this.state.dischargePortItem,
-										rules: [{ required: true,message: '请选择废水排放口' },
+										rules: [{ required: true, message: '请选择废水排放口' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -178,8 +178,8 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="实测排放量">
 									{getFieldDecorator('measuredExhaustVolume', {
 										initialValue: this.state.data.measuredExhaustVolume ? this.state.data.measuredExhaustVolume + '' : '',
-										rules: [{ required: true ,message: '请输入实测排放量'},
-										{/* { pattern: /^[0-9]*$/ } */ }
+										rules: [{ required: true, message: '请输入实测排放量' },
+										{ pattern: /^[0-9]+\.{0,1}[0-9]{0,6}$/, message: '数字格式' }
 										],
 									})(
 										<Input placeholder="实测排放量" />
@@ -190,7 +190,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="排放时间">
 									{getFieldDecorator('emissionTime', {
 										initialValue: this.state.data.emissionTime ? this.state.data.emissionTime + '' : '',
-										rules: [{ required: true,message: '请选择排放时间' },
+										rules: [{ required: true, message: '请选择排放时间' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -204,8 +204,8 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="废气排放量">
 									{getFieldDecorator('exhaustEmission', {
 										initialValue: this.state.data.exhaustEmission ? this.state.data.exhaustEmission + '' : '',
-										rules: [{ required: true,message: '请输入废气排放量' },
-										{/* { pattern: /^[0-9]*$/ } */ }
+										rules: [{ required: true, message: '请输入废气排放量' },
+										{ pattern: /^[0-9]+\.{0,1}[0-9]{0,6}$/, message: '数字格式' }
 										],
 									})(
 										<Input placeholder="废气排放量" />
@@ -216,7 +216,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="数据来源">
 									{getFieldDecorator('dataSources', {
 										initialValue: this.state.data.dataSources,
-										rules: [{ required: true,message: '请输入数据来源' },
+										rules: [{ required: true, message: '请输入数据来源' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -228,7 +228,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="燃料">
 									{getFieldDecorator('fuel', {
 										initialValue: this.state.data.fuel ? this.state.data.fuel + '' : '',
-										rules: [{ required: true,message: '请输入燃料' },
+										rules: [{ required: true, message: '请输入燃料' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
@@ -242,8 +242,8 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="林格曼黑度">
 									{getFieldDecorator('ringermanBlackness', {
 										initialValue: this.state.data.ringermanBlackness ? this.state.data.ringermanBlackness + '' : '',
-										rules: [{ required: true,message: '请输入林格曼黑度' },
-										{/* { pattern: /^[0-9]*$/ } */ }
+										rules: [{ required: true, message: '请输入林格曼黑度' },
+										{ pattern: /^[0-9]+\.{0,1}[0-9]{0,6}$/, message: '数字格式' }
 										],
 									})(
 										<Input placeholder="林格曼黑度" />
@@ -254,7 +254,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="废气类型">
 									{getFieldDecorator('exhaustGasType', {
 										initialValue: this.state.data.exhaustGasType,
-										rules: [{ required: true,message: '请输入废气类型' },
+										rules: [{ required: true, message: '请输入废气类型' },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(

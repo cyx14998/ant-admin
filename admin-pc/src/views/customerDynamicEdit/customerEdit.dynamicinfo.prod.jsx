@@ -23,6 +23,7 @@ const columns = [{
 }, {
   title: '产量',
   dataIndex: 'theYield',
+  validateType: 'number',
 }, {
   title: '操作',
   dataIndex: 'operation',
@@ -54,10 +55,10 @@ export const CustomerEditDynamicinfoProd = connectEditableSectionApi({
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve, reject) => {
-       var cusId = getLocQueryByLabel('id');
+      var cusId = getLocQueryByLabel('id');
       if (!cusId) return;
       // 获取产品信息列表
-      console.log("dynamicId",dynamicId)
+      console.log("dynamicId", dynamicId)
       getProductDynamicInfoList({ customerMonthDclarationId: dynamicId }).then(res => {
         console.log('prolist res', res)
         if (res.data.result !== 'success') {
@@ -105,7 +106,7 @@ export const CustomerEditDynamicinfoProd = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        getProductDynamicInfoEdit({record,customerMonthDclarationId: dynamicId}).then(res => {
+        getProductDynamicInfoEdit({ ...record, customerMonthDclarationId: dynamicId }).then(res => {
           console.log('AddProd res', res);
           if (res.data.result !== 'success') {
             resolve({

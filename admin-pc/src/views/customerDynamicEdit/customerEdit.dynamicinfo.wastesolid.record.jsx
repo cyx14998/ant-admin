@@ -4,7 +4,7 @@
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getWasteSolidRecordList,
   getWasteSolidRecordAdd,
   getWasteSolidRecordUpdate,
@@ -35,29 +35,36 @@ const columns = [{
   title: '主要污染物',
   dataIndex: 'mainPollutants',
 }, {
-  title: '产生量(顿)',
+  title: '产生量(吨)',
   dataIndex: 'productionQuantity',
+  validateType: 'number',
 }, {
   title: '综合利用量',
   dataIndex: 'comprehensiveUtilization',
+  validateType: 'number',
 }, {
   title: '处置去向',
   dataIndex: 'disposeWhereabouts',
 }, {
   title: '处置量-符合环保标准的量(吨)',
   dataIndex: 'disposalCapacityLawful',
+  validateType: 'number',
 }, {
   title: '贮存量-符合环保标准的量(吨)',
   dataIndex: 'storageCapacityLawful',
+  validateType: 'number',
 }, {
   title: '处置量-不符合环保标准的量(吨)',
   dataIndex: 'disposalCapacityUnLawful',
+  validateType: 'number',
 }, {
   title: '贮存量-不符合环保标准的量(吨)',
   dataIndex: 'storageCapacityUnLawful',
+  validateType: 'number',
 }, {
   title: '排放量-不符合环保标准的量(吨)',
   dataIndex: 'emissionAmount',
+  validateType: 'number',
 }, {
   title: '操作',
   dataIndex: 'operation',
@@ -88,9 +95,9 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '固体废物产生及处置情况',
   columns: columns,
   apiLoader: function () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
-      if(!dynamicId) return;
+      if (!dynamicId) return;
 
       /**
        * 固体废物可选项
@@ -103,15 +110,15 @@ const WasteWaterDemoSection = connectEditableSectionApi({
 
         var wasteSolidList = res.data.wasteSolidList;
 
-        var wasteSolidListOptions = convertObjectLabel(wasteSolidList, 'tableId', 'theName'); 
+        var wasteSolidListOptions = convertObjectLabel(wasteSolidList, 'tableId', 'theName');
         return wasteSolidListOptions;
       }).then(wasteSolidListOptions => {
         console.log('wasteSolidListOptions-----------', wasteSolidListOptions);
         itemDataModel.wasteSolidId.options = wasteSolidListOptions;
 
-        getWasteSolidRecordList({customerMonthDclarationId: dynamicId}).then(res => {
+        getWasteSolidRecordList({ customerMonthDclarationId: dynamicId }).then(res => {
           console.log('getWasteSolidRecordList res ---', res);
-          
+
           if (res.data.result !== 'success') {
             resolve({
               code: -1,
