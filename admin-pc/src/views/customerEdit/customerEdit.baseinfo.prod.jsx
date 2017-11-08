@@ -61,7 +61,8 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       if (!cusId) return;
 
       getProductBaseInfoList({}).then(res => {
-        console.log('prolist res',res)        
+        console.log('prolist res--------',res);
+
         if (res.data.result !== 'success') {
           resolve({
             code: -1,
@@ -85,7 +86,8 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       // 新增      
       return new Promise((resolve, reject) => {
         getProductBaseInfoAdd(record).then(res => {
-          console.log('AddProd res', res);
+          console.log('AddProd res-------', res);
+
           if (res.data.result !== 'success') {
             resolve({
               code: -1,
@@ -104,7 +106,8 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
       // 编辑
       return new Promise((resolve, reject) => {
         getProductBaseInfoEdit(record).then(res => {
-          console.log('AddProd res', res);
+          console.log('AddProd res----------', res);
+
           if (res.data.result !== 'success') {
             resolve({
               code: -1,
@@ -122,10 +125,10 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
     }
   },
   apiDel: function (tableId) {
-    console.log(tableId)
     return new Promise((resolve, reject) => {
       getProductBaseInfoDelete(tableId).then(res => {
-        console.log('DeleteProd res', res);
+        console.log('DeleteProd res-----------', res);
+
         if (res.data.result !== 'success') {
             resolve({
               code: -1,

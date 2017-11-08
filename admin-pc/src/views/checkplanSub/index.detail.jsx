@@ -54,11 +54,10 @@ class CheckplanSubDetail extends React.Component {
     componentWillReceiveProps(nextProps) {
         var self = this;
         if (self.state.recordEdit !== nextProps.recordEdit) {
-            console.log('编辑')
             self.setState({
                 recordEdit: nextProps.recordEdit
             })
-            console.log('1-------------', nextProps.recordEdit);
+            console.log('will-------------', nextProps.recordEdit);
             self.resetFile();
 
         }
@@ -66,7 +65,7 @@ class CheckplanSubDetail extends React.Component {
     }
     componentDidMount() {
         var self = this;
-        console.log('2-------------------', self.props.recordEdit);
+        console.log('did-------------------', self.props.recordEdit);
         self.setState({
             recordEdit: self.props.recordEdit
         });
@@ -76,7 +75,8 @@ class CheckplanSubDetail extends React.Component {
     resetFile() {
         var self = this;
         var recordEdit = self.state.recordEdit;
-        console.log(recordEdit)
+        console.log('recordEdit详情-----------',recordEdit)
+
         if (recordEdit.feedbackSheetURL) {
             self.setState({
                 prodImgUrl: recordEdit.feedbackSheetURL
@@ -105,12 +105,12 @@ class CheckplanSubDetail extends React.Component {
             });
         }
     }
+
     render() {
         var recordEdit = this.state.recordEdit;
         var prodImgUrl = this.state.prodImgUrl;
         var positionImgUrl = this.state.positionImgUrl;
         var reportUrl = this.state.reportUrl
-        console.log('prodImgUrl----------',prodImgUrl)
         return (
             <div className="yzy-tab-content-item-wrap">
                 <div className="baseinfo-section">

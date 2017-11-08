@@ -16,6 +16,7 @@ const rcsearchformData = {
     type: 'input',
     label: '批号',
     name: 'keyword',
+    placeholder: '请输入批号',
   },
   ]
 };
@@ -24,7 +25,6 @@ const rcsearchformData = {
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
 
-// import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
 
 import './index.less';
 
@@ -95,44 +95,19 @@ const itemDataModel = {
   },
   theRemarks: '',
 };
-//搜索功能未实现
-// function getData(params) {
-//   //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
-//   return new Promise((resolve, reject) => {
-//     getCheckplanMainlist(params).then(res => {
-//       console.log('getCheckplanMainlist res ---', res);
-
-//       if (res.data.result !== 'success') {
-//         resolve({
-//           code: -1,
-//           info: res.data.info,
-//         })
-//         return;
-//       }
-
-//       var data = res.data.inspectionPlanMstList;
-//       resolve({
-//         code: 0,
-//         data,
-//       })
-//     }).catch(err => {
-//       reject(err)
-//     })
-//   })
-// }
-
 /**
  * 可编辑模块
  */
 const EditableDemoSection = connectEditableSectionApi({
   secTitle: '',
   columns: columns,
-  apiLoader: function ({apiListItemId}) {
-    console.log('apiListItemId-----', apiListItemId)
+
+  apiLoader: function ({ apiListItemId }) {
+    console.log('apiListItemId---------', apiListItemId);
+
     return new Promise((resolve, reject) => {
-      // var keyword = this.state.keyword ? this.state.keyword : '';
-      getCheckplanMainlist({keyword: apiListItemId}).then(res => {
-        console.log('getCheckplanMainlist res ---', res);
+      getCheckplanMainlist({ keyword: apiListItemId }).then(res => {
+        console.log('getCheckplanMainlist res ------------', res);
 
         if (res.data.result !== 'success') {
           resolve({
@@ -143,7 +118,6 @@ const EditableDemoSection = connectEditableSectionApi({
         }
 
         var data = res.data.inspectionPlanMstList;
-
         data = data.map(item => {
           item.serialNumber = {
             cellType: 'input',
@@ -172,8 +146,10 @@ const EditableDemoSection = connectEditableSectionApi({
       })
     })
   },
+
   apiSave: function (record) {
-    console.log('apiSave record ----', record);
+    console.log('apiSave record ---------------', record);
+
     var self = this;
     var _record_for_save = {
       ...record,
@@ -224,8 +200,9 @@ const EditableDemoSection = connectEditableSectionApi({
       });
     }
   },
+
   apiDel: function (tableId) {
-    console.log(`apiDel ${tableId}`);
+    console.log(`apiDel------------ ${tableId}`);
 
     return new Promise((resolve, reject) => {
       getCheckplanMainDelete({ tableId }).then(res => {
@@ -246,7 +223,7 @@ const EditableDemoSection = connectEditableSectionApi({
     });
   },
 
-  // 添加新页面查看功能
+  // 跳转新页面
   checkInNewpage: function (tableId) {
     if (tableId === '') return;
 
@@ -267,7 +244,8 @@ class CustomerCheckPlan extends Component {
     };
     this.handleFormSearch.bind(this);
   }
-  // 搜索功能未实现
+
+  // 搜索
   handleFormSearch(values) {
     if (!values.keyword) return;
     console.log('handleFormSearch--------', values)

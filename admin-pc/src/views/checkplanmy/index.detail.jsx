@@ -63,7 +63,6 @@ class CheckplanDetail extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         var self = this;
-        // self.beforeUpload();
         self.setState({
             prodFileList: [],
             positionFileList: [], //检查单图
