@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // 规制目录入口
 const glob = require('glob');
@@ -128,7 +129,13 @@ const webpackConfig = {
 	  // 分离entry.vendors
 	  new webpack.optimize.CommonsChunkPlugin({
 	    name: 'vendors',
-	  })
+		}),
+			
+		 // copy koa
+	  new CopyWebpackPlugin([{
+			from: 'src/config',
+			to: 'config/'
+		}]),
 	],
 
 	resolve: {

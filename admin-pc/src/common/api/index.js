@@ -7,7 +7,8 @@ import {
   getLocQueryByLabel
 } from '../utils';
 
-axios.defaults.baseURL =BaseConfig.apiPath+'/ythb';
+axios.defaults.baseURL = BaseConfig.apiPath; 
+// axios.defaults.baseURL = 'http://106.14.199.230:8080/ythb';
 axios.defaults.timeout = 1000 * 5;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
@@ -15,9 +16,9 @@ axios.defaults.headers.get['Content-Type'] = 'application/json';
 
 export const apiVer = '20171018'; // '20171018';
 
-export function getToken () {
+export function getToken() {
   var token = localStorage.getItem('token');
-  
+
   if (!token) {
     alert('登陆过期，请登陆后再来查看');
 
@@ -46,13 +47,3 @@ export function getCustomerId() {
 
 
 export default axios;
-
-
-
-
-
-
-
-
-
-
