@@ -65,17 +65,6 @@ const columns = [{
   width: 120
 }];
 
-/**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
-
 const InnerComponent = ({
   editId,
   closeModal,

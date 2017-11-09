@@ -45,21 +45,22 @@ const dynamicId = getLocQueryByLabel("dynamicId");
 /**
  * table head
  */
-const columns = [{
-  title: '排放量',
-  dataIndex: 'emissionAmount',
-  validateType: 'number',
-}, {
-  title: '排放去向',
-  dataIndex: 'emissionDestination',
-}, {
-  title: '排放口',
-  dataIndex: 'portsNumber',
-}, {
-  title: '操作',
-  dataIndex: 'operation',
-  width: 120
-}];
+const columns = [
+  {
+    title: '废水排放口',
+    dataIndex: 'wasteWaterDischargePortId',
+  }, {
+    title: '排放量',
+    dataIndex: 'emissionAmount',
+    validateType: 'number',
+  }, {
+    title: '排放去向',
+    dataIndex: 'emissionDestination',
+  }, {
+    title: '操作',
+    dataIndex: 'operation',
+    width: 120
+  }];
 
 
 /**
@@ -68,7 +69,7 @@ const columns = [{
 const itemDataModel = {
   emissionAmount: '',
   emissionDestination: '',
-  portsNumber: {
+  wasteWaterDischargePortId: {
     value: '',
     options: []
   }
@@ -95,7 +96,7 @@ const WasteWaterDischargeRecordBase = connectEeditableSectionApi({
 
         return wasteWaterDischargePortListOptions;
       }).then(wasteWaterDischargePortListOptions => {
-        itemDataModel.portsNumber.options = wasteWaterDischargePortListOptions;
+        itemDataModel.wasteWaterDischargePortId.options = wasteWaterDischargePortListOptions;
         //获取废水列表
         getWastewaterDischargeRecordList({
           customerMonthDclarationId: dynamicId,
@@ -113,10 +114,11 @@ const WasteWaterDischargeRecordBase = connectEeditableSectionApi({
           var data = res.data.wasteWaterDischargeRecordList;
 
           data = data.map(item => {
+            console.log('-----------------', item);
             return {
               ...item,
-              portsNumber: {
-                value: item.portsNumber,
+              wasteWaterDischargePortId: {
+                value: item.wasteWaterDischargePort.tableId + '',
                 disabled: true,
                 options: wasteWaterDischargePortListOptions
               }
@@ -143,7 +145,7 @@ const WasteWaterDischargeRecordBase = connectEeditableSectionApi({
         getWastewaterDischargeRecordAdd({
           ...record,
           customerMonthDclarationId: dynamicId,
-          wasteWaterDischargePortId: record.portsNumber.value,
+          wasteWaterDischargePortId: record.wasteWaterDischargePortId.value,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({
@@ -166,7 +168,7 @@ const WasteWaterDischargeRecordBase = connectEeditableSectionApi({
         getWastewaterDischargeRecordUpdate({
           ...record,
           customerMonthDclarationId: dynamicId,
-          wasteWaterDischargePortId: record.portsNumber.value,
+          wasteWaterDischargePortId: record.wasteWaterDischargePortId.value,
         }).then(res => {
           if (res.data.result !== 'success') {
             resolve({

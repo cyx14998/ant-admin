@@ -5,8 +5,8 @@ import React, { Component } from 'react';
 import {
   Button,
   Icon,
-  Row, 
-  Col, 
+  Row,
+  Col,
   Input,
   Select,
   Form,
@@ -36,7 +36,7 @@ class UneditableTable extends Component {
   renderColumns() {
     if (this.formatedColumns) return this.formatedColumns;
 
-    let { 
+    let {
       columns,
       onDelete,
       onEdit,
@@ -44,18 +44,18 @@ class UneditableTable extends Component {
     } = this.props;
 
     let len = columns.length,
-        i = 0;
+      i = 0;
 
     for (i; i < len; i++) {
       /**
        * 居然出现了闭包
        */
-      (function(i) {
+      (function (i) {
         columns[i].render = (text, record) => {
 
           // 文件下载
           if (columns[i].type === 'downloadfile') {
-            return <a target="_blank" href={text} download="图片">点击下载</a>
+            return < a target="_blank" href={text} download="图片" > {text?'点击下载':'暂无'}</a >
           }
 
           // 如果有值，直接渲染
@@ -81,7 +81,7 @@ class UneditableTable extends Component {
           if (text === undefined) {
             return (
               <div>
-                <a title="编辑" style={{marginRight: '10px'}} onClick={() => onEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
+                <a title="编辑" style={{ marginRight: '10px' }} onClick={() => onEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
                 <Popconfirm title="确定要删除吗？" onConfirm={() => onDelete(record.tableId)}>
                   <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
                 </Popconfirm>

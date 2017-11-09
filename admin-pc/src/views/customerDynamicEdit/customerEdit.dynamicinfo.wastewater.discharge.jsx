@@ -102,7 +102,7 @@ class WasteGasDischargeDetail extends React.Component {
 				tableId = this.state.tableId;
 			}
 			//编辑
-			if (this.state.tableId) {
+			if (tableId) {
 				getWastewaterDischargeRecordUpdate({
 					...values,
 					tableId: tableId,

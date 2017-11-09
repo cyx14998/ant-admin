@@ -561,7 +561,7 @@ class CustomerCheckPlanSub extends React.Component {
                         {/* --------------------------- 顶部新增 -------------------------- */}
                         <DraggableModal
                             title="子表数据新增，选择企业"
-                            width='70%'
+                            width='90%'
                             visible={this.state.customerListModalVisible}
                             onCancel={() => this.setState({ customerListModalVisible: false })}
                             className='modal'
@@ -590,7 +590,7 @@ class CustomerCheckPlanSub extends React.Component {
                         {/* --------------------------- 批量分配任务 -------------------------- */}
                         <Button type="primary" onClick={this.performerbtn.bind(this)} style={{ marginLeft: 8 }}>批量分配任务</Button>
 
-                        {/* --------------------------- 执行者管理----批量-------------------------- */}
+                        {/* --------------------------- 执行者管理--批量-------------------------- */}
                         <DraggableModal
                             title="执行者管理"
                             width='70%'

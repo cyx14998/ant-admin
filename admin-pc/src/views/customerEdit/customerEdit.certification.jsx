@@ -4,7 +4,7 @@
 
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getCertificationList,
   getCertificationAdd,
   getCertificationUpdate,
@@ -13,6 +13,8 @@ import {
 
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
+
+const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 
 /**
  * table head
@@ -42,24 +44,16 @@ const columns = [{
 }];
 
 /**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
-
-/**
  * 新数据默认值
  */
 const itemDataModel = {
   theName: '',
   releaseDatetime: moment(new Date()).format(dateFormat),
   expiryDatetime: moment(new Date()).format(dateFormat),
-  filePath: '',
+  filePath: {
+    cellType: 'fileUpload',
+    fileList: []
+  },
   approvalUnit: '',
   theRemarks: '',
 };
@@ -68,7 +62,7 @@ const WasteWaterDemoSection = connectEditableSectionApi({
   secTitle: '企业证照材料基本情况',
   columns: columns,
   apiLoader: function () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       //获取数据
       getCertificationList({}).then(res => {
         console.log('getCertificationList res ---', res);
@@ -81,7 +75,17 @@ const WasteWaterDemoSection = connectEditableSectionApi({
           return;
         }
 
-        var data = res.data.customerCertificationList;
+        var data = res.data.customerCertificationList.map(item => {
+          let fileList = item.filePath ? [{ uid: -1, name: '文件', url: item.filePath }] : [];
+
+          return {
+            ...item,
+            filePath: {
+              cellType: 'fileUpload',
+              fileList
+            }
+          }
+        });
         resolve({
           code: 0,
           data,
@@ -96,13 +100,39 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     console.log('apiSave record ----', record);
     var self = this;
 
+    /**
+     * 处理fileList
+     */
+    var file = record.filePath.fileList[0];
+
+    var filePath = '';
+
+    if (file && file.url) {
+      filePath = file.url;
+    }
+
+    if (file && file.response) {
+      filePath = downloadUrl + file.response.filePath
+    }
+
+    /**
+     * fix bug 
+     * 文件上传后，新增项带有文件
+     */
+    itemDataModel.filePath.fileList = [];
+
+    const record_for_save = {
+      ...record,
+      filePath: filePath
+    }
+console.log(record_for_save)
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getCertificationAdd({
-          ...record,
+          ...record_for_save,
         }).then(res => {
-          console.log("getCertificationAdd res",res)
+          console.log("getCertificationAdd res", res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
@@ -121,11 +151,10 @@ const WasteWaterDemoSection = connectEditableSectionApi({
     } else {
       // 编辑
       return new Promise((resolve, reject) => {
-        console.log(record)
         getCertificationUpdate({
-          ...record,
+          ...record_for_save,
         }).then(res => {
-          console.log("getCertificationUpdate res",res)
+          console.log("getCertificationUpdate res", res)
           if (res.data.result !== 'success') {
             resolve({
               code: 1,
