@@ -17,14 +17,43 @@ import {
 } from 'antd';
 const FormItem = Form.Item;
 
+import {
+    getMemberList,
+    getCheckplanSublist,
+    getCheckplanDetail,
+    getCheckplanSubDelete,
+    getCheckplanSubDeleteMulti,
+    getCheckplanSubPerformer,
+    getCheckplanSubPerformerMulti,
+    getCheckplanSubAddMulti,
+    getCheckplanSubAddAll,
+    getCustomerList,
+} from '../../common/api/api.checkplan';
+
 import DraggableModal from '../../components/modal.draggable';
 
 import RcSearchForm from '../../components/rcsearchform';
-import { MyToast } from '../../common/utils';
 
+import { MyToast, getLocQueryByLabel } from '../../common/utils';
+
+import CheckplanSubDetail from './index.detail'
+
+// 头部搜索数据
+const rcsearchformData = {
+    colspan: 2,
+    fields: [{
+        type: 'input',
+        label: '企业名称',
+        name: 'keyword',
+        placeholder: '请输入企业名称',
+    }]
+}
 
 const checkplanId = getLocQueryByLabel('checkplanId');
-
+/** 
+ *  表格头部
+*/
+/**-------总列表表头-------- */
 const columns = [{
     title: '序号',
     dataIndex: 'num',
@@ -55,6 +84,33 @@ const columns = [{
     width: 120,
 }];
 
+/**-------企业列表表头-》添加-------- */
+const customersData = [{
+    title: '序号',
+    dataIndex: 'num',
+    render: (text, record, index) => (index + 1)
+}, {
+    title: '企业名称',
+    dataIndex: 'customerName',
+}, {
+    title: '统一社会信用代码',
+    dataIndex: 'uniformSocialCreditCode',
+}, {
+    title: '单位地址',
+    dataIndex: 'unitAddress',
+}, {
+    title: '传真',
+    dataIndex: 'fax',
+}, {
+    title: '联系人',
+    dataIndex: 'contactPerson',
+    key: 'contactPerson',
+}, {
+    title: '电话',
+    dataIndex: 'phoneNumber',
+},];
+
+/**-------执行者表头-------- */
 const memberData = [{
     title: '序号',
     dataIndex: 'num',
@@ -81,58 +137,6 @@ const memberData = [{
     dataIndex: 'operation',
     width: 60,
 }];
-
-const customersData = [{
-    title: '序号',
-    dataIndex: 'num',
-    render: (text, record, index) => (index + 1)
-}, {
-    title: '企业名称',
-    dataIndex: 'customerName',
-}, {
-    title: '统一社会信用代码',
-    dataIndex: 'uniformSocialCreditCode',
-}, {
-    title: '单位地址',
-    dataIndex: 'unitAddress',
-}, {
-    title: '传真',
-    dataIndex: 'fax',
-}, {
-    title: '联系人',
-    dataIndex: 'contactPerson',
-    key: 'contactPerson',
-}, {
-    title: '电话',
-    dataIndex: 'phoneNumber',
-},];
-
-// RcSearchForm datablob
-const rcsearchformData = {
-    colspan: 2,
-    fields: [{
-        type: 'input',
-        label: '企业名称',
-        name: 'keyword',
-    }]
-}
-
-import { getLocQueryByLabel } from '../../common/utils';
-
-import {
-    getMemberList,
-    getCheckplanSublist,
-    getCheckplanDetail,
-    getCheckplanSubDelete,
-    getCheckplanSubDeleteMulti,
-    getCheckplanSubPerformer,
-    getCheckplanSubPerformerMulti,
-    getCheckplanSubAddMulti,
-    getCheckplanSubAddAll,
-    getCustomerList,
-} from '../../common/api/api.checkplan';
-import CheckplanSubDetail from './index.detail'
-
 //列表页面
 class CustomerCheckPlanSub extends React.Component {
     constructor(props) {
@@ -155,7 +159,7 @@ class CustomerCheckPlanSub extends React.Component {
 
         this.getData = this.getData.bind(this);
         this.getCustomerList = this.getCustomerList.bind(this);
-
+        //总表的operation
         columns[6].render = (text, record, index) => (
             <div>
                 <a title="查看" onClick={this.showTestModal.bind(this, record)}><Icon type="eye-o" className="yzy-icon" /></a>
@@ -166,6 +170,7 @@ class CustomerCheckPlanSub extends React.Component {
             </div>
         );
 
+        //执行者列表的operation
         memberData[5].render = (text, record) => (
             <a href="#" title="选择" onClick={this.selectPerformer.bind(this, record.tableId)} ><Icon type="check" className="yzy-icon" /></a>
         )
@@ -174,88 +179,107 @@ class CustomerCheckPlanSub extends React.Component {
     componentDidMount() {
         this.getData({ inspectionPlanMstId: checkplanId });
         this.getCustomerList();
-        //根据主表id获取子表基本信息
+
+        //获取子表基本信息(by 总表的单行id )
         getCheckplanDetail({ tableId: checkplanId }).then(res => {
-            console.log('getCheckplanDetail res ---', res);
+            console.log('getCheckplanDetail res -------', res);
+
             if (res.data.result !== 'success') {
-                MyToast(res.data.info)
+                MyToast(res.data.info || '接口失败')
                 return;
             }
+
             this.setState({
                 checkplanDetail: res.data.inspectionPlanMst
             })
+
+        }).catch(err => {
+            MyToast(err || '子表基本信息获取失败');
+        })
+
+        // 获取执行者列表
+        getMemberList({}).then(res => {
+            console.log('getMemberlist res --------', res);
+
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '接口失败')
+                return;
+            }
+
+            this.setState({
+                memberList: res.data.memberList,
+            });
+
         }).catch(err => {
             console.log(err)
-        })
-        // 获取人员列表
-        return new Promise((resolve, rejcet) => {
-            getMemberList({}).then(res => {
-                console.log('getMemberlist res ---', res);
-
-                if (res.data.result !== 'success') {
-                    console.log(res.data.info, )
-                    return;
-                }
-                this.setState({
-                    memberList: res.data.memberList,
-                });
-            }).catch(err => {
-                console.log(err)
-            })
+            MyToast(err || '执行者获取失败');
         })
     }
+
     //获取子表列表数据--封装
     getData(params) {
         //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
         getCheckplanSublist(params).then(res => {
-            console.log('getCheckplanSublist ---', res)
+            console.log('getCheckplanSublist --------', res)
+
             if (res.data.result !== 'success') {
-                alert(res.data.info || '接口失败')
+                MyToast(res.data.info || '接口失败')
                 return;
             }
+
             this.setState({
                 loading: false,
                 checkplanSubList: res.data.inspectionPlanDtlList
             })
+
         }).catch(err => {
-            alert(err || '接口失败')
+            MyToast(err || '子表获取失败');
         })
     }
-    //获取企业列表--封装    
+
+    //获取企业列表------封装    
     getCustomerList() {
-        console.log('获取企业列表');
         getCustomerList({ inspectionPlanMstId: checkplanId }).then(res => {
-            console.log('getCustomerList res ---', res);
+            console.log('getCustomerList res ---------', res);
 
             if (res.data.result !== 'success') {
                 console.log(res.data.info, )
                 return;
             }
+
             this.setState({
                 customerList: res.data.customerList,
             });
+
         }).catch(err => {
-            console.log(err)
+            MyToast(err || '企业列表接口失败');
         })
     }
+
     //头部搜索
     handleFormSearch(values) {
-        console.log('handleSearch ---------', values);
+        console.log('handleSearch -----------', values);
+
         this.getData({
             keyword: values.keyword,
             inspectionPlanMstId: checkplanId,
         });
     }
-    //列表删除btn
+
+    /** --------------------列表删除-------------------- */
+    //列表删除
     onEditDelete(text, record, index) {
         var self = this;
+
         //调用列表删除接口
         getCheckplanSubDelete({ tableId: record.tableId }).then(res => {
-            console.log('getCheckplanSubDelete ---', res)
+            console.log('getCheckplanSubDelete --------------', res);
+
             if (res.data.result !== 'success') {
-                alert(res.data.info || '接口失败')
+                MyToast(res.data.info || '接口失败');
                 return;
             }
+
             self.state.checkplanSubList.splice(index, 1);
             self.setState({
                 checkplanSubList: self.state.checkplanSubList
@@ -263,10 +287,39 @@ class CustomerCheckPlanSub extends React.Component {
             self.getCustomerList();
 
         }).catch(err => {
-            alert(err || '接口失败')
+            MyToast(err || '删除失败');
         })
     }
-    //列表单个添加btn
+    //列表删除（批量）
+    multiDelete() {
+        if (this.state.checkSubIdArr.length > 0) {
+            var param = this.state.checkSubIdArr.join(',');
+
+            getCheckplanSubDeleteMulti({ tableIdArr: param, inspectionPlanMstId: checkplanId }).then(res => {
+                console.log('批量删除 res-------', res);
+
+                if (res.data.result !== 'success') {
+                    MyToast(res.data.info || '接口失败');
+                    return;
+                }
+
+                MyToast('批量删除成功');
+                this.getData({ inspectionPlanMstId: checkplanId });
+                this.getCustomerList();
+                this.setState({
+                    checkSubIdArr: [],
+                });
+
+            }).catch(err => {
+                MyToast(err || '批量删除失败');
+            })
+
+        } else {
+            MyToast('请先选择要管理的数据');
+        }
+    }
+    /** --------------------列表新增-------------------- */
+    //列表新增--->控制Modal
     subAddbtn() {
         if (!this.state.customerList.length) {
             MyToast('暂无可添加数据')
@@ -276,60 +329,69 @@ class CustomerCheckPlanSub extends React.Component {
             })
         }
     }
-    //列表新增企业 -- 可批量  ->确定btn
+    //列表新增（批量）  
     customerListModalOk() {
         var customerIdArr = this.state.SubCusSelectedRowKeysArr.join(',');
         getCheckplanSubAddMulti({
-            inspectionPlanMstId: checkplanId,//主表Id
-            customerIdArr: customerIdArr, //企业Id数组
+            inspectionPlanMstId: checkplanId, //主表Id
+            customerIdArr: customerIdArr,  //企业Id数组
         }).then(res => {
+            console.log('getCheckplanSubAddMulti----------', res);
+
             this.setState({
                 customerListModalVisible: false,
             });
-            console.log(res)
 
             if (res.data.result !== 'success') {
-                MyToast(res.data.info)
+                MyToast(res.data.info || '接口失败');
                 return;
             }
+
             MyToast("添加成功");
+
             this.getData({ inspectionPlanMstId: checkplanId });
             this.getCustomerList();
             this.setState({
                 SubCusSelectedRowKeysArr: []
             })
+
         }).catch(err => {
-            console.log(err);
-            MyToast("添加失败")
+            MyToast(err || "添加失败")
         });
     }
-    //全部新增btn
+
+    //列表新增（全部）
     addAll() {
         if (!this.state.customerList.length) {
             MyToast('暂无可添加数据')
         } else {
             getCheckplanSubAddAll({ inspectionPlanMstId: checkplanId }).then(res => {
-                console.log('批量新增 res ---', res);
+                console.log('批量新增 res ----------', res);
+
                 if (res.data.result !== 'success') {
-                    MyToast(res.data.info)
+                    MyToast(res.data.info || '接口失败');
                     return;
                 }
                 MyToast('批量新增成功');
+
                 this.getData({ inspectionPlanMstId: checkplanId });
                 this.getCustomerList();
+
             }).catch(err => {
-                console.log(err)
+                MyToast(err || "添加失败")
             })
         }
     }
-    //列表单个执行者
+
+    /** --------------------执行者-------------------- */
+    //列表后----执行者id存储
     singlePerformSelect(tableId) {
         this.setState({
             multiModalVisible: true,
             checkSubId: tableId,
         })
     }
-    //执行者批量btn
+    //执行者批量控制-----btn
     performerbtn() {
         if (this.state.checkSubIdArr.length > 0) {
             this.setState({ multiModalVisible: true })
@@ -340,97 +402,85 @@ class CustomerCheckPlanSub extends React.Component {
     //Modal--批量分配执行人员 
     selectPerformer(tableId) {
         console.log('performerSelect = ', tableId);
+
         //单个选择
         if (this.state.checkSubId != '') {
             getCheckplanSubPerformer({ tableId: this.state.checkSubId, performerId: tableId }).then(res => {
                 console.log('perfomerSave res ---', res);
+
                 this.setState({
                     multiModalVisible: false,
                 });
+
                 if (res.data.result !== 'success') {
-                    MyToast(res.data.info)
+                    MyToast(res.data.info || '接口失败');
                     return;
                 }
+
                 MyToast('选择成功');
                 this.getData({ inspectionPlanMstId: checkplanId });
+
             }).catch(err => {
-                console.log(err)
-                MyToast('选择失败')
+                MyToast(err || "选择失败")
             })
+
             this.setState({
                 checkSubId: '',
             });
+
         } else if (this.state.checkSubIdArr.length > 0) {
             //批量选择
-            console.log(this.state.checkSubIdArr);
             var param = this.state.checkSubIdArr.join(',');
             getCheckplanSubPerformerMulti({ tableIdArr: param, performerId: tableId }).then(res => {
                 console.log('perfomerMultiSave res ---', res);
+
                 this.setState({
                     multiModalVisible: false,
                 });
+
                 if (res.data.result !== 'success') {
-                    MyToast(res.data.info)
+                    MyToast(res.data.info || '接口失败');
                     return;
                 }
                 MyToast('批量选择成功');
                 this.getData({ inspectionPlanMstId: checkplanId });
+
             }).catch(err => {
-                console.log(err)
-                MyToast('批量选择失败')
+                MyToast(err || "批量选择失败")
             })
+
         } else {
             MyToast('请选择数据')
         }
     }
-    //批量删除
-    multiDelete() {
-        if (this.state.checkSubIdArr.length > 0) {
-            var param = this.state.checkSubIdArr.join(',');
 
-            getCheckplanSubDeleteMulti({ tableIdArr: param, inspectionPlanMstId: checkplanId }).then(res => {
-                console.log('批量删除 res ---', res);
-                if (res.data.result !== 'success') {
-                    MyToast(res.data.info)
-                    return;
-                }
-                MyToast('批量删除成功');
-                this.getData({ inspectionPlanMstId: checkplanId });
-                this.getCustomerList();
-                this.setState({
-                    checkSubIdArr: [],
-                });
-            }).catch(err => {
-                console.log(err)
-                MyToast('批量删除失败')
-            })
-        } else {
-            MyToast('请先选择要管理的数据');
-        }
-    }
-    //编辑Modal确定取消
+    /** --------------------列表编辑-------------------- */
+    //隐藏编辑Modal
     editModalCancel() {
         this.setState({ editModalVisible: false });
     }
     //显示编辑Modal
     showTestModal(recordEdit) {
-        this.setState({
+        var self = this;
+        self.setState({
             recordEdit: recordEdit
         });
-        var self = this;
+
         setTimeout(() => {
             self.setState({
                 editModalVisible: true,
             });
         }, 20)
     }
+
     render() {
         var checkplanDetail = this.state.checkplanDetail;
 
+        //总表的行标选择
         var self = this;
         const rowSelection = {
             onChange(selectedRowKeys) {
-                console.log(`selectedRowKeys changed: ${selectedRowKeys}`);
+                console.log(`selectedRowKeys changed-------------------: ${selectedRowKeys}`);
                 self.state.checkSubIdArr = selectedRowKeys;
             },
             // onSelect(record, selected, selectedRows) {
@@ -440,6 +490,8 @@ class CustomerCheckPlanSub extends React.Component {
             //     console.log(selected, selectedRows);
             // }
         };
+
+        //企业Modal的行标选择        
         const customersDataRowSelection = {
             onChange(selectedRowKeys) {
                 console.log(`CustomerSelectedRowKeys changed: ${selectedRowKeys}`);
@@ -494,16 +546,19 @@ class CustomerCheckPlanSub extends React.Component {
                         </div>
                     </div>
                 </div>
+
                 <div className="yzy-search-form-wrap">
                     <RcSearchForm {...rcsearchformData}
                         handleSearch={this.handleFormSearch.bind(this)} />
                 </div>
+
                 <div className="yzy-list-wrap">
                     <div className="yzy-list-btns-wrap" style={{ paddingTop: 10 }}>
                         {/* <Button type="primary">导出excel</Button> */}
                         <Button type="primary" style={{ marginLeft: 8 }}
                             onClick={this.subAddbtn.bind(this)}>新增</Button>
-                        {/* 顶部新增 */}
+
+                        {/* --------------------------- 顶部新增 -------------------------- */}
                         <DraggableModal
                             title="子表数据新增，选择企业"
                             width='70%'
@@ -526,13 +581,16 @@ class CustomerCheckPlanSub extends React.Component {
                                 <Button type="primary" style={{ padding: '0 40px', margin: '20px 0' }} onClick={this.customerListModalOk.bind(this)}>确定</Button>
                             </div>
                         </DraggableModal>
-                        {/* 顶部新增-----全部 */}
+
+                        {/* --------------------------- 顶部新增--全部 -------------------------- */}
                         <Popconfirm title="确定新增全部" onConfirm={this.addAll.bind(this)}>
                             <Button type="primary" style={{ marginLeft: 8 }}>新增(全部)</Button>
                         </Popconfirm>
-                        {/* 批量分配任务 */}
+
+                        {/* --------------------------- 批量分配任务 -------------------------- */}
                         <Button type="primary" onClick={this.performerbtn.bind(this)} style={{ marginLeft: 8 }}>批量分配任务</Button>
-                        {/* 执行者管理----批量 */}
+
+                        {/* --------------------------- 执行者管理----批量-------------------------- */}
                         <DraggableModal
                             title="执行者管理"
                             width='70%'
@@ -552,7 +610,8 @@ class CustomerCheckPlanSub extends React.Component {
                                 }}
                             />
                         </DraggableModal>
-                        {/* 批量删除 */}
+
+                        {/* --------------------------- 批量删除-------------------------- */}
                         <Popconfirm title="确定删除所选项" onConfirm={this.multiDelete.bind(this)}>
                             <Button type="primary" style={{ marginLeft: 8 }}>删除（批量）</Button>
                         </Popconfirm>
@@ -572,7 +631,7 @@ class CustomerCheckPlanSub extends React.Component {
                     />
                 </div>
 
-
+                {/* --------------------------- 总Table-------------------------- */}
                 <DraggableModal
                     title="检查子表查看页面"
                     width="70%"

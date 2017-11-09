@@ -172,7 +172,10 @@ const webpackConfig = {
 	  }),
 
 	  // copy koa
-	  // new CopyWebpackPlugin()
+	  new CopyWebpackPlugin([{
+			from: 'src/config/',
+			to: 'config/'
+		}]),
 	],
 
 	// 自动解析后缀，比如 import App from './app'

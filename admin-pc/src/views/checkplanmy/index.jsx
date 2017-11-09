@@ -18,9 +18,14 @@ import DraggableModal from '../../components/modal.draggable';
 
 import RcSearchForm from '../../components/rcsearchform';
 import { MyToast } from '../../common/utils';
+import { getLocQueryByLabel } from '../../common/utils';
+
+import { MyPlanlist, getCheckplanSubComplete,} from '../../common/api/api.checkplan.my';
+import CheckplanDetailForm from './index.detail'
 
 const checkplanId = getLocQueryByLabel('checkplanId');
 
+/**table表头 */
 const columns = [{
     title: '企业',
     dataIndex: 'customer.customerName',
@@ -62,13 +67,6 @@ const rcsearchformData = {
         name: 'keyword',
     }]
 }
-import { getLocQueryByLabel } from '../../common/utils';
-
-import {
-    MyPlanlist,
-    getCheckplanSubComplete,
-} from '../../common/api/api.checkplan.my';
-import CheckplanDetailForm from './index.detail'
 
 //列表页面
 class CustomerCheckPlanMy extends React.Component {
@@ -144,14 +142,15 @@ class CustomerCheckPlanMy extends React.Component {
     saveFormRef(form) {
         this.form = form.props.form;
     }
-    //编辑Modal页面隐藏
+    //编辑Modal------隐藏
     TestCancel() {
         this.form.resetFields();
         this.setState({ editModalVisible: false });
     }
-    //显示编辑Modal
+    //编辑Modal-----显示
     showTestModal(recordEdit) {
-        console.log('showModal---------------', recordEdit)
+        console.log('showModal---------------', recordEdit);
+        
         this.setState({
             recordEdit: recordEdit,
             editModalVisible: true,
