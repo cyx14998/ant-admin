@@ -190,7 +190,7 @@ class EditableTable extends Component {
               var filePath = (text.fileList[0] && text.fileList[0].url) || '';
 
               if (filePath) {
-                return (<a href={filePath} target="_blank" download="file">下载</a>)
+                return (<a href={filePath} target="_blank" download="file">点击下载</a>)
               } else {
                 return '';
               }

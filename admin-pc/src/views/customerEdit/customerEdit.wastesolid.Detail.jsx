@@ -298,6 +298,18 @@ class WasteWaterDischargeDetail extends React.Component {
                                 </FormItem>
                             </Col>
                             <Col span={8}>
+                                <FormItem {...formItemLayout} label="废物名称">
+                                    {getFieldDecorator('theName', {
+                                        initialValue: this.state.data.theName,
+                                        rules: [{ required: true, message: '请输入废物名称' },
+                                        {/* { pattern: /^[0-9]*$/ } */ }
+                                        ],
+                                    })(
+                                        <Input placeholder="废物名称" />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col span={8}>
                                 <FormItem {...formItemLayout} label="是否危废">
                                     {getFieldDecorator('isHazardousWaste', {
                                         initialValue: this.state.data.isHazardousWaste === true ? '是' : '否',
@@ -312,11 +324,13 @@ class WasteWaterDischargeDetail extends React.Component {
                                         )}
                                 </FormItem>
                             </Col>
+                        </Row>
+                        <Row>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="危险废物名称">
                                     {getFieldDecorator('hazardousWasteName', {
                                         initialValue: this.state.data.hazardousWasteName,
-                                        rules: [{ required: true, message: '请输入危险废物名称' },
+                                        rules: [{ message: '请输入危险废物名称' },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
@@ -324,13 +338,11 @@ class WasteWaterDischargeDetail extends React.Component {
                                         )}
                                 </FormItem>
                             </Col>
-                        </Row>
-                        <Row>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="处置方式">
                                     {getFieldDecorator('disposalMethod', {
                                         initialValue: this.state.data.disposalMethod,
-                                        rules: [{ required: true, message: '请输入处置方式' },
+                                        rules: [{ message: '请输入处置方式' },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
@@ -338,23 +350,12 @@ class WasteWaterDischargeDetail extends React.Component {
                                         )}
                                 </FormItem>
                             </Col>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label="废物名称">
-                                    {getFieldDecorator('theName', {
-                                        initialValue: this.state.data.theName,
-                                        rules: [{ required: true, message: '请输入废物名称' },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
-                                        ],
-                                    })(
-                                        <Input placeholder="废物名称" />
-                                        )}
-                                </FormItem>
-                            </Col>
+
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="废物产生工艺">
                                     {getFieldDecorator('processing', {
                                         initialValue: this.state.data.processing,
-                                        rules: [{ required: true, message: '请输入废物产生工艺' },
+                                        rules: [{ message: '请输入废物产生工艺' },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
@@ -368,7 +369,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="危险代码">
                                     {getFieldDecorator('dangerCode', {
                                         initialValue: this.state.data.dangerCode,
-                                        rules: [{ required: true, message: '请输入危险代码' },
+                                        rules: [{ message: '请输入危险代码' },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
@@ -380,7 +381,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="危险废物产生环节">
                                     {getFieldDecorator('generatingLinks', {
                                         initialValue: this.state.data.generatingLinks,
-                                        rules: [{ required: true, message: '请输入危险废物产生环节' },
+                                        rules: [{ message: '请输入危险废物产生环节' },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
@@ -392,7 +393,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="危险废物年产生量">
                                     {getFieldDecorator('annualProduction', {
                                         initialValue: this.state.data.annualProduction ? this.state.data.annualProduction + '' : '',
-                                        rules: [{ required: true, message: '请输入危险废物年产生量' },
+                                        rules: [{ message: '请输入危险废物年产生量' },
                                         { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' }
                                         ],
                                     })(
@@ -406,7 +407,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="贮存场所位置">
                                     {getFieldDecorator('storagePlaceAddress', {
                                         initialValue: this.state.data.storagePlaceAddress,
-                                        rules: [{ required: true, message: '请输入贮存场所位置' },
+                                        rules: [{ message: '请输入贮存场所位置' },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
@@ -418,7 +419,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="处置单位名称">
                                     {getFieldDecorator('disposeUnitName', {
                                         initialValue: this.state.data.disposeUnitName,
-                                        rules: [{ required: true },
+                                        rules: [{},
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(

@@ -33,20 +33,20 @@ const columns = [{
   title: '监管记录',
   dataIndex: 'regulatoryRecordURL',
   render: (text, record) => (
-    <a target="_blank" download="文件" href={record.regulatoryRecordURL}>{record.regulatoryRecordURL ? '下载地址' : '无'}</a>
+    <a target="_blank" download="文件" href={record.regulatoryRecordURL}>{record.regulatoryRecordURL ? '点击下载' : '无'}</a>
   )
 }, {
   title: '反馈单',
   dataIndex: 'feedbackSheetURL',
   render: (text, record) => (
-    <a target="_blank" download="文件" href={record.feedbackSheetURL}>{record.feedbackSheetURL ? '下载地址' : '无'}</a>
+    <a target="_blank" download="文件" href={record.feedbackSheetURL}>{record.feedbackSheetURL ? '点击下载' : '无'}</a>
   )
 },
 {
   title: '整改报告',
   dataIndex: 'rectificationReportURL',
   render: (text, record) => (
-    <a target="_blank" download="文件" href={record.rectificationReportURL}>{record.rectificationReportURL ? '下载地址' : '无'}</a>
+    <a target="_blank" download="文件" href={record.rectificationReportURL}>{record.rectificationReportURL ? '点击下载' : '无'}</a>
   )
 },
 {

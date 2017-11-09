@@ -112,7 +112,7 @@ const WasteGasDischargeRecordBase = connectEeditableSectionApi({
         return wasteGasDischargePortListOptions;
       }).then(wasteGasDischargePortListOptions => {
         itemDataModel.wasteGasDischargePortId.options = wasteGasDischargePortListOptions;
-
+        //获取废气列表
         getWasteGasDischargeRecordList({
           customerMonthDclarationId: dynamicId,
         }).then(res => {
@@ -129,6 +129,7 @@ const WasteGasDischargeRecordBase = connectEeditableSectionApi({
           var data = res.data.wasteGasDischargeRecordList;
 
           data = data.map(item => {
+            console.log('------------------',item);
             return {
               ...item,
               wasteGasDischargePortId: {

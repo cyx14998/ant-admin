@@ -122,11 +122,11 @@ class CheckplanSubDetail extends React.Component {
                         <Col span={8}>{recordEdit.theRemarks ? recordEdit.theRemarks : '无'}</Col>
                     </Row>
                     <h2 className="yzy-tab-content-title">反馈单下载</h2>
-                    <a target="_blank" download="图片" href={prodImgUrl} style={{ marginLeft: 8 }}>{prodImgUrl ? '下载地址' : '无'}</a>
+                    <a target="_blank" download="图片" href={prodImgUrl} style={{ marginLeft: 8 }}>{prodImgUrl ? '点击下载' : '无'}</a>
                     <h2 className="yzy-tab-content-title">检查记录下载</h2>
-                    <a target="_blank" download="图片" href={positionImgUrl} style={{ marginLeft: 8 }}>{positionImgUrl ? '下载地址' : '无'}</a>
+                    <a target="_blank" download="图片" href={positionImgUrl} style={{ marginLeft: 8 }}>{positionImgUrl ? '点击下载' : '无'}</a>
                     <h2 className="yzy-tab-content-title">整改报告</h2>
-                    <a target="_blank" download="图片" href={reportUrl} style={{ marginLeft: 8 }}>{reportUrl ? '下载地址' : '无'}</a>
+                    <a target="_blank" download="图片" href={reportUrl} style={{ marginLeft: 8 }}>{reportUrl ? '点击下载' : '无'}</a>
                 </div>
             </div>
         )

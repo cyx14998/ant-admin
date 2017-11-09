@@ -68,13 +68,13 @@ class WasteWaterDischargeDetail extends React.Component {
 			if (err) return;
 
 			var tableId = this.props.editId;
-
+			console.log('tableId------',tableId);
 			if (!tableId) {
 				tableId = this.state.tableId;
 			}
 
 			//编辑
-			if (this.state.tableId) {
+			if (tableId) {
 				getWastewaterDischargeUpdate({
 					...values,
 					tableId: tableId,
@@ -120,11 +120,11 @@ class WasteWaterDischargeDetail extends React.Component {
 						<h2 className="yzy-tab-content-title">排放口基本信息</h2>
 						<Row>
 							<Col span={8}>
-								<FormItem {...formItemLayout} label="排水口编号">
+								<FormItem {...formItemLayout} label="排放口编号">
 									{getFieldDecorator('serialNumber', {
 										initialValue: this.state.data.serialNumber,
 										rules: [{ required: true, message: '必填' },
-										{ pattern: /^[0-9]*$/, message: '请输入数值' }
+										//{ pattern: /^[0-9]*$/, message: '请输入数值' }
 										],
 									})(
 										<Input placeholder="排水口编号" />

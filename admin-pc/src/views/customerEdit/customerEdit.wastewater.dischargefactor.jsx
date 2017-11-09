@@ -25,7 +25,6 @@ const columns = [{
 }, {
   title: '输入执行标准文件号',
   dataIndex: 'executeStandardNumber',
-  validateType: 'onlyNum',
 }, {
   title: '标准值',
   dataIndex: 'standardValue',

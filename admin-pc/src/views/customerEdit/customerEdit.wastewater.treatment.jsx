@@ -89,7 +89,7 @@ const WasteWaterTreatment = connectEditableSectionApi({
       ]).then(axios.spread((approachList, wwTreatmentList) => {
 
         //废水治理基本情况
-        var wwTreatmentData = wwTreatmentList.data.controlFacilitiesList;
+        var wwTreatmentData = wwTreatmentList.data.controlFacilitiesList || [];
 
         //处理方法列表
         var approachList = approachList.data.approachList;
@@ -158,7 +158,7 @@ const WasteWaterTreatment = connectEditableSectionApi({
     }
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
-        console.log('新增',record_for_save)
+        console.log('新增', record_for_save)
         // 新增
         getWastewaterTreatmentAdd({
           ...record_for_save,
