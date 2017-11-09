@@ -71,9 +71,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
     }
 
     componentDidMount() {
-        //获取管辖归属列表
+        //获取管辖归属列表----------
         getJurisdictionList({}).then(res => {
-            console.log('管辖归属', res.data.jurisdictionAscriptionList)
+            console.log('管辖归属-----------------', res.data.jurisdictionAscriptionList)
             if (res.data.result !== 'success') {
                 return
             }
@@ -81,9 +81,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 jurisdictionList: res.data.jurisdictionAscriptionList,
             })
         }).catch(err => console.log(err));
-        //获取省份        
+        //获取省份-----------       
         getProvinceList({}).then(res => {
-            console.log('省', res.data.provinceList)
+            console.log('省------------', res.data.provinceList)
             if (res.data.result !== 'success') {
                 return
             }
@@ -91,10 +91,10 @@ class CustomerEditBaseinfoDetail extends React.Component {
                 provinceList: res.data.provinceList,
             })
         }).catch(err => console.log(err));
-        //获取基本信息
+        //获取基本信息-----------
         var self = this;
         getCustomerInfoById().then(res => {
-            console.log('getCustomerInfoById res', res);
+            console.log('getCustomerInfoById res----------------', res);
             if (res.data.result !== 'success') {
                 return
             }
@@ -147,7 +147,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
     }
     //改变管辖归属
     changejurisdiction(key) {
-        console.log(key);
+        // console.log(key);
     }
     //更改省份
     changeProvince(key) {
@@ -253,7 +253,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             if (err) return;
 
             var data = { ...values };
-            // 地址处理
+            // 地址处理-----------------
             var provinceName = self.state.provinceId ? self.state.provinceList[data.provinceId - 1].theName : '';
             var cityName = '';
             self.state.cityId ?
@@ -274,9 +274,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
                         townName = item.theName;
                 }) : '';
             data.unitAddress = provinceName + cityName + areaName + townName + data.address;
-            //时间处理
+            //时间处理---------------------
             data.openingDate = data.openingDate ? data.openingDate.format('YYYY-MM-DD') : new Date().format('YYYY-MM-DD');
-            // 图片处理
+            // 图片处理--------------------
             //生产工艺流程图及排污环节
             var prodFileUrl = self.state.prodFileList[0];
             if (!prodFileUrl) {
@@ -309,21 +309,21 @@ class CustomerEditBaseinfoDetail extends React.Component {
                     positionFileUrl = downloadUrl + positionFileUrl;
                 }
             }
-            //图片
+
             data.productionFlowChartURL = prodFileUrl;
             data.factoryFloorPlanURL = positionFileUrl;
-            console.log('when savebaseInfoDetail -------', data);
+            console.log('when savebaseInfoDetail ----------', data);
 
             var cusId = getLocQueryByLabel('id');
             if (cusId === '') {
                 //新增
                 saveAddCustomerInfoById(data).then(res => {
                     console.log('saveCustomerInfoById res', res);
+
                     if (res.data.result !== 'success') {
                         MyToast(res.data.info);
                         return
                     }
-                    console.log('123456----------------', res.data)
                     MyToast('保存成功');
                     self.state.onBaseinfoSave(); //控制其他tabs可用
                     localStorage.setItem("yt-customerId", res.data.tableId);
@@ -333,6 +333,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             } else {
                 saveEditCustomerInfoById(data).then(res => {
                     console.log('saveCustomerInfoById res', res);
+
                     if (res.data.result !== 'success') {
                         return
                     }
@@ -480,7 +481,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('fax', {
                                         initialValue: customer.fax ? customer.fax : '',
                                         rules: [
-                                        { pattern:  /^(\d{3,4}-)?\d{7,8}$/, message: '请输入正确格式的传真' } 
+                                            { pattern: /^(\d{3,4}-)?\d{7,8}$/, message: '请输入正确格式的传真' }
                                         ],
                                     })(
                                         <Input placeholder="传真" />
@@ -638,6 +639,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 </FormItem>
                             </Col>
                         </Row>
+
                         <Row>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="重点类型">
@@ -656,7 +658,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('exhaustEmissionsPorts', {
                                         initialValue: customer.exhaustEmissionsPorts ? customer.exhaustEmissionsPorts + "" : '',
                                         rules: [
-                                        { pattern: /^[0-9]*$/,message: '数量为纯数字!' } 
+                                            { pattern: /^[0-9]*$/, message: '数量为纯数字!' }
                                         ],
                                     })(
                                         <Input placeholder="废气排放口数量" addonAfter="个" />
@@ -668,7 +670,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('wastewaterDischargePorts', {
                                         initialValue: customer.wastewaterDischargePorts ? customer.wastewaterDischargePorts + "" : '',
                                         rules: [
-                                        { pattern: /^[0-9]*$/, message: '数量为纯数字!' } 
+                                            { pattern: /^[0-9]*$/, message: '数量为纯数字!' }
                                         ],
                                     })(
                                         <Input placeholder="废水排放口数量" addonAfter="个" />
@@ -676,6 +678,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 </FormItem></Col>
 
                         </Row>
+
                         <Row>
                             <Col span={8}>
                                 <Col span={12}>
@@ -737,6 +740,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 </FormItem>
                             </Col>
                         </Row>
+
                         <Row>
                             {/*含小数点的正则： /^-?\d+\.\d+$/ */}
                             <Col span={8}>
@@ -744,7 +748,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('aiNitrogenOxide', {
                                         initialValue: customer.aiNitrogenOxide ? customer.aiNitrogenOxide + "" : '',
                                         rules: [
-                                        { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' } 
+                                            { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' }
                                         ],
                                     })(
                                         <Input placeholder="氮氧化物" />
@@ -756,7 +760,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('aiSmoke', {
                                         initialValue: customer.aiSmoke ? customer.aiSmoke + "" : '',
                                         rules: [
-                                        { pattern: /^\d+$|^\d+\.\d+$/g,message: '请输入数值' } 
+                                            { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' }
                                         ],
                                     })(
                                         <Input placeholder="烟尘" />
@@ -768,7 +772,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('aiSulfurDioxide', {
                                         initialValue: customer.aiSulfurDioxide ? customer.aiSulfurDioxide + "" : '',
                                         rules: [
-                                        { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' }
+                                            { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' }
                                         ],
                                     })(
                                         <Input placeholder="二氧化硫" />
@@ -776,13 +780,14 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 </FormItem>
                             </Col>
                         </Row>
+
                         <Row>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="悬浮物">
                                     {getFieldDecorator('aiSuspendedSolids', {
                                         initialValue: customer.aiSuspendedSolids ? customer.aiSuspendedSolids + "" : '',
                                         rules: [
-                                        { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' } 
+                                            { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' }
                                         ],
                                     })(
                                         <Input placeholder="悬浮物" />
@@ -794,7 +799,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('aiAmmoniaNitrogen', {
                                         initialValue: customer.aiAmmoniaNitrogen ? customer.aiAmmoniaNitrogen + "" : '',
                                         rules: [
-                                        { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' } 
+                                            { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' }
                                         ],
                                     })(
                                         <Input placeholder="氮氧" />
@@ -806,7 +811,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('aiChemicalOxygenDemand', {
                                         initialValue: customer.aiChemicalOxygenDemand ? customer.aiChemicalOxygenDemand + "" : '',
                                         rules: [
-                                        { pattern: /^\d+$|^\d+\.\d+$/g ,message: '请输入数值'} 
+                                            { pattern: /^\d+$|^\d+\.\d+$/g, message: '请输入数值' }
                                         ],
                                     })(
                                         <Input placeholder="化学需氧量" />
@@ -814,6 +819,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                 </FormItem>
                             </Col>
                         </Row>
+
                         <Row>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="其他">

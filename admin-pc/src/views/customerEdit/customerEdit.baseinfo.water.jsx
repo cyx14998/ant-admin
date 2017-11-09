@@ -55,7 +55,8 @@ export const CustomerEditBaseinfoWater = connectEditableSectionApi({
             if (!cusId) return;
 
             getWaterBaseInfoList({}).then(res => {
-                console.log('Waterlist res', res)
+                console.log('Waterlist res------------', res);
+
                 if (res.data.result !== 'success') {
                     console.log(res.data.info)
                     resolve({
@@ -81,7 +82,8 @@ export const CustomerEditBaseinfoWater = connectEditableSectionApi({
             // 新增      
             return new Promise((resolve, reject) => {
                 getWaterBaseInfoAdd(record).then(res => {
-                    console.log('AddWater res', res);
+                    console.log('AddWater res----------', res);
+
                     if (res.data.result !== 'success') {
                         resolve({
                             code: -1,
@@ -100,7 +102,8 @@ export const CustomerEditBaseinfoWater = connectEditableSectionApi({
             // 编辑
             return new Promise((resolve, reject) => {
                 getWaterBaseInfoEdit(record).then(res => {
-                    console.log('AddWater res', res);
+                    console.log('AddWater res-------------', res);
+
                     if (res.data.result !== 'success') {
                         resolve({
                             code: -1,
@@ -121,7 +124,8 @@ export const CustomerEditBaseinfoWater = connectEditableSectionApi({
         console.log(tableId)
         return new Promise((resolve, reject) => {
             getWaterBaseInfoDelete(tableId).then(res => {
-                console.log('DeleteWater res', res);
+                console.log('DeleteWater res---------------', res);
+                
                 if (res.data.result !== 'success') {
                     resolve({
                         code: -1,
