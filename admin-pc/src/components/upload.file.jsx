@@ -21,6 +21,8 @@ import {
 const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 const uploadUrl = 'http://up.qiniu.com/';
 
+const uploadData = {};
+
 /**
  * @props uploadTitle
  * @props acceptType
@@ -38,24 +40,38 @@ class QiniuUploadFile extends React.Component {
     //   status: 'done',
     //   url: 'http://oyc0y0ksm.bkt.clouddn.com/1509173501415'
     // }]
-
-    this.state = {
-      uptoken: '',
-    }
-
   }
 
   componentDidMount() {
     getQiNiuToken({}).then(res => {
-        if (!res.data || !res.data.uptoken) {
-            MyToast('getqiniuyun uptoken error');
-            return;
-        }
+      if (!res.data || !res.data.uptoken) {
+          MyToast('getqiniuyun uptoken error');
+          return;
+      }
 
-        this.setState({
-          uptoken: res.data.uptoken
-        });
+      uploadData.token = res.data.uptoken;
     }).catch(err => console.log(err));
+  }
+
+  /**
+   * 通过key 设置文件路径和名称
+   * 路径规则：filetype/2017/11/11/timestamp.ext
+   */
+  getFileKey(fileType, fileName) {
+    var type = fileType.split('/')[0];
+    var ext = fileName.split('.')[1] || '';
+    var date = new Date();
+    var y = date.getFullYear(),
+        m = date.getMonth() + 1,
+        d = date.getDate(),
+        timestamp = date.getTime();
+
+    m = m < 10 ? ('0' + m) : m;
+    d = d < 10 ? ('0' + d) : d;
+
+    var path = `${type}/${y}/${m}/${d}/${timestamp}.${ext}`;
+
+    return path;
   }
 
   beforeUpload(file) {
@@ -64,11 +80,16 @@ class QiniuUploadFile extends React.Component {
       MyToast('请选择图片小于2MB!');
     }
 
+    // get file path 
+    var filepath = this.getFileKey(file.type, file.name);
+
+    uploadData.key = filepath;
+
     return isLt2M;
   }
 
-  handleUploadChange({file, fileList}) {
-    this.props.handleUploadedFileList({fileList})
+  handleUploadChange({ file, fileList }) {
+    this.props.handleUploadedFileList({ fileList })
 
     return;
 
@@ -85,9 +106,9 @@ class QiniuUploadFile extends React.Component {
   render() {
     let {
       uploadedFileList,
-      uploadTitle='上传',
-      acceptType='*/*',
-      maxLength=1
+      uploadTitle = '上传',
+      acceptType = '*/*',
+      maxLength = 1
     } = this.props;
 
     return (
@@ -100,16 +121,13 @@ class QiniuUploadFile extends React.Component {
             beforeUpload={this.beforeUpload.bind(this)}
             onChange={this.handleUploadChange.bind(this)}
             fileList={uploadedFileList}
-            data={{
-              token: this.state.uptoken, 
-              key: Date.now()
-            }}>
+            data={uploadData}>
             {
               uploadedFileList.length === maxLength ? null : 
               (
                 <Button><Icon type="upload" /> Click to Upload </Button>
               )
-            }
+          }
         </Upload>
       </div>
     )

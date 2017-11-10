@@ -139,8 +139,12 @@ class WasteWaterDischargeDetail extends React.Component {
                         MyToast(res.data.info)
                         return;
                     }
-                    MyToast("保存成功")
+                    MyToast("保存成功");
                     localStorage.setItem("wastewaterDischargeIsShow", "block");
+                    
+                    setTimeout(() => {
+                        this.props.closeModal()
+                    }, 500);
                 }).catch(err => {
                     MyToast('接口调用失败')
                 });
@@ -154,10 +158,14 @@ class WasteWaterDischargeDetail extends React.Component {
                         return;
                     }
                     MyToast("新增成功")
-                   
+
                     this.setState({
                         tableId: res.data.tableId
                     });
+
+                    setTimeout(() => {
+                        this.props.closeModal()
+                    }, 500);
                 }).catch(err => {
                     MyToast('接口调用失败')
                 });
@@ -176,7 +184,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="环评建设项目名称">
                                     {getFieldDecorator('theName', {
                                         initialValue: this.state.data.theName,
-                                        rules: [{ required: true ,message: '请输入环评建设项目名称'},
+                                        rules: [{ required: true, message: '请输入环评建设项目名称' },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
@@ -188,7 +196,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                 <FormItem {...formItemLayout} label="环评等级">
                                     {getFieldDecorator('theLevel', {
                                         initialValue: this.state.data.theLevel,
-                                        rules: [{ required: true,message: '请输入环评等级' },
+                                        rules: [{ required: true, message: '请输入环评等级' },
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
@@ -215,7 +223,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                         {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
-                                        <Input placeholder="试生产批复-环保部门审批文号" />                                                                               
+                                        <Input placeholder="试生产批复-环保部门审批文号" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -224,7 +232,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                     {getFieldDecorator('approvalTimeTPA', {
                                         initialValue: moment(this.state.data.approvalTimeTPA || new Date(), 'YYYY-MM-DD'),
                                     })(
-                                        <DatePicker />                                                                                
+                                        <DatePicker />
                                         )}
                                 </FormItem>
                             </Col>
@@ -247,7 +255,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                     {getFieldDecorator('approvalTimeEIA', {
                                         initialValue: moment(this.state.data.approvalTimeEIA || new Date(), 'YYYY-MM-DD'),
                                     })(
-                                        <DatePicker />                                                                                
+                                        <DatePicker />
                                         )}
                                 </FormItem>
                             </Col>
@@ -268,7 +276,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                     {getFieldDecorator('approvalTimeFAA', {
                                         initialValue: moment(this.state.data.approvalTimeFAA || new Date(), 'YYYY-MM-DD'),
                                     })(
-                                        <DatePicker />                                                                                
+                                        <DatePicker />
                                         )}
                                 </FormItem>
                             </Col>

@@ -164,6 +164,7 @@ class WasteWaterDischargeDetail extends React.Component {
             if (err) return;
             //台账
             var prodFileUrl = self.state.prodFileList[0];
+            console.log('----------------',prodFileUrl)
             if (!prodFileUrl) {
                 prodFileUrl = "";
             } else {
@@ -231,7 +232,7 @@ class WasteWaterDischargeDetail extends React.Component {
             data.transferManifestURL = reportFileUrl;
             data.storagePlaceImageURL = imgFileUrl;
 
-            console.log('2222222保存', data)
+            console.log('固体编辑保存前---------', data)
 
             var tableId = self.props.editId;
             if (!tableId) {
@@ -290,7 +291,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                     {getFieldDecorator('serialNumber', {
                                         initialValue: this.state.data.serialNumber,
                                         rules: [{ required: true, message: '请输入编号' },
-                                        { pattern: /^[0-9]*$/, message: '请输入数值' }
+                                        //{ pattern: /^[0-9]*$/, message: '请输入数值' }
                                         ],
                                     })(
                                         <Input placeholder="编号" />

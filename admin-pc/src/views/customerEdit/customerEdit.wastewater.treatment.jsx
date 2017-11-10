@@ -35,7 +35,7 @@ const columns = [{
   title: '治理类型',
   dataIndex: 'governanceType',
 }, {
-  title: '处理方法ID',
+  title: '处理方法',
   dataIndex: 'approachId',
 }, {
   title: '设计处理能力',
@@ -44,7 +44,7 @@ const columns = [{
   title: '投入使用日期',
   dataIndex: 'putInUseDate',
 }, {
-  title: '传台账记录',
+  title: '台账记录',
   dataIndex: 'standingBookURL',
   width: 160,
 }, {
