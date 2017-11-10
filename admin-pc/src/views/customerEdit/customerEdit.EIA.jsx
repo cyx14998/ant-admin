@@ -32,25 +32,25 @@ const columns = [{
   dataIndex: 'editDatetime',
 }, {
   title: '试生产批复-环保部门审批文号',
-  dataIndex: 'DocumentNumberTPA',
+  dataIndex: 'documentNumberTPA',
 }, {
   title: '试生产批复-审批时间',
   dataIndex: 'approvalTimeTPA',
 }, {
   title: '环评批复-环保部门审批文号',
-  dataIndex: 'DocumentNumberEIA',
+  dataIndex: 'documentNumberEIA',
 }, {
   title: '环评批复-审批时间',
   dataIndex: 'approvalTimeEIA',
 }, {
   title: '竣工验收批复-环保部门审批文号',
-  dataIndex: 'DocumentNumberFAA',
+  dataIndex: 'documentNumberFAA',
 }, {
   title: '竣工验收批复-审批时间',
   dataIndex: 'approvalTimeFAA',
 }, {
   title: '自主验收文件',
-  dataIndex: 'SelfAcceptanceURL',
+  dataIndex: 'selfAcceptanceURL',
   type: 'downloadfile'
 }, {
   title: '操作',

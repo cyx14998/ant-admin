@@ -55,7 +55,7 @@ class UneditableTable extends Component {
 
           // 文件下载
           if (columns[i].type === 'downloadfile') {
-            return < a target="_blank" href={text} download="图片" > {text?'点击下载':'暂无'}</a >
+            return < a target="_blank" href={text} download="图片" > {text?'点击下载':'无'}</a >
           }
 
           // 如果有值，直接渲染

@@ -96,7 +96,7 @@ const AttachmentRecord = connectUneditableSectionApi({
           return {
             ...item,
             theSize: _fsize,
-            filePath: <a href={item.filePath} target="_blank" download="file">文件下载</a>,
+            filePath: <a href={item.filePath} target="_blank" download="file">点击下载</a>,
             attachmentTypeName: (item.attachmentType && item.attachmentType.theName) || ''
           }
         })
