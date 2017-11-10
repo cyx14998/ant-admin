@@ -23,14 +23,14 @@ const columns = [{
   title: '编号',
   dataIndex: 'serialNumber',
 }, {
+  title: '废物名称',
+  dataIndex: 'theName',
+},{
   title: '是否危废',
   dataIndex: 'isHazardousWaste',
 }, {
   title: '处置方式',
   dataIndex: 'disposalMethod',
-}, {
-  title: '废物名称',
-  dataIndex: 'theName',
 }, {
   title: '废物产生工艺',
   dataIndex: 'processing',

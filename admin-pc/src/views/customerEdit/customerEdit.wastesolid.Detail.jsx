@@ -232,7 +232,7 @@ class WasteWaterDischargeDetail extends React.Component {
             data.transferManifestURL = reportFileUrl;
             data.storagePlaceImageURL = imgFileUrl;
 
-            console.log('固体编辑保存前---------', data)
+            console.log('固体编辑保存前-----------------', data)
 
             var tableId = self.props.editId;
             if (!tableId) {
@@ -259,7 +259,7 @@ class WasteWaterDischargeDetail extends React.Component {
             } else {
                 // 新增
                 getWastesolidAdd({
-                    ...values,
+                    ...data,
                 }).then(res => {
                     if (res.data.result !== 'success') {
                         MyToast(res.data.info)
