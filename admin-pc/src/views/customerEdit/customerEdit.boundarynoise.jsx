@@ -3,7 +3,7 @@
  */
 import connectEditableSectionApi from '../../components/hoc.editable.section';
 
-import { 
+import {
   getBoundaryNoiseList,
   getBoundaryNoiseAdd,
   getBoundaryNoiseUpdate,
@@ -12,7 +12,7 @@ import {
   getNoiseSourcePropertyList,
 } from '../../common/api/api.customer.plus.js';
 
-import { 
+import {
   MyToast,
   convertObjectLabel
 } from '../../common/utils';
@@ -62,12 +62,12 @@ const BoundaryNoise = connectEditableSectionApi({
   secTitle: '边界噪声基本情况',
   columns: columns,
   apiLoader: function () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       axios.all([
         getFunctionalAreaTypeList({}),
         getNoiseSourcePropertyList({}),
         getBoundaryNoiseList({})
-      ]).then(axios.spread((areaList, noiseSourceList,noiseList) => {
+      ]).then(axios.spread((areaList, noiseSourceList, noiseList) => {
         //获取表单数据
         var noiseData = noiseList.data.boundaryNoiseList;
         //获取功能区类型列表
@@ -86,15 +86,15 @@ const BoundaryNoise = connectEditableSectionApi({
         itemDataModel.noiseSourcePropertyId = noiseSourceData;  //噪声源性质
         itemDataModel.functionalAreaTypeId = areaData;  //功能区类型
         //重新拼接数据
-        noiseData = noiseData.map( item => {
+        noiseData = noiseData.map(item => {
           return {
             ...item,
             functionalAreaTypeId: {
-              value: item.functionalAreaType.tableId+'',
+              value: item.functionalAreaType.tableId + '',
               options: convertObjectLabel(functionalAreaTypeList)
             },
             noiseSourcePropertyId: {
-              value: item.noiseSourceProperty.tableId+'',
+              value: item.noiseSourceProperty.tableId + '',
               options: convertObjectLabel(noiseSourcePropertyList),
             },
           }
@@ -109,15 +109,18 @@ const BoundaryNoise = connectEditableSectionApi({
   },
   apiSave: function (record) {
     // 新增
-    record.noiseSourcePropertyId = record.noiseSourcePropertyId.value;
-    record.functionalAreaTypeId = record.functionalAreaTypeId.value;
-    var self = this;
-
+    // record.noiseSourcePropertyId = record.noiseSourcePropertyId.value;
+    // record.functionalAreaTypeId = record.functionalAreaTypeId.value;
+    const _record_for_save = {
+      ...record,
+      noiseSourcePropertyId : record.noiseSourcePropertyId.value,
+      functionalAreaTypeId : record.functionalAreaTypeId.value,
+    }
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增
         getBoundaryNoiseAdd({
-          ...record,
+          ..._record_for_save,
         }).then(res => {
           // console.log("getBoundaryNoiseAdd res",res)
           if (res.data.result !== 'success') {
@@ -139,7 +142,7 @@ const BoundaryNoise = connectEditableSectionApi({
       // 编辑
       return new Promise((resolve, reject) => {
         getBoundaryNoiseUpdate({
-          ...record,
+          ..._record_for_save,
         }).then(res => {
           // console.log("getBoundaryNoiseUpdate res",res)
           if (res.data.result !== 'success') {

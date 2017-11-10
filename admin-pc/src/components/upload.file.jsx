@@ -47,14 +47,14 @@ class QiniuUploadFile extends React.Component {
 
   componentDidMount() {
     getQiNiuToken({}).then(res => {
-        if (!res.data || !res.data.uptoken) {
-            MyToast('getqiniuyun uptoken error');
-            return;
-        }
+      if (!res.data || !res.data.uptoken) {
+        MyToast('getqiniuyun uptoken error');
+        return;
+      }
 
-        this.setState({
-          uptoken: res.data.uptoken
-        });
+      this.setState({
+        uptoken: res.data.uptoken
+      });
     }).catch(err => console.log(err));
   }
 
@@ -67,8 +67,8 @@ class QiniuUploadFile extends React.Component {
     return isLt2M;
   }
 
-  handleUploadChange({file, fileList}) {
-    this.props.handleUploadedFileList({fileList})
+  handleUploadChange({ file, fileList }) {
+    this.props.handleUploadedFileList({ fileList })
 
     return;
 
@@ -85,31 +85,34 @@ class QiniuUploadFile extends React.Component {
   render() {
     let {
       uploadedFileList,
-      uploadTitle='上传',
-      acceptType='*/*',
-      maxLength=1
+      uploadTitle = '上传',
+      acceptType = '*/*',
+      maxLength = 1
     } = this.props;
 
     return (
       <div>
         <Upload
-            action='http://up.qiniup.com'
-            container="container"
-            multiple={false}
-            accept={acceptType}
-            beforeUpload={this.beforeUpload.bind(this)}
-            onChange={this.handleUploadChange.bind(this)}
-            fileList={uploadedFileList}
-            data={{
-              token: this.state.uptoken, 
-              key: Date.now()
-            }}>
-            {
-              uploadedFileList.length === maxLength ? null : 
+          action='http://up.qiniup.com'
+          container="container"
+          multiple={false}
+          accept={acceptType}
+          beforeUpload={this.beforeUpload.bind(this)}
+          onChange={this.handleUploadChange.bind(this)}
+          fileList={uploadedFileList}
+          uniqueNames={false}
+          saveKey={false}
+          data={{
+            token: this.state.uptoken,
+            key: Date.now()
+            
+          }}>
+          {
+            uploadedFileList.length === maxLength ? null :
               (
                 <Button><Icon type="upload" /> Click to Upload </Button>
               )
-            }
+          }
         </Upload>
       </div>
     )

@@ -245,15 +245,15 @@ class EditableSection extends Component {
        * 新增刷新，为了获取 tableId
        * 
        */
-      if (record.tableId === '') {
+      // if (record.tableId === '') {
         setTimeout(() => {
           this.getDataSource({});
         }, 20);
       }      
-    }).catch(err => {
-      MyToast('接口调用失败');
-    })
-  }
+    // }).catch(err => {
+    //   MyToast('接口调用失败');
+    // }
+  )}
 
   render() {
     let {

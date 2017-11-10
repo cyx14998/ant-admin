@@ -14,6 +14,10 @@ import {
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
 
+import {
+  MyToast,
+} from '../../common/utils';
+
 const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 
 /**

@@ -68,7 +68,7 @@ class WasteWaterDischargeDetail extends React.Component {
 			if (err) return;
 
 			var tableId = this.props.editId;
-			console.log('tableId------',tableId);
+			console.log('tableId------', tableId);
 			if (!tableId) {
 				tableId = this.state.tableId;
 			}
@@ -124,7 +124,7 @@ class WasteWaterDischargeDetail extends React.Component {
 									{getFieldDecorator('serialNumber', {
 										initialValue: this.state.data.serialNumber,
 										rules: [{ required: true, message: '必填' },
-										//{ pattern: /^[0-9]*$/, message: '请输入数值' }
+											//{ pattern: /^[0-9]*$/, message: '请输入数值' }
 										],
 									})(
 										<Input placeholder="排水口编号" />
@@ -161,7 +161,7 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="经度">
 									{getFieldDecorator('longitude', {
 										initialValue: this.state.data.longitude ? this.state.data.longitude + "" : "",
-										rules: [{ required: true, message: '必填' },
+										rules: [{ message: '必填' },
 										{ pattern: /^-?(([1-9]\d?)|(1[1-7]\d)|180)(\.\d{1,6})?$/, message: '请输入正确的经度' }
 										],
 									})(
@@ -173,7 +173,7 @@ class WasteWaterDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="维度">
 									{getFieldDecorator('latitude', {
 										initialValue: this.state.data.latitude ? this.state.data.latitude + "" : "",
-										rules: [{ required: true, message: '必填' },
+										rules: [{ message: '必填' },
 										{ pattern: /^-?(([1-8]\d?)|([1-8]\d)|90)(\.\d{1,6})?$/, message: '请输入正确的纬度!' }
 										],
 									})(

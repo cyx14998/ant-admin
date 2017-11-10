@@ -154,7 +154,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="经度">
 									{getFieldDecorator('longitude', {
 										initialValue: this.state.data.longitude ? this.state.data.longitude + "" : "",
-										rules: [{ required: true, message: '请输入经度' },
+										rules: [{ message: '请输入经度' },
 										{ pattern: /^-?(([1-9]\d?)|(1[1-7]\d)|180)(\.\d{1,6})?$/, message: '请输入正确的经度' }
 										],
 									})(
@@ -166,7 +166,7 @@ class WasteGasDischargeDetail extends React.Component {
 								<FormItem {...formItemLayout} label="纬度">
 									{getFieldDecorator('latitude', {
 										initialValue: this.state.data.latitude ? this.state.data.latitude + "" : "",
-										rules: [{ required: true, message: '请输入纬度' },
+										rules: [{ message: '请输入纬度' },
 										{ pattern: /^-?(([1-8]\d?)|([1-8]\d)|90)(\.\d{1,6})?$/, message: '请输入正确的纬度!' }
 										],
 									})(

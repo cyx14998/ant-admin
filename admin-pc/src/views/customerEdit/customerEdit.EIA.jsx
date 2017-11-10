@@ -86,10 +86,11 @@ const itemDataModel = {
 };
 
 const InnerComponent = ({
-  editId
+  editId,
+  closeModal,
 }) => (
     <div>
-      <EIADetail editId={editId} />
+      <EIADetail editId={editId} closeModal={closeModal} />
     </div>
   );
 
