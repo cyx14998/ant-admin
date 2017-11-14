@@ -21,22 +21,27 @@ const menuConfig = [
     icon: 'schedule',
     name: 'checkplan',
     key: '计划管理|/checkplan.html'
-  },{
+  }, {
     sub: '我的任务',
     icon: 'solution',
     name: 'checkplanmy',
     key: '我的任务|/checkplanmy.html'
-  },  {
-    sub: '员工管理',
+  }, {
+    sub: '人力资源管理',
     icon: 'contacts',
-    name: 'staffmanagement',
-    key: '员工管理|/staffmanagement.html',
+    key: '人力资源管理',
+    items: ['员工管理|/staffmanagement.html', '请假管理|/leavemanagement.html'],
   }, {
     sub: '部门管理',
     icon: 'fork',
     name: 'department',
     key: '部门管理|/department.html',
-  }, 
+  },{
+    sub: '审批流程管理',
+    icon: 'fork',
+    name: 'approvalProcess',
+    key: '审批流程管理|/approvalProcess.html',
+  },
   // {
   //   sub: '导航测试',
   //   icon: 'home',
@@ -83,13 +88,13 @@ class SiderMenu extends Component {
     });
 
     return (
-      <Menu 
+      <Menu
         onClick={onMenuChange}
-        defaultSelectedKeys={[menuConfig[0].key]} 
+        defaultSelectedKeys={[menuConfig[0].key]}
         mode="inline">
-          {
-            menus
-          }
+        {
+          menus
+        }
       </Menu>
     )
   }

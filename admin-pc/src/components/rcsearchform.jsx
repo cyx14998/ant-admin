@@ -10,6 +10,7 @@ import {
   Col, 
   Input,
   Select,
+  DatePicker,
   Form,
 } from 'antd';
 const FormItem = Form.Item;
@@ -85,6 +86,18 @@ class SearchForm extends Component {
                     ))
                   }
                 </Select>
+              )}
+            </FormItem>
+          </Col>
+        )
+      }
+
+      if (item.type === 'picker') {
+        return (
+          <Col span={itemWidth} key={i}>
+            <FormItem label={item.label} {...formItemLayout}>
+              {getFieldDecorator(item.name)(
+                <DatePicker style={{width: '100%'}}/>
               )}
             </FormItem>
           </Col>
