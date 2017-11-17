@@ -17,6 +17,7 @@ import {
 const columns = [{
     title: '企业用水量',
     dataIndex: 'consumption',
+    validateType: 'number',
 }, {
     title: '年耗量',
     dataIndex: 'annualConsumption',
@@ -52,6 +53,9 @@ export const CustomerEditBaseinfoWater = connectEditableSectionApi({
         return new Promise((resolve, reject) => {
             // 获取用水信息列表
             var cusId = getLocQueryByLabel('id');
+            if (!cusId) {
+                cusId = localStorage.getItem('yt-customerId');
+            }
             if (!cusId) return;
 
             getWaterBaseInfoList({}).then(res => {
@@ -125,7 +129,7 @@ export const CustomerEditBaseinfoWater = connectEditableSectionApi({
         return new Promise((resolve, reject) => {
             getWaterBaseInfoDelete(tableId).then(res => {
                 console.log('DeleteWater res---------------', res);
-                
+
                 if (res.data.result !== 'success') {
                     resolve({
                         code: -1,

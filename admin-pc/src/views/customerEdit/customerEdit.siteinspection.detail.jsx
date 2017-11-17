@@ -16,6 +16,7 @@ import {
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
+const { TextArea } = Input;
 
 import {
   MyToast
@@ -42,7 +43,7 @@ import {
 import QiniuUploadFile from '../../components/upload.file';
 
 
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath;
 
 /**
  * @params editId
@@ -159,7 +160,7 @@ class WasteWaterDischargeDetail extends React.Component {
           this.setState({ tableId: res.data.tableId });
 
           setTimeout(() => {
-              this.props.closeModal()
+            this.props.closeModal()
           }, 500);
         }).catch(err => {
           MyToast('接口调用失败')
@@ -181,7 +182,7 @@ class WasteWaterDischargeDetail extends React.Component {
           MyToast("新增成功");
 
           setTimeout(() => {
-              this.props.closeModal()
+            this.props.closeModal()
           }, 500);
         }).catch(err => {
           MyToast('接口调用失败')
@@ -218,12 +219,14 @@ class WasteWaterDischargeDetail extends React.Component {
                     )}
                 </FormItem>
               </Col>
+            </Row>
+            <Row>
               <Col span={8}>
                 <FormItem {...formItemLayout} label="备注">
                   {getFieldDecorator('theRemarks', {
                     initialValue: this.state.data.theRemarks ? this.state.data.theRemarks : '',
                   })(
-                    <Input placeholder="备注" />
+                    <TextArea placeholder="备注" autosize={{ minRows: 1, maxRows: 10}}/>
                     )}
                 </FormItem>
               </Col>

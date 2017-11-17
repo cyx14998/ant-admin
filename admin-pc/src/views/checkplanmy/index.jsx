@@ -20,7 +20,7 @@ import RcSearchForm from '../../components/rcsearchform';
 import { MyToast } from '../../common/utils';
 import { getLocQueryByLabel } from '../../common/utils';
 
-import { MyPlanlist, getCheckplanSubComplete,} from '../../common/api/api.checkplan.my';
+import { MyPlanlist, getCheckplanSubComplete, } from '../../common/api/api.checkplan.my';
 import CheckplanDetailForm from './index.detail'
 
 const checkplanId = getLocQueryByLabel('checkplanId');
@@ -65,7 +65,22 @@ const rcsearchformData = {
         type: 'input',
         label: '企业名称',
         name: 'keyword',
-    }]
+    }, {
+        type: 'select',
+        label: '完成情况',
+        name: 'isComplete',
+        defaultValue: '0',
+        options: [{
+            value: '0',
+            label: '全部'
+        }, {
+            value: '1',
+            label: '已完成'
+        }, {
+            value: '2',
+            label: '未完成'
+        }]
+    },]
 }
 
 //列表页面
@@ -79,6 +94,8 @@ class CustomerCheckPlanMy extends React.Component {
             performerId: '',
             checkSubIdArr: [],
             recordEdit: {},
+            keyword: '',
+            isComplete: '',
         }
 
         this.getData = this.getData.bind(this);
@@ -87,6 +104,19 @@ class CustomerCheckPlanMy extends React.Component {
 
     componentDidMount() {
         this.getData({});
+        columns[5].render = (text, record, index) => (
+            <div>
+                {record.theState ? '已完成' : '执行中'}
+            </div>
+        );
+        columns[5].filters = [{
+            text: '已完成',
+            value: '1',
+        }, {
+            text: '执行中',
+            value: '2',
+        }];
+        columns[5].onFilter = (value, record) =>console.log(1) ;
         columns[6].render = (text, record, index) => (
             <div>
                 <a title="编辑" onClick={() => this.showTestModal(record)}><Icon type="edit" className="yzy-icon" /></a>
@@ -119,7 +149,12 @@ class CustomerCheckPlanMy extends React.Component {
         console.log('handleSearch ---------', values);
         this.getData({
             keyword: values.keyword,
-            inspectionPlanMstId: checkplanId
+            inspectionPlanMstId: checkplanId,
+            isComplete: values.isComplete
+        });
+        this.setState({
+            keyword: values.keyword,
+            isComplete: values.isComplete
         });
     }
 
@@ -133,7 +168,11 @@ class CustomerCheckPlanMy extends React.Component {
                 return;
             }
             MyToast('完成');
-            this.getData({ inspectionPlanMstId: checkplanId })
+            this.getData({
+                keyword: this.state.keyword,
+                inspectionPlanMstId: checkplanId,
+                isComplete: this.state.isComplete
+            })
         }).catch(err => {
             alert(err || '接口失败')
         })
@@ -150,7 +189,7 @@ class CustomerCheckPlanMy extends React.Component {
     //编辑Modal-----显示
     showTestModal(recordEdit) {
         console.log('showModal---------------', recordEdit);
-        
+
         this.setState({
             recordEdit: recordEdit,
             editModalVisible: true,
@@ -164,9 +203,9 @@ class CustomerCheckPlanMy extends React.Component {
                         handleSearch={this.handleFormSearch.bind(this)} />
                 </div>
                 <div className="yzy-list-wrap">
-                    <div className="yzy-list-btns-wrap">
+                    {/* <div className="yzy-list-btns-wrap">
                         <Button type="primary">导出excel</Button>
-                    </div>
+                    </div> */}
                     <Table
                         columns={columns}
                         onTestClick={this.onTestClick}

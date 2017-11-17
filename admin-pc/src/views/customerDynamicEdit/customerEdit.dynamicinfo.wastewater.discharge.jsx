@@ -55,21 +55,21 @@ class WasteGasDischargeDetail extends React.Component {
 	}
 
 	componentDidMount() {
-		//获取所有排放口
-		getWastewaterDischargeList({}).then(res => {
-			if (res.data.result !== 'success') {
-				MyToast(res.data.info)
-				return;
-			}
-			var tableId = [];
-			res.data.wasteWaterDischargePortList.map((item, index) => {
-				tableId.push(item.tableId);
-			})
-			this.setState({ dischargePort: tableId })
-		}).catch(err => {
-			MyToast('接口调用失败')
-		})
-		var tableId = this.props.editId;
+		// //获取所有排放口
+		// getWastewaterDischargeList({}).then(res => {
+		// 	if (res.data.result !== 'success') {
+		// 		MyToast(res.data.info)
+		// 		return;
+		// 	}
+		// 	var tableId = [];
+		// 	res.data.wasteWaterDischargePortList.map((item, index) => {
+		// 		tableId.push(item.tableId);
+		// 	})
+		// 	this.setState({ dischargePort: tableId })
+		// }).catch(err => {
+		// 	MyToast('接口调用失败')
+		// })
+		var tableId = this.props.apiListItemId;
 		if (tableId === '') return;
 		getWastewaterDischargeRecordDetail({ tableId: tableId }).then(res => {
 			console.log("ssssssssssssssssssssssssssssssssssssss", res);
@@ -80,68 +80,68 @@ class WasteGasDischargeDetail extends React.Component {
 			this.setState({
 				data: res.data.wasteWaterDischargeRecord,
 				tableId: res.data.wasteWaterDischargeRecord.tableId,
-				dischargePortItem: res.data.wasteWaterDischargeRecord.wasteWaterDischargePort.tableId
+				dischargePortItem: res.data.wasteWaterDischargeRecord.wasteWaterDischargePort
 			})
 		}).catch(err => {
 			MyToast('接口调用失败')
 		})
 
 	}
-	// 基本信息保存
-	saveDetail(e) {
-		e.preventDefault();
-		const {
-			form
-		} = this.props;
+	// // 基本信息保存
+	// saveDetail(e) {
+	// 	e.preventDefault();
+	// 	const {
+	// 		form
+	// 	} = this.props;
 
-		form.validateFields((err, values) => {
-			if (err) return;
-			console.log('when saveDetail ---', values);
-			var tableId = this.props.editId;
-			if (!tableId) {
-				tableId = this.state.tableId;
-			}
-			//编辑
-			if (tableId) {
-				getWastewaterDischargeRecordUpdate({
-					...values,
-					tableId: tableId,
-				}).then(res => {
-					if (res.data.result !== 'success') {
-						MyToast(res.data.info)
-						return;
-					}
-					MyToast("保存成功")
-				}).catch(err => {
-					MyToast('接口调用失败')
-				});
-			} else {
-				// 新增
-				getWastewaterDischargeRecordAdd({
-					...values,
-					customerMonthDclarationId: cusMId,
-				}).then(res => {
-					if (res.data.result !== 'success') {
-						MyToast(res.data.info)
-						return;
-					}
-					localStorage.setItem('wastewater-discharge-editId', res.data.tableId);
-					this.setState({ tableId: res.data.tableId });
-					this.props.showItemVisible();
-					MyToast("新增成功")
-				}).catch(err => {
-					MyToast('接口调用失败')
-				});
-			}
-		})
-	}
+	// 	form.validateFields((err, values) => {
+	// 		if (err) return;
+	// 		console.log('when saveDetail ---', values);
+	// 		var tableId = this.props.editId;
+	// 		if (!tableId) {
+	// 			tableId = this.state.tableId;
+	// 		}
+	// 		//编辑
+	// 		if (tableId) {
+	// 			getWastewaterDischargeRecordUpdate({
+	// 				...values,
+	// 				tableId: tableId,
+	// 			}).then(res => {
+	// 				if (res.data.result !== 'success') {
+	// 					MyToast(res.data.info)
+	// 					return;
+	// 				}
+	// 				MyToast("保存成功")
+	// 			}).catch(err => {
+	// 				MyToast('接口调用失败')
+	// 			});
+	// 		} else {
+	// 			// 新增
+	// 			getWastewaterDischargeRecordAdd({
+	// 				...values,
+	// 				customerMonthDclarationId: cusMId,
+	// 			}).then(res => {
+	// 				if (res.data.result !== 'success') {
+	// 					MyToast(res.data.info)
+	// 					return;
+	// 				}
+	// 				localStorage.setItem('wastewater-discharge-editId', res.data.tableId);
+	// 				this.setState({ tableId: res.data.tableId });
+	// 				this.props.showItemVisible();
+	// 				MyToast("新增成功")
+	// 			}).catch(err => {
+	// 				MyToast('接口调用失败')
+	// 			});
+	// 		}
+	// 	})
+	// }
 
 
 	render() {
 		let { getFieldDecorator } = this.props.form;
 		return (
 			<div className="yzy-tab-content-item-wrap">
-				<Form onSubmit={this.saveDetail.bind(this)}>
+				<Form >
 					<div className="baseinfo-section">
 						<h2 className="yzy-tab-content-title">废水排放基本信息详情</h2>
 						<Row>
@@ -153,7 +153,7 @@ class WasteGasDischargeDetail extends React.Component {
 										{ pattern: /^[0-9]*$/, message: '数字格式' }
 										],
 									})(
-										<Input placeholder="排放量" />
+										<Input />
 										)}
 								</FormItem>
 							</Col>
@@ -165,34 +165,22 @@ class WasteGasDischargeDetail extends React.Component {
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
-										<Input placeholder="排放去向" />
+										<Input />										
 										)}
 								</FormItem>
 							</Col>
-							<Col span={8}>
+							{/* <Col span={8}>
 								<FormItem {...formItemLayout} label="废水排放口">
-									{getFieldDecorator('wasteWaterDischargePortId', {
-										initialValue: this.state.dischargePortItem + '' || this.state.dischargePort[0] + '',
+									{getFieldDecorator('wasteWaterDischargePort', {
+										initialValue: this.state.data.wasteWaterDischargePort.theName,
 										rules: [{ required: true, message: '请选择废水排放口' },
-										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
-										<Select>
-											{
-												this.state.dischargePort.map((item, index) => {
-													return (
-														<Option key={index} value={item.toString()}>{item.toString()}</Option>
-													)
-												})
-											}
-										</Select>
+										<Input />										
 										)}
 								</FormItem>
-							</Col>
+							</Col> */}
 						</Row>
-					</div>
-					<div className="yzy-block-center">
-						<Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
 					</div>
 				</Form>
 			</div>

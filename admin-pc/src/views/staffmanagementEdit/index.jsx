@@ -34,7 +34,7 @@ class StaffManagementEdit extends Component {
   }
 
   componentDidMount() {
-    
+
   }
 
   onStaffDetailsSave(values) {
@@ -56,7 +56,7 @@ class StaffManagementEdit extends Component {
         setTimeout(() => {
           window.location.search = `staffId=${res.data.tableId}`;
         }, 500);
-        
+
       }).catch(err => MyToast('新增失败'));
     } else {
       // update
@@ -67,20 +67,23 @@ class StaffManagementEdit extends Component {
         if (res.data.result !== 'success') {
           return MyToast(res.data.info || '更新失败')
         }
-
+        //改变用户头像和用户名
+        // $('#userHeadImg').attr('src', values.);
+        parent.document.getElementById('userHeadImg').setAttribute('src', values.headImagePath);
+        parent.document.getElementById('userName').innerHTML = values.realName;
+        localStorage.setItem('headImagePath', values.headImagePath);
+        localStorage.setItem('userName', values.realName);
         MyToast('更新成功');
-      }).catch(err => MyToast('更新失败'));
+      }).catch(err => console.log('更新失败', err));
     }
   }
-
-
 
   render() {
     return (
       <div className="yzy-page">
         <div className="yzy-list-wrap">
           <StaffDetails staffId={this.state.staffId} onSave={this.onStaffDetailsSave.bind(this)} />
-          { this.state.staffId && <StaffCertModule apiListItemId={this.state.staffId} /> }
+          {this.state.staffId && <StaffCertModule apiListItemId={this.state.staffId} />}
         </div>
       </div>
     )

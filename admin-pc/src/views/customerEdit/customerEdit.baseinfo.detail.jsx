@@ -37,7 +37,7 @@ import {
 
 //引入上传图片组件
 import QiniuUpload from '../../components/upload';
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath;
 const uploadUrl = 'http://up.qiniu.com/';
 
 const formItemLayout = {
@@ -67,6 +67,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             townId: '',
             uptoken: '',
             onBaseinfoSave: this.props.onBaseinfoSave || '',
+            tableId: '', //控制新增or编辑
         });
     }
 
@@ -314,7 +315,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
             data.factoryFloorPlanURL = positionFileUrl;
             console.log('when savebaseInfoDetail ----------', data);
 
-            var cusId = getLocQueryByLabel('id');
+            var cusId = getLocQueryByLabel('id') || self.state.tableId;
             if (cusId === '') {
                 //新增
                 saveAddCustomerInfoById(data).then(res => {
@@ -324,9 +325,12 @@ class CustomerEditBaseinfoDetail extends React.Component {
                         MyToast(res.data.info);
                         return
                     }
-                    MyToast('保存成功');
+                    MyToast('新增成功');
                     self.state.onBaseinfoSave(); //控制其他tabs可用
                     localStorage.setItem("yt-customerId", res.data.tableId);
+                    self.setState({
+                        tableId: res.data.tableId,
+                    });
                 }).catch(err =>
                     MyToast(err)
                     )
@@ -430,7 +434,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('phoneNumber', {
                                         initialValue: customer.phoneNumber ? customer.phoneNumber : '',
                                         rules: [{ required: true, message: '必填' },
-                                        { pattern: /^(13[0-9]|15[0|1|3|6|7|8|9]|18[8|9])\d{8}$/, message: '请输入正确的电话号码!' }
+                                        { pattern: /^[0-9]*$/, message: '请输入正确的电话号码!' }
                                         ],
                                     })(
                                         <Input placeholder="电话" />
@@ -457,7 +461,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('longitude', {
                                         initialValue: customer.longitude ? customer.longitude + "" : '',
                                         rules: [
-                                            { pattern: /^-?(([1-9]\d?)|(1[1-7]\d)|180)(\.\d{1,6})?$/, message: '请输入正确的经度!' }
+                                            { pattern: /^\d+(\.\d+)?$/, message: '请输入正确的经度!' }
                                         ],
                                     })(
                                         <Input placeholder="中心经度" />
@@ -469,7 +473,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('latitude', {
                                         initialValue: customer.latitude ? customer.latitude + "" : '',
                                         rules: [
-                                            { pattern: /^-?(([1-8]\d?)|([1-8]\d)|90)(\.\d{1,6})?$/, message: '请输入正确的纬度!' }
+                                            { pattern: /^\d+(\.\d+)?$/, message: '请输入正确的纬度!' }
                                         ],
                                     })(
                                         <Input placeholder="中心纬度" />
@@ -481,7 +485,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
                                     {getFieldDecorator('fax', {
                                         initialValue: customer.fax ? customer.fax : '',
                                         rules: [
-                                            { pattern: /^(\d{3,4}-)?\d{7,8}$/, message: '请输入正确格式的传真' }
+                                            { pattern: /^[0-9]*$/, message: '请输入正确格式的传真' }
                                         ],
                                     })(
                                         <Input placeholder="传真" />

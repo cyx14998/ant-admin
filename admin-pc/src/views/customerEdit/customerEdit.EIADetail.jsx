@@ -34,7 +34,7 @@ import {
 
 import QiniuUploadFile from '../../components/upload.file';
 
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath;
 const uploadUrl = 'http://up.qiniu.com/';
 class WasteWaterDischargeDetail extends React.Component {
     constructor(props) {

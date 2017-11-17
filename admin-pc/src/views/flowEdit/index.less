@@ -1,0 +1,88 @@
+@import '../../theme/index.less';
+
+@color: rgba(26, 179, 148, 1);
+.yzy-page{
+    .yzy-list-wrap{
+        .approval-content{
+            padding: 20px 0;
+            .approval-list{
+                width: 200px;
+                margin: 0 auto;
+                .approval-item{
+                    .item-body{
+                        text-align: center;
+                        height: 120px;
+                        line-height: 120px;
+                        background: rgba(26, 179, 148, .3);
+                        position: relative;
+                        border-radius: 5px;
+                        .item-edit, .item-del{
+                            width: 40px;
+                            height: 20px;
+                            color: @color;
+                            border: 1px solid @color;
+                            border-radius: 3px;
+                            position: absolute;
+                            cursor: pointer;
+                            i{
+                                position: absolute;
+                            }
+                        }
+                        .item-del{
+                            top: 0;
+                            right: -40px;
+                            i{
+                                top: 3px;
+                                right: 12px;
+                            }
+                        }
+                        .item-edit{
+                            top: 21px;
+                            right: -40px;
+                            i{
+                                top: 1px;
+                                right: 10px;
+                            }
+                        }
+                    }
+                    .item-nextArr{
+                        height: 120px;
+                        background: url('../../media/flow_arrow.png') top center no-repeat;
+                        background-size: auto 100%;
+                        position: relative;
+                        .insert-action{
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            background: #fff;
+                            padding: 5px 0;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            margin-left: -21px;
+                            margin-top: -15px;
+                            cursor: pointer;
+                            p{
+                                display: inline-block;
+                                border: 1px solid @color;
+                                padding: 2px 5px;
+                                border-radius: 3px;
+                                color: @color;
+                            }
+                        }
+                    }
+                    &:last-child{
+                        .item-nextArr{
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.approvalProcessSave{
+    text-align: center;
+    margin-bottom: 20px;
+}

@@ -72,3 +72,39 @@ export function convertObjectLabel(source, valueProp='tableId', labelProp='theNa
 }
 
 
+/**
+ * @props value
+ * @props options 
+ * @return label
+ */
+export function getLabelFromOptions(value, options) {
+  var label = '';
+
+  for (var i=0, len=options.length; i<len; i++) {
+    if (options[i].value === value) {
+      label = options[i].label;
+      break;
+    }
+  }
+
+  return label;  
+}
+
+/**
+ * 数组切割
+ * @props arr      [{id: '001'}, {id: '002'}]
+ * @props rowKey   id
+ * @props key      001
+ * @return newArr  [{id: '002'}]
+ */
+export function getSlicedObjectArray(arr, rowKey, key) {
+  var newArr = [];
+
+  arr.map(item => {
+    if (item[rowKey] !== key) {
+      newArr.push(item)
+    }
+  });
+
+  return newArr;
+}

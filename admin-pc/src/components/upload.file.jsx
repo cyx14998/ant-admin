@@ -18,7 +18,6 @@ import {
   MyToast,
 } from '../common/utils';
 
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
 const uploadUrl = 'http://up.qiniu.com/';
 
 const uploadData = {};
@@ -45,8 +44,8 @@ class QiniuUploadFile extends React.Component {
   componentDidMount() {
     getQiNiuToken({}).then(res => {
       if (!res.data || !res.data.uptoken) {
-          MyToast('getqiniuyun uptoken error');
-          return;
+        MyToast('getqiniuyun uptoken error');
+        return;
       }
 
       uploadData.token = res.data.uptoken;
@@ -62,9 +61,9 @@ class QiniuUploadFile extends React.Component {
     var ext = fileName.split('.')[1] || '';
     var date = new Date();
     var y = date.getFullYear(),
-        m = date.getMonth() + 1,
-        d = date.getDate(),
-        timestamp = date.getTime();
+      m = date.getMonth() + 1,
+      d = date.getDate(),
+      timestamp = date.getTime();
 
     m = m < 10 ? ('0' + m) : m;
     d = d < 10 ? ('0' + d) : d;
@@ -114,18 +113,18 @@ class QiniuUploadFile extends React.Component {
     return (
       <div>
         <Upload
-            action='http://up.qiniup.com'
-            container="container"
-            multiple={false}
-            accept={acceptType}
-            beforeUpload={this.beforeUpload.bind(this)}
-            onChange={this.handleUploadChange.bind(this)}
-            fileList={uploadedFileList}
-            data={uploadData}>
-            {
-              uploadedFileList.length === maxLength ? null : 
+          action='http://up.qiniup.com'
+          container="container"
+          multiple={false}
+          accept={acceptType}
+          beforeUpload={this.beforeUpload.bind(this)}
+          onChange={this.handleUploadChange.bind(this)}
+          fileList={uploadedFileList}
+          data={uploadData}>
+          {
+            uploadedFileList.length === maxLength ? null :
               (
-                <Button><Icon type="upload" /> Click to Upload </Button>
+                <Button><Icon type="upload" />上传文件</Button>
               )
           }
         </Upload>

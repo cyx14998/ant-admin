@@ -58,17 +58,6 @@ const columns = [{
 }];
 
 /**
- * 可选项
- */
-const options = [{
-  value: 'sy',
-  label: '事业单位'
-}, {
-  value: 'qy',
-  label: '企业单位'
-}];
-
-/**
  * 新数据默认值
  */
 const itemDataModel = {

@@ -78,7 +78,9 @@ class SearchForm extends Component {
         return (
           <Col span={itemWidth} key={i}>
             <FormItem label={item.label} {...formItemLayout}>
-              {getFieldDecorator(item.name)(
+              {getFieldDecorator(item.name, {
+                initialValue: item.defaultValue || ''
+              })(
                 <Select>
                   {
                     item.options.map((opt, i) => (

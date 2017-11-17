@@ -21,7 +21,7 @@ const Option = Select.Option;
 
 import EditableCell from './editable.cell';
 
-import RULES from '../../common/utils/validate.rules';
+import RULES from '../../common/utils/validate';
 
 import {
   MyToast,
@@ -31,7 +31,7 @@ import {
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
 
-const fileDownloadPath = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const fileDownloadPath = BaseConfig.qiniuPath;
 
 
 const changeObjectEditable = (data, rowKey, key, editable) => {
@@ -56,6 +56,7 @@ const changeObjectEditable = (data, rowKey, key, editable) => {
  * @props loading
  * @props pagination
  * @props onThirdEye  查看按钮
+ * @props CustomerBtn 自定义按钮
  */
 class EditableTable extends React.Component {
   constructor(props) {
@@ -90,11 +91,12 @@ class EditableTable extends React.Component {
       columns,
       rowKey='tableId',
       onThirdEye,
+      CustomerBtn,
     } = this.props;
 
     var validateTypes = this.getValidateTypes(columns);
 
-    var formatedColumns = this.getColumns({columns, rowKey, onThirdEye});
+    var formatedColumns = this.getColumns({columns, rowKey, onThirdEye, CustomerBtn});
 
     this.setState({
       columns: formatedColumns,
@@ -114,11 +116,12 @@ class EditableTable extends React.Component {
   }
 
   // 通过动态渲染数据来控制可编辑性
-  getColumns({columns, rowKey, onThirdEye}) {
+  getColumns({columns, rowKey, onThirdEye, CustomerBtn}) {
     for (let i=0, len=columns.length; i<len; i++) {
       columns[i].render = (text, record) => {
         // 操作栏
         if (columns[i].dataIndex === 'operation') {
+          
           // 新添加行
           if (record.tableId === '') {
             return (
@@ -141,6 +144,10 @@ class EditableTable extends React.Component {
                 <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteItem(record[rowKey])}>
                   <a title="删除"><Icon type="delete" /></a>
                 </Popconfirm>
+
+                {
+                  typeof CustomerBtn === 'function' && <CustomerBtn record={record} />
+                }
               </div>
             )
           }
@@ -364,7 +371,7 @@ class EditableTable extends React.Component {
 
     let _dataSource = this.state.dataSource;
 
-    if (_dataSource[0][rowKey] === '') return MyToast('请先保存新增项');
+    if (_dataSource[0] && _dataSource[0][rowKey] === '') return MyToast('请先保存新增项');
 
     this.setState(prev => {
       let _itemDataModel = JSON.parse(JSON.stringify(itemDataModel));

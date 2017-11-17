@@ -21,7 +21,7 @@ import WasteWaterDischargeFactor from './customerEdit.dynamicinfo.wastewater.dis
  * 废水排放基本信息详情
  */
 // import WasteWaterDischargeDetail from './customerEdit.dynamicinfo.wastewater.discharge';
-
+// <WasteWaterDischargeDetail apiListItemId={this.state.eidtId}/>
 
 import {
   getWastewaterDischargeList, // 选择废水排放口
@@ -251,7 +251,7 @@ class WasteWaterDischargeRecord extends React.Component {
           title="废水排放因子"
           onCancel={this.handleCancel.bind(this)}
           footer={null}>
-          {this.state.eidtId === '' ? null : <WasteWaterDischargeFactor apiListItemId={this.state.eidtId} />}
+          {this.state.eidtId === '' ? null : <div><WasteWaterDischargeFactor apiListItemId={this.state.eidtId} /></div>}
         </DraggableModal>
       </div>
     )

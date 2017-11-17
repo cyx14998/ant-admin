@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --config webpack.dev.js --progress --colors --inline --hot --history-api-fallback",
+    "start": "webpack-dev-server --config webpack.dev.js --progress --colors --inline --hot --host 0.0.0.0 --history-api-fallback",
     "build": "webpack --config webpack.prod.js --progress --profile --colors"
   },
   "repository": {
@@ -24,6 +24,7 @@
   "dependencies": {
     "antd": "^2.13.6",
     "axios": "^0.16.2",
+    "babel-polyfill": "^6.26.0",
     "crypto-js": "^3.1.9-1",
     "koa": "^2.3.0",
     "koa-router": "^7.2.1",

@@ -57,6 +57,9 @@ export const CustomerEditBaseinfoEnergy = connectEditableSectionApi({
     return new Promise((resolve, reject) => {
       // 获取能源信息列表
       var cusId = getLocQueryByLabel('id');
+      if (!cusId) {
+        cusId = localStorage.getItem('yt-customerId');
+      }
       if (!cusId) return;
 
       getEnergyBaseInfoList({}).then(res => {

@@ -10,13 +10,22 @@
      pageNumber = 1,
      countPerPage = 1000,
      keyword,
+     isComplete
  }) {
+     var params = {};
+     // 完成情况        
+     if (isComplete === '1') {
+         params.isComplete = true;
+     } else if (isComplete === '2') {
+         params.isComplete = false;
+     }
      return axios.get('/uInspectionPlanDtlForMeList.uhtm?InterfaceVersion=' + apiVer, {
          params: {
              token: getToken(),
              pageNumber,
              countPerPage,
-             keyword
+             keyword,
+             ...params
          }
      })
  }

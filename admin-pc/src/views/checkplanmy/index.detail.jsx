@@ -25,9 +25,11 @@ const Option = Select.Option;
 import {
     getLocQueryByLabel, MyToast
 } from '../../common/utils';
+
 import QiniuUploadFile from '../../components/upload.file';
 
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath; // BaseConfig.qiniuPath;
+
 const uploadUrl = 'http://up.qiniu.com/';
 
 const formItemLayout = {

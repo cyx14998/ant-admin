@@ -15,7 +15,7 @@ import {
  * table head
  */
 const columns = [{
-  title: '主要产品名称',
+  title: '原辅材料名称',
   dataIndex: 'theName',
 }, {
   title: '计量单位',
@@ -57,6 +57,10 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
     return new Promise((resolve, reject) => {
       // 获取原辅材料信息列表
       var cusId = getLocQueryByLabel('id');
+            
+      if (!cusId) {
+        cusId = localStorage.getItem('yt-customerId');
+      }
       if (!cusId) return;
 
       getMaterialBaseInfoList({}).then(res => {

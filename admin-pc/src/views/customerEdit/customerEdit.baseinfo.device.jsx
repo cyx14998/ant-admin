@@ -76,6 +76,9 @@ export const CustomerEditBaseinfoDevice = connectEditableSectionApi({
         return new Promise((resolve, reject) => {
             // 获取生产装置信息列表
             var cusId = getLocQueryByLabel('id');
+            if (!cusId) {
+                cusId = localStorage.getItem('yt-customerId');
+            }
             if (!cusId) return;
             getDeviceBaseInfoList({}).then(res => {
                 console.log('Devicelist res', res)

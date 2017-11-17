@@ -17,7 +17,7 @@ import {
   MyToast,
 } from '../common/utils';
 
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath; //  BaseConfig.qiniuPath;
 const uploadUrl = 'http://up.qiniu.com/';
 
 const uploadData = {};
@@ -83,6 +83,13 @@ class QiniuUpload extends React.Component {
     if (!isLt2M) {
       MyToast('请选择图片小于2MB!');
     }
+
+    // accept     image/*
+    // file.type  image/png
+
+    // accept.split('/')[0] === '*' || accept.split('/')[0] === file.type.split('/')[0]
+
+
 
     // get file path 
     var filepath = this.getFileKey(file.type, file.name);

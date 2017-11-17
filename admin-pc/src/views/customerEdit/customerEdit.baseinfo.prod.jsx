@@ -58,7 +58,12 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
     return new Promise((resolve, reject) => {
       // 获取产品信息列表
       var cusId = getLocQueryByLabel('id');
-      if (!cusId) return;
+      
+      if (!cusId) {
+        cusId = localStorage.getItem('yt-customerId');
+      }
+
+      if (!cusId)  return;
 
       getProductBaseInfoList({}).then(res => {
         console.log('prolist res--------',res);
@@ -95,9 +100,10 @@ export const CustomerEditBaseinfoProd = connectEditableSectionApi({
             });
             return
           }
+
           resolve({
             code: 0 // success
-          })
+          });
         }).catch(err => {
           reject(err)
         });

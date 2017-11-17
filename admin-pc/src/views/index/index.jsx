@@ -20,52 +20,60 @@ import './index.less';
  * iframe 调用钩子
  */
 window.iframeHook = {};
+const imgCircleUrl = localStorage.getItem('headImagePath');
 
 const MenuTop = ({
     logout
 }) => (
-    <div className="yzy-avatar-wrap">
-        <img src={imgCircle} alt="" className="avatar" />
-        <div className="avatar-info">
-            <span>{localStorage.getItem('userName')?localStorage.getItem('userName'): '友通管理员'}</span>
-            <div className="controls">
-              <span className="username">游客</span>
-              <span className="split">|</span>
-              <a className="logout" onClick={logout}>退出</a>
+        <div className="yzy-avatar-wrap">
+            <img id="userHeadImg" src={imgCircleUrl ? imgCircleUrl : imgCircle} alt="" className="avatar" />
+            <div className="avatar-info">
+                <span id="userName">{localStorage.getItem('userName') ? localStorage.getItem('userName') : '友通管理员'}</span>
+                <div className="controls">
+                    <span className="username">游客</span>
+                    <span className="split">|</span>
+                    <a className="logout" onClick={logout}>退出</a>
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
 
 // 面包屑
-const BreadcrumbMap = ({
-    breads,
-    onBreadClick
-}) => {
+class BreadcrumbMap extends React.Component {
+    constructor(props) {
+        super(props);
+    }
 
-    return (
-      <Breadcrumb>
-        {
-            breads.map(bread => {
-                let arrBread = bread.split('|');
+    render() {
+        let {
+            breads,
+            onBreadClick
+        } = this.props;
 
-                if (!arrBread[1]) {
-                    return (
-                        <Breadcrumb.Item key={bread}>
-                            {arrBread[0]}
-                        </Breadcrumb.Item>
-                    )
+        return (
+            <Breadcrumb>
+                {
+                    breads.map(bread => {
+                        let arrBread = bread.split('|');
+
+                        if (!arrBread[1]) {
+                            return (
+                                <Breadcrumb.Item key={bread}>
+                                    {arrBread[0]}
+                                </Breadcrumb.Item>
+                            )
+                        }
+
+                        return (
+                            <Breadcrumb.Item key={bread}>
+                                <a onClick={() => onBreadClick(bread, breads)} >{arrBread[0]}</a>
+                            </Breadcrumb.Item>
+                        )
+                    })
                 }
-
-                return (
-                    <Breadcrumb.Item key={bread}>
-                        <a onClick={() => onBreadClick(bread, breads)} >{arrBread[0]}</a>
-                    </Breadcrumb.Item>
-                )
-            })
-        }
-      </Breadcrumb>
-    );
+            </Breadcrumb>
+        );
+    }
 }
 
 import SiderMenu from './sidermenu';
@@ -93,7 +101,7 @@ class Page extends React.Component {
          * @breadIncrement
          * @incrementType    add/replace
          */
-        window.iframeHook.changePage = function ({url, breadIncrement, incrementType='add'}) {
+        window.iframeHook.changePage = function ({ url, breadIncrement, incrementType = 'add' }) {
             if (!url) return;
 
             let breadIncrementHadin = self.state.breads.indexOf(breadIncrement) !== -1;
@@ -147,7 +155,7 @@ class Page extends React.Component {
     }
 
     onCollapse(collapsed) {
-      this.setState({ collapsed });
+        this.setState({ collapsed });
     }
     /**
      * SiderMenu
@@ -158,7 +166,7 @@ class Page extends React.Component {
 
         if (url === this.state.url) {
             this.setState({
-                url:   `${url}#${Math.random()}`
+                url: `${url}#${Math.random()}`
             });
             return;
         }
@@ -181,7 +189,7 @@ class Page extends React.Component {
 
         // 后面的面包屑切掉
         var index = 0;
-        for (var i=0, len=breads.length; i<len; i++) {
+        for (var i = 0, len = breads.length; i < len; i++) {
             if (breads[i] === bread) {
                 index = i;
                 break;
@@ -190,13 +198,13 @@ class Page extends React.Component {
 
         this.setState({
             url,
-            breads: breads.slice(0, index+1)
+            breads: breads.slice(0, index + 1)
         })
     }
 
     logout() {
-        // localStorage.removeItem('token');
-        localStorage.clear();
+        localStorage.removeItem('token');
+        // localStorage.clear();
         window.location.replace('/login.html');
     }
 
@@ -217,23 +225,23 @@ class Page extends React.Component {
                 </Sider>
                 <Layout>
                     <Header>
-                        <BreadcrumbMap 
+                        <BreadcrumbMap
                             breads={this.state.breads}
                             onBreadClick={this.onBreadClick.bind(this)}
                             className="yzy-breadcrumb" />
                     </Header>
-                    <Content style={{width: '100%', height: '100%', overflow: 'hidden'}}>
-                        <iframe 
-                            id='innerFrame' 
-                            src={this.state.url} 
-                            frameBorder="0" 
-                            style={{ width: '100%', height: '100%',  borderLeft: '1px solid #e9e9e9' }}></iframe>
+                    <Content style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+                        <iframe
+                            id='innerFrame'
+                            src={this.state.url}
+                            frameBorder="0"
+                            style={{ width: '100%', height: '100%', borderLeft: '1px solid #e9e9e9' }}></iframe>
                     </Content>
                 </Layout>
             </Layout>
         );
 
-        
+
     }
 }
 

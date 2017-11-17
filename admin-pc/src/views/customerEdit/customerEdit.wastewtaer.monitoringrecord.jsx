@@ -18,7 +18,7 @@ import {
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
 
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath;
 
 /**
  * table head
@@ -127,7 +127,7 @@ const WasteWaterMonitoringRecord = connectEditableSectionApi({
       filePath = file.url;
     }
 
-    if (file && file.response.filePath) {
+    if (file && file.response) {
       filePath = downloadUrl + file.response.filePath
     }
 

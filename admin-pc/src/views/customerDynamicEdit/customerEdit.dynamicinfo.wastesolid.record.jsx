@@ -24,13 +24,15 @@ const dynamicId = getLocQueryByLabel('dynamicId');
 /**
  * table head
  */
-const columns = [{
-  title: '废物名称',
-  dataIndex: 'theName',
-}, {
+const columns = [
+//   {
+//   title: '废物名称',
+//   dataIndex: 'theName',
+// }, 
+{
   title: '所属固体废物',
   dataIndex: 'wasteSolidId',
-  width: 80,
+  width: 120,
 }, {
   title: '主要污染物',
   dataIndex: 'mainPollutants',

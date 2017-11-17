@@ -36,11 +36,11 @@ const menuConfig = [
     icon: 'fork',
     name: 'department',
     key: '部门管理|/department.html',
-  },{
+  }, {
     sub: '审批流程管理',
     icon: 'fork',
-    name: 'approvalProcess',
-    key: '审批流程管理|/approvalProcess.html',
+    name: 'flow',
+    key: '审批流程管理|/flow.html',
   },
   // {
   //   sub: '导航测试',
@@ -49,6 +49,28 @@ const menuConfig = [
   //   items: ['客户检查计划管理|/checkplan.html', '员工管理|/staffmanagement.html',]
 
   // }
+  {
+    sub: '采购管理',
+    icon: 'home',
+    key: ' 采购管理',
+    items: ['采购单管理|/purchaseorders.html',
+      '入库单管理|/purchaseorderswarehousing.html',
+      '出库单管理|/purchaseordersoutbound.html',
+      '付款单管理|/purchaseorderspayment.html',
+      '库存管理|/stock.html',
+    ]
+    // '入库单管理|/staffmanagement.html',stock
+  }, {
+    sub: '行政管理',
+    icon: 'bell',
+    key: '行政管理',
+    items: ['公告管理|/noticemanagement.html'],
+  }, {
+    sub: '系统管理',
+    icon: 'setting',
+    key: '系统管理',
+    items: ['权限管理|/authoritymanagement.html', '菜单管理|/menumanagement.html'],
+  },
 ];
 
 class SiderMenu extends Component {

@@ -41,7 +41,7 @@ const formItemLayout = {
   wrapperCol: { span: 18 },
 }
 
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath;
 const uploadUrl = 'http://up.qiniu.com/';
 
 class StaffCertEdit extends React.Component {
@@ -50,7 +50,7 @@ class StaffCertEdit extends React.Component {
 
     this.state = {
       uploadedFileList: [],
-      
+
       data: {
         theName: '',
         serialNumber: '',
@@ -102,9 +102,9 @@ class StaffCertEdit extends React.Component {
     })
   }
 
-  handleUploadedFileList({fileList}) {
+  handleUploadedFileList({ fileList }) {
     this.setState({
-        uploadedFileList: fileList,
+      uploadedFileList: fileList,
     });
   }
 
@@ -165,7 +165,6 @@ class StaffCertEdit extends React.Component {
           }
 
           MyToast('更新成功');
-
           setTimeout(() => {
             window.location.reload();
           }, 500);
@@ -206,7 +205,7 @@ class StaffCertEdit extends React.Component {
                     )}
                 </FormItem>
               </Col>
-              
+
             </Row>
             <Row>
               <Col span={12}>
@@ -233,13 +232,13 @@ class StaffCertEdit extends React.Component {
                     )}
                 </FormItem>
               </Col>
-              
+
             </Row>
             <Row>
               <Col span={12}>
                 <FormItem {...formItemLayout} label="复证周期">
                   {getFieldDecorator('repetitionCycle', {
-                    initialValue: this.state.data.repetitionCycle ,
+                    initialValue: this.state.data.repetitionCycle,
                     rules: [{ required: true },
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
@@ -263,10 +262,10 @@ class StaffCertEdit extends React.Component {
                 <div className="yzy-tab-content-item-wrap">
                   <h2 className="yzy-tab-content-title">证件上传</h2>
                   <QiniuUpload
-                      uploadTitle="证件上传"
-                      uploadedFileList={this.state.uploadedFileList}
-                      handleUploadedFileList={this.handleUploadedFileList.bind(this)}
-                     />
+                    uploadTitle="证件上传"
+                    uploadedFileList={this.state.uploadedFileList}
+                    handleUploadedFileList={this.handleUploadedFileList.bind(this)}
+                  />
                 </div>
               </Col>
             </Row>

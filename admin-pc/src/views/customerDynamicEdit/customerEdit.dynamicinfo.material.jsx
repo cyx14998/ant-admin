@@ -15,7 +15,7 @@ import {
  * table head
  */
 const columns = [{
-  title: '主要产品名称',
+  title: '原辅材料名称',
   dataIndex: 'theName',
 }, {
   title: '计量单位',

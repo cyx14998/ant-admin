@@ -10,7 +10,7 @@ import {
   getIEPSUpdate,
   getIEPSDelete,
 } from '../../common/api/api.customer.plus.js';
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath;
 
 /**
  * table head

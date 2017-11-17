@@ -100,8 +100,8 @@ const itemDataModel = {
  */
 const EditableDemoSection = connectEditableSectionApi({
   secTitle: '',
+  pagination: true,
   columns: columns,
-
   apiLoader: function ({ apiListItemId }) {
     console.log('apiListItemId---------', apiListItemId);
 
@@ -247,10 +247,10 @@ class CustomerCheckPlan extends Component {
 
   // 搜索
   handleFormSearch(values) {
-    if (!values.keyword) return;
+    // if (!values.keyword) return;
     console.log('handleFormSearch--------', values)
     this.setState({
-      keyword: values.keyword,
+      keyword: values.keyword  ? values.keyword : '',
     });
   }
 

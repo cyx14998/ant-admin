@@ -203,14 +203,18 @@ class DepartmentEdit extends Component {
 
       console.log('values-------', values);
       if (record.tableId === undefined && this.state.newAddDepartmentId === '') {
+        var fatherId = values.fatherId;
+        if (fatherId) {
+          fatherId = parseInt(fatherId)
+        }
         // addrecord
         addRecord({
-          fatherId: parseInt(values.fatherId),
+          fatherId: fatherId,
           theName: values.theName
         });
       } else {
         editRecord({
-          fatherId: parseInt(values.fatherId),
+          fatherId: fatherId,
           tableId: record.tableId || this.state.newAddDepartmentId,
           theName: values.theName
         })
@@ -249,7 +253,7 @@ class DepartmentEdit extends Component {
                 <FormItem {...formItemLayout} label="部门名称">
                   {getFieldDecorator('theName', {
                     initialValue: record.theName ? record.theName + '' : '',
-                    rules: [{ required: true },
+                    rules: [{ required: true, message: '请输入部门名称' },
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
@@ -261,7 +265,7 @@ class DepartmentEdit extends Component {
                 <FormItem {...formItemLayout} label="上级部门">
                   {getFieldDecorator('fatherId', {
                     initialValue: record.fatherId ? record.fatherId + '' : '',
-                    rules: [{required: true}]
+                   
                   })(
                     <Select placeholder="上级部门">
                       {

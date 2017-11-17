@@ -22,7 +22,7 @@ import {
 
 import axios from '../../common/api';
 
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath;
 
 
 /**

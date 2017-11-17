@@ -76,13 +76,13 @@ const itemDataModel = {
   theName: '',
   theLevel: '',
   editDatetime: '',
-  DocumentNumberTPA: '',
+  documentNumberTPA: '',
   approvalTimeTPA: '',
-  DocumentNumberEIA: '',
+  documentNumberEIA: '',
   approvalTimeEIA: '',
-  DocumentNumberFAA: '',
+  documentNumberFAA: '',
   approvalTimeFAA: '',
-  SelfAcceptanceURL: '',
+  selfAcceptanceURL: '',
 };
 
 const InnerComponent = ({

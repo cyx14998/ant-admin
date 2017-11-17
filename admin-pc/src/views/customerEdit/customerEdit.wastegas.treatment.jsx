@@ -11,7 +11,7 @@ import {
   getWastewaterTreatmentDelete,
   getWastewaterTreatmentUpdate,
 } from '../../common/api/api.customer.plus.js';
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath;
 
 import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';

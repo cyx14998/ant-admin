@@ -64,6 +64,11 @@ class LoginForm extends React.Component {
     changePsd(e) {
         this.setState({ password: e.target.value });
     }
+    onKeyDown(e) {
+        if (e.keyCode === 13) {
+            this.handleSubmit();
+        }
+    }
     //记住用户名
     remember() {
         this.setState({ remember: !this.state.remember })
@@ -101,6 +106,7 @@ class LoginForm extends React.Component {
             localStorage.setItem("token", res.data.token);
             window.location = '/index.html';
             localStorage.setItem('userName', res.data.realName);
+            localStorage.setItem('headImagePath', res.data.headImagePath);
         }).catch(err => {
             MyToast('服务器繁忙')
             console.log(err)
@@ -110,12 +116,12 @@ class LoginForm extends React.Component {
         // console.log(phoneNumber);
         return (
             <div className="login-form">
-                <Input placeholder="请输入手机号码" value={this.state.phoneNumber}
+                <Input placeholder="请输入手机号码" defaultValue={this.state.phoneNumber}
                     prefix={<Icon type="user" style={{ fontSize: 20, color: '#999' }} />}
-                    onChange={this.changePhoneNum.bind(this)} />
+                    onInput={this.changePhoneNum.bind(this)} onKeyUp={this.onKeyDown.bind(this)} />
                 <Input type="password" placeholder="请输入密码"
                     prefix={<Icon type="lock" style={{ fontSize: 20, color: '#999' }} />}
-                    onChange={this.changePsd.bind(this)} />
+                    onInput={this.changePsd.bind(this)} onKeyUp={this.onKeyDown.bind(this)} />
                 <div className="remember">
                     <Checkbox
                         onChange={this.remember.bind(this)}

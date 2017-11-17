@@ -40,7 +40,7 @@ const formItemLayout = {
   wrapperCol: { span: 16 },
 }
 
-const downloadUrl = 'http://oyc0y0ksm.bkt.clouddn.com/';
+const downloadUrl = BaseConfig.qiniuPath;
 const uploadUrl = 'http://up.qiniu.com/';
 
 /**

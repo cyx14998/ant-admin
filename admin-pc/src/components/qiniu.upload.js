@@ -15,7 +15,7 @@ import {
 } from '../common/utils';
 
 // 骑牛验证token
-var uptoken = "W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:SwubTIEG7OeBqV747UxeiIvnp70=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTEwMzA5NjMyfQ==";
+// var uptoken = "W5Fv28XaKurdNr5zjN1fwIb_zLwWw8GwJ6Fnk23E:SwubTIEG7OeBqV747UxeiIvnp70=:eyJzYXZlS2V5IjoiJHt4OnNvdXJjZVR5cGV9LyQoeWVhcikvJChtb24pLyQoZGF5KS8ke2hvdXJ9LyR7bWlufS8ke3NlY30vJCh4OmZpbGVOYW1lKSIsInNjb3BlIjoieXRoYiIsInJldHVybkJvZHkiOiJ7XCJrZXlcIjogJChrZXkpLCBcImhhc2hcIjogJChldGFnKSwgXCJmaWxlUGF0aFwiOiAkKGtleSksIFwiaW1hZ2VXaWR0aFwiOiAkKGltYWdlSW5mby53aWR0aCksIFwiaW1hZ2VIZWlnaHRcIjogJChpbWFnZUluZm8uaGVpZ2h0KSwgXCJmc2l6ZVwiOiAkKGZzaXplKSwgXCJleHRcIjogJChleHQpfSIsImRlYWRsaW5lIjoxNTEwMzA5NjMyfQ==";
 
 const qiniuHost = 'http://up.qiniup.com';
 const uploadData = {};
@@ -46,16 +46,16 @@ class QiniuUpload extends React.Component {
   }
 
   componentDidMount() {
-    // getQiNiuToken({}).then(res => {
-    //     if (!res.data || !res.data.uptoken) {
-    //         MyToast('getqiniuyun uptoken error');
-    //         return;
-    //     }
+    getQiNiuToken({}).then(res => {
+        if (!res.data || !res.data.uptoken) {
+            MyToast('getqiniuyun uptoken error');
+            return;
+        }
 
-    //     this.setState({
-    //       uptoken: res.data.uptoken
-    //     });
-    // }).catch(err => console.log(err));
+        this.setState({
+          uptoken: res.data.uptoken
+        });
+    }).catch(err => console.log(err));
 
     // get qiniu uptoken
     uploadData.token = uptoken;

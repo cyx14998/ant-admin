@@ -1,5 +1,5 @@
 /**
- * 检查子表编辑页面
+ * 请假管理编辑页面
  */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -13,8 +13,6 @@ import {
     DatePicker,
     TimePicker,
     Select,
-    Icon,
-    Modal,
     Table,
     Button
 } from 'antd';
@@ -219,7 +217,7 @@ class LeaveManagementSubDetail extends React.Component {
             <div className="yzy-tab-content-item-wrap">
                 <div className="baseinfo-section">
                     <Form>
-                        <h2 className="yzy-tab-content-title">基本信息</h2>
+                        {/* <h2 className="yzy-tab-content-title">基本信息</h2> */}
                         <Row>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="编号：">
@@ -346,8 +344,9 @@ class LeaveManagementSubDetail extends React.Component {
                         }} /> */}
                     <div className="actions-btns">
                         {
-                            recordEdit.modalType && recordEdit.modalType == 'edit' && <Button type="primary" className="btn-cancel" onClick={this.submitApproval.bind(this)}>作废</Button>
+                            recordEdit.modalType && recordEdit.modalType == 'edit' && <Button type="primary" className="btn-cancel" onClick={this.submitApproval.bind(this)}>退回</Button>
                         }
+                        <Button type="primary" className="btn-cancel">审核</Button>
                         <Button type="primary" onClick={this.saveDetail.bind(this)}>确定</Button>
                     </div>
                 </div>

@@ -35,7 +35,7 @@ const columns = [
   {
     title: '部门名称',
     dataIndex: 'theName'
-  }, 
+  },
   // {
   //   title: '创建时间',
   //   dataIndex: 'createDatetime'
@@ -84,17 +84,17 @@ class Department extends Component {
     columns[1].render = (text, record) => {
       return (
         <div>
-          <a title="新增" style={{marginRight: '10px'}} onClick={() => this.addNewDepartment(record.tableId)}><Icon type="pushpin-o" className="yzy-icon" /></a>
-          <a title="编辑" style={{marginRight: '10px'}} onClick={() => this.editDepartment(record)}><Icon type="edit" className="yzy-icon" /></a>
+          <a title="新增" style={{ marginRight: '10px' }} onClick={() => this.addNewDepartment(record.tableId)}><Icon type="pushpin-o" className="yzy-icon" /></a>
+          <a title="编辑" style={{ marginRight: '10px' }} onClick={() => this.editDepartment(record)}><Icon type="edit" className="yzy-icon" /></a>
           <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteDepartment(record.tableId)}>
             <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
-          </Popconfirm>          
+          </Popconfirm>
         </div>
       )
     };
   }
 
-  _getDepartmentList(params={}) {
+  _getDepartmentList(params = {}) {
     getDepartmentList(params).then(res => {
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '获取部门列表失败')
@@ -128,11 +128,11 @@ class Department extends Component {
 
   renderSubDepartment(record) {
     if (record.departmentList === undefined) return null;
-    
+
     return (
-      <Table 
+      <Table
         showHeader={false}
-        columns={columns} 
+        columns={columns}
         dataSource={record.departmentList}
         onExpand={this.onRowExpand}
         expandedRowRender={this.renderSubDepartment}
@@ -142,7 +142,7 @@ class Department extends Component {
   }
 
   deleteDepartment(id) {
-    getDepartmentListDelete({tableId: id}).then(res => {
+    getDepartmentListDelete({ tableId: id }).then(res => {
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '删除部门失败')
       }
@@ -166,10 +166,10 @@ class Department extends Component {
       editDepartmentRecord: record,
       editModalTitle: '部门编辑'
     })
-  } 
+  }
 
-  editDepartmentRecord({fatherId, tableId, theName}) {
-    getDepartmentListUpdate({fatherId, tableId, theName}).then(res => {
+  editDepartmentRecord({ fatherId, tableId, theName }) {
+    getDepartmentListUpdate({ fatherId, tableId, theName }).then(res => {
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '编辑部门失败')
       }
@@ -181,20 +181,20 @@ class Department extends Component {
   }
 
   addNewDepartment(fatherId) {
-    if (this.state.departmentListOptions.length === 0) {
-      MyToast('部门列表请求中，请稍后再试');
-      return;
-    }
+    // if (this.state.departmentListOptions.length === 0) {
+    //   MyToast('部门列表请求中，请稍后再试');
+    //   return;
+    // }
     
     this.setState({
       editModalVisible: true,
-      editDepartmentRecord: {fatherId},
+      editDepartmentRecord: { fatherId },
       editModalTitle: '部门新增'
     });
   }
 
-  addNewDepartmentRecord({fatherId, theName}) {
-    getDepartmentListAdd({fatherId, theName}).then(res => {
+  addNewDepartmentRecord({ fatherId, theName }) {
+    getDepartmentListAdd({ fatherId, theName }).then(res => {
 
       var departmentId = res.data.tableId;
 
@@ -207,9 +207,9 @@ class Department extends Component {
       setTimeout(this._getDepartmentList, 500);
 
       setTimeout(this._getDepartmentListForSelect, 600);
-      
+
     }).catch(err => MyToast(err));
-  }  
+  }
 
   handleEditModalCancel() {
     // 关闭Modal时，清除数据
@@ -226,12 +226,12 @@ class Department extends Component {
       <div className="yzy-page">
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
-            <Button type="primary" style={{marginLeft: 8}}
+            <Button type="primary" style={{ marginLeft: 8 }}
               onClick={() => this.addNewDepartment('')}>新增</Button>
           </div>
 
           <Table
-            columns={columns} 
+            columns={columns}
             dataSource={this.state.departmentList}
             expandedRowRender={this.renderSubDepartment}
             rowKey="tableId"
@@ -246,7 +246,7 @@ class Department extends Component {
           footer={null}>
           {
             this.state.editModalVisible &&
-            <DepartmentEdit 
+            <DepartmentEdit
               newAddDepartmentId={this.state.newAddDepartmentId}
               record={this.state.editDepartmentRecord}
               departmentListOptions={this.state.departmentListOptions}

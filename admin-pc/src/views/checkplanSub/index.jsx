@@ -38,15 +38,46 @@ import { MyToast, getLocQueryByLabel } from '../../common/utils';
 
 import CheckplanSubDetail from './index.detail'
 
-// 头部搜索数据
+// 头部搜索数据 
 const rcsearchformData = {
     colspan: 2,
     fields: [{
+        type: 'select',
+        label: '分配情况',
+        name: 'isAllot',
+        defaultValue: '0',
+        options: [{
+            value: '0',
+            label: '全部'
+        }, {
+            value: '1',
+            label: '已分配'
+        }, {
+            value: '2',
+            label: '未分配'
+        },]
+    }, {
+        type: 'select',
+        label: '完成情况',
+        name: 'isComplete',
+        defaultValue: '0',
+        options: [{
+            value: '0',
+            label: '全部'
+        }, {
+            value: '1',
+            label: '已完成'
+        }, {
+            value: '2',
+            label: '未完成'
+        },]
+    }, {
         type: 'input',
         label: '企业名称',
         name: 'keyword',
         placeholder: '请输入企业名称',
-    }]
+    },
+    ]
 }
 
 const checkplanId = getLocQueryByLabel('checkplanId');
@@ -142,11 +173,15 @@ class CustomerCheckPlanSub extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isComplete: '',
+            isAllot: '',
+            keyword: '',
             loading: true,
             checkplanSubList: [], //子表数据列表
             editModalVisible: false, //编辑Modal显隐
             performerId: '', //执行者列表的id
-            checkSubIdArr: [], //批量操作多条数据的执行者时，的该多条数据的id
+            selectedRowKeys: [], //批量操作多条数据的执行者时，的该多条数据的id
+
             checkSubId: [], //操作单条执行者存储的单条Id
             multiModalVisible: false, //批量管理modal显隐
             customerList: [], //企业列表
@@ -159,6 +194,7 @@ class CustomerCheckPlanSub extends React.Component {
 
         this.getData = this.getData.bind(this);
         this.getCustomerList = this.getCustomerList.bind(this);
+        this.getCheckplanSubDetail = this.getCheckplanSubDetail.bind(this);
         //总表的operation
         columns[6].render = (text, record, index) => (
             <div>
@@ -179,24 +215,7 @@ class CustomerCheckPlanSub extends React.Component {
     componentDidMount() {
         this.getData({ inspectionPlanMstId: checkplanId });
         this.getCustomerList();
-
-        //获取子表基本信息(by 总表的单行id )
-        getCheckplanDetail({ tableId: checkplanId }).then(res => {
-            console.log('getCheckplanDetail res -------', res);
-
-            if (res.data.result !== 'success') {
-                MyToast(res.data.info || '接口失败')
-                return;
-            }
-
-            this.setState({
-                checkplanDetail: res.data.inspectionPlanMst
-            })
-
-        }).catch(err => {
-            MyToast(err || '子表基本信息获取失败');
-        })
-
+        this.getCheckplanSubDetail();
         // 获取执行者列表
         getMemberList({}).then(res => {
             console.log('getMemberlist res --------', res);
@@ -215,9 +234,34 @@ class CustomerCheckPlanSub extends React.Component {
             MyToast(err || '执行者获取失败');
         })
     }
+    getCheckplanSubDetail() {
+        //获取子表基本信息(by 总表的单行id )
+        getCheckplanDetail({ tableId: checkplanId }).then(res => {
+            console.log('getCheckplanDetail res -------', res);
 
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '接口失败')
+                return;
+            }
+
+            this.setState({
+                checkplanDetail: res.data.inspectionPlanMst
+            })
+
+        }).catch(err => {
+            MyToast(err || '子表基本信息获取失败');
+        })
+    }
     //获取子表列表数据--封装
     getData(params) {
+        // 筛选条件过滤 0 1 2
+        // if (params.allotStatus === '1') {
+        //     params.isComplete = true;
+        // }
+        // if (params.allotStatus === '2') {
+        //     params.isAllot = true;
+        // }
+
         //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
         getCheckplanSublist(params).then(res => {
             console.log('getCheckplanSublist --------', res)
@@ -263,6 +307,13 @@ class CustomerCheckPlanSub extends React.Component {
         this.getData({
             keyword: values.keyword,
             inspectionPlanMstId: checkplanId,
+            isAllot: values.isAllot,
+            isComplete: values.isComplete,
+        });
+        this.setState({
+            keyword: values.keyword,
+            isAllot: values.isAllot,
+            isComplete: values.isComplete,
         });
     }
 
@@ -285,6 +336,7 @@ class CustomerCheckPlanSub extends React.Component {
                 checkplanSubList: self.state.checkplanSubList
             })
             self.getCustomerList();
+            self.getCheckplanSubDetail();
 
         }).catch(err => {
             MyToast(err || '删除失败');
@@ -292,8 +344,8 @@ class CustomerCheckPlanSub extends React.Component {
     }
     //列表删除（批量）
     multiDelete() {
-        if (this.state.checkSubIdArr.length > 0) {
-            var param = this.state.checkSubIdArr.join(',');
+        if (this.state.selectedRowKeys.length > 0) {
+            var param = this.state.selectedRowKeys.join(',');
 
             getCheckplanSubDeleteMulti({ tableIdArr: param, inspectionPlanMstId: checkplanId }).then(res => {
                 console.log('批量删除 res-------', res);
@@ -304,10 +356,17 @@ class CustomerCheckPlanSub extends React.Component {
                 }
 
                 MyToast('批量删除成功');
-                this.getData({ inspectionPlanMstId: checkplanId });
+                console.log(this.state.isAllot, this.state.isComplete)
+                this.getData({
+                    keyword: this.state.keyword,
+                    inspectionPlanMstId: checkplanId,
+                    isAllot: this.state.isAllot,
+                    isComplete: this.state.isComplete,
+                });
                 this.getCustomerList();
+                this.getCheckplanSubDetail();
                 this.setState({
-                    checkSubIdArr: [],
+                    selectedRowKeys: [],
                 });
 
             }).catch(err => {
@@ -349,10 +408,17 @@ class CustomerCheckPlanSub extends React.Component {
 
             MyToast("添加成功");
 
-            this.getData({ inspectionPlanMstId: checkplanId });
+            this.getData({
+                keyword: this.state.keyword,
+                inspectionPlanMstId: checkplanId,
+                isAllot: this.state.isAllot,
+                isComplete: this.state.isComplete,
+            });
             this.getCustomerList();
+            this.getCheckplanSubDetail();
             this.setState({
-                SubCusSelectedRowKeysArr: []
+                SubCusSelectedRowKeysArr: [],
+                selectedRowKeys: []
             })
 
         }).catch(err => {
@@ -374,8 +440,17 @@ class CustomerCheckPlanSub extends React.Component {
                 }
                 MyToast('批量新增成功');
 
-                this.getData({ inspectionPlanMstId: checkplanId });
+                this.getData({
+                    keyword: this.state.keyword,
+                    inspectionPlanMstId: checkplanId,
+                    isAllot: this.state.isAllot,
+                    isComplete: this.state.isComplete,
+                });
                 this.getCustomerList();
+                this.getCheckplanSubDetail();
+                this.setState({
+                    selectedRowKeys: [],
+                });
 
             }).catch(err => {
                 MyToast(err || "添加失败")
@@ -393,7 +468,7 @@ class CustomerCheckPlanSub extends React.Component {
     }
     //执行者批量控制-----btn
     performerbtn() {
-        if (this.state.checkSubIdArr.length > 0) {
+        if (this.state.selectedRowKeys.length > 0) {
             this.setState({ multiModalVisible: true })
         } else {
             MyToast('请先选择要管理的数据');
@@ -418,19 +493,24 @@ class CustomerCheckPlanSub extends React.Component {
                 }
 
                 MyToast('选择成功');
-                this.getData({ inspectionPlanMstId: checkplanId });
-
+                this.getData({
+                    keyword: this.state.keyword,
+                    inspectionPlanMstId: checkplanId,
+                    isAllot: this.state.isAllot,
+                    isComplete: this.state.isComplete,
+                });
             }).catch(err => {
                 MyToast(err || "选择失败")
             })
 
             this.setState({
                 checkSubId: '',
+
             });
 
-        } else if (this.state.checkSubIdArr.length > 0) {
+        } else if (this.state.selectedRowKeys.length > 0) {
             //批量选择
-            var param = this.state.checkSubIdArr.join(',');
+            var param = this.state.selectedRowKeys.join(',');
             getCheckplanSubPerformerMulti({ tableIdArr: param, performerId: tableId }).then(res => {
                 console.log('perfomerMultiSave res ---', res);
 
@@ -443,7 +523,15 @@ class CustomerCheckPlanSub extends React.Component {
                     return;
                 }
                 MyToast('批量选择成功');
-                this.getData({ inspectionPlanMstId: checkplanId });
+                this.getData({
+                    keyword: this.state.keyword,
+                    inspectionPlanMstId: checkplanId,
+                    isAllot: this.state.isAllot,
+                    isComplete: this.state.isComplete,
+                });
+                this.setState({
+                    selectedRowKeys: []
+                });
 
             }).catch(err => {
                 MyToast(err || "批量选择失败")
@@ -478,10 +566,18 @@ class CustomerCheckPlanSub extends React.Component {
 
         //总表的行标选择
         var self = this;
+
+        let {
+            selectedRowKeys,
+            SubCusSelectedRowKeysArr
+        } = this.state;
+
         const rowSelection = {
+            selectedRowKeys,
             onChange(selectedRowKeys) {
                 console.log(`selectedRowKeys changed-------------------: ${selectedRowKeys}`);
-                self.state.checkSubIdArr = selectedRowKeys;
+
+                self.setState({ selectedRowKeys });
             },
             // onSelect(record, selected, selectedRows) {
             //     console.log(record, selected, selectedRows);
@@ -493,9 +589,13 @@ class CustomerCheckPlanSub extends React.Component {
 
         //企业Modal的行标选择        
         const customersDataRowSelection = {
+            SubCusSelectedRowKeysArr,
             onChange(selectedRowKeys) {
                 console.log(`CustomerSelectedRowKeys changed: ${selectedRowKeys}`);
-                self.state.SubCusSelectedRowKeysArr = selectedRowKeys;
+
+                self.setState({
+                    SubCusSelectedRowKeysArr: selectedRowKeys
+                });
             }
         }
 

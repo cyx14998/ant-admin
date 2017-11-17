@@ -5,8 +5,8 @@ import React, { Component } from 'react';
 import {
   Button,
   Icon,
-  Row, 
-  Col, 
+  Row,
+  Col,
   Input,
   Select,
   Form,
@@ -72,14 +72,14 @@ class EditableTable extends Component {
   getLabelFromOptions(value, options) {
     var label = '';
 
-    for (var i=0, len=options.length; i<len; i++) {
+    for (var i = 0, len = options.length; i < len; i++) {
       if (options[i].value === value) {
         label = options[i].label;
         break;
       }
     }
 
-    return label;  
+    return label;
 
   }
 
@@ -102,7 +102,7 @@ class EditableTable extends Component {
 
     const self = this;
 
-    let { 
+    let {
       columns,
       onCellChange,
       onDelete,
@@ -113,13 +113,13 @@ class EditableTable extends Component {
     } = this.props;
 
     let len = columns.length,
-        i = 0;
+      i = 0;
 
     for (i; i < len; i++) {
       /**
        * 居然出现了闭包
        */
-      (function(i) {
+      (function (i) {
         /**
          * text: 当前渲染数据字段
          * record: 当前渲染数据（{}）
@@ -133,7 +133,7 @@ class EditableTable extends Component {
             }
 
             return (
-              <EditableCell 
+              <EditableCell
                 tableId={record.tableId}
                 dataIndex={columns[i].dataIndex}
                 cellType="select"
@@ -142,7 +142,7 @@ class EditableTable extends Component {
                 options={text.options}
                 onCellChange={onCellChange} />
             );
-          } 
+          }
 
           // date 通过正则判断是否是日期字符串 2017-11-11
           if (text !== undefined && (text.cellType === 'datepicker' || /^[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(text))) {
@@ -151,7 +151,7 @@ class EditableTable extends Component {
             }
 
             return (
-              <EditableCell 
+              <EditableCell
                 tableId={record.tableId}
                 dataIndex={columns[i].dataIndex}
                 cellType="datepicker"
@@ -173,7 +173,7 @@ class EditableTable extends Component {
 
             // 可编辑状态（包含可编辑状态下的禁用状态）
             return (
-              <EditableCell 
+              <EditableCell
                 tableId={record.tableId}
                 dataIndex={columns[i].dataIndex}
                 cellType="input"
@@ -214,7 +214,7 @@ class EditableTable extends Component {
 
             // input
             return (
-              <EditableCell 
+              <EditableCell
                 tableId={record.tableId}
                 dataIndex={columns[i].dataIndex}
                 cellType="input"
@@ -234,8 +234,8 @@ class EditableTable extends Component {
             if (record.tableId === '') {
               return (
                 <div>
-                  <a title="取消" style={{marginRight: '10px'}} onClick={() => onDelete(record.tableId)}><Icon type="close" className="yzy-icon" /></a>
-                  <a title="保存" style={{marginRight: '10px'}} onClick={() => {
+                  <a title="取消" style={{ marginRight: '10px' }} onClick={() => onDelete(record.tableId)}><Icon type="close" className="yzy-icon" /></a>
+                  <a title="保存" style={{ marginRight: '10px' }} onClick={() => {
                     onSave(record, self.validateTypes);
                     // 保存成功后，禁用编辑功能
                     // self.setState({editableTableId: 0}); 
@@ -250,8 +250,8 @@ class EditableTable extends Component {
             if (!self.getEditable(record)) {
               return (
                 <div>
-                  <a title="查看" style={{marginRight: '10px'}} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
-                  <a title="编辑" style={{marginRight: '10px'}} onClick={() => self.setState({editable: true, editableTableId: record.tableId})}><Icon type="edit" className="yzy-icon" /></a>
+                  <a title="查看" style={{ marginRight: '10px' }} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+                  <a title="编辑" style={{ marginRight: '10px' }} onClick={() => self.setState({ editable: true, editableTableId: record.tableId })}><Icon type="edit" className="yzy-icon" /></a>
                   <Popconfirm title="确定要删除吗？" onConfirm={() => onDelete(record.tableId)}>
                     <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
                   </Popconfirm>
@@ -262,16 +262,16 @@ class EditableTable extends Component {
             // 可编辑状态
             return (
               <div>
-                <a title="查看" style={{marginRight: '10px'}} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
-                <a title="取消" style={{marginRight: '10px'}} onClick={() => self.setState({editableTableId: 0})}><Icon type="close" className="yzy-icon" /></a>
-                <a title="保存" style={{marginRight: '10px'}} onClick={() => {
-                    onSave(record, self.validateTypes, (res) => {
-                      if (res.result === 'success') {
-                        // 保存成功后，禁用编辑功能
-                        self.setState({editableTableId: 0}); 
-                      }
-                    });
-                  }}><Icon type="check" className="yzy-icon" /></a>
+                <a title="查看" style={{ marginRight: '10px' }} onClick={() => checkInNewpage(record.tableId)}><Icon type="eye-o" className="yzy-icon" /></a>
+                <a title="取消" style={{ marginRight: '10px' }} onClick={() => self.setState({ editableTableId: 0 })}><Icon type="close" className="yzy-icon" /></a>
+                <a title="保存" style={{ marginRight: '10px' }} onClick={() => {
+                  onSave(record, self.validateTypes, (res) => {
+                    if (res.result === 'success') {
+                      // 保存成功后，禁用编辑功能
+                      self.setState({ editableTableId: 0 });
+                    }
+                  });
+                }}><Icon type="check" className="yzy-icon" /></a>
                 <Popconfirm title="确定要删除吗？" onConfirm={() => onDelete(record.tableId)}>
                   <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
                 </Popconfirm>
@@ -302,8 +302,8 @@ class EditableTable extends Component {
             if (record.tableId === '') {
               return (
                 <div>
-                  <a title="取消" style={{marginRight: '10px'}} onClick={() => onDelete(record.tableId)}><Icon type="close" className="yzy-icon" /></a>
-                  <a title="保存" style={{marginRight: '10px'}} onClick={() => {
+                  <a title="取消" style={{ marginRight: '10px' }} onClick={() => onDelete(record.tableId)}><Icon type="close" className="yzy-icon" /></a>
+                  <a title="保存" style={{ marginRight: '10px' }} onClick={() => {
                     onSave(record, self.validateTypes);
                     // 保存成功后，禁用编辑功能
                     // self.setState({editableTableId: 0}); 
@@ -319,7 +319,7 @@ class EditableTable extends Component {
             if (!self.getEditable(record)) {
               return (
                 <div>
-                  <a title="编辑" style={{marginRight: '10px'}} onClick={() => self.setState({editable: true, editableTableId: record.tableId})}><Icon type="edit" className="yzy-icon" /></a>
+                  <a title="编辑" style={{ marginRight: '10px' }} onClick={() => self.setState({ editable: true, editableTableId: record.tableId })}><Icon type="edit" className="yzy-icon" /></a>
                   {/* <a title="保存" style={{marginRight: '10px'}} onClick={() => onSave(record)}><Icon type="check" className="yzy-icon" /></a> */}
                   <Popconfirm title="确定要删除吗？" onConfirm={() => onDelete(record.tableId)}>
                     <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
@@ -330,12 +330,12 @@ class EditableTable extends Component {
 
             return (
               <div>
-                <a title="取消" style={{marginRight: '10px'}} onClick={() => self.setState({editableTableId: 0})}><Icon type="close" className="yzy-icon" /></a>
-                <a title="保存" style={{marginRight: '10px'}} onClick={() => {
+                <a title="取消" style={{ marginRight: '10px' }} onClick={() => self.setState({ editableTableId: 0 })}><Icon type="close" className="yzy-icon" /></a>
+                <a title="保存" style={{ marginRight: '10px' }} onClick={() => {
                   onSave(record, self.validateTypes, (res) => {
                     if (res.result === 'success') {
                       // 保存成功后，禁用编辑功能
-                      self.setState({editableTableId: 0}); 
+                      self.setState({ editableTableId: 0 });
                     }
                   });
                 }}><Icon type="check" className="yzy-icon" /></a>
@@ -355,10 +355,13 @@ class EditableTable extends Component {
   }
 
   render() {
+    let {
+      pagination,
+    } = this.props;
 
     return (
       <Table
-        pagination={false}
+        pagination={pagination}
         columns={this.renderColumns()}
         dataSource={this.props.dataSource}
         rowKey="tableId"

@@ -10,14 +10,14 @@ const glob = require('glob');
 // 获取指定路径下的入口文件
 function getEntries(globPath) {
 	var files = glob.sync(globPath),
-	 entries = {};
+		entries = {};
 
-	files.forEach(function(filepath) {
-	  // 取倒数第二层(view下面的文件夹)做包名
-	  var split = filepath.split('/');
-	  var name = split[split.length - 2];
+	files.forEach(function (filepath) {
+		// 取倒数第二层(view下面的文件夹)做包名
+		var split = filepath.split('/');
+		var name = split[split.length - 2];
 
-	  entries[name] = './' + filepath;
+		entries[name] = './' + filepath;
 	});
 
 	return entries;
@@ -27,15 +27,15 @@ const entries = getEntries('src/views/**/index.jsx');
 
 const htmlPlugins = Object.keys(entries).map(function (name) {
 	return new HtmlWebpackPlugin({
-      // 生成出来的html文件名
-      filename: name + '.html',
-      // 每个html的模版，这里多个页面使用同一个模版
-      template: './src/template.html',
-      // 自动将引用插入html
-      inject: true,
-      // 每个html引用的js模块，也可以在这里加上vendor等公用模块
-      chunks: ['vendors', name]
-  });
+		// 生成出来的html文件名
+		filename: name + '.html',
+		// 每个html的模版，这里多个页面使用同一个模版
+		template: './src/template.html',
+		// 自动将引用插入html
+		inject: true,
+		// 每个html引用的js模块，也可以在这里加上vendor等公用模块
+		chunks: ['vendors', name]
+	});
 });
 
 const webpackConfig = {
@@ -53,10 +53,10 @@ const webpackConfig = {
 			// First, run the linter.
 			// It's important to do this before Babel processes the JS.
 			{
-			  test: /\.jsx?$/,
-			  enforce: 'pre',
-			  include: path.resolve(__dirname, 'src'),
-			  use: 'eslint-loader'
+				test: /\.jsx?$/,
+				enforce: 'pre',
+				include: path.resolve(__dirname, 'src'),
+				// use: 'eslint-loader'
 			},
 
 			// Process JS with Babel.
@@ -82,27 +82,27 @@ const webpackConfig = {
 			{
 				test: /\.less$/,
 				use: [
-					'style-loader', 
+					'style-loader',
 					{
 						loader: 'css-loader',
 						options: {
 							importLoaders: 1
 						}
-					}, 
+					},
 					{
 						loader: 'postcss-loader',
 						options: {
 							plugins: [
 								require('postcss-flexbugs-fixes'),
 								require('autoprefixer')({
-	                browsers: [
-	                  '>1%',
-	                  'last 6 versions',
-	                  'Firefox ESR',
-	                  'not ie < 9', // React doesn't support IE8 anyway
-	                ],
-	                flexbox: 'no-2009',
-	              })
+									browsers: [
+										'>1%',
+										'last 6 versions',
+										'Firefox ESR',
+										'not ie < 9', // React doesn't support IE8 anyway
+									],
+									flexbox: 'no-2009',
+								})
 							]
 						}
 					},
@@ -110,36 +110,42 @@ const webpackConfig = {
 				]
 			},
 			// "url" loader works like "file" loader except that it embeds assets
-	    // smaller than specified limit in bytes as data URLs to avoid requests.
-	    // A missing `test` is equivalent to a match.
-	    {
-	      test: /\.(png|jpe?g|gif|bmp)$/,
-	      include: path.resolve(__dirname, 'src'),
-	      use: {
-	      	loader: 'url-loader',
-		      options: {
-		        limit: 10000,
-		        name: 'assets/media/[name].[ext]',
-		      }
-	      }
+			// smaller than specified limit in bytes as data URLs to avoid requests.
+			// A missing `test` is equivalent to a match.
+			{
+				test: /\.(png|jpe?g|gif|bmp)$/,
+				include: path.resolve(__dirname, 'src'),
+				use: {
+					loader: 'url-loader',
+					options: {
+						limit: 10000,
+						name: 'assets/media/[name].[ext]',
+					}
+				}
 			}
-    ]
+		]
 	},
-	plugins: [    
-	  // 分离entry.vendors
-	  new webpack.optimize.CommonsChunkPlugin({
-	    name: 'vendors',
+	plugins: [
+		// 分离entry.vendors
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'vendors',
 		}),
-			
-		 // copy koa
-	  new CopyWebpackPlugin([{
-			from: 'src/config',
-			to: 'config/'
-		}]),
+
+		// copy koa
+		new CopyWebpackPlugin([
+			{
+				from: 'src/config',
+				to: 'config/'
+			},
+			{
+				from: 'src/ueditor',
+				to: 'ueditor/'
+			}
+		]),
 	],
 
 	resolve: {
-	  extensions: ['.web.js', '.js', '.jsx', '.json']
+		extensions: ['.web.js', '.js', '.jsx', '.json']
 	}
 };
 

@@ -148,7 +148,7 @@ const CustomerEditBaseinfo = ({
                                 {getFieldDecorator('latitude', {
                                     initialValue: customerBaseinfo.customer.latitude,
                                     rules: [{ required: true, message: 'Please input your Game!' },
-                                    {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
+                                    {/* { pattern:  /^\d+(\.\d+)?$/, message: '编号为纯数字!' } */ }
                                     ],
                                 })(
                                     <Input size="small" />
@@ -160,7 +160,7 @@ const CustomerEditBaseinfo = ({
                                 {getFieldDecorator('longitude', {
                                     initialValue: customerBaseinfo.customer.longitude,
                                     rules: [{ required: true, message: 'Please input your Game!' },
-                                    {/* { pattern: /^[0-9]*$/, message: '编号为纯数字!' } */ }
+                                    {/* { pattern:  /^\d+(\.\d+)?$/, message: '编号为纯数字!' } */ }
                                     ],
                                 })(
                                     <Input size="small" />

@@ -71,7 +71,7 @@ class EditableSection extends Component {
       apiLoader
     } = this.props;
 
-    if (nextApiListItemId) {
+    if (nextApiListItemId !== undefined) {
       apiListItemId = nextApiListItemId
     }
 
@@ -109,7 +109,7 @@ class EditableSection extends Component {
             let field = item[dataIndex];
             // input && datepicker '2017-11-11'
             if (typeof field === 'number' || typeof field === 'string') {
-              item[dataIndex] = value;
+              item[dataIndex] = value.replace(/^\s|\s$/, '');
             }
 
             // select
@@ -262,6 +262,7 @@ class EditableSection extends Component {
       checkInNewpage,
       hasModal,
       onEdit,
+      pagination = false
     } = this.props;
 
     return (
@@ -279,6 +280,7 @@ class EditableSection extends Component {
           loading={this.state.loading}
           checkInNewpage={checkInNewpage}
           hasModal={hasModal}
+          pagination={pagination}
           onEdit={onEdit} />
 
         {/** 

@@ -20,7 +20,7 @@ export function getToken() {
   var token = localStorage.getItem('token');
 
   if (!token) {
-    alert('登陆过期，请登陆后再来查看');
+    // alert('登陆过期，请登陆后再来查看');
 
     if (window.innerFrame) {
       window.location.replace('/login.html');

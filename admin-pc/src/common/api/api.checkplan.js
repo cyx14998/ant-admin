@@ -131,14 +131,30 @@ export function getCheckplanSublist({
   countPerPage = 1000,
   inspectionPlanMstId,
   keyword,
+  isAllot,
+  isComplete
 }) {
+  var params = {};
+  //分配情况
+  if (isAllot === '1') {
+    params.isAllot = true;
+  } else if (isAllot === '2') {
+    params.isAllot = false;
+  }
+  // 完成情况        
+  if (isComplete === '1') {
+    params.isComplete = true;
+  } else if (isComplete === '2') {
+    params.isComplete = false;
+  }
   return axios.get('/uInspectionPlanDtlList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
       inspectionPlanMstId,
-      keyword
+      keyword,
+      ...params
     }
   })
 }
