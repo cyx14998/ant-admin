@@ -4,16 +4,20 @@ import axios, {
   apiVer
 } from './index';
 
-//库存列表
-export function getstockList({
+//获取库存列表
+export function getStockList({
+  pageNumber = 1,
   countPerPage = 1000,
   keyword,
+  warehouseId,
 }) {
-  return axios.get('/uWarehouseList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageItemList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      pageNumber,
       countPerPage,
       keyword,
+      warehouseId,
     }
   })
 }

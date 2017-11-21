@@ -254,12 +254,12 @@ class Flow extends Component {
   }
 
   // 步骤角色列表
-  uFlowRoleList(record) {
-    parent.window.iframeHook.changePage({
-      url: '/flowStep.html?flowDtlId=' + record.tableId,
-      breadIncrement: '步骤角色编辑'
-    });
-  }
+  // uFlowRoleList(record) {
+  //   parent.window.iframeHook.changePage({
+  //     url: '/flowStep.html?flowDtlId=' + record.tableId,
+  //     breadIncrement: '步骤角色编辑'
+  //   });
+  // }
 
   render() {
     return (
@@ -282,7 +282,7 @@ class Flow extends Component {
                 return (
                   <span>
                     <a title="查看子流程" onClick={this.uFlowDtlDetail.bind(this, record)}><Icon type="eye-o" /></a>
-                    <a title="查看步骤" onClick={this.uFlowRoleList.bind(this, record)}><Icon type="bars" /></a>
+                    {/* <a title="查看步骤" onClick={this.uFlowRoleList.bind(this, record)}><Icon type="bars" /></a> */}
                   </span>
                 )
               }

@@ -1,5 +1,5 @@
 /**
- * 流程系统
+ * 菜单管理
  */
 import axios, {
     getToken,
@@ -13,14 +13,30 @@ import axios, {
 export function uMenuList({
     pageNumber = 1,
     countPerPage = 1000,
-    keyword = ''
-    }) {
+    keyword = '',
+    fatherMenuId = '', // 父菜单Id
+}) {
     return axios.get('/uMenuList.uhtm?InterfaceVersion=' + apiVer, {
         params: {
             token: getToken(),
             pageNumber,
             countPerPage,
-            keyword
+            keyword,
+            fatherMenuId,
+        }
+    })
+}
+
+/**
+* 一百九十四．	菜单详情
+*/
+export function uMenuDetail({
+    tableId = '',  // 菜单ID
+}) {
+    return axios.get('/uMenuDetail.uhtm?InterfaceVersion=' + apiVer, {
+        params: {
+            token: getToken(),
+            tableId,
         }
     })
 }
@@ -33,6 +49,8 @@ export function uMenuAdd({
     theLink = '',  // 菜单路径
     fatherMenuId = '',//父菜单ID（没有则不传）
     theSort = '',  // 排序
+    flowMstId='', // 流程主表ID
+    tableName='', // 数据库表名
 }) {
     return axios.get('/uMenuAdd.uhtm?InterfaceVersion=' + apiVer, {
         params: {
@@ -40,7 +58,9 @@ export function uMenuAdd({
             theName,
             theLink,
             fatherMenuId,
-            theSort
+            theSort,
+            flowMstId,
+            tableName,
         }
     })
 }
@@ -52,7 +72,9 @@ export function uMenuUpdate({
     tableId = '', // 菜单ID
     theName = '',  // 角色名称
     theLink = '',  // 菜单路径
-    theSort = ''  // 排序
+    theSort = '',  // 排序
+    flowMstId='', // 流程主表ID
+    tableName='', // 数据库表名
 }) {
     return axios.get('/uMenuUpdate.uhtm?InterfaceVersion=' + apiVer, {
         params: {
@@ -60,7 +82,9 @@ export function uMenuUpdate({
             tableId,
             theName,
             theLink,
-            theSort
+            theSort,
+            flowMstId,
+            tableName,
         }
     })
 }
@@ -75,6 +99,19 @@ export function uMenuDelete({
         params: {
             token: getToken(),
             tableId,
+        }
+    })
+}
+
+
+/**
+* 一百九十六．	菜单列表（树形结构）
+*/
+export function uMenuListForTree({
+}) {
+    return axios.get('/uMenuListForTree.uhtm?InterfaceVersion=' + apiVer, {
+        params: {
+            token: getToken(),
         }
     })
 }

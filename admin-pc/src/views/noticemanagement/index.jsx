@@ -1,5 +1,5 @@
 /**
- * 员工管理
+ * 公告管理
  */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -13,7 +13,7 @@ import {
 
 import RcSearchForm from '../../components/rcsearchform';
 import DraggableModal from '../../components/modal.draggable';
-import LeaveManagementSubDetail from './index.detail'
+import NoticeManagementSubDetail from './index.detail'
 
 import './index.less';
 
@@ -21,6 +21,9 @@ import {
     uLeaveApplicationList,
     uLeaveApplicationDelete
 } from '../../common/api/api.LeaveManagement';
+import {
+    uProclamationList
+} from '../../common/api/api.noticemanagement';
 
 import {
     getDepartmentList
@@ -70,7 +73,7 @@ const RcSearchFormData = {
 }
 
 
-class LeaveManagement extends Component {
+class NoticeManagement extends Component {
     constructor(props) {
         super(props);
 
@@ -85,11 +88,13 @@ class LeaveManagement extends Component {
         }
 
         this.getData = this.getData.bind(this);
+        this._getuProclamationList = this._getuProclamationList.bind(this);
         this.showTestModal = this.showTestModal.bind(this);
     }
 
     componentDidMount() {
         this.getData({});
+        this._getuProclamationList({});
 
         columns[6].render = (text, record, index) => {
             return (
@@ -102,47 +107,6 @@ class LeaveManagement extends Component {
             )
         }
 
-    }
-
-    handleFormSearch(values) {
-        console.log('handleSearch ---------', values);
-
-        this.getData({
-            keyword: values.keyword,
-            departmentId: values.departmentId
-        });
-    }
-    //编辑|| 新增Modal------隐藏
-    TestCancel() {
-        this.setState({ editModalVisible: false });
-    }
-    //编辑|| 新增Modal-----显示
-    showTestModal(recordEdit, type) {
-        console.log(recordEdit)
-        if (type) {
-            //
-            this.setState({
-                modalType: type
-            });
-        }
-        recordEdit.modalType = type;
-        this.setState({
-            recordEdit: recordEdit,
-            editModalVisible: true,
-        });
-    }
-    // 删除操作
-    onEditDelete(text, record, index) {
-        // console.log(text, record, index);
-        var self = this;
-        uLeaveApplicationDelete({ tableId: record.tableId }).then(res => {
-            if (res.data.result !== 'success') {
-                MyToast(res.data.info || '删除失败');
-            }
-            setTimeout(() => {
-                self.getData({});
-            }, 500);
-        }).catch(err => MyToast('删除失败'));
     }
 
     getData(params) {
@@ -174,6 +138,59 @@ class LeaveManagement extends Component {
         });
     }
 
+    // 获取公告列表
+    _getuProclamationList(params) {
+        uProclamationList(params).then(res => {
+            console.log(res);
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '接口失败')
+                return;
+            }
+        }).catch(err => {
+            MyToast(err || '接口失败')
+        });
+    }
+    handleFormSearch(values) {
+        console.log('handleSearch ---------', values);
+
+        this.getData({
+            keyword: values.keyword,
+            departmentId: values.departmentId
+        });
+    }
+    //编辑|| 新增Modal------隐藏
+    modalCancel() {
+        this.setState({ editModalVisible: false });
+    }
+    //编辑|| 新增Modal-----显示
+    showTestModal(recordEdit, type) {
+        console.log(recordEdit)
+        if (type) {
+            //
+            this.setState({
+                modalType: type
+            });
+        }
+        recordEdit.modalType = type;
+        this.setState({
+            recordEdit: recordEdit,
+            editModalVisible: true,
+        });
+    }
+    // 删除操作
+    onEditDelete(text, record, index) {
+        // console.log(text, record, index);
+        var self = this;
+        uLeaveApplicationDelete({ tableId: record.tableId }).then(res => {
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '删除失败');
+            }
+            setTimeout(() => {
+                self.getData({});
+            }, 500);
+        }).catch(err => MyToast('删除失败'));
+    }
+
     render() {
         return (
             <div className="yzy-page">
@@ -203,12 +220,12 @@ class LeaveManagement extends Component {
                     width='70%'
                     okText=''
                     footer={null}
-                    onCancel={this.TestCancel.bind(this)}
+                    onCancel={this.modalCancel.bind(this)}
                     className='modal editModal'
                 >
                     {
                         this.state.editModalVisible &&
-                        <LeaveManagementSubDetail id="mediaMsgEditor" height="400" value="从这里开始写正文" recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)} />
+                        <NoticeManagementSubDetail id="mediaMsgEditor" height="400" value="从这里开始写正文" recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} modalCancel={this.modalCancel.bind(this)} />
                     }
                 </DraggableModal>
             </div>
@@ -217,4 +234,4 @@ class LeaveManagement extends Component {
 }
 
 
-ReactDOM.render(<LeaveManagement />, document.getElementById('root'));
+ReactDOM.render(<NoticeManagement />, document.getElementById('root'));

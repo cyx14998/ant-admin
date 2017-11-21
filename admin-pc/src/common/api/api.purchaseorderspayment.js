@@ -6,7 +6,7 @@ import axios, {
 
 
 //付款单主表列表
-export function getWarehousingList({
+export function getPaymentList({
   countPerPage = 1000,
   keyword,
   isPass,
@@ -29,7 +29,7 @@ export function getWarehousingList({
     params.storageInMemberId = storageInMemberId;
   }
 
-  return axios.get('/uStorageInRecordMstList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uPaymentRecordMstList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       countPerPage,
@@ -39,10 +39,10 @@ export function getWarehousingList({
   })
 }
 // 付款单主表详情
-export function getWarehousingDetail({
+export function getPaymentDetail({
   tableId,
 }) {
-  return axios.get('/uStorageInRecordMstDetail.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uPaymentRecordMstDetail.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
@@ -50,19 +50,13 @@ export function getWarehousingDetail({
   })
 }
 // 付款单主表新增
-export function getWarehousingAdd({
-  warehouseId,
-  storageInMemberId,
-  storageInDatetime,
+export function getPaymentAdd({
   theRemarks,
   menuId,
 }) {
-  return axios.get('/uStorageInRecordMstAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uPaymentRecordMstAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      warehouseId,
-      storageInMemberId,
-      storageInDatetime,
       theRemarks,
       menuId,
     }
@@ -70,30 +64,24 @@ export function getWarehousingAdd({
 }
 
 // 付款单主表编辑
-export function getWarehousingEdit({
+export function getPaymentEdit({
   tableId,
-  warehouseId,
-  storageInMemberId,
-  storageInDatetime,
   theRemarks,
 }) {
-  return axios.get('/uStorageInRecordMstUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uPaymentRecordMstUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
-      warehouseId,
-      storageInMemberId,
-      storageInDatetime,
       theRemarks,
     }
   })
 }
 
 // 付款单主表删除
-export function getWarehousingDelete({
+export function getPaymentDelete({
   tableId,
 }) {
-  return axios.get('/uStorageInRecordMstDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uPaymentRecordDtlDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
@@ -102,38 +90,38 @@ export function getWarehousingDelete({
 }
 /**-----------------------付款单明细---------------------------- */
 //付款单明细列表
-export function getWarehousingRecordList({
+export function getPaymentRecordList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword,
-  storageInRecordMstId,
+  paymentRecordMstId,
 }) {
-  return axios.get('/uStorageInRecordDtlList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uPaymentRecordDtlList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
       keyword,
-      storageInRecordMstId
+      paymentRecordMstId
     }
   })
 }
 
 // 付款单明细新增
-export function getWarehousingRecordnAdd({
-  storageInRecordMstId,
+export function getPaymentRecordnAdd({
+  paymentRecordMstId,
   tableIdArr,
 }) {
-  return axios.get('/uStorageInRecordDtlAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uPaymentRecordDtlAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      storageInRecordMstId,
+      paymentRecordMstId,
       tableIdArr,
     }
   })
 }
 
-//付款单明细新增-------获取未入库采购单列表
+//付款单明细新增-------获取可付款采购单列表
 export function getPurchaseRecordMstListUnStockList({
   pageNumber = 1,
   countPerPage = 1000,
@@ -148,43 +136,46 @@ export function getPurchaseRecordMstListUnStockList({
     }
   })
 }
-//付款单明细新增-------获取未入库采购单--明细列表
+//付款单明细新增-------获取可付款采购单--明细列表
 export function getPurchaseRecordDtlListUnStockList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword,
-  purchaseRecordMstId,
-  // serialNumber,
-  // theName,
+  paymentRecordMstId,
 }) {
-  return axios.get('/uPurchaseRecordDtlListUnStock.uhtm?InterfaceVersion=' + apiVer, {
+  var params = {};
+  //可付款采购单选择
+  if (paymentRecordMstId && paymentRecordMstId !== '全部') {
+    params.paymentRecordMstId = paymentRecordMstId;
+  }
+  return axios.get('/uPaymentRecordDtlList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
       keyword,
-      purchaseRecordMstId,
-      // serialNumber,
-      // theName,
+      ...params,
     }
   })
 }
 // 付款单明细编辑
-export function getWarehousingRecordnEdit({
+export function getPaymentRecordnEdit({
   tableId,
-  theQuantity,
+  theRemarks,
+  theAmount,
 }) {
-  return axios.get('/uStorageInRecordDtlUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uPaymentRecordDtlUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
-      theQuantity,
+      theRemarks,
+      theAmount,
     }
   })
 }
 
 // 付款单明细删除
-export function getWarehousingRecordnDelete({
+export function getPaymentRecordnDelete({
   tableId,
 }) {
   return axios.get('/uStorageInRecordDtlDelete.uhtm?InterfaceVersion=' + apiVer, {
@@ -200,7 +191,7 @@ export function getCheckRecordList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword,
-  storageInRecordMstId,
+  paymentRecordMstId,
 }) {
   return axios.get('/uPurchaseRecordDtlList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -208,7 +199,7 @@ export function getCheckRecordList({
       pageNumber,
       countPerPage,
       keyword,
-      storageInRecordMstId
+      paymentRecordMstId
     }
   })
 }

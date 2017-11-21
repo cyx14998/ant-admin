@@ -12,11 +12,26 @@
                     .item-body{
                         text-align: center;
                         height: 120px;
-                        line-height: 120px;
                         background: rgba(26, 179, 148, .3);
                         position: relative;
                         border-radius: 5px;
-                        .item-edit, .item-del{
+                        .item-title{
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            height: 100%;
+                            flex-direction: column;
+                            .main-title{
+                                display: flex;
+                                flex-direction: column-reverse;
+                                margin-bottom: 5px;
+                                font-size: 20px;
+                            }
+                            p{
+                                flex: 1;
+                            }
+                        }
+                        .item-edit, .item-del, .item-setPeople{
                             width: 40px;
                             height: 20px;
                             color: @color;
@@ -38,6 +53,14 @@
                         }
                         .item-edit{
                             top: 21px;
+                            right: -40px;
+                            i{
+                                top: 1px;
+                                right: 10px;
+                            }
+                        }
+                        .item-setPeople{
+                            top: 43px;
                             right: -40px;
                             i{
                                 top: 1px;

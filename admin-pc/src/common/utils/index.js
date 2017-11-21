@@ -71,7 +71,6 @@ export function convertObjectLabel(source, valueProp='tableId', labelProp='theNa
   return dest;
 }
 
-
 /**
  * @props value
  * @props options 

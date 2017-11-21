@@ -12,6 +12,7 @@ export function getWarehousingList({
   keyword,
   isPass,
   theState,
+  warehouseId,
   storageInMemberId,
 }) {
   var params = {};
@@ -24,6 +25,10 @@ export function getWarehousingList({
   //入库单状态
   if (theState && theState !== '0') {
     params.theState = theState - 1;
+  }
+  //仓库选择
+  if (warehouseId && warehouseId !== '全部') {
+    params.warehouseId = warehouseId;
   }
   //入库人选择
   if (storageInMemberId && storageInMemberId !== '全部') {
@@ -184,15 +189,26 @@ export function getPurchaseRecordDtlListUnStockList({
   // serialNumber,
   // theName,
 }) {
+  var params = {};
+  //采购单主表选择
+  if (purchaseRecordMstId && purchaseRecordMstId !== '全部') {
+    params.purchaseRecordMstId = purchaseRecordMstId;
+  }
+  // //编号
+  // if (serialNumber) {
+  //   params.serialNumber = serialNumber;
+  // }
+  // //品名
+  // if (theName) {
+  //   params.theName = theName;
+  // }
   return axios.get('/uPurchaseRecordDtlListUnStock.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
       keyword,
-      purchaseRecordMstId,
-      // serialNumber,
-      // theName,
+      ...params,
     }
   })
 }

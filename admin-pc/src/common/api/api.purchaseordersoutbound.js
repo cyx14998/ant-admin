@@ -7,12 +7,13 @@ import axios, {
 
 
 //出库单主表列表
-export function getWarehousingList({
+export function getOutboundList({
   countPerPage = 1000,
   keyword,
   isPass,
   theState,
-  storageInMemberId,
+  warehouseId,
+  storageOutMemberId,
 }) {
   var params = {};
   // 审核情况        
@@ -25,12 +26,16 @@ export function getWarehousingList({
   if (theState && theState !== '0') {
     params.theState = theState - 1;
   }
-  //入库人选择
-  if (storageInMemberId && storageInMemberId !== '全部') {
-    params.storageInMemberId = storageInMemberId;
+  //仓库选择
+  if (warehouseId && warehouseId !== '全部') {
+    params.warehouseId = warehouseId;
+  }
+  //出库人选择
+  if (storageOutMemberId && storageOutMemberId !== '全部') {
+    params.storageOutMemberId = storageOutMemberId;
   }
 
-  return axios.get('/uStorageInRecordMstList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageOutRecordMstList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       countPerPage,
@@ -40,10 +45,10 @@ export function getWarehousingList({
   })
 }
 // 出库单主表详情
-export function getWarehousingDetail({
+export function getOutboundDetail({
   tableId,
 }) {
-  return axios.get('/uStorageInRecordMstDetail.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageOutRecordMstDetail.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
@@ -51,19 +56,19 @@ export function getWarehousingDetail({
   })
 }
 // 出库单主表新增
-export function getWarehousingAdd({
+export function getOutboundAdd({
   warehouseId,
-  storageInMemberId,
-  storageInDatetime,
+  storageOutMemberId,
+  storageOutDatetime,
   theRemarks,
   menuId,
 }) {
-  return axios.get('/uStorageInRecordMstAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageOutRecordMstAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       warehouseId,
-      storageInMemberId,
-      storageInDatetime,
+      storageOutMemberId,
+      storageOutDatetime,
       theRemarks,
       menuId,
     }
@@ -71,30 +76,32 @@ export function getWarehousingAdd({
 }
 
 // 出库单主表编辑
-export function getWarehousingEdit({
+export function getOutboundEdit({
   tableId,
   warehouseId,
-  storageInMemberId,
-  storageInDatetime,
+  storageOutMemberId,
+  storageOutDatetime,
   theRemarks,
+  menuId,
 }) {
-  return axios.get('/uStorageInRecordMstUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageOutRecordMstUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
       warehouseId,
-      storageInMemberId,
-      storageInDatetime,
+      storageOutMemberId,
+      storageOutDatetime,
       theRemarks,
+      menuId,
     }
   })
 }
 
 // 出库单主表删除
-export function getWarehousingDelete({
+export function getOutboundDelete({
   tableId,
 }) {
-  return axios.get('/uStorageInRecordMstDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageOutRecordMstDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
@@ -103,79 +110,60 @@ export function getWarehousingDelete({
 }
 /**-----------------------出库单明细---------------------------- */
 //出库单明细列表
-export function getWarehousingRecordList({
+export function getOutboundRecordList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword,
-  storageInRecordMstId,
+  storageOutRecordMstId,
 }) {
-  return axios.get('/uStorageInRecordDtlList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageOutRecordDtlList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
       keyword,
-      storageInRecordMstId
+      storageOutRecordMstId
     }
   })
 }
 
 // 出库单明细新增
-export function getWarehousingRecordnAdd({
-  storageInRecordMstId,
+export function getOutboundRecordnAdd({
+  storageOutRecordMstId,
   tableIdArr,
 }) {
-  return axios.get('/uStorageInRecordDtlAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageOutRecordMstAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      storageInRecordMstId,
+      storageOutRecordMstId,
       tableIdArr,
     }
   })
 }
 
-//出库单明细新增-------获取未入库采购单列表
-export function getPurchaseRecordMstListUnStockList({
+//出库单明细新增-------获取库存列表
+export function getStockList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword,
+  warehouseId,
 }) {
-  return axios.get('/uPurchaseRecordMstListUnStock.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageItemList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
       keyword,
-    }
-  })
-}
-//出库单明细新增-------获取未入库采购单--明细列表
-export function getPurchaseRecordDtlListUnStockList({
-  pageNumber = 1,
-  countPerPage = 1000,
-  keyword,
-  purchaseRecordMstId,
-  // serialNumber,
-  // theName,
-}) {
-  return axios.get('/uPurchaseRecordDtlListUnStock.uhtm?InterfaceVersion=' + apiVer, {
-    params: {
-      token: getToken(),
-      pageNumber,
-      countPerPage,
-      keyword,
-      purchaseRecordMstId,
-      // serialNumber,
-      // theName,
+      warehouseId,
     }
   })
 }
 // 出库单明细编辑
-export function getWarehousingRecordnEdit({
+export function getOutboundRecordnEdit({
   tableId,
   theQuantity,
 }) {
-  return axios.get('/uStorageInRecordDtlUpdate.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageOutRecordDtlUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
@@ -185,10 +173,10 @@ export function getWarehousingRecordnEdit({
 }
 
 // 出库单明细删除
-export function getWarehousingRecordnDelete({
+export function getOutboundRecordnDelete({
   tableId,
 }) {
-  return axios.get('/uStorageInRecordDtlDelete.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageOutRecordDtlDelete.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
@@ -201,7 +189,7 @@ export function getCheckRecordList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword,
-  storageInRecordMstId,
+  storageOutRecordMstId,
 }) {
   return axios.get('/uPurchaseRecordDtlList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -209,7 +197,7 @@ export function getCheckRecordList({
       pageNumber,
       countPerPage,
       keyword,
-      storageInRecordMstId
+      storageOutRecordMstId
     }
   })
 }

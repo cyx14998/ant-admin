@@ -29,6 +29,10 @@ import {
   getStaffDetails
 } from '../../common/api/api.staffmanagement';
 
+import {
+  uRoleList
+} from '../../common/api/api.role';
+
 
 import {
   MyToast,
@@ -69,16 +73,20 @@ class StaffDetails extends React.Component {
         isActivationLogin: false,
       },
 
-      departmentList: []
+      departmentList: [],
+      roleList: [],
     }
 
     this._getStaffDetails = this._getStaffDetails.bind(this);
     this._getDepartmentListForSelect = this._getDepartmentListForSelect.bind(this);
+    this._getRoleListForSelect = this._getRoleListForSelect.bind(this);
   }
 
   componentDidMount() {
     // 获取部门列表
     this._getDepartmentListForSelect();
+    // 获取角色列表
+    this._getRoleListForSelect();
 
     var staffId = this.props.staffId;
 
@@ -113,8 +121,34 @@ class StaffDetails extends React.Component {
     });
   }
 
+  _getRoleListForSelect() {
+    uRoleList({}).then(res => {
+      console.log('uRoleList res', res)
+
+      if (res.data.result !== 'success') {
+        MyToast(res.data.info || '获取角色列表失败');
+        return;
+      }
+
+      var roleList = res.data.roleList.map(item => {
+        let role = {
+          value: item.tableId,
+          label: item.theName
+        };
+
+        return role;
+      });
+
+      this.setState({
+        roleList
+      });
+    }).catch(err => {
+      MyToast('获取角色列表失败')
+    });
+  }
+
   _getStaffDetails(staffId) {
-    getStaffDetails({staffId}).then(res => {
+    getStaffDetails({ staffId }).then(res => {
       console.log('getStaffDetails res', res)
 
       if (res.data.result !== 'success') {
@@ -140,9 +174,9 @@ class StaffDetails extends React.Component {
     })
   }
 
-  handleUploadedFileList({fileList}) {
+  handleUploadedFileList({ fileList }) {
     this.setState({
-        uploadedFileList: fileList,
+      uploadedFileList: fileList,
     });
   }
 
@@ -308,8 +342,8 @@ class StaffDetails extends React.Component {
                     {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
-                    <Input 
-                      type="password" 
+                    <Input
+                      type="password"
                       placeholder="密码"
                       autoComplete="new-password" />
                     )}
@@ -333,14 +367,30 @@ class StaffDetails extends React.Component {
             </Row>
             <Row>
               <Col span={16}>
-                <FormItem labelCol={{span: 4}} wrapperCol={{span: 20}} label="住址">
+                <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} label="住址">
                   {getFieldDecorator('address', {
                     initialValue: this.state.data.address,
                     rules: [{ required: true },
-                    {/* { pattern: /^[0-9]*$/ } */ }
                     ],
                   })(
                     <Input placeholder="住址" />
+                    )}
+                </FormItem>
+              </Col>
+              <Col span={8}>
+                <FormItem labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} label="角色">
+                  {getFieldDecorator('roleId', {
+                    initialValue: this.state.data.roleId ? this.state.data.roleId + '' : '',
+                    rules: [{ required: true },
+                    ],
+                  })(
+                    <Select placeholder="角色">
+                      {
+                        this.state.roleList.map((item, index) => {
+                          return <Option key={index} value={item.value.toString()}>{item.label}</Option>
+                        })
+                      }
+                    </Select>
                     )}
                 </FormItem>
               </Col>
@@ -351,10 +401,10 @@ class StaffDetails extends React.Component {
                 <div className="yzy-tab-content-item-wrap">
                   <h2 className="yzy-tab-content-title">头像上传</h2>
                   <QiniuUpload
-                      uploadTitle="证件上传"
-                      uploadedFileList={this.state.uploadedFileList}
-                      handleUploadedFileList={this.handleUploadedFileList.bind(this)}
-                     />
+                    uploadTitle="证件上传"
+                    uploadedFileList={this.state.uploadedFileList}
+                    handleUploadedFileList={this.handleUploadedFileList.bind(this)}
+                  />
                 </div>
               </Col>
             </Row>

@@ -178,7 +178,8 @@ class PurchaseordersList extends React.Component {
   deletePurchaseorder(id) {
     getPurchaseOrderDelete({ tableId: id }).then(res => {
       if (res.data.result !== 'success') {
-        MyToast(res.data.info || '删除采购单失败')
+        MyToast(res.data.info || '删除采购单失败');
+        return;
       }
       setTimeout(this.getData({}), 500);
     }).catch(err => MyToast(err));

@@ -19,6 +19,7 @@ import {
 } from '../../common/api/api.flow';
 import DraggableModal from '../../components/modal.draggable';
 import FlowDetail from './flow.details';
+import SetPeople from './flow.setPeople';
 
 import {
     getLocQueryByLabel,
@@ -38,7 +39,9 @@ class FlowEdit extends Component {
 
         this.state = {
             flowMstId: getLocQueryByLabel('flowMstId') || '',
-            editModalVisible: false,
+            editModalVisible: false, // 编辑
+            setModalVisible: false, // 设定审核人员模态框
+            setPeopleID: '', // 设定审核人员ID
             recordEdit: {}, // 点击编辑时接口返回的子表详情数据
 
             modalType: 'add', // 新增 || 编辑 add/edit
@@ -99,13 +102,24 @@ class FlowEdit extends Component {
 
     }
 
+    showSetPeopleModal(data) {
+        this.setState({
+            setPeopleID: data.tableId,
+            setModalVisible: true,
+        })
+    }
+
+    setPeopleCancel() {
+        this.setState({ setModalVisible: false });
+    }
+
     // 新增流程  Modal---- 显示
     addFlow() {
         var recordEdit = {};
         var length = this.state.flowList.length;
         if (length) {
             var lastFlowDtlTheName = this.state.flowList[length - 1].theRemark;
-            var tableId = this.state.flowList[length - 1].tableId;
+            var tableId = this.state.flowList[length - 1].tableId; // 上一步骤的流程ID
             recordEdit = {
                 tableId,
                 lastFlowDtl: {
@@ -114,7 +128,7 @@ class FlowEdit extends Component {
             };
         }
         recordEdit.modalType = 'add';
-        recordEdit.flowMstId = this.state.flowMstId;
+        recordEdit.flowMstId = this.state.flowMstId; // 主流程ID
         this.setState({
             editModalVisible: true,
             recordEdit,
@@ -135,8 +149,8 @@ class FlowEdit extends Component {
             }
         };
         recordEdit.modalType = 'insert';
-        recordEdit.flowMstId = this.state.flowMstId;
-        recordEdit.tableId = this.state.flowList[index].tableId;
+        recordEdit.flowMstId = this.state.flowMstId;      // 主流程ID
+        recordEdit.tableId = this.state.flowList[index].tableId;  // 上一步骤的流程ID
         this.setState({
             editModalVisible: true,
             recordEdit,
@@ -166,10 +180,10 @@ class FlowEdit extends Component {
     }
 
     // 保存流程
-    approvalProcessSave() {
-        console.log('save--------------');
-        MyToast('保存成功');
-    }
+    // approvalProcessSave() {
+    //     console.log('save--------------');
+    //     MyToast('保存成功');
+    // }
 
     render() {
         var self = this;
@@ -195,12 +209,18 @@ class FlowEdit extends Component {
                                         self.state.flowList.map((item, index) => {
                                             return <div className="approval-item" key={index}>
                                                 <div className="item-body">
-                                                    <p className={item.title}>流程{index + 1}</p>
+                                                    <div className="item-title">
+                                                        <p className="main-title">{item.theName}</p>
+                                                        <p>{item.theRemark}</p>
+                                                    </div>
                                                     <Popconfirm title="确定删除么?" onConfirm={this.delFlow.bind(self, item, index)}>
                                                         <a title="删除" className="item-del" href="#" style={{ marginLeft: 8 }}><Icon type="delete" className="yzy-icon" /></a>
                                                     </Popconfirm>
                                                     <div className="item-edit" title="编辑" onClick={self.showEditModal.bind(self, item)}>
                                                         <Icon type="edit" />
+                                                    </div>
+                                                    <div className="item-setPeople" title="设定审核人员" onClick={self.showSetPeopleModal.bind(self, item)}>
+                                                        <Icon type="user-add" />
                                                     </div>
                                                 </div>
                                                 <div className="item-nextArr">
@@ -227,10 +247,24 @@ class FlowEdit extends Component {
                             this.state.editModalVisible && <FlowDetail getData={this.getData.bind(this)} recordEdit={this.state.recordEdit} TestCancel={this.TestCancel.bind(this)} />
                         }
                     </DraggableModal>
+                    <DraggableModal
+                        width="90%"
+                        visible={this.state.setModalVisible}
+                        title='设定审核人员'
+                        onCancel={this.setPeopleCancel.bind(this)}
+                        footer={null}>
+                        {
+                            this.state.setModalVisible &&
+                            <SetPeople
+                                flowDtlId={this.state.setPeopleID}
+                                handleModalCancel={this.setPeopleCancel.bind(this)}
+                            />
+                        }
+                    </DraggableModal>
                 </div>
-                <div className="approvalProcessSave">
+                {/* <div className="approvalProcessSave">
                     <Button type="primary" onClick={this.approvalProcessSave.bind(this)}>保存</Button>
-                </div>
+                </div> */}
                 <BackTop />
             </div>
         )

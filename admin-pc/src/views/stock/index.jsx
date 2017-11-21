@@ -60,7 +60,7 @@ const rcsearchformData = {
 }
 
 import {
-    getstockList,
+    getStockList,
     getWarehousingDelete,
 } from '../../common/api/api.stock.js';
 
@@ -80,23 +80,25 @@ const columns = [
         title: '单据编号',
         dataIndex: 'serialNumber',
     }, {
-        title: '创建人',
-        dataIndex: 'editor.realName',
+        title: '仓库',
+        dataIndex: 'warehouse.theName',
     }, {
-        title: '入库人',
-        dataIndex: 'storageInMember.realName',
+        title: '厂商',
+        dataIndex: 'manufacturerName',
     }, {
-        title: '入库日期',
-        dataIndex: 'storageInDatetime',
+        title: '品名',
+        dataIndex: 'theName',
     }, {
-        title: '是否审核完成',
-        dataIndex: 'isPass',
-    }, {
-        title: '单据状态',
-        dataIndex: 'theState',
-    }, {
-        title: '备注',
-        dataIndex: 'theRemarks',
+        title: '数量',
+        dataIndex: 'theQuantity',
+    }, 
+    // {
+    //     title: '出库中数量',
+    //     dataIndex: 'manufacturerName',
+    // },
+     {
+        title: '创建时间',
+        dataIndex: 'createDatetime',
     }, {
         title: '操作',
         dataIndex: 'operation',
@@ -112,12 +114,12 @@ const columns = [
 //   })
 // }
 //列表页面
-class PurchaseorderswarehousingList extends React.Component {
+class PurchaseordersstockList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: true,
-            storageInRecordMstList: [],
+            storageItemList: [],
             memberList: [], //入库人列表
         }
 
@@ -128,7 +130,7 @@ class PurchaseorderswarehousingList extends React.Component {
     componentDidMount() {
         this.getData({});
         this._getMemberList();
-        columns[7].render = (text, record) => {
+        columns[6].render = (text, record) => {
             return (
                 <div>
                     {/* <a title="编辑" style={{ marginRight: '10px' }} onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a> */}
@@ -144,13 +146,13 @@ class PurchaseorderswarehousingList extends React.Component {
         this.setState({
             loading: true
         });
-        getstockList(params).then(res => {
-            console.log('getstockList ---', res)
+        getStockList(params).then(res => {
+            console.log('getStockList ---', res)
             if (res.data.result !== 'success') {
                 MyToast(res.data.info || '接口失败')
                 return;
             }
-            var data = res.data.storageInRecordMstList;
+            var data = res.data.storageItemList;
             data = data.map(item => {
 
 
@@ -162,7 +164,7 @@ class PurchaseorderswarehousingList extends React.Component {
             });
             this.setState({
                 loading: false,
-                storageInRecordMstList: data,
+                storageItemList: data,
             })
         }).catch(err => {
             MyToast('接口失败');
@@ -290,7 +292,7 @@ class PurchaseorderswarehousingList extends React.Component {
                     </div>
                     <Table
                         columns={columns}
-                        dataSource={this.state.storageInRecordMstList}
+                        dataSource={this.state.storageItemList}
                         loading={this.state.loading}
                         rowKey="tableId"
                         rowClassName={(record, index) => {
@@ -305,4 +307,4 @@ class PurchaseorderswarehousingList extends React.Component {
     }
 }
 
-ReactDOM.render(<PurchaseorderswarehousingList />, document.getElementById('root'));
+ReactDOM.render(<PurchaseordersstockList />, document.getElementById('root'));

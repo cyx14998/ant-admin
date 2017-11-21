@@ -537,7 +537,8 @@ class PurchaseordersEdit extends React.Component {
                                     </Col>
                                 </Row>
                                 <div className="yzy-block-center">
-                                    <Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
+                                    <Button type="primary" style={{ padding: '0 30px' }} onClick={this.onCheck.bind(this)}>审核通过</Button>
+                                    <Button type="primary" style={{ padding: '0 40px', marginLeft: 8 }} htmlType="submit">保存</Button>
                                 </div>
                             </div>
                             {this.state.tableId ?

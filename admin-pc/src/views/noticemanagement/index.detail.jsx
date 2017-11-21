@@ -1,5 +1,5 @@
 /**
- * 请假管理编辑页面
+ * 公告管理编辑页面
  */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -194,7 +194,7 @@ class NoticeManagementSubDetail extends React.Component {
                     }
                     setTimeout(() => {
                         self.props.getData({});
-                        self.props.TestCancel();
+                        self.props.modalCancel();
                     }, 500);
                 }).catch(err => MyToast('新增失败'))
             } else {
@@ -211,7 +211,7 @@ class NoticeManagementSubDetail extends React.Component {
                     }
                     setTimeout(() => {
                         self.props.getData({});
-                        self.props.TestCancel();
+                        self.props.modalCancel();
                     }, 500);
                 }).catch(err => MyToast('更新失败'))
             }
@@ -231,7 +231,7 @@ class NoticeManagementSubDetail extends React.Component {
             }
             setTimeout(() => {
                 self.props.getData({});
-                self.props.TestCancel();
+                self.props.modalCancel();
             }, 500);
         }).catch(err => MyToast('作废失败'));
     }

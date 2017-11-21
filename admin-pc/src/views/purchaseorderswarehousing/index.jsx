@@ -12,56 +12,10 @@ import {
 
 import RcSearchForm from '../../components/rcsearchform';
 
-// 头部搜索
-const rcsearchformData = {
-  colspan: 2,
-  fields: [
-    //   {
-    //   type: 'input',
-    //   label: '单据编号',
-    //   name: 'serialNumber',
-    // }, {
-    //   type: 'input',
-    //   label: '厂商名称',
-    //   name: 'manufacturerName',
-    // },
-    {
-      type: 'select',
-      label: '审核情况',
-      name: 'isPass',
-      defaultValue: '0',
-      options: [{
-        value: '0',
-        label: '全部'
-      }, {
-        value: '1',
-        label: '审核完成'
-      }, {
-        value: '2',
-        label: '未审核'
-      }]
-    }, {
-      type: 'select',
-      label: '入库单状态',
-      name: 'theState',
-      defaultValue: '0',
-      options: [{
-        value: '0',
-        label: '全部'
-      }, {
-        value: '1',
-        label: '正常'
-      }, {
-        value: '2',
-        label: '作废'
-      }]
-    },
-  ]
-}
-
 import {
   getWarehousingList,
   getWarehousingDelete,
+  gethousingList, //获取仓库列表  
   getMemberList, //获取入库人列表 （员工列表）
 } from '../../common/api/api.purchaseorderswarehousing.js';
 
@@ -114,15 +68,18 @@ class PurchaseorderswarehousingList extends React.Component {
     this.state = {
       loading: true,
       storageInRecordMstList: [],
+      houseList: [], //仓库列表
       memberList: [], //入库人列表
     }
 
     this.getData = this.getData.bind(this);
+    this._gethousingList = this._gethousingList.bind(this);
     this._getMemberList = this._getMemberList.bind(this);
   }
 
   componentDidMount() {
     this.getData({});
+    this._gethousingList({});
     this._getMemberList();
     columns[7].render = (text, record) => {
       return (
@@ -167,6 +124,35 @@ class PurchaseorderswarehousingList extends React.Component {
       });
     })
   }
+  //获取仓库列表
+  _gethousingList() {
+    gethousingList({}).then(res => {
+      console.log('gethousingList res', res)
+
+      if (res.data.result !== 'success') {
+        MyToast(res.data.info || '获取仓库列表失败');
+        return;
+      }
+
+      var houseList = res.data.warehouseList.map(item => {
+        let house = {
+          value: item.tableId + '',
+          label: item.theName
+        };
+
+        return house;
+      });
+      houseList.unshift({
+        value: '全部',
+        label: '全部'
+      })
+      this.setState({
+        houseList: houseList
+      });
+    }).catch(err => {
+      MyToast('获取仓库列表失败')
+    });
+  }
   //获取入库人列表
   _getMemberList() {
     getMemberList({}).then(res => {
@@ -200,6 +186,7 @@ class PurchaseorderswarehousingList extends React.Component {
   //头部搜索
   handleFormSearch(values) {
     this.getData({
+      warehouseId: values.warehouseId,
       storageInMemberId: values.storageInMemberId,
       isPass: values.isPass,
       theState: values.theState,
@@ -210,7 +197,8 @@ class PurchaseorderswarehousingList extends React.Component {
   deletePurchaseorder(id) {
     getWarehousingDelete({ tableId: id }).then(res => {
       if (res.data.result !== 'success') {
-        MyToast(res.data.info || '删除入库单失败')
+        MyToast(res.data.info || '删除入库单失败');
+        return;
       }
 
       MyToast('删除入库单成功');
@@ -228,11 +216,13 @@ class PurchaseorderswarehousingList extends React.Component {
           type: 'select',
           label: '仓库',
           name: 'warehouseId',
-          options: []
+          defaultValue: '全部',
+          options: this.state.houseList
         }, {
           type: 'select',
           label: '入库人',
           name: 'storageInMemberId',
+          defaultValue: '全部',
           options: this.state.memberList
         },
         {

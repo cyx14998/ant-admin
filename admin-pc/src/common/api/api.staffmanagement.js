@@ -55,7 +55,8 @@ export function getStaffListAdd({
   address,
   idCard,
   isActivationLogin,
-  departmentId
+  departmentId,
+  roleId
 }) {
   return axios.get('/uMemberAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -70,7 +71,8 @@ export function getStaffListAdd({
       address,
       idCard,
       isActivationLogin,
-      departmentId
+      departmentId,
+      roleId
     }
   })
 }
@@ -91,7 +93,8 @@ export function getStaffListUpdate({
   address,
   idCard,
   isActivationLogin,
-  departmentId
+  departmentId,
+  roleId
 }) {
   return axios.get('/uMemberUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -107,7 +110,8 @@ export function getStaffListUpdate({
       address,
       idCard,
       isActivationLogin,
-      departmentId
+      departmentId,
+      roleId
     }
   })
 }

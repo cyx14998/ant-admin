@@ -12,61 +12,13 @@ import {
 
 import RcSearchForm from '../../components/rcsearchform';
 
-// 头部搜索
-const rcsearchformData = {
-  colspan: 2,
-  fields: [
-    //   {
-    //   type: 'input',
-    //   label: '单据编号',
-    //   name: 'serialNumber',
-    // }, {
-    //   type: 'input',
-    //   label: '厂商名称',
-    //   name: 'manufacturerName',
-    // },
-    {
-      type: 'select',
-      label: '审核情况',
-      name: 'isPass',
-      defaultValue: '0',
-      options: [{
-        value: '0',
-        label: '全部'
-      }, {
-        value: '1',
-        label: '审核完成'
-      }, {
-        value: '2',
-        label: '未审核'
-      }]
-    }, {
-      type: 'select',
-      label: '付款单状态',
-      name: 'theState',
-      defaultValue: '0',
-      options: [{
-        value: '0',
-        label: '全部'
-      }, {
-        value: '1',
-        label: '正常'
-      }, {
-        value: '2',
-        label: '作废'
-      }]
-    },
-  ]
-}
+import {
+  getPaymentList,
+  getPaymentDelete,
+} from '../../common/api/api.purchaseorderspayment.js';
 
 import {
-  getWarehousingList,
-  getWarehousingDelete,
-} from '../../common/api/api.purchaseordersoutbound.js';
-
-import {
-    gethousingList, //获取仓库列表
-    getMemberList, //获取入库人列表 （员工列表）
+  getMemberList, //获取创建人列表 （员工列表）
 } from '../../common/api/api.purchaseorderswarehousing.js'
 
 import {
@@ -82,19 +34,16 @@ const columns = [
   }, {
     title: '创建人',
     dataIndex: 'editor.realName',
-  }, {
-    title: '入库人',
-    dataIndex: 'storageInMember.realName',
-  }, {
-    title: '入库日期',
-    dataIndex: 'storageInDatetime',
-  }, {
+  },  {
     title: '是否审核完成',
     dataIndex: 'isPass',
   }, {
     title: '单据状态',
     dataIndex: 'theState',
-  }, {
+  },{
+    title: '付款单金额',
+    dataIndex: 'theTotalAmount',
+  },  {
     title: '备注',
     dataIndex: 'theRemarks',
   }, {
@@ -107,18 +56,18 @@ const columns = [
 function changeIframeToEdit(id) {
   console.log('chanageiframe', parent.window.iframeHook)
   parent.window.iframeHook.changePage({
-    url: '/purchaseorderspaymentEdit.html?warehousingId=' + id + '#' + Math.random(),
+    url: '/purchaseorderspaymentEdit.html?paymentId=' + id + '#' + Math.random(),
     breadIncrement: '付款单编辑'
   })
 }
 //列表页面
-class PurchaseorderswarehousingList extends React.Component {
+class PurchaseorderspaymentList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      storageInRecordMstList: [],
-      memberList: [], //入库人列表
+      paymentRecordMstList: [],
+      memberList: [], //创建人列表
     }
 
     this.getData = this.getData.bind(this);
@@ -128,11 +77,11 @@ class PurchaseorderswarehousingList extends React.Component {
   componentDidMount() {
     this.getData({});
     this._getMemberList();
-    columns[7].render = (text, record) => {
+    columns[6].render = (text, record) => {
       return (
         <div>
           <a title="编辑" style={{ marginRight: '10px' }} onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
-          <Popconfirm title="确定要删除吗？" onConfirm={() => this.deletePurchaseorder(record.tableId)}>
+          <Popconfirm title="确定要删除吗？" onConfirm={() => this.deletePayment(record.tableId)}>
             <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>
         </div>
@@ -144,16 +93,14 @@ class PurchaseorderswarehousingList extends React.Component {
     this.setState({
       loading: true
     });
-    getWarehousingList(params).then(res => {
-      console.log('getWarehousingList ---', res)
+    getPaymentList(params).then(res => {
+      console.log('getPaymentList --------------', res)
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '接口失败')
         return;
       }
-      var data = res.data.storageInRecordMstList;
+      var data = res.data.paymentRecordMstList;
       data = data.map(item => {
-
-
         return {
           ...item,
           isPass: item.isPass == 'true' ? '是' : '否',
@@ -162,7 +109,7 @@ class PurchaseorderswarehousingList extends React.Component {
       });
       this.setState({
         loading: false,
-        storageInRecordMstList: data,
+        paymentRecordMstList: data,
       })
     }).catch(err => {
       MyToast('接口失败');
@@ -171,16 +118,15 @@ class PurchaseorderswarehousingList extends React.Component {
       });
     })
   }
-  //获取入库人列表
+  //获取创建人列表
   _getMemberList() {
     getMemberList({}).then(res => {
       console.log('getMemberList res', res)
 
       if (res.data.result !== 'success') {
-        MyToast(res.data.info || '获取入库人列表失败');
+        MyToast(res.data.info || '获取创建人列表失败');
         return;
       }
-      console.log('-------------', res.data.memberList)
       var memberList = res.data.memberList.map(item => {
         let member = {
           value: item.tableId + '',
@@ -198,7 +144,7 @@ class PurchaseorderswarehousingList extends React.Component {
         memberList: memberList
       });
     }).catch(err => {
-      MyToast('获取入库人列表失败')
+      MyToast('获取创建人列表失败')
     });
   }
   //头部搜索
@@ -211,10 +157,11 @@ class PurchaseorderswarehousingList extends React.Component {
   }
 
   // 付款单删除
-  deletePurchaseorder(id) {
-    getWarehousingDelete({ tableId: id }).then(res => {
+  deletePayment(id) {
+    getPaymentDelete({ tableId: id }).then(res => {
       if (res.data.result !== 'success') {
-        MyToast(res.data.info || '删除付款单失败')
+        MyToast(res.data.info || '删除付款单失败');
+        return;
       }
 
       MyToast('删除付款单成功');
@@ -227,15 +174,9 @@ class PurchaseorderswarehousingList extends React.Component {
     // 头部搜索
     const rcsearchformData = {
       colspan: 2,
-      fields: [
-        {
+      fields: [{
           type: 'select',
-          label: '仓库',
-          name: 'warehouseId',
-          options: []
-        }, {
-          type: 'select',
-          label: '入库人',
+          label: '创建人',
           name: 'storageInMemberId',
           options: this.state.memberList
         },
@@ -256,7 +197,7 @@ class PurchaseorderswarehousingList extends React.Component {
           }]
         }, {
           type: 'select',
-          label: '付款单状态',
+          label: '采购单状态',
           name: 'theState',
           defaultValue: '0',
           options: [{
@@ -280,7 +221,6 @@ class PurchaseorderswarehousingList extends React.Component {
         </div>
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
-            {/* <Button type="primary"  style={{marginRight: 8}}>导出excel</Button> */}
             <Button type="primary"
               onClick={() => {
                 localStorage.removeItem('yt-customerId');
@@ -290,7 +230,7 @@ class PurchaseorderswarehousingList extends React.Component {
           </div>
           <Table
             columns={columns}
-            dataSource={this.state.storageInRecordMstList}
+            dataSource={this.state.paymentRecordMstList}
             loading={this.state.loading}
             rowKey="tableId"
             rowClassName={(record, index) => {
@@ -305,4 +245,4 @@ class PurchaseorderswarehousingList extends React.Component {
   }
 }
 
-ReactDOM.render(<PurchaseorderswarehousingList />, document.getElementById('root'));
+ReactDOM.render(<PurchaseorderspaymentList />, document.getElementById('root'));

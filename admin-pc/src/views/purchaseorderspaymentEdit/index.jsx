@@ -29,21 +29,20 @@ const formItemLayout = {
 }
 
 import {
-    getWarehousingDetail,
-    getWarehousingAdd,
-    getWarehousingEdit,
-    getWarehousingRecordList,
-    getWarehousingRecordnAdd,
-    getWarehousingRecordnEdit,
-    getWarehousingRecordnDelete,
+    getPaymentDetail,
+    getPaymentAdd,
+    getPaymentEdit,
+    getPaymentRecordList,
+    getPaymentRecordnAdd,
+    getPaymentRecordnEdit,
+    getPaymentRecordnDelete,
     getPurchaseRecordMstListUnStockList, //明细新增---采购单主表列表
     getPurchaseRecordDtlListUnStockList,//明细新增---采购单主表--明细列表
     getCheckRecordList,
-} from '../../common/api/api.purchaseorderswarehousing.js';
+} from '../../common/api/api.purchaseorderspayment.js';
 
 import {
-    gethousingList, //获取仓库列表
-    getMemberList, //获取入库人列表 （员工列表）
+    getMemberList, //获取创建人列表 （员工列表）
 } from '../../common/api/api.purchaseorderswarehousing.js'
 
 /**
@@ -64,28 +63,16 @@ const columns = [
         title: '单据编号',
         dataIndex: 'serialNumber',
     }, {
-        title: '品名',
-        dataIndex: 'theName',
-    }, {
-        title: '规格型号',
-        dataIndex: 'theSpecifications',
-    }, {
-        title: '单价',
-        dataIndex: 'thePrice',
+        title: '金额',
+        dataIndex: 'theAmount',
         validateType: 'number',
     }, {
-        title: '总金额',
-        dataIndex: 'totalAmount',
-        validateType: 'number',
+        title: '编辑时间',
+        dataIndex: 'editDatetime',
     }, {
-        title: '已入库数量',
-        dataIndex: 'inStorageQuantity',
+        title: '备注',
+        dataIndex: 'theRemarks',
         validateType: 'number',
-    }, {
-        title: '入库数量',
-        dataIndex: 'theQuantity',
-        validateType: 'number',
-    }, {
         title: '操作',
         dataIndex: 'operation',
         width: 120,
@@ -127,70 +114,41 @@ const warehousingsColumns = [
     },
 ];
 //编辑页面
-class WarehousingsEdit extends React.Component {
+class PaymentsEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tableId: getLocQueryByLabel('warehousingId') || '', //控制底面表格显隐
+            tableId: getLocQueryByLabel('paymentId') || '', //控制底面表格显隐
             loading: true,
-            houseList: [], //仓库列表
             memberList: [], //入库人列表（员工列表）
-            storageInRecordMst: {}, //列表信息详情
-            warehousingDtlList: [], //明细列表
+            paymentRecordMst: {}, //列表信息详情
+            paymentDtlList: [], //明细列表
             checkRecordlList: [], //检查记录列表
 
             warehousingsListModalVisible: false, //入库明细新增------Modal显隐
             purchaseRecordMstList: [], //入库明细新增Modal列表 --- （采购单列表）
-            purchaseRecordDtlList: [], //入库明细新增Modal列表 --- （采购单明细列表）
+            paymentRecordDtlList: [], //入库明细新增Modal列表 --- （采购单明细列表）
             purOrdSelectedRowKeysArr: [], //入库明细新增Modal列表的选择tableId --- （采购单明细列表）
 
-            purchaseRecordMstId: '', //Modal头部搜索
+            paymentRecordMstId: '', //Modal头部搜索
             serialNumber: '', //Modal头部搜索
             theName: '', //Modal头部搜索
         }
-        this._gethousingList = this._gethousingList.bind(this);
         this._getMemberList = this._getMemberList.bind(this);
-        this._getWarehousingDetail = this._getWarehousingDetail.bind(this);
-        this._getWarehousingRecordList = this._getWarehousingRecordList.bind(this);
+        this._getPaymentDetail = this._getPaymentDetail.bind(this);
+        this._getPaymentRecordList = this._getPaymentRecordList.bind(this);
         this._getCheckRecordList = this._getCheckRecordList.bind(this);
         this._getPurchaseRecordMstListUnStockList = this._getPurchaseRecordMstListUnStockList.bind(this);
         this._getPurchaseRecordDtlListUnStockList = this._getPurchaseRecordDtlListUnStockList.bind(this);
     }
 
     componentDidMount() {
-        this._gethousingList();
         this._getMemberList();
-        this._getWarehousingDetail({ tableId: this.state.tableId });
-        this._getWarehousingRecordList({ storageInRecordMstId: this.state.tableId });
-        this._getCheckRecordList({ storageInRecordMstId: this.state.tableId });
+        this._getPaymentDetail({ tableId: this.state.tableId });
+        this._getPaymentRecordList({ paymentRecordMstId: this.state.tableId });
+        this._getCheckRecordList({ paymentRecordMstId: this.state.tableId });
     }
 
-    //获取仓库列表
-    _gethousingList() {
-        gethousingList({}).then(res => {
-            console.log('gethousingList res', res)
-
-            if (res.data.result !== 'success') {
-                MyToast(res.data.info || '获取仓库列表失败');
-                return;
-            }
-
-            var houseList = res.data.warehouseList.map(item => {
-                let house = {
-                    value: item.tableId,
-                    label: item.theName
-                };
-
-                return house;
-            });
-
-            this.setState({
-                houseList: houseList
-            });
-        }).catch(err => {
-            MyToast('获取仓库列表失败')
-        });
-    }
     //获取入库人列表
     _getMemberList() {
         getMemberList({}).then(res => {
@@ -200,7 +158,6 @@ class WarehousingsEdit extends React.Component {
                 MyToast(res.data.info || '获取入库人列表失败');
                 return;
             }
-            console.log('-------------', res.data.memberList)
             var memberList = res.data.memberList.map(item => {
                 let member = {
                     value: item.tableId,
@@ -218,14 +175,14 @@ class WarehousingsEdit extends React.Component {
         });
     }
     //获取付款单列表详情
-    _getWarehousingDetail(params) {
+    _getPaymentDetail(params) {
         this.setState({
             loading: false
         });
         if (!params.tableId) return;
 
-        getWarehousingDetail(params).then(res => {
-            console.log('getWarehousingDetail ---', res)
+        getPaymentDetail(params).then(res => {
+            console.log('getPaymentDetail ---', res)
             if (res.data.result !== 'success') {
                 MyToast(res.data.info || '接口失败')
                 return;
@@ -233,7 +190,7 @@ class WarehousingsEdit extends React.Component {
 
             this.setState({
                 loading: false,
-                storageInRecordMst: res.data.storageInRecordMst,
+                paymentRecordMst: res.data.paymentRecordMst,
             })
         }).catch(err => {
             MyToast('接口失败');
@@ -259,15 +216,12 @@ class WarehousingsEdit extends React.Component {
 
             var data = { ...values };
 
-            //时间处理---------------------
-            data.storageInDatetime = data.storageInDatetime ? data.storageInDatetime.format('YYYY-MM-DD') : new Date().format('YYYY-MM-DD');
-
             console.log('when save purOrder付款单保存前 ----------', data);
 
             var tableId = self.state.tableId;
             if (tableId === '') {
                 //新增
-                getWarehousingAdd(data).then(res => {
+                getPaymentAdd(data).then(res => {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
@@ -282,7 +236,7 @@ class WarehousingsEdit extends React.Component {
                     MyToast(err)
                     )
             } else {
-                getWarehousingEdit({ ...data, tableId: tableId }).then(res => {
+                getPaymentEdit({ ...data, tableId: tableId }).then(res => {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
@@ -308,23 +262,14 @@ class WarehousingsEdit extends React.Component {
                     value: data.serialNumber,
                     disabled: true,
                 },
-                theName: {
-                    value: data.theName || '',
+                theAmount: {
+                    value: data.theAmount
                 },
-                theSpecifications: {
-                    value: data.theSpecifications,
+                theRemarks: {
+                    value: data.theRemarks,
                 },
-                thePrice: {
-                    value: data.thePrice
-                },
-                totalAmount: {
-                    value: data.totalAmount,
-                },
-                inStorageQuantity: {
-                    value: data.inStorageQuantity,
-                },
-                theQuantity: {
-                    value: data.theQuantity || '',
+                editDatetime: {
+                    value: data.editDatetime,
                 },
             }
         });
@@ -345,22 +290,22 @@ class WarehousingsEdit extends React.Component {
 
     }
     //获取付款单明细列表    
-    _getWarehousingRecordList(params) {
+    _getPaymentRecordList(params) {
         console.log('------------params', params)
-        if (!params.storageInRecordMstId) return;
+        if (!params.paymentRecordMstId) return;
 
-        getWarehousingRecordList(params).then(res => {
-            console.log('getWarehousingRecordList ------------', res)
+        getPaymentRecordList(params).then(res => {
+            console.log('getPaymentRecordList ------------', res)
             if (res.data.result !== 'success') {
                 MyToast(res.data.info || '接口失败')
                 return;
             }
 
-            var dataSource = res.data.storageInRecordMst || [];
+            var dataSource = res.data.paymentRecordDtlList || [];
             dataSource = this.formatDatasource(dataSource)
             this.setState({
                 loading: false,
-                warehousingDtlList: dataSource
+                paymentDtlList: dataSource
             })
         }).catch(err => {
             MyToast('接口失败');
@@ -370,7 +315,7 @@ class WarehousingsEdit extends React.Component {
         })
     }
     // //付款单明细新增
-    // addBtnWarehousing(record) 
+    // addBtnPayment(record) 
 
     //付款单明细新增btn
     warehousingAddBtn() {
@@ -380,12 +325,12 @@ class WarehousingsEdit extends React.Component {
         })
     }
     //付款单明细编辑   
-    updateWarehousing(record) {
+    updatePayment(record) {
         console.log('明细编辑-----------------------', record);
         var _record = this.serializeRecord(record);
 
         return new Promise((resolve, reject) => {
-            getWarehousingRecordnEdit({
+            getPaymentRecordnEdit({
                 tableId: record.tableId,
                 theQuantity: record.theQuantity,
             }).then(res => {
@@ -406,9 +351,9 @@ class WarehousingsEdit extends React.Component {
         })
     }
     // 付款单明细删除
-    deleteWarehousing(id) {
+    deletePayment(id) {
         return new Promise((resolve, reject) => {
-            getWarehousingRecordnDelete({ tableId: id }).then(res => {
+            getPaymentRecordnDelete({ tableId: id }).then(res => {
                 if (res.data.result != 'success') {
                     resolve({
                         code: -1,
@@ -424,12 +369,12 @@ class WarehousingsEdit extends React.Component {
             }).catch(err => resolve({ code: -1, msg: err }))
         })
     }
-    /** -------------------------------------付款单明细---------------------------------- */
+    /** -------------------------------------检查记录列表---------------------------------- */
 
     //检查记录列表
     _getCheckRecordList(params) {
         console.log('params', params)
-        if (!params.storageInRecordMstId) return;
+        if (!params.paymentRecordMstId) return;
 
         // getCheckRecordList(params).then(res => {
         //     console.log('getCheckRecordList ------------', res)
@@ -457,7 +402,7 @@ class WarehousingsEdit extends React.Component {
     }
 
     /** ----------------------------------------Modal------------------------------------- */
-    //付款单明细新增----获取采购单列表
+    //付款单明细新增----获取采购单(可付款)列表
     _getPurchaseRecordMstListUnStockList() {
 
         getPurchaseRecordMstListUnStockList({}).then(res => {
@@ -474,17 +419,20 @@ class WarehousingsEdit extends React.Component {
 
                 return purchaseRecord;
             });
-
+            purchaseRecordMstList.unshift({
+                value: '全部',
+                label: '全部'
+            })
             this.setState({
                 loading: false,
                 purchaseRecordMstList: purchaseRecordMstList
             });
         })
     }
-    //付款单明细新增----获取采购单-明细列表
+    //付款单明细新增----获取采购单(可付款)-明细列表
     _getPurchaseRecordDtlListUnStockList(params) {
         console.log('params', params)
-        if (!params.purchaseRecordMstId) return;
+        if (!params.paymentRecordMstId) return;
 
         getPurchaseRecordDtlListUnStockList(params).then(res => {
             console.log('getPurchaseRecordDtlList ------------', res)
@@ -494,14 +442,14 @@ class WarehousingsEdit extends React.Component {
             }
             this.setState({
                 loading: false,
-                purchaseRecordDtlList: res.data.purchaseRecordDtlList
+                paymentRecordDtlList: res.data.paymentRecordDtlList
             })
         })
     }
     //头部搜索
     handleFormSearch(values) {
         this._getPurchaseRecordDtlListUnStockList({
-            purchaseRecordMstId: values.purchaseRecordMstId,
+            paymentRecordMstId: values.paymentRecordMstId,
             // serialNumber: values.serialNumber || '',
             // theName: values.theName || '',
         });
@@ -511,9 +459,9 @@ class WarehousingsEdit extends React.Component {
         var purOrdSelectedRowKeysArr = this.state.purOrdSelectedRowKeysArr.join(',');
         console.log('------------', this.state.purOrdSelectedRowKeysArr)
 
-        getWarehousingRecordnAdd({
+        getPaymentRecordnAdd({
             tableIdArr: purOrdSelectedRowKeysArr,
-            storageInRecordMstId: this.state.tableId,
+            paymentRecordMstId: this.state.tableId,
         }).then(res => {
             if (res.data.result !== 'success') {
                 MyToast(res.data.info);
@@ -523,7 +471,7 @@ class WarehousingsEdit extends React.Component {
             this.setState({
                 warehousingsListModalVisible: false,
             });
-            this._getWarehousingRecordList({ storageInRecordMstId: this.state.tableId });
+            this._getPaymentRecordList({ paymentRecordMstId: this.state.tableId });
         }).catch(err =>
             MyToast(err)
             )
@@ -531,7 +479,7 @@ class WarehousingsEdit extends React.Component {
 
     render() {
         let { getFieldDecorator } = this.props.form;
-        var storageInRecordMst = this.state.storageInRecordMst;
+        var paymentRecordMst = this.state.paymentRecordMst;
         var purOrdSelectedRecord = this.state.purOrdSelectedRecord;
 
         var self = this;
@@ -563,8 +511,8 @@ class WarehousingsEdit extends React.Component {
                 {
                     type: 'select',
                     label: '采购单主表',
-                    name: 'purchaseRecordMstId',
-                    defaultValue: '0',
+                    name: 'paymentRecordMstId',
+                    defaultValue: '全部',
                     options: this.state.purchaseRecordMstList,
                 }]
         }
@@ -577,59 +525,9 @@ class WarehousingsEdit extends React.Component {
                                 <h2 className="yzy-tab-content-title">付款单基本信息</h2>
                                 <Row>
                                     <Col span={8}>
-                                        <FormItem {...formItemLayout} label="仓库">
-                                            {getFieldDecorator('warehouseId', {
-                                                initialValue: storageInRecordMst.warehouse ? storageInRecordMst.warehouse.tableId + '' : '',
-                                                //rules: [{ required: true, message: '必填!' },
-                                                //{ pattern: /^[0-9]*$/ } 
-                                                //],
-                                            })(
-                                                <Select placeholder="仓库">
-                                                    {
-                                                        this.state.houseList.map(item => {
-                                                            return <Option key={item.value} value={item.value.toString()}>{item.label}</Option>
-                                                        })
-                                                    }
-                                                </Select>
-                                                )}
-                                        </FormItem>
-                                    </Col>
-                                    <Col span={8}>
-                                        <FormItem {...formItemLayout} label="入库人">
-                                            {getFieldDecorator('storageInMemberId', {
-                                                initialValue: storageInRecordMst.storageInMember ? storageInRecordMst.storageInMember.memberId + '' : '',
-                                                //rules: [{ required: true, message: '必填!' },
-                                                //{ pattern: /^[0-9]*$/ } 
-                                                //],
-                                            })(
-                                                <Select placeholder="入库人">
-                                                    {
-                                                        this.state.memberList.map(item => {
-                                                            return <Option key={item.value} value={item.value.toString()}>{item.label}</Option>
-                                                        })
-                                                    }
-                                                </Select>
-                                                )}
-                                        </FormItem>
-                                    </Col>
-                                    <Col span={8}>
-                                        <FormItem {...formItemLayout} label="入库时间">
-                                            {getFieldDecorator('storageInDatetime', {
-                                                initialValue: moment(storageInRecordMst.storageInDatetime || new Date(), 'YYYY-MM-DD'),
-                                                //rules: [{ required: true, message: '必填!' },
-                                                //{ pattern: /^[0-9]*$/ } 
-                                                //],
-                                            })(
-                                                <DatePicker />
-                                                )}
-                                        </FormItem>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={8}>
                                         <FormItem {...formItemLayout} label="菜单">
                                             {getFieldDecorator('menuId', {
-                                                initialValue: storageInRecordMst.menuId ? storageInRecordMst.menuId : '',
+                                                initialValue: paymentRecordMst.menuId ? paymentRecordMst.menuId : '',
                                                 //rules: [{ required: true, message: '必填!' },
                                                 //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                                 // ],
@@ -641,7 +539,7 @@ class WarehousingsEdit extends React.Component {
                                     <Col span={8}>
                                         <FormItem {...formItemLayout} label="备注">
                                             {getFieldDecorator('theRemarks', {
-                                                initialValue: storageInRecordMst.theRemarks ? storageInRecordMst.theRemarks : '',
+                                                initialValue: paymentRecordMst.theRemarks ? paymentRecordMst.theRemarks : '',
                                                 //rules: [{ required: true, message: '必填!' },
                                                 // pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
                                                 //],
@@ -651,23 +549,61 @@ class WarehousingsEdit extends React.Component {
                                         </FormItem>
                                     </Col>
                                 </Row>
+                                {
+                                    getLocQueryByLabel('paymentId') ?
+                                        <Row>
+                                            {/* <Col span={8}>
+                                        <FormItem {...formItemLayout} label="创建人">
+                                            {getFieldDecorator('storageInMemberId', {
+                                                initialValue: paymentRecordMst.editor ? paymentRecordMst.editor.realName + '' : '',
+                                                //rules: [{ required: true, message: '必填!' },
+                                                //{ pattern: /^[0-9]*$/ } 
+                                                //],
+                                            })(
+                                                <Select placeholder="创建人">
+                                                    {
+                                                        this.state.memberList.map(item => {
+                                                            return <Option key={item.value} value={item.value.toString()}>{item.label}</Option>
+                                                        })
+                                                    }
+                                                </Select>
+                                                )}
+                                        </FormItem>
+                                    </Col> */}
+                                            <Col span={8}>
+                                                <FormItem {...formItemLayout} label="单据编号">
+                                                    {paymentRecordMst.serialNumber}
+                                                </FormItem>
+                                            </Col>
+                                            <Col span={8}>
+                                                <FormItem {...formItemLayout} label="审核情况">
+                                                    {paymentRecordMst.isPass ? '完成' : '未完成'}
+                                                </FormItem>
+                                            </Col>
+                                            <Col span={8}>
+                                                <FormItem {...formItemLayout} label="创建日期">
+                                                    {paymentRecordMst.createDatetime}
+                                                </FormItem>
+                                            </Col>
+                                        </Row>
+                                        : null}
                                 <div className="yzy-block-center">
-                                                                        <Button type="primary" style={{ padding: '0 30px' }} onClick={this.onCheck.bind(this)}>审核通过</Button>
-                                    <Button type="primary" style={{ padding: '0 40px',marginLeft: 8 }} htmlType="submit">保存</Button>
+                                    <Button type="primary" style={{ padding: '0 30px' }} onClick={this.onCheck.bind(this)}>审核通过</Button>
+                                    <Button type="primary" style={{ padding: '0 40px', marginLeft: 8 }} htmlType="submit">保存</Button>
                                 </div>
                             </div>
                             {this.state.tableId ?
                                 <div>
                                     <div className="baseinfo-section">
                                         <h2 className="yzy-tab-content-title">付款单明细</h2>
-                                        <Button type="primary" style={{ marginLeft: 8 }} onClick={this.warehousingAddBtn.bind(this)}>新增</Button>
+                                        <Button type="primary" style={{ marginLeft: 8, float: 'right' }} onClick={this.warehousingAddBtn.bind(this)}>新增</Button>
                                         <EditableTableSection
                                             columns={columns}
-                                            dataSource={this.state.warehousingDtlList}
-                                            onDelete={this.deleteWarehousing.bind(this)}
-                                            //onSaveAdd={this.addBtnWarehousing.bind(this)}
-                                            onSaveUpdate={this.updateWarehousing.bind(this)}
-                                            //itemDataModel={getWarehousingRecord}
+                                            dataSource={this.state.paymentDtlList}
+                                            onDelete={this.deletePayment.bind(this)}
+                                            //onSaveAdd={this.addBtnPayment.bind(this)}
+                                            onSaveUpdate={this.updatePayment.bind(this)}
+                                            //itemDataModel={getPaymentRecord}
                                             loading={this.state.loading}
                                         />
                                     </div>
@@ -701,7 +637,7 @@ class WarehousingsEdit extends React.Component {
                                     style={{ marginTop: 20 }}
                                     rowSelection={warehousingsDataRowSelection}
                                     columns={warehousingsColumns}
-                                    dataSource={this.state.purchaseRecordDtlList}
+                                    dataSource={this.state.paymentRecordDtlList}
                                     rowKey="tableId"
                                     rowClassName={(record, index) => {
                                         if (index % 2 !== 0) {
@@ -720,5 +656,5 @@ class WarehousingsEdit extends React.Component {
         )
     }
 }
-var WarehousingsEditForm = Form.create()(WarehousingsEdit);
-ReactDOM.render(<WarehousingsEditForm />, document.getElementById('root'));
+var PaymentsEditForm = Form.create()(PaymentsEdit);
+ReactDOM.render(<PaymentsEditForm />, document.getElementById('root'));

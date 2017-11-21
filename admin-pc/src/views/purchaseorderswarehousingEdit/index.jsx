@@ -66,20 +66,13 @@ const columns = [
     }, {
         title: '规格型号',
         dataIndex: 'theSpecifications',
-    }, {
-        title: '单价',
-        dataIndex: 'thePrice',
-        validateType: 'number',
-    }, {
-        title: '总金额',
-        dataIndex: 'totalAmount',
-        validateType: 'number',
-    }, {
-        title: '已入库数量',
-        dataIndex: 'inStorageQuantity',
-        validateType: 'number',
-    }, {
-        title: '入库数量',
+    },
+    {
+        title: '厂商',
+        dataIndex: 'manufacturerName',
+    },
+    {
+        title: '可入库数量',
         dataIndex: 'theQuantity',
         validateType: 'number',
     }, {
@@ -141,7 +134,7 @@ class WarehousingsEdit extends React.Component {
             purchaseRecordDtlList: [], //入库明细新增Modal列表 --- （采购单明细列表）
             purOrdSelectedRowKeysArr: [], //入库明细新增Modal列表的选择tableId --- （采购单明细列表）
 
-            purchaseRecordMstId: '', //Modal头部搜索
+            purchaseRecordMstId: '0', //Modal头部搜索
             serialNumber: '', //Modal头部搜索
             theName: '', //Modal头部搜索
         }
@@ -307,18 +300,15 @@ class WarehousingsEdit extends React.Component {
                 },
                 theName: {
                     value: data.theName || '',
+                    disabled: true,
                 },
                 theSpecifications: {
                     value: data.theSpecifications,
+                    disabled: true,
                 },
-                thePrice: {
-                    value: data.thePrice
-                },
-                totalAmount: {
-                    value: data.totalAmount,
-                },
-                inStorageQuantity: {
-                    value: data.inStorageQuantity,
+                manufacturerName: {
+                    value: data.manufacturerName,
+                    disabled: true,
                 },
                 theQuantity: {
                     value: data.theQuantity || '',
@@ -336,8 +326,8 @@ class WarehousingsEdit extends React.Component {
             serialNumber: record.serialNumber.value,
             theName: record.theName.value,
             theSpecifications: record.theSpecifications.value,
+            manufacturerName: record.manufacturerName.value,
             theQuantity: record.theQuantity.value,
-            thePrice: record.thePrice.value,
         }
 
     }
@@ -347,13 +337,13 @@ class WarehousingsEdit extends React.Component {
         if (!params.storageInRecordMstId) return;
 
         getWarehousingRecordList(params).then(res => {
-            console.log('getWarehousingRecordList ------------', res)
+            console.log('getWarehousingRecordList 明细--------------------------------', res)
             if (res.data.result !== 'success') {
                 MyToast(res.data.info || '接口失败')
                 return;
             }
-
-            var dataSource = res.data.storageInRecordMst || [];
+            // res.data.storageInRecordDtlList
+            var dataSource = res.data.storageInRecordDtlList || [];
             dataSource = this.formatDatasource(dataSource)
             this.setState({
                 loading: false,
@@ -372,11 +362,16 @@ class WarehousingsEdit extends React.Component {
     //入库单明细新增btn
     warehousingAddBtn() {
         this._getPurchaseRecordMstListUnStockList();
+        this._getPurchaseRecordDtlListUnStockList({
+            purchaseRecordMstId: this.state.purchaseRecordMstId,
+            // serialNumber: values.serialNumber || '',
+            // theName: values.theName || '',
+        });
         this.setState({
             warehousingsListModalVisible: true
         })
     }
-    //入库单明细编辑   
+    //入库单明细编辑--保存 
     updateWarehousing(record) {
         console.log('明细编辑-----------------------', record);
         var _record = this.serializeRecord(record);
@@ -384,7 +379,7 @@ class WarehousingsEdit extends React.Component {
         return new Promise((resolve, reject) => {
             getWarehousingRecordnEdit({
                 tableId: record.tableId,
-                theQuantity: record.theQuantity,
+                theQuantity: record.theQuantity.value,
             }).then(res => {
                 if (res.data.result != 'success') {
                     resolve({
@@ -471,7 +466,10 @@ class WarehousingsEdit extends React.Component {
 
                 return purchaseRecord;
             });
-
+            purchaseRecordMstList.unshift({
+                value: '全部',
+                label: '全部'
+            })
             this.setState({
                 loading: false,
                 purchaseRecordMstList: purchaseRecordMstList
@@ -505,8 +503,13 @@ class WarehousingsEdit extends React.Component {
     }
     //明细新增 --- Modal确定  
     purordListModalOk() {
-        var purOrdSelectedRowKeysArr = this.state.purOrdSelectedRowKeysArr.join(',');
-        console.log('------------', this.state.purOrdSelectedRowKeysArr)
+        var purOrdSelectedRowKeysArr = this.state.purOrdSelectedRowKeysArr;
+        if (purOrdSelectedRowKeysArr.length == 0) {
+            MyToast('请先选择数据');
+            return;
+        }
+        purOrdSelectedRowKeysArr = purOrdSelectedRowKeysArr.join(',');
+        console.log('------------', purOrdSelectedRowKeysArr)
 
         getWarehousingRecordnAdd({
             tableIdArr: purOrdSelectedRowKeysArr,
@@ -519,6 +522,7 @@ class WarehousingsEdit extends React.Component {
             MyToast('明细新增成功');
             this.setState({
                 warehousingsListModalVisible: false,
+                purOrdSelectedRowKeysArr: [],
             });
             this._getWarehousingRecordList({ storageInRecordMstId: this.state.tableId });
         }).catch(err =>
@@ -561,7 +565,7 @@ class WarehousingsEdit extends React.Component {
                     type: 'select',
                     label: '采购单主表',
                     name: 'purchaseRecordMstId',
-                    defaultValue: '0',
+                    defaultValue: '全部',
                     options: this.state.purchaseRecordMstList,
                 }]
         }

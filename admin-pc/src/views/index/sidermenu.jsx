@@ -69,7 +69,7 @@ const menuConfig = [
     sub: '系统管理',
     icon: 'setting',
     key: '系统管理',
-    items: ['权限管理|/authoritymanagement.html', '菜单管理|/menumanagement.html'],
+    items: ['角色管理|/rolemanagement.html', '菜单管理|/menumanagement.html'],
   },
 ];
 

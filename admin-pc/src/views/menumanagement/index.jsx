@@ -1,5 +1,5 @@
 /**
- * 权限管理
+ * 菜单管理
  */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -15,48 +15,11 @@ import {
     Affix
 } from 'antd';
 const TreeNode = Tree.TreeNode;
-const treeData = [
-    {
-        title: '0-0',
-        key: '0-0',
-        children: [{
-            title: '0-0-0',
-            key: '0-0-0',
-            children: [
-                { title: '0-0-0-0', key: '0-0-0-0' },
-                { title: '0-0-0-1', key: '0-0-0-1' },
-                { title: '0-0-0-2', key: '0-0-0-2' },
-            ],
-        }, {
-            title: '0-0-1',
-            key: '0-0-1',
-            children: [
-                { title: '0-0-1-0', key: '0-0-1-0' },
-                { title: '0-0-1-1', key: '0-0-1-1' },
-                { title: '0-0-1-2', key: '0-0-1-2' },
-            ],
-        }, {
-            title: '0-0-2',
-            key: '0-0-2',
-        }],
-    }, {
-        title: '0-1',
-        key: '0-1',
-        children: [
-            { title: '0-1-0-0', key: '0-1-0-0' },
-            { title: '0-1-0-1', key: '0-1-0-1' },
-            { title: '0-1-0-2', key: '0-1-0-2' },
-        ],
-    }, {
-        title: '0-2',
-        key: '0-2',
-    }
-];
 
 
 import RcSearchForm from '../../components/rcsearchform';
 import DraggableModal from '../../components/modal.draggable';
-import AuthoritySubDetail from './index.detail'
+import MenuSubDetail from './index.detail'
 
 import './index.less';
 
@@ -64,12 +27,9 @@ import {
     uMenuList,
     uMenuAdd,
     uMenuUpdate,
-    uMenuDelete
+    uMenuDelete,
+    uMenuListForTree
 } from '../../common/api/api.menumanagement';
-
-import {
-    getDepartmentList
-} from '../../common/api/api.department';
 
 import {
     MyToast
@@ -118,21 +78,24 @@ class AuthorityManagement extends Component {
 
         this.state = {
             loading: true,
-            staffList: [],
-            departmentList: [], // 部门列表
+            menuList: [],
             editModalVisible: false,
+            fatherMenuId: '',
+            keyword: '',
             recordEdit: {},
             modalType: 'add', // 弹窗类型 add 新增  edit 编辑
 
-            selectedKeys: [], // 菜单选中的key
+            treeData: [], // 树形菜单
         }
 
         this.getData = this.getData.bind(this);
+        this.getTreeData = this.getTreeData.bind(this);
         this.showTestModal = this.showTestModal.bind(this);
     }
 
     componentDidMount() {
         this.getData({});
+        this.getTreeData();
 
         columns[5].render = (text, record, index) => {
             return (
@@ -147,46 +110,7 @@ class AuthorityManagement extends Component {
 
     }
 
-    handleFormSearch(values) {
-        console.log('handleSearch ---------', values);
-
-        this.getData({
-            keyword: values.keyword
-        });
-    }
-    //编辑|| 新增Modal------隐藏
-    TestCancel() {
-        this.setState({ editModalVisible: false });
-    }
-    //编辑|| 新增Modal-----显示
-    showTestModal(recordEdit, type) {
-        console.log(recordEdit)
-        if (type) {
-            //
-            this.setState({
-                modalType: type
-            });
-        }
-        recordEdit.modalType = type;
-        this.setState({
-            recordEdit: recordEdit,
-            editModalVisible: true,
-        });
-    }
-    // 删除操作
-    onEditDelete(text, record, index) {
-        // console.log(text, record, index);
-        var self = this;
-        uLeaveApplicationDelete({ tableId: record.tableId }).then(res => {
-            if (res.data.result !== 'success') {
-                MyToast(res.data.info || '删除失败');
-            }
-            setTimeout(() => {
-                self.getData({});
-            }, 500);
-        }).catch(err => MyToast('删除失败'));
-    }
-
+    // 获取菜单列表
     getData(params) {
         uMenuList(params).then(res => {
             if (res.data.result !== 'success') {
@@ -198,16 +122,114 @@ class AuthorityManagement extends Component {
 
             this.setState({
                 loading: false,
-                staffList: data
+                menuList: data
             });
         }).catch(err => {
             MyToast(err || '接口失败')
         });
     }
 
+    // 获取树形菜单列表
+    getTreeData() {
+        uMenuListForTree({}).then(res => {
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '接口失败')
+                return;
+            }
+
+            var treeData = res.data.menuList;
+            treeData = this.dealTreeData(treeData);
+            this.setState({
+                loading: false,
+                treeData
+            });
+        }).catch(err => {
+            MyToast(err || '接口失败')
+        });
+    }
+
+    // 处理树形结构数据
+    dealTreeData(data) {
+        var treeData = [];
+        if (data && data.length) {
+            data.map((item) => {
+                var tmpl = {
+                    title: item.theName,
+                    key: item.tableId
+                }
+                if (item.menuList && item.menuList.length) {
+                    var children = [];
+                    item.menuList.map((child) => {
+                        var childTmpl = {
+                            title: child.theName,
+                            key: child.tableId
+                        }
+                        children.push(childTmpl);
+                    });
+                    tmpl.children = children;
+                }
+                treeData.push(tmpl);
+            });
+        }
+        return treeData;
+    }
+
+    // 搜索
+    handleFormSearch(values) {
+        console.log('handleSearch ---------', values);
+        this.setState({
+            keyword: values.keyword
+        });
+        this.getData({
+            keyword: values.keyword
+        });
+    }
+    //编辑|| 新增Modal------隐藏
+    TestCancel() {
+        this.setState({ editModalVisible: false });
+    }
+    //编辑|| 新增Modal-----显示
+    showTestModal(recordEdit, type) {
+        if (type) {
+            //
+            this.setState({
+                modalType: type
+            });
+        }
+        recordEdit.modalType = type;
+        recordEdit.keyword = this.state.keyword;
+        recordEdit.fatherMenuId = this.state.fatherMenuId;
+        this.setState({
+            recordEdit: recordEdit,
+            editModalVisible: true,
+        });
+    }
+    // 删除操作
+    onEditDelete(text, record, index) {
+        // console.log(text, record, index);
+        var self = this;
+        uMenuDelete({ tableId: record.tableId }).then(res => {
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '删除失败');
+            }
+
+            this.state.menuList.splice(index, 1);
+            this.setState({
+                menuList: this.state.menuList
+            });
+        }).catch(err => MyToast('删除失败'));
+    }
+
     onSelect(selectedKeys, info) {
-        console.log('onSelect', info);
-        this.setState({ selectedKeys });
+        // console.log('onSelect', selectedKeys);
+        var params = {
+            fatherMenuId: selectedKeys[0],
+            keyword: this.state.keyword
+        };
+        this.setState({
+            fatherMenuId: selectedKeys[0],
+        })
+        this.getData(params);
     }
 
     renderTreeNodes(data) {
@@ -233,9 +255,8 @@ class AuthorityManagement extends Component {
                                 <Tree
                                     showLine
                                     onSelect={this.onSelect.bind(this)}
-                                    selectedKeys={this.state.selectedKeys}
                                 >
-                                    {this.renderTreeNodes(treeData)}
+                                    {this.renderTreeNodes(this.state.treeData)}
                                 </Tree>
                             </div>
                         </Affix>
@@ -253,7 +274,7 @@ class AuthorityManagement extends Component {
                                 </div>
                                 <Table
                                     columns={columns}
-                                    dataSource={this.state.staffList}
+                                    dataSource={this.state.menuList}
                                     rowKey="tableId"
                                     loading={this.state.loading}
                                     rowClassName={(record, index) => {
@@ -282,7 +303,7 @@ class AuthorityManagement extends Component {
                     className='modal editModal'
                 >
                     {
-                        this.state.editModalVisible && <AuthoritySubDetail recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)} />
+                        this.state.editModalVisible && <MenuSubDetail recordEdit={this.state.recordEdit} getTreeData={this.getTreeData.bind(this)} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)} />
                     }
                 </DraggableModal>
             </div>

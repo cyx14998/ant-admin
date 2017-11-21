@@ -60,13 +60,13 @@ const rcsearchformData = {
 }
 
 import {
-  getWarehousingList,
-  getWarehousingDelete,
+  getOutboundList,
+  getOutboundDelete,
 } from '../../common/api/api.purchaseordersoutbound.js';
 
 import {
-    gethousingList, //获取仓库列表
-    getMemberList, //获取入库人列表 （员工列表）
+  gethousingList, //获取仓库列表
+  getMemberList, //获取出库人列表 （员工列表）
 } from '../../common/api/api.purchaseorderswarehousing.js'
 
 import {
@@ -83,11 +83,11 @@ const columns = [
     title: '创建人',
     dataIndex: 'editor.realName',
   }, {
-    title: '入库人',
-    dataIndex: 'storageInMember.realName',
+    title: '出库人',
+    dataIndex: 'storageOutMember.realName',
   }, {
-    title: '入库日期',
-    dataIndex: 'storageInDatetime',
+    title: '出库日期',
+    dataIndex: 'storageOutDatetime',
   }, {
     title: '是否审核完成',
     dataIndex: 'isPass',
@@ -107,26 +107,29 @@ const columns = [
 function changeIframeToEdit(id) {
   console.log('chanageiframe', parent.window.iframeHook)
   parent.window.iframeHook.changePage({
-    url: '/purchaseordersoutboundEdit.html?warehousingId=' + id + '#' + Math.random(),
+    url: '/purchaseordersoutboundEdit.html?outboundId=' + id + '#' + Math.random(),
     breadIncrement: '出库单编辑'
   })
 }
 //列表页面
-class PurchaseorderswarehousingList extends React.Component {
+class PurchaseordersoutboundList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      storageInRecordMstList: [],
-      memberList: [], //入库人列表
+      storageOutRecordMstList: [],
+      houseList: [],//仓库列表
+      memberList: [], //出库人列表
     }
 
     this.getData = this.getData.bind(this);
+    this._gethousingList = this._gethousingList.bind(this);
     this._getMemberList = this._getMemberList.bind(this);
   }
 
   componentDidMount() {
     this.getData({});
+    this._gethousingList();
     this._getMemberList();
     columns[7].render = (text, record) => {
       return (
@@ -144,13 +147,13 @@ class PurchaseorderswarehousingList extends React.Component {
     this.setState({
       loading: true
     });
-    getWarehousingList(params).then(res => {
-      console.log('getWarehousingList ---', res)
+    getOutboundList(params).then(res => {
+      console.log('getOutboundList ---', res)
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '接口失败')
         return;
       }
-      var data = res.data.storageInRecordMstList;
+      var data = res.data.storageOutRecordMstList;
       data = data.map(item => {
 
 
@@ -162,7 +165,7 @@ class PurchaseorderswarehousingList extends React.Component {
       });
       this.setState({
         loading: false,
-        storageInRecordMstList: data,
+        storageOutRecordMstList: data,
       })
     }).catch(err => {
       MyToast('接口失败');
@@ -171,13 +174,42 @@ class PurchaseorderswarehousingList extends React.Component {
       });
     })
   }
-  //获取入库人列表
+  //获取仓库列表
+  _gethousingList() {
+    gethousingList({}).then(res => {
+      console.log('gethousingList res', res)
+
+      if (res.data.result !== 'success') {
+        MyToast(res.data.info || '获取仓库列表失败');
+        return;
+      }
+
+      var houseList = res.data.warehouseList.map(item => {
+        let house = {
+          value: item.tableId + '',
+          label: item.theName
+        };
+
+        return house;
+      });
+      houseList.unshift({
+        value: '全部',
+        label: '全部'
+      })
+      this.setState({
+        houseList: houseList
+      });
+    }).catch(err => {
+      MyToast('获取仓库列表失败')
+    });
+  }
+  //获取出库人列表
   _getMemberList() {
     getMemberList({}).then(res => {
       console.log('getMemberList res', res)
 
       if (res.data.result !== 'success') {
-        MyToast(res.data.info || '获取入库人列表失败');
+        MyToast(res.data.info || '获取出库人列表失败');
         return;
       }
       console.log('-------------', res.data.memberList)
@@ -198,13 +230,14 @@ class PurchaseorderswarehousingList extends React.Component {
         memberList: memberList
       });
     }).catch(err => {
-      MyToast('获取入库人列表失败')
+      MyToast('获取出库人列表失败')
     });
   }
   //头部搜索
   handleFormSearch(values) {
     this.getData({
-      storageInMemberId: values.storageInMemberId,
+      warehouseId: values.warehouseId,
+      storageOutMemberId: values.storageOutMemberId,
       isPass: values.isPass,
       theState: values.theState,
     });
@@ -212,15 +245,16 @@ class PurchaseorderswarehousingList extends React.Component {
 
   // 出库单删除
   deletePurchaseorder(id) {
-    getWarehousingDelete({ tableId: id }).then(res => {
+    getOutboundDelete({ tableId: id }).then(res => {
       if (res.data.result !== 'success') {
-        MyToast(res.data.info || '删除出库单失败')
+        MyToast(res.data.info || '删除出库单失败');
+        return;
       }
 
       MyToast('删除出库单成功');
 
       setTimeout(this.getData({}), 500);
-    }).catch(err => MyToast(err));
+    }).catch(err => console.log(err));
   }
 
   render() {
@@ -232,11 +266,13 @@ class PurchaseorderswarehousingList extends React.Component {
           type: 'select',
           label: '仓库',
           name: 'warehouseId',
-          options: []
+          defaultValue: '全部',
+          options: this.state.houseList
         }, {
           type: 'select',
-          label: '入库人',
-          name: 'storageInMemberId',
+          label: '出库人',
+          name: 'storageOutMemberId',
+          defaultValue: '全部',
           options: this.state.memberList
         },
         {
@@ -290,7 +326,7 @@ class PurchaseorderswarehousingList extends React.Component {
           </div>
           <Table
             columns={columns}
-            dataSource={this.state.storageInRecordMstList}
+            dataSource={this.state.storageOutRecordMstList}
             loading={this.state.loading}
             rowKey="tableId"
             rowClassName={(record, index) => {
@@ -305,4 +341,4 @@ class PurchaseorderswarehousingList extends React.Component {
   }
 }
 
-ReactDOM.render(<PurchaseorderswarehousingList />, document.getElementById('root'));
+ReactDOM.render(<PurchaseordersoutboundList />, document.getElementById('root'));
