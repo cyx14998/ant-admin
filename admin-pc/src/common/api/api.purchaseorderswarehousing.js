@@ -2,7 +2,8 @@
 import axios, {
   getToken,
   getCustomerId,
-  apiVer
+  apiVer,
+  getMenuId,
 } from './index';
 
 
@@ -44,7 +45,7 @@ export function getWarehousingList({
     }
   })
 }
-// 入库单主表详情
+//入库单主表详情
 export function getWarehousingDetail({
   tableId,
 }) {
@@ -55,8 +56,8 @@ export function getWarehousingDetail({
     }
   })
 }
-//入库单主表列表
-export function gethousingList({
+//仓库列表
+export function getHousingList({
   countPerPage = 1000,
   keyword,
 }) {
@@ -68,7 +69,7 @@ export function gethousingList({
     }
   })
 }
-//入库单主表列表
+//员工列表
 export function getMemberList({
   countPerPage = 1000,
   keyword,
@@ -87,7 +88,6 @@ export function getWarehousingAdd({
   storageInMemberId,
   storageInDatetime,
   theRemarks,
-  menuId,
 }) {
   return axios.get('/uStorageInRecordMstAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -96,7 +96,7 @@ export function getWarehousingAdd({
       storageInMemberId,
       storageInDatetime,
       theRemarks,
-      menuId,
+      menuId: getMenuId(),
     }
   })
 }
@@ -132,6 +132,46 @@ export function getWarehousingDelete({
     }
   })
 }
+/**-----------------------入库单状态更改---------------------------- */
+// 入库单作废
+export function getWarehousingCancel({
+  tableId,
+}) {
+  return axios.get('/uStorageInRecordMstCancel.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+    }
+  })
+}
+// 入库单送审/审核
+export function getWarehousingPass({
+  tableId,
+  theContent,
+}) {
+  return axios.get('/uStorageInRecordMstPass.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      menuId: getMenuId(),
+      tableId,
+      theContent,
+    }
+  })
+}
+// 入库单退回
+export function getWarehousingReject({
+  tableId,
+  theContent,
+}) {
+  return axios.get('/uStorageInRecordMstReject.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      menuId: getMenuId(),
+      tableId,
+      theContent,
+    }
+  })
+}
 /**-----------------------入库单明细---------------------------- */
 //入库单明细列表
 export function getWarehousingRecordList({
@@ -154,13 +194,13 @@ export function getWarehousingRecordList({
 // 入库单明细新增
 export function getWarehousingRecordnAdd({
   storageInRecordMstId,
-  tableIdArr,
+  data,
 }) {
   return axios.get('/uStorageInRecordDtlAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       storageInRecordMstId,
-      tableIdArr,
+      data: JSON.stringify(data)
     }
   })
 }
@@ -237,21 +277,21 @@ export function getWarehousingRecordnDelete({
     }
   })
 }
-/**-----------------------入库单审核记录---------------------------- */
-//入库单审核记录列表
+/**-----------------------审核记录---------------------------- */
+//审核记录列表
 export function getCheckRecordList({
   pageNumber = 1,
   countPerPage = 1000,
   keyword,
-  storageInRecordMstId,
+  flowOrderStateId,
 }) {
-  return axios.get('/uPurchaseRecordDtlList.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uFlowHistoryList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
       keyword,
-      storageInRecordMstId
+      flowOrderStateId
     }
   })
 }

@@ -13,10 +13,12 @@ import {
     Input,
     DatePicker,
     Select,
-    Popconfirm
+    Popconfirm,
+    Affix,
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
+const { TextArea } = Input;
 
 import moment from 'moment';
 
@@ -25,16 +27,22 @@ const formItemLayout = {
     wrapperCol: { span: 16 },
 }
 
+import DraggableModal from '../../components/modal.draggable';
+
 import {
     getPurchaseOrderDetail,
     getPurchaseOrderAdd,
     getPurchaseOrderEdit,
     getPurchaseOrderRecordList,
+    getPurchaseOrderCancel,
+    getPurchaseOrderPass,
+    getPurchaseOrderReject,
     getPurchaseOrderRecordnAdd,
     getPurchaseOrderRecordnEdit,
     getPurchaseOrderRecordnDelete,
-    getCheckRecordList,
 } from '../../common/api/api.purchaseorders.js';
+
+import { getCheckRecordList } from '../../common/api/api.purchaseorderswarehousing.js';
 
 import {
     getDepartmentListForSelect
@@ -74,12 +82,15 @@ const columns = [
     }, {
         title: '总金额',
         dataIndex: 'totalAmount',
-        validateType: 'number',
-    }, {
-        title: '已入库数量',
-        dataIndex: 'inStorageQuantity',
-        validateType: 'number',
-    }, {
+    },
+    //  {
+    //     title: '已入库数量',
+    //     dataIndex: 'inStorageQuantity',
+    // }, {
+    //     title: '可入库数量',
+    //     dataIndex: 'couldStorageQuantity',
+    // },
+    {
         title: '操作',
         dataIndex: 'operation',
         width: 120,
@@ -107,24 +118,37 @@ const getPurchaseOrderRecord = {
     },
     totalAmount: {
         value: '',
+        disabled: true,
     },
-    inStorageQuantity: {
-        value: '',
-    }
+    // inStorageQuantity: {
+    //     value: '0',
+    //     disabled: true,
+    // },
+    // couldStorageQuantity: {
+    //     value: '0',
+    //     disabled: true,
+    // }
 };
-//审核记录
+//审核记录列表头部
 const checkRecordColumns = [
     {
-        title: '审核时间',
-        dataIndex: 'checkTime',
+        title: '审核日期',
+        dataIndex: 'createDatetime',
     }, {
         title: '审核人',
-        dataIndex: 'checkPerson',
+        dataIndex: 'member.realName',
     }, {
         title: '审核意见',
-        dataIndex: 'checkOpinion',
-    },
+        dataIndex: 'theContent',
+    }, {
+        title: '审核结果',
+        dataIndex: 'theFlowResult',
+        render: (record) => <span>
+            {record.theFlowResult ? '审核通过' : '审核不通过'}
+        </span>
+    }
 ];
+
 // 基本信息---采购类型（固定资产    工程材料   办公用品   劳防用品  其他）
 const purOrderType = [
     {
@@ -149,10 +173,16 @@ class PurchaseordersEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tableId: getLocQueryByLabel('purOrderId') || '', //控制底面表格显隐
+            tableId: getLocQueryByLabel('tableId') || '', //控制底面表格显隐
+            flowOrderStateId: '',
             loading: true,
             departmentList: [], //部门列表
             purchaseRecordMst: {}, //列表信息详情
+
+            suggestModalVisible: false, //审核意见弹窗显隐
+            suggestContent: '', //审核意见
+            checkType: '', //点击的审核按钮类型
+
             purchaseRecordDtlList: [], //明细列表
             checkRecordlList: [], //检查记录列表
         }
@@ -166,7 +196,6 @@ class PurchaseordersEdit extends React.Component {
         this._getDepartmentListForSelect();
         this._getPurchaseOrderDetail({ tableId: this.state.tableId });
         this._getPurchaseOrderRecordList({ purchaseRecordMstId: this.state.tableId });
-        this._getCheckRecordList({ purchaseRecordMstId: this.state.tableId });
     }
     //获取部门列表
     _getDepartmentListForSelect() {
@@ -207,17 +236,117 @@ class PurchaseordersEdit extends React.Component {
                 MyToast(res.data.info || '接口失败')
                 return;
             }
+            var data = res.data.purchaseRecordMst;
+            var state = '';
+            if (data.isPass) {
+                state = '已审核';
+            } else {
+                if (data.theState == 0) {
+                    state = '审核中';
+                } else if (data.theState == 1) {
+                    state = '已作废';
+                }
+            }
+            data.theState = state;
+            var flowOrderStateId = data.flowOrderState ? data.flowOrderState.tableId : '';
 
             this.setState({
                 loading: false,
-                purchaseRecordMst: res.data.purchaseRecordMst,
+                purchaseRecordMst: data,
+                flowOrderStateId: flowOrderStateId,
             })
+            this._getCheckRecordList({ flowOrderStateId: flowOrderStateId });
         }).catch(err => {
             MyToast('接口失败');
             this.setState({
                 loading: false
             });
         })
+    }
+    //头部审核按钮-点击
+    oncheckbtn(type) {
+        this.setState({
+            checkType: type,
+            suggestModalVisible: true,
+        });
+    }
+    //审核意见弹窗-文本
+    suggestTextChange(e) {
+        this.setState({
+            suggestContent: e.target.value,
+        });
+    }
+    //审核意见弹窗-取消    
+    onCancelSuggestModal() {
+        this.setState({
+            suggestModalVisible: false,
+        });
+    }
+    //审核意见弹窗-确定    
+    onSuggestModalOk() {
+        var checkType = this.state.checkType;
+        if (checkType == 'checkReject') {
+            this.onCheckReject();
+        } else if (checkType == 'checkPass') {
+            this.onCheckPass();
+        }
+    }
+    //采购单作废
+    onCheckCancel() {
+        getPurchaseOrderCancel({ tableId: this.state.tableId }).then(res => {
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '作废失败');
+                return;
+            }
+
+            MyToast('采购单已作废');
+            this._getPurchaseOrderDetail({ tableId: this.state.tableId });
+            this._getCheckRecordList({ flowOrderStateId: this.state.flowOrderStateId });
+        }).catch(err =>
+            MyToast('接口失败')
+            );
+    }
+    //采购单退回
+    onCheckReject() {
+        getPurchaseOrderReject({
+            tableId: this.state.tableId,
+            theContent: this.state.suggestContent
+        }).then(res => {
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '退回失败');
+                return;
+            }
+
+            MyToast('采购单已退回');
+            this.setState({
+                suggestModalVisible: false,
+            });
+            this._getPurchaseOrderDetail({ tableId: this.state.tableId });
+            this._getCheckRecordList({ flowOrderStateId: this.state.flowOrderStateId });
+        }).catch(err =>
+            MyToast('接口失败')
+            );
+    }
+    //采购单送审
+    onCheckPass() {
+        getPurchaseOrderPass({
+            tableId: this.state.tableId,
+            theContent: this.state.suggestContent
+        }).then(res => {
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '送审失败');
+                return;
+            }
+
+            MyToast('采购单已送审');
+            this.setState({
+                suggestModalVisible: false,
+            });
+            this._getPurchaseOrderDetail({ tableId: this.state.tableId });
+            this._getCheckRecordList({ flowOrderStateId: this.state.flowOrderStateId });
+        }).catch(err =>
+            MyToast('接口失败')
+            );
     }
     //基本信息保存
     saveDetail(e) {
@@ -250,6 +379,7 @@ class PurchaseordersEdit extends React.Component {
                     MyToast('新增成功');
                     self.setState({
                         tableId: res.data.tableId,
+                        flowOrderStateId: res.data.flowOrderStateId,
                     });
                 }).catch(err =>
                     MyToast(err)
@@ -259,6 +389,7 @@ class PurchaseordersEdit extends React.Component {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
+                        MyToast(res.data.info);
                         return
                     }
                     MyToast('编辑成功');
@@ -268,6 +399,7 @@ class PurchaseordersEdit extends React.Component {
             }
         })
     }
+    /** ----------------------------------------采购单明细------------------------------------- */
     //数据列表格式化
     formatDatasource(dataSource) {
         var data = dataSource.map(data => {
@@ -292,10 +424,14 @@ class PurchaseordersEdit extends React.Component {
                 },
                 totalAmount: {
                     value: data.totalAmount,
+                    disabled: true,
                 },
-                inStorageQuantity: {
-                    value: data.inStorageQuantity,
-                },
+                // inStorageQuantity: {
+                //     value: data.inStorageQuantity,
+                // },
+                // couldStorageQuantity: {
+                //     value: data.couldStorageQuantity
+                // }
             }
         });
 
@@ -345,11 +481,12 @@ class PurchaseordersEdit extends React.Component {
     addBtnPurchaseorder(record) {
         console.log('新增-----------------------', record);
         var _record = this.serializeRecord(record);
+        var self = this;
 
         return new Promise((resolve, reject) => {
             getPurchaseOrderRecordnAdd({
                 ..._record,
-                purchaseRecordMstId: this.state.tableId
+                purchaseRecordMstId: self.state.tableId
             }).then(res => {
                 if (res.data.result != 'success') {
                     resolve({
@@ -364,6 +501,9 @@ class PurchaseordersEdit extends React.Component {
                     tableId: res.data.tableId,
                     msg: '新增成功'
                 });
+                self._getPurchaseOrderRecordList({
+                    purchaseRecordMstId: self.state.tableId
+                });
             }).catch(err => resolve({ code: -1, msg: err }))
         });
     }
@@ -371,6 +511,7 @@ class PurchaseordersEdit extends React.Component {
     updatePurchaseorder(record) {
         console.log('编辑-----------------------', record);
         var _record = this.serializeRecord(record);
+        var self = this;
 
         return new Promise((resolve, reject) => {
             getPurchaseOrderRecordnEdit({ ..._record }).then(res => {
@@ -386,6 +527,9 @@ class PurchaseordersEdit extends React.Component {
                     code: 0,
                     tableId: res.data.tableId,
                     msg: '编辑成功'
+                });
+                self._getPurchaseOrderRecordList({
+                    purchaseRecordMstId: this.state.tableId
                 });
             }).catch(err => resolve({ code: -1, msg: err }))
         })
@@ -409,34 +553,25 @@ class PurchaseordersEdit extends React.Component {
             }).catch(err => resolve({ code: -1, msg: err }))
         })
     }
+    /** ----------------------------------------检查记录------------------------------------- */
     //检查记录列表
     _getCheckRecordList(params) {
-        console.log('params', params)
-        if (!params.purchaseRecordMstId) return;
+        console.log('-------------params', params)
+        if (!params.flowOrderStateId) return;
 
-        // getCheckRecordList(params).then(res => {
-        //     console.log('getCheckRecordList ------------', res)
-        //     if (res.data.result !== 'success') {
-        //         MyToast(res.data.info || '接口失败')
-        //         return;
-        //     }
-        // var data = res.data.checkRecordlList;
-        var data = [{
-            tableId: '1',
-            checkTime: '2017-08-08',
-            checkPerson: '审查人',
-            checkOpinion: '审查意见'
-        }];
-        this.setState({
-            loading: false,
-            checkRecordlList: data
+        getCheckRecordList(params).then(res => {
+            console.log('getCheckRecordList ------------', res)
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '接口失败')
+                return;
+            }
+
+            this.setState({
+                checkRecordlList: res.data.flowHistoryList
+            });
+        }).catch(err => {
+            MyToast(err || '接口失败');
         })
-        // }).catch(err => {
-        //     MyToast('接口失败');
-        //     this.setState({
-        //         loading: false
-        //     });
-        // })
     }
     render() {
         let { getFieldDecorator } = this.props.form;
@@ -446,8 +581,87 @@ class PurchaseordersEdit extends React.Component {
                 <div className="yzy-list-wrap">
                     <div className="yzy-tab-content-item-wrap">
                         <Form onSubmit={this.saveDetail.bind(this)}>
+                            <div>
+                                <Button type="primary" style={{ padding: '0 20px', }} htmlType="submit">保存</Button>
+                                <Button type="primary" style={{ padding: '0 20px', marginLeft: 8 }} onClick={this.oncheckbtn.bind(this, 'checkPass')} >审核</Button>
+                                <Popconfirm title="确定要作废么？" onConfirm={this.onCheckCancel.bind(this)}>
+                                    <Button type="primary" className="btn-cancel" style={{ padding: '0 20px', marginLeft: 8 }} >作废</Button>
+                                </Popconfirm>
+                                <Button type="primary" className="btn-reject" style={{ padding: '0 20px', marginLeft: 8 }} onClick={this.oncheckbtn.bind(this, 'checkReject')}>退回</Button>
+                            </div>
                             <div className="baseinfo-section">
                                 <h2 className="yzy-tab-content-title">采购单基本信息</h2>
+                                <Row>
+                                    <Col span={8}>
+                                        <FormItem {...formItemLayout} label="单据编号">
+                                            {getFieldDecorator('serialNumber', {
+                                                initialValue: purchaseRecordMst.serialNumber ? purchaseRecordMst.serialNumber : '',
+                                            })(
+                                                <Input placeholder="单据编号" disabled={true} />
+                                                )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col span={8}>
+                                        <FormItem {...formItemLayout} label="单据状态">
+                                            {getFieldDecorator('theState', {
+                                                initialValue: purchaseRecordMst.theState,
+                                            })(
+                                                <Input placeholder="单据状态" disabled={true} />
+                                                )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col span={8}>
+                                        <FormItem {...formItemLayout} label="总金额">
+                                            {getFieldDecorator('totalAmount', {
+                                                initialValue: purchaseRecordMst.totalAmount ? purchaseRecordMst.totalAmount : '',
+                                            })(
+                                                <Input placeholder="总金额" disabled={true} />
+                                                )}
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col span={8}>
+                                        <FormItem {...formItemLayout} label="已付款金额">
+                                            {getFieldDecorator('hasPaymentAmount', {
+                                                initialValue: purchaseRecordMst.hasPaymentAmount ? purchaseRecordMst.hasPaymentAmount : '',
+                                            })(
+                                                <Input placeholder="已付款金额" disabled={true} />
+                                                )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col span={8}>
+                                        <FormItem {...formItemLayout} label="厂商名称">
+                                            {getFieldDecorator('manufacturerName', {
+                                                initialValue: purchaseRecordMst.manufacturerName ? purchaseRecordMst.manufacturerName : '',
+                                                //rules: [{ required: true, message: '必填!' },
+                                                //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
+                                                //],
+                                            })(
+                                                <Input placeholder="厂商名称" />
+                                                )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col span={8}>
+                                        <FormItem {...formItemLayout} label="采购单类型">
+                                            {getFieldDecorator('theType', {
+                                                initialValue: purchaseRecordMst.theType ? purchaseRecordMst.theType + '' : '',
+                                                //rules: [{ required: true, message: '必填!' },
+                                                // pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
+                                                //],
+                                            })(
+                                                <Select placeholder="采购类型">
+                                                    {
+                                                        purOrderType.map(item => {
+                                                            return <Option key={item.value} value={item.value.toString()}>{item.label}</Option>
+                                                        })
+                                                    }
+                                                </Select>
+                                                )}
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+
                                 <Row>
                                     <Col span={8}>
                                         <FormItem {...formItemLayout} label="部门">
@@ -468,18 +682,6 @@ class PurchaseordersEdit extends React.Component {
                                         </FormItem>
                                     </Col>
                                     <Col span={8}>
-                                        <FormItem {...formItemLayout} label="菜单">
-                                            {getFieldDecorator('menuId', {
-                                                initialValue: purchaseRecordMst.menuId ? purchaseRecordMst.menuId : '',
-                                                //rules: [{ required: true, message: '必填!' },
-                                                //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                                // ],
-                                            })(
-                                                <Input placeholder="菜单" />
-                                                )}
-                                        </FormItem>
-                                    </Col>
-                                    <Col span={8}>
                                         <FormItem {...formItemLayout} label="订货时间">
                                             {getFieldDecorator('orderTime', {
                                                 initialValue: moment(purchaseRecordMst.orderTime || new Date(), 'YYYY-MM-DD'),
@@ -488,38 +690,6 @@ class PurchaseordersEdit extends React.Component {
                                                 //],
                                             })(
                                                 <DatePicker />
-                                                )}
-                                        </FormItem>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={8}>
-                                        <FormItem {...formItemLayout} label="采购单类型">
-                                            {getFieldDecorator('theType', {
-                                                initialValue: purchaseRecordMst.theType ? purchaseRecordMst.theType + '' : '',
-                                                //rules: [{ required: true, message: '必填!' },
-                                                // pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                                //],
-                                            })(
-                                                <Select placeholder="采购类型">
-                                                    {
-                                                        purOrderType.map(item => {
-                                                            return <Option key={item.value} value={item.value.toString()}>{item.label}</Option>
-                                                        })
-                                                    }
-                                                </Select>
-                                                )}
-                                        </FormItem>
-                                    </Col>
-                                    <Col span={8}>
-                                        <FormItem {...formItemLayout} label="厂商名称">
-                                            {getFieldDecorator('manufacturerName', {
-                                                initialValue: purchaseRecordMst.manufacturerName ? purchaseRecordMst.manufacturerName : '',
-                                                //rules: [{ required: true, message: '必填!' },
-                                                //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                                //],
-                                            })(
-                                                <Input placeholder="厂商名称" />
                                                 )}
                                         </FormItem>
                                     </Col>
@@ -535,11 +705,8 @@ class PurchaseordersEdit extends React.Component {
                                                 )}
                                         </FormItem>
                                     </Col>
+
                                 </Row>
-                                <div className="yzy-block-center">
-                                    <Button type="primary" style={{ padding: '0 30px' }} onClick={this.onCheck.bind(this)}>审核通过</Button>
-                                    <Button type="primary" style={{ padding: '0 40px', marginLeft: 8 }} htmlType="submit">保存</Button>
-                                </div>
                             </div>
                             {this.state.tableId ?
                                 <div>
@@ -569,6 +736,19 @@ class PurchaseordersEdit extends React.Component {
                                 </div>
                                 : null}
                         </Form>
+                        {/* 审核意见 */}
+                        <DraggableModal
+                            title="审核意见"
+                            width='70%'
+                            visible={this.state.suggestModalVisible}
+                            onCancel={this.onCancelSuggestModal.bind(this)}
+                            className='modal'
+                        >
+                            <TextArea onChange={this.suggestTextChange.bind(this)} />
+                            <div className="yzy-block-center" style={{ marginTop: 10 }}>
+                                <Button type="primary" onClick={this.onSuggestModalOk.bind(this)} style={{ padding: '0 20', }}>确定</Button>
+                            </div>
+                        </DraggableModal>
                     </div>
                 </div>
             </div>

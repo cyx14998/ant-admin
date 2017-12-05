@@ -8,7 +8,8 @@ import {
 	Row,
 	Col,
 	Input,
-	Button
+	Button,
+	Upload,
 } from 'antd';
 const FormItem = Form.Item;
 
@@ -16,10 +17,15 @@ import {
 	MyToast
 } from '../../common/utils';
 
+import QiniuUploadFile from '../../components/upload.file';
+const downloadUrl = BaseConfig.qiniuPath; // BaseConfig.qiniuPath;
+const uploadUrl = 'http://up.qiniu.com/';
+
 const formItemLayout = {
 	labelCol: { span: 8 },
 	wrapperCol: { span: 16 },
 }
+
 
 import {
 	getWasteGasDischargeDetail,
@@ -37,6 +43,7 @@ class WasteGasDischargeDetail extends React.Component {
 		this.state = {
 			data: {},
 			tableId: "", // 新增后的tableId
+			prodFileList: [], //检测报告
 		}
 	}
 
@@ -49,10 +56,30 @@ class WasteGasDischargeDetail extends React.Component {
 				MyToast(res.data.info)
 				return;
 			}
-			this.setState({ data: res.data.wasteGasDischargePort })
+			this.setState({ data: res.data.wasteGasDischargePort });
+			//文件初始化
+			if (res.data.customer.examiningReportURL) {
+				this.setState({
+					prodFileList: [{
+						uid: '1',
+						name: '检查报告',
+						url: res.data.customer.examiningReportURL
+					}],
+				});
+			} else {
+				this.setState({
+					prodFileList: [],
+				});
+			}
 		}).catch(err => {
 			MyToast('接口调用失败')
 		})
+	}
+	//检查报告
+	handleProdFileList({ fileList }) {
+		this.setState({
+			prodFileList: fileList,
+		});
 	}
 	// 基本信息保存
 	saveDetail(e) {
@@ -63,7 +90,27 @@ class WasteGasDischargeDetail extends React.Component {
 
 		form.validateFields((err, values) => {
 			if (err) return;
-			// console.log('when saveDetail ---', values);
+
+			var data = { ...values };
+			//附件上传
+			var prodFileUrl = this.state.prodFileList[0];
+			if (!prodFileUrl) {
+				prodFileUrl = "";
+			} else {
+				prodFileUrl = prodFileUrl.url
+				// 上传
+				if (!prodFileUrl) {
+					prodFileUrl = this.state.prodFileList[0].response.filePath;
+				}
+				if (!prodFileUrl) {
+					prodFileUrl = ""
+				} else if (prodFileUrl.indexOf(downloadUrl) === -1) {
+					prodFileUrl = downloadUrl + prodFileUrl;
+				}
+			}
+			data.examiningReportURL = prodFileUrl;
+			console.log('------------------保存前', data);
+
 			var tableId = this.props.editId;
 			if (!tableId) {
 				tableId = this.state.tableId;
@@ -72,7 +119,7 @@ class WasteGasDischargeDetail extends React.Component {
 			//编辑
 			if (tableId) {
 				getWasteGasDischargeUpdate({
-					...values,
+					...data,
 					tableId: tableId,
 				}).then(res => {
 					if (res.data.result !== 'success') {
@@ -86,7 +133,7 @@ class WasteGasDischargeDetail extends React.Component {
 			} else {
 				// 新增
 				getWasteGasDischargeAdd({
-					...values,
+					...data,
 				}).then(res => {
 					if (res.data.result !== 'success') {
 						MyToast(res.data.info)
@@ -117,7 +164,7 @@ class WasteGasDischargeDetail extends React.Component {
 									{getFieldDecorator('serialNumber', {
 										initialValue: this.state.data.serialNumber,
 										rules: [{ required: true, message: '请输入排放口编号' },
-										//{ pattern: /^[0-9]*$/, message: '请输入数值' }
+											//{ pattern: /^[0-9]*$/, message: '请输入数值' }
 										],
 									})(
 										<Input placeholder="排放口编号" />
@@ -155,7 +202,7 @@ class WasteGasDischargeDetail extends React.Component {
 									{getFieldDecorator('longitude', {
 										initialValue: this.state.data.longitude ? this.state.data.longitude + "" : "",
 										rules: [{ message: '请输入经度' },
-										{ pattern:  /^\d+(\.\d+)?$/, message: '请输入正确的经度' }
+										{ pattern: /^\d+(\.\d+)?$/, message: '请输入正确的经度' }
 										],
 									})(
 										<Input placeholder="经度" />
@@ -167,7 +214,7 @@ class WasteGasDischargeDetail extends React.Component {
 									{getFieldDecorator('latitude', {
 										initialValue: this.state.data.latitude ? this.state.data.latitude + "" : "",
 										rules: [{ message: '请输入纬度' },
-										{ pattern:  /^\d+(\.\d+)?$/, message: '请输入正确的纬度!' }
+										{ pattern: /^\d+(\.\d+)?$/, message: '请输入正确的纬度!' }
 										],
 									})(
 										<Input placeholder="纬度" />
@@ -175,14 +222,14 @@ class WasteGasDischargeDetail extends React.Component {
 								</FormItem>
 							</Col>
 							<Col span={8}>
-								<FormItem {...formItemLayout} label="污水排放规律">
+								<FormItem {...formItemLayout} label="排放规律">
 									{getFieldDecorator('dischargeLaw', {
 										initialValue: this.state.data.dischargeLaw,
 										rules: [{ required: true },
 										{/* { pattern: /^[0-9]*$/ } */ }
 										],
 									})(
-										<Input placeholder="污水排放规律" />
+										<Input placeholder="排放规律" />
 										)}
 								</FormItem>
 							</Col>
@@ -223,6 +270,18 @@ class WasteGasDischargeDetail extends React.Component {
 										<Input placeholder="排放口类型" />
 										)}
 								</FormItem>
+							</Col>
+						</Row>
+						<Row>
+							<Col span={12}>
+								<div className="baseinfo-section">
+									<h2 className="yzy-tab-content-title">检测报告</h2>
+									<QiniuUploadFile
+										uploadTitle="检测报告单"
+										uploadedFileList={this.state.prodFileList}
+										handleUploadedFileList={this.handleProdFileList.bind(this)}
+									/>
+								</div>
 							</Col>
 						</Row>
 					</div>

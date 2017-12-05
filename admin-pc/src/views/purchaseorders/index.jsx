@@ -81,10 +81,6 @@ const columns = [
     dataIndex: 'hasPaymentAmount',
     key: 'hasPaymentAmount',
   }, {
-    title: '是否审核完成',
-    dataIndex: 'isPass',
-    key: 'isPass',
-  }, {
     title: '单据状态',
     dataIndex: 'theState',
     key: 'theState',
@@ -102,10 +98,11 @@ const columns = [
 function changeIframeToEdit(id) {
   console.log('chanageiframe', parent.window.iframeHook)
   parent.window.iframeHook.changePage({
-    url: '/purchaseordersEdit.html?purOrderId=' + id + '#' + Math.random(),
+    url: '/purchaseordersEdit.html?tableId=' + id + '#' + Math.random(),
     breadIncrement: '采购单编辑'
   })
 }
+
 //列表页面
 class PurchaseordersList extends React.Component {
   constructor(props) {
@@ -120,7 +117,7 @@ class PurchaseordersList extends React.Component {
 
   componentDidMount() {
     this.getData({});
-    columns[9].render = (text, record) => {
+    columns[8].render = (text, record) => {
       return (
         <div>
           <a title="编辑" style={{ marginRight: '10px' }} onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
@@ -144,6 +141,17 @@ class PurchaseordersList extends React.Component {
       }
       var data = res.data.purchaseRecordMstList;
       data = data.map(item => {
+          var state = '';
+        if (item.isPass) {
+          state = '已审核';
+        } else {
+          if (item.theState == 0) {
+            state = '审核中';
+          } else if (item.theState == 1) {
+            state = '已作废';
+          }
+        }
+
         let index = item.theType - 1;
         if (index < 0) {
           index = 0;
@@ -152,8 +160,7 @@ class PurchaseordersList extends React.Component {
         return {
           ...item,
           theType: purOrderTypeOptions[index].label,
-          isPass: item.isPass == 'true' ? '是' : '否',
-          theState: item.theState == '0' ? '正常' : '作废',
+          theState: state,
         }
       });
       this.setState({
@@ -196,12 +203,10 @@ class PurchaseordersList extends React.Component {
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
             {/* <Button type="primary"  style={{marginRight: 8}}>导出excel</Button> */}
-            <Button type="primary"
+            {/* <Button type="primary"
               onClick={() => {
-                localStorage.removeItem('yt-customerId');
-
                 return changeIframeToEdit('');
-              }}>新增</Button>
+              }}>新增</Button> */}
           </div>
           <Table
             columns={columns}

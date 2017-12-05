@@ -46,12 +46,6 @@ const columns = [
     title: '流程名称',
     dataIndex: 'theName',
   }, {
-    title: '关联页面',
-    dataIndex: 'sourceLink',
-  }, {
-    title: '关联表',
-    dataIndex: 'tableName',
-  }, {
     title: '创建时间',
     dataIndex: 'createDatetime',
   }, {
@@ -69,12 +63,6 @@ const getWarehousingRecord = {
   tableId: '',
   editable: true,
   theName: {
-    value: '',
-  },
-  sourceLink: {
-    value: '',
-  },
-  tableName: {
     value: '',
   },
   createDatetime: {
@@ -129,12 +117,6 @@ class Flow extends Component {
         tableId: data.tableId,
         theName: {
           value: data.theName || '',
-        },
-        sourceLink: {
-          value: data.sourceLink || '',
-        },
-        tableName: {
-          value: data.tableName || '',
         },
         createDatetime: {
           value: data.createDatetime || '',
@@ -224,14 +206,10 @@ class Flow extends Component {
       return {
         tableId: record.tableId,
         theName: record.theName.value,
-        sourceLink: record.sourceLink.value,
-        tableName: record.tableName.value,
       }
     }
     return {
       theName: record.theName.value,
-      sourceLink: record.sourceLink.value,
-      tableName: record.tableName.value,
     }
 
   }

@@ -34,16 +34,13 @@ const columns = [
   }, {
     title: '创建人',
     dataIndex: 'editor.realName',
-  },  {
-    title: '是否审核完成',
-    dataIndex: 'isPass',
   }, {
     title: '单据状态',
     dataIndex: 'theState',
-  },{
+  }, {
     title: '付款单金额',
     dataIndex: 'theTotalAmount',
-  },  {
+  }, {
     title: '备注',
     dataIndex: 'theRemarks',
   }, {
@@ -56,7 +53,7 @@ const columns = [
 function changeIframeToEdit(id) {
   console.log('chanageiframe', parent.window.iframeHook)
   parent.window.iframeHook.changePage({
-    url: '/purchaseorderspaymentEdit.html?paymentId=' + id + '#' + Math.random(),
+    url: '/purchaseorderspaymentEdit.html?tableId=' + id + '#' + Math.random(),
     breadIncrement: '付款单编辑'
   })
 }
@@ -77,7 +74,7 @@ class PurchaseorderspaymentList extends React.Component {
   componentDidMount() {
     this.getData({});
     this._getMemberList();
-    columns[6].render = (text, record) => {
+    columns[5].render = (text, record) => {
       return (
         <div>
           <a title="编辑" style={{ marginRight: '10px' }} onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
@@ -101,10 +98,21 @@ class PurchaseorderspaymentList extends React.Component {
       }
       var data = res.data.paymentRecordMstList;
       data = data.map(item => {
+
+        var state = '';
+        if (item.isPass) {
+          state = '已审核';
+        } else {
+          if (item.theState == 0) {
+            state = '审核中';
+          } else if (item.theState == 1) {
+            state = '已作废';
+          }
+        }
+
         return {
           ...item,
-          isPass: item.isPass == 'true' ? '是' : '否',
-          theState: item.theState == '0' ? '正常' : '作废',
+          theState: state,
         }
       });
       this.setState({
@@ -175,42 +183,42 @@ class PurchaseorderspaymentList extends React.Component {
     const rcsearchformData = {
       colspan: 2,
       fields: [{
-          type: 'select',
-          label: '创建人',
-          name: 'storageInMemberId',
-          options: this.state.memberList
-        },
-        {
-          type: 'select',
-          label: '审核情况',
-          name: 'isPass',
-          defaultValue: '0',
-          options: [{
-            value: '0',
-            label: '全部'
-          }, {
-            value: '1',
-            label: '审核完成'
-          }, {
-            value: '2',
-            label: '未审核'
-          }]
+        type: 'select',
+        label: '创建人',
+        name: 'storageInMemberId',
+        options: this.state.memberList
+      },
+      {
+        type: 'select',
+        label: '审核情况',
+        name: 'isPass',
+        defaultValue: '0',
+        options: [{
+          value: '0',
+          label: '全部'
         }, {
-          type: 'select',
-          label: '采购单状态',
-          name: 'theState',
-          defaultValue: '0',
-          options: [{
-            value: '0',
-            label: '全部'
-          }, {
-            value: '1',
-            label: '正常'
-          }, {
-            value: '2',
-            label: '作废'
-          }]
-        },
+          value: '1',
+          label: '审核完成'
+        }, {
+          value: '2',
+          label: '未审核'
+        }]
+      }, {
+        type: 'select',
+        label: '采购单状态',
+        name: 'theState',
+        defaultValue: '0',
+        options: [{
+          value: '0',
+          label: '全部'
+        }, {
+          value: '1',
+          label: '正常'
+        }, {
+          value: '2',
+          label: '作废'
+        }]
+      },
       ]
     }
     return (
@@ -220,14 +228,12 @@ class PurchaseorderspaymentList extends React.Component {
             handleSearch={this.handleFormSearch.bind(this)} />
         </div>
         <div className="yzy-list-wrap">
-          <div className="yzy-list-btns-wrap">
+          {/* <div className="yzy-list-btns-wrap">
             <Button type="primary"
               onClick={() => {
-                localStorage.removeItem('yt-customerId');
-
                 return changeIframeToEdit('');
               }}>新增</Button>
-          </div>
+          </div> */}
           <Table
             columns={columns}
             dataSource={this.state.paymentRecordMstList}

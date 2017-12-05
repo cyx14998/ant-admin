@@ -1,0 +1,104 @@
+@import '../../style/base.less';
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+    background-color: #f2f2f2;
+}
+
+@fontColor: #656565;
+.container {
+    .am-search {
+        background-color: #f2f2f2;
+        padding: 0 28 * @unit;
+        border-bottom: 1px solid #ddd;
+        .am-search-input {
+            background-color: #fff;
+            border-radius: 40 * @unit;
+            .am-search-synthetic-ph-placeholder {
+                font-size: 28 * @unit;
+            }
+            & input[type="search"] {
+                font-size: 28 * @unit;
+            }
+        }
+        .am-search-cancel {
+            color: #656565;
+            font-size: 30 * @unit;
+        }
+    }
+    .result-list {
+        .am-list-body {
+            background-color: #eee;
+            .list-view-section-body {
+                .staff-item {
+                    background-color: #fff;
+                    .staff-icon {
+                        float: left;
+                        padding: 17 *@unit 28 *@unit 17 *@unit 17 *@unit;
+                        img {
+                            width: 90 * @unit;
+                            height: 90 * @unit;
+                            border-radius: 50%;
+                        }
+                    }
+                    .staff-intro {
+                        margin-left: 130 * @unit;
+                        border-bottom: 1px solid #eee;
+                        .staff-header {
+                            font-size: 30 * @unit;
+                            padding-top: 13 *@unit;
+                            color: @fontColor;
+                            overflow: hidden;
+                            .name,
+                            .sex {
+                                float: left;
+                            }
+                            .sex {
+                                width: 26 * @unit;
+                                margin-left: 32 * @unit;
+                                margin-top: 3px;
+                            }
+                        }
+                        .staff-body {
+                            padding-top: 20 * @unit;
+                            .item {
+                                float: left;
+                                position: relative;
+                                .pItem {
+                                    font-size: 28 * @unit;
+                                    color: @fontColor;
+                                }
+                            }
+                            .contacts {
+                                padding-right: 48* @unit;
+                                &::after {
+                                    content: ' ';
+                                    width: 1px;
+                                    height: 26* @unit;
+                                    background-color: #ddd;
+                                    position: absolute;
+                                    right: 0;
+                                    top: 50%;
+                                    margin-top: -13 * @unit;
+                                }
+                            }
+                            .link-phone {
+                                padding-left: 48* @unit;
+                                text-align: center;
+                            }
+                        }
+                    }
+                }
+                & .staff-item:last-child {
+                    margin-bottom: 0;
+                }
+            }
+            &::before,
+            &::after {
+                display: none;
+            }
+        }
+    }
+}

@@ -17,11 +17,14 @@ import {
 } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
+const { TextArea } = Input;
 
 import moment from 'moment';
 
 import DraggableModal from '../../components/modal.draggable';
 import RcSearchForm from '../../components/rcsearchform';
+
+import PaymentRecordModal from './index.modal';
 
 const formItemLayout = {
     labelCol: { span: 8 },
@@ -30,19 +33,18 @@ const formItemLayout = {
 
 import {
     getPaymentDetail,
+    getPaymentCancel,
+    getPaymentPass,
+    getPaymentReject,
     getPaymentAdd,
     getPaymentEdit,
     getPaymentRecordList,
-    getPaymentRecordnAdd,
-    getPaymentRecordnEdit,
     getPaymentRecordnDelete,
-    getPurchaseRecordMstListUnStockList, //明细新增---采购单主表列表
-    getPurchaseRecordDtlListUnStockList,//明细新增---采购单主表--明细列表
-    getCheckRecordList,
 } from '../../common/api/api.purchaseorderspayment.js';
 
 import {
     getMemberList, //获取创建人列表 （员工列表）
+    getCheckRecordList,
 } from '../../common/api/api.purchaseorderswarehousing.js'
 
 /**
@@ -53,7 +55,6 @@ import {
  * @desc
  *     只关心增删改查的接口调用与数据转换
  */
-import EditableTableSection from '../../components/editableTable/index';
 
 import { MyToast, getLocQueryByLabel, } from '../../common/utils';
 
@@ -63,33 +64,35 @@ const columns = [
         title: '单据编号',
         dataIndex: 'serialNumber',
     }, {
-        title: '金额',
-        dataIndex: 'theAmount',
-        validateType: 'number',
-    }, {
         title: '编辑时间',
         dataIndex: 'editDatetime',
     }, {
-        title: '备注',
-        dataIndex: 'theRemarks',
-        validateType: 'number',
+        title: '已付款金额',
+        dataIndex: 'theAmount',
+    }, {
         title: '操作',
         dataIndex: 'operation',
         width: 120,
     }
 ];
-//审核记录头部
+//审核记录列表头部
 const checkRecordColumns = [
     {
-        title: '审核时间',
-        dataIndex: 'checkTime',
+        title: '审核日期',
+        dataIndex: 'createDatetime',
     }, {
         title: '审核人',
-        dataIndex: 'checkPerson',
+        dataIndex: 'member.realName',
     }, {
         title: '审核意见',
-        dataIndex: 'checkOpinion',
-    },
+        dataIndex: 'theContent',
+    }, {
+        title: '审核结果',
+        dataIndex: 'theFlowResult',
+        render: (record) => <span>
+            {record.theFlowResult ? '审核通过' : '审核不通过'}
+        </span>
+    }
 ];
 //采购单明细头部-----（用于新增入库明细）
 const warehousingsColumns = [
@@ -118,41 +121,42 @@ class PaymentsEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tableId: getLocQueryByLabel('paymentId') || '', //控制底面表格显隐
+            tableId: getLocQueryByLabel('tableId') || '', //控制底面表格显隐
+            flowOrderStateId: '',
             loading: true,
             memberList: [], //入库人列表（员工列表）
             paymentRecordMst: {}, //列表信息详情
+
+            suggestModalVisible: false, //审核意见弹窗显隐
+            suggestContent: '', //审核意见
+            checkType: '', //点击的审核按钮类型
+
             paymentDtlList: [], //明细列表
+            paymentSelectedRowKeysArr: [], //明细Id多选
             checkRecordlList: [], //检查记录列表
 
             warehousingsListModalVisible: false, //入库明细新增------Modal显隐
-            purchaseRecordMstList: [], //入库明细新增Modal列表 --- （采购单列表）
-            paymentRecordDtlList: [], //入库明细新增Modal列表 --- （采购单明细列表）
-            purOrdSelectedRowKeysArr: [], //入库明细新增Modal列表的选择tableId --- （采购单明细列表）
-
-            paymentRecordMstId: '', //Modal头部搜索
-            serialNumber: '', //Modal头部搜索
-            theName: '', //Modal头部搜索
         }
         this._getMemberList = this._getMemberList.bind(this);
         this._getPaymentDetail = this._getPaymentDetail.bind(this);
         this._getPaymentRecordList = this._getPaymentRecordList.bind(this);
         this._getCheckRecordList = this._getCheckRecordList.bind(this);
-        this._getPurchaseRecordMstListUnStockList = this._getPurchaseRecordMstListUnStockList.bind(this);
-        this._getPurchaseRecordDtlListUnStockList = this._getPurchaseRecordDtlListUnStockList.bind(this);
     }
 
     componentDidMount() {
         this._getMemberList();
         this._getPaymentDetail({ tableId: this.state.tableId });
         this._getPaymentRecordList({ paymentRecordMstId: this.state.tableId });
-        this._getCheckRecordList({ paymentRecordMstId: this.state.tableId });
+        columns[3].render = (text, record, index) => {
+            return (<Popconfirm title="确定删除么?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
+                <a title="删除" className="delete" href="#" ><Icon type="delete" className="yzy-icon" /></a>
+            </Popconfirm>)
+        }
     }
 
     //获取入库人列表
     _getMemberList() {
         getMemberList({}).then(res => {
-            console.log('getMemberList res', res)
 
             if (res.data.result !== 'success') {
                 MyToast(res.data.info || '获取入库人列表失败');
@@ -187,11 +191,27 @@ class PaymentsEdit extends React.Component {
                 MyToast(res.data.info || '接口失败')
                 return;
             }
+            var data = res.data.paymentRecordMst;
+            var state = '';
+            if (data.isPass) {
+                state = '已审核';
+            } else {
+                if (data.theState == 0) {
+                    state = '审核中';
+                } else if (data.theState == 1) {
+                    state = '已作废';
+                }
+            }
+            data.theState = state;
+            var flowOrderStateId = data.flowOrderState ? data.flowOrderState.tableId : '';
 
             this.setState({
                 loading: false,
-                paymentRecordMst: res.data.paymentRecordMst,
+                paymentRecordMst: data,
+                flowOrderStateId: flowOrderStateId,
             })
+            this._getCheckRecordList({ flowOrderStateId: flowOrderStateId });
+
         }).catch(err => {
             MyToast('接口失败');
             this.setState({
@@ -199,9 +219,90 @@ class PaymentsEdit extends React.Component {
             });
         })
     }
-    //审核btn
-    onCheck() {
+    //头部审核按钮-点击
+    oncheckbtn(type) {
+        this.setState({
+            checkType: type,
+            suggestModalVisible: true,
+        });
+    }
+    //审核意见弹窗-文本
+    suggestTextChange(e) {
+        this.setState({
+            suggestContent: e.target.value,
+        });
+    }
+    //审核意见弹窗-取消    
+    onCancelSuggestModal() {
+        this.setState({
+            suggestModalVisible: false,
+        });
+    }
+    //审核意见弹窗-确定    
+    onSuggestModalOk() {
+        var checkType = this.state.checkType;
+        if (checkType == 'checkReject') {
+            this.onCheckReject();
+        } else if (checkType == 'checkPass') {
+            this.onCheckPass();
+        }
+    }
+    //付款单作废
+    onCheckCancel() {
+        getPaymentCancel({ tableId: this.state.tableId }).then(res => {
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '作废失败');
+                return;
+            }
 
+            MyToast('付款单已作废');
+            this._getPaymentDetail({ tableId: this.state.tableId });
+            this._getCheckRecordList({ flowOrderStateId: this.state.flowOrderStateId });
+        }).catch(err =>
+            MyToast('接口失败')
+            );
+    }
+    //付款单退回
+    onCheckReject() {
+        getPaymentReject({
+            tableId: this.state.tableId,
+            theContent: this.state.suggestContent
+        }).then(res => {
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '退回失败');
+                return;
+            }
+
+            MyToast('付款单已退回');
+            this.setState({
+                suggestModalVisible: false,
+            });
+            this._getPaymentDetail({ tableId: this.state.tableId });
+            this._getCheckRecordList({ flowOrderStateId: this.state.flowOrderStateId });
+        }).catch(err =>
+            MyToast('接口失败')
+            );
+    }
+    //付款单送审
+    onCheckPass() {
+        getPaymentPass({
+            tableId: this.state.tableId,
+            theContent: this.state.suggestContent
+        }).then(res => {
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '送审失败');
+                return;
+            }
+
+            MyToast('付款单已送审');
+            this.setState({
+                suggestModalVisible: false,
+            })
+            this._getPaymentDetail({ tableId: this.state.tableId });
+            this._getCheckRecordList({ flowOrderStateId: this.state.flowOrderStateId });
+        }).catch(err =>
+            MyToast('接口失败')
+            );
     }
     //基本信息保存
     saveDetail(e) {
@@ -231,6 +332,7 @@ class PaymentsEdit extends React.Component {
                     MyToast('新增成功');
                     self.setState({
                         tableId: res.data.tableId,
+                        flowOrderStateId: res.data.flowOrderStateId,
                     });
                 }).catch(err =>
                     MyToast(err)
@@ -240,6 +342,7 @@ class PaymentsEdit extends React.Component {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
+                        MyToast(res.data.info);
                         return
                     }
                     MyToast('编辑成功');
@@ -250,59 +353,19 @@ class PaymentsEdit extends React.Component {
         })
     }
     /** -------------------------------------付款单明细------------------------------ */
-    //数据列表格式化
-    formatDatasource(dataSource) {
-        if (!dataSource) return;
-
-        var data = dataSource.map(data => {
-            // theSpecifications
-            return {
-                tableId: data.tableId,
-                serialNumber: {
-                    value: data.serialNumber,
-                    disabled: true,
-                },
-                theAmount: {
-                    value: data.theAmount
-                },
-                theRemarks: {
-                    value: data.theRemarks,
-                },
-                editDatetime: {
-                    value: data.editDatetime,
-                },
-            }
-        });
-
-        return data;
-    }
-    //数据提交格式化
-    serializeRecord(record) {
-        //file
-        return {
-            tableId: record.tableId,
-            serialNumber: record.serialNumber.value,
-            theName: record.theName.value,
-            theSpecifications: record.theSpecifications.value,
-            theQuantity: record.theQuantity.value,
-            thePrice: record.thePrice.value,
-        }
-
-    }
     //获取付款单明细列表    
     _getPaymentRecordList(params) {
         console.log('------------params', params)
         if (!params.paymentRecordMstId) return;
 
         getPaymentRecordList(params).then(res => {
-            console.log('getPaymentRecordList ------------', res)
+            console.log('getPaymentRecordList明细 ------------', res)
             if (res.data.result !== 'success') {
                 MyToast(res.data.info || '接口失败')
                 return;
             }
 
             var dataSource = res.data.paymentRecordDtlList || [];
-            dataSource = this.formatDatasource(dataSource)
             this.setState({
                 loading: false,
                 paymentDtlList: dataSource
@@ -314,167 +377,60 @@ class PaymentsEdit extends React.Component {
             });
         })
     }
-    // //付款单明细新增
-    // addBtnPayment(record) 
 
     //付款单明细新增btn
     warehousingAddBtn() {
-        this._getPurchaseRecordMstListUnStockList();
         this.setState({
             warehousingsListModalVisible: true
         })
     }
-    //付款单明细编辑   
-    updatePayment(record) {
-        console.log('明细编辑-----------------------', record);
-        var _record = this.serializeRecord(record);
-
-        return new Promise((resolve, reject) => {
-            getPaymentRecordnEdit({
-                tableId: record.tableId,
-                theQuantity: record.theQuantity,
-            }).then(res => {
-                if (res.data.result != 'success') {
-                    resolve({
-                        code: -1,
-                        msg: res.data.info
-                    });
-                    return;
-                }
-
-                resolve({
-                    code: 0,
-                    tableId: res.data.tableId,
-                    msg: '编辑成功'
-                });
-            }).catch(err => resolve({ code: -1, msg: err }))
+    //modal显隐
+    onCancelModal() {
+        this.setState({
+            warehousingsListModalVisible: false,
         })
     }
     // 付款单明细删除
-    deletePayment(id) {
-        return new Promise((resolve, reject) => {
-            getPaymentRecordnDelete({ tableId: id }).then(res => {
-                if (res.data.result != 'success') {
-                    resolve({
-                        code: -1,
-                        msg: res.data.info
-                    });
-                    return;
-                }
+    onEditDelete(text, record, index) {
+        var self = this;
 
-                resolve({
-                    code: 0,
-                    msg: '删除成功'
-                });
-            }).catch(err => resolve({ code: -1, msg: err }))
+        //调用列表删除接口
+        getPaymentRecordnDelete({ tableIdArr: record.tableId }).then(res => {
+            console.log('getPaymentRecordnDelete --------------', res);
+
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '接口失败');
+                return;
+            }
+
+            self.state.paymentDtlList.splice(index, 1);
+            self.setState({
+                paymentDtlList: self.state.paymentDtlList
+            })
+
+        }).catch(err => {
+            MyToast(err || '删除失败');
         })
     }
     /** -------------------------------------检查记录列表---------------------------------- */
-
     //检查记录列表
     _getCheckRecordList(params) {
         console.log('params', params)
-        if (!params.paymentRecordMstId) return;
+        if (!params.flowOrderStateId) return;
 
-        // getCheckRecordList(params).then(res => {
-        //     console.log('getCheckRecordList ------------', res)
-        //     if (res.data.result !== 'success') {
-        //         MyToast(res.data.info || '接口失败')
-        //         return;
-        //     }
-        // var data = res.data.checkRecordlList;
-        var data = [{
-            tableId: 1,
-            checkTime: '2017-08-08',
-            checkPerson: '审查人',
-            checkOpinion: '审查意见'
-        }];
-        this.setState({
-            loading: false,
-            checkRecordlList: data
-        })
-        // }).catch(err => {
-        //     MyToast('接口失败');
-        //     this.setState({
-        //         loading: false
-        //     });
-        // })
-    }
-
-    /** ----------------------------------------Modal------------------------------------- */
-    //付款单明细新增----获取采购单(可付款)列表
-    _getPurchaseRecordMstListUnStockList() {
-
-        getPurchaseRecordMstListUnStockList({}).then(res => {
-            console.log('getPurchaseRecordMstList ------------', res)
+        getCheckRecordList(params).then(res => {
+            console.log('getCheckRecordList ------------', res)
             if (res.data.result !== 'success') {
                 MyToast(res.data.info || '接口失败')
                 return;
             }
-            var purchaseRecordMstList = res.data.purchaseRecordMstList && res.data.purchaseRecordMstList.map(item => {
-                let purchaseRecord = {
-                    value: item.tableId + '',
-                    label: item.manufacturerName
-                };
 
-                return purchaseRecord;
-            });
-            purchaseRecordMstList.unshift({
-                value: '全部',
-                label: '全部'
-            })
             this.setState({
-                loading: false,
-                purchaseRecordMstList: purchaseRecordMstList
+                checkRecordlList: res.data.flowHistoryList
             });
+        }).catch(err => {
+            MyToast(err || '接口失败');
         })
-    }
-    //付款单明细新增----获取采购单(可付款)-明细列表
-    _getPurchaseRecordDtlListUnStockList(params) {
-        console.log('params', params)
-        if (!params.paymentRecordMstId) return;
-
-        getPurchaseRecordDtlListUnStockList(params).then(res => {
-            console.log('getPurchaseRecordDtlList ------------', res)
-            if (res.data.result !== 'success') {
-                MyToast(res.data.info || '接口失败')
-                return;
-            }
-            this.setState({
-                loading: false,
-                paymentRecordDtlList: res.data.paymentRecordDtlList
-            })
-        })
-    }
-    //头部搜索
-    handleFormSearch(values) {
-        this._getPurchaseRecordDtlListUnStockList({
-            paymentRecordMstId: values.paymentRecordMstId,
-            // serialNumber: values.serialNumber || '',
-            // theName: values.theName || '',
-        });
-    }
-    //明细新增 --- Modal确定  
-    purordListModalOk() {
-        var purOrdSelectedRowKeysArr = this.state.purOrdSelectedRowKeysArr.join(',');
-        console.log('------------', this.state.purOrdSelectedRowKeysArr)
-
-        getPaymentRecordnAdd({
-            tableIdArr: purOrdSelectedRowKeysArr,
-            paymentRecordMstId: this.state.tableId,
-        }).then(res => {
-            if (res.data.result !== 'success') {
-                MyToast(res.data.info);
-                return;
-            }
-            MyToast('明细新增成功');
-            this.setState({
-                warehousingsListModalVisible: false,
-            });
-            this._getPaymentRecordList({ paymentRecordMstId: this.state.tableId });
-        }).catch(err =>
-            MyToast(err)
-            )
     }
 
     render() {
@@ -483,59 +439,72 @@ class PaymentsEdit extends React.Component {
         var purOrdSelectedRecord = this.state.purOrdSelectedRecord;
 
         var self = this;
-        var purOrdSelectedRowKeysArr = self.state.purOrdSelectedRowKeysArr;
+        var paymentSelectedRowKeysArr = self.state.paymentSelectedRowKeysArr;
 
-        //付款单Modal的行标选择        
-        const warehousingsDataRowSelection = {
-            purOrdSelectedRowKeysArr,
-            onChange(purOrdSelectedRowKeysArr) {
-                console.log(`purOrdSelectedRowKeys changed: ${purOrdSelectedRowKeysArr}`);
+        //付款单明细行标选择        
+        const paymentRecordDataRowSelection = {
+            paymentSelectedRowKeysArr,
+            onChange(paymentSelectedRowKeysArr) {
+                console.log(`purOrdSelectedRowKeys changed: ${paymentSelectedRowKeysArr}`);
                 self.setState({
-                    purOrdSelectedRowKeysArr: purOrdSelectedRowKeysArr,
+                    paymentSelectedRowKeysArr: paymentSelectedRowKeysArr,
                 })
             }
-        }
-        // Modal头部搜索
-        const rcsearchformData = {
-            colspan: 2,
-            fields: [
-                //     {
-                //     type: 'input',
-                //     label: '单据编号',
-                //     name: 'serialNumber',
-                // }, {
-                //     type: 'input',
-                //     label: '品名',
-                //     name: 'theName',
-                // },
-                {
-                    type: 'select',
-                    label: '采购单主表',
-                    name: 'paymentRecordMstId',
-                    defaultValue: '全部',
-                    options: this.state.purchaseRecordMstList,
-                }]
         }
         return (
             <div className="yzy-page">
                 <div className="yzy-list-wrap">
                     <div className="yzy-tab-content-item-wrap">
                         <Form onSubmit={this.saveDetail.bind(this)}>
+                            <div>
+                                <Button type="primary" style={{ padding: '0 20px', }} htmlType="submit">保存</Button>
+                                <Button type="primary" style={{ padding: '0 20px', marginLeft: 8 }} onClick={this.oncheckbtn.bind(this, 'checkPass')} >审核</Button>
+                                <Popconfirm title="确定要作废么？" onConfirm={this.onCheckCancel.bind(this)}>
+                                    <Button type="primary" className="btn-cancel" style={{ padding: '0 20px', marginLeft: 8 }} >作废</Button>
+                                </Popconfirm>
+                                <Button type="primary" className="btn-reject" style={{ padding: '0 20px', marginLeft: 8 }} onClick={this.oncheckbtn.bind(this, 'checkReject')}>退回</Button>
+                            </div>
                             <div className="baseinfo-section">
                                 <h2 className="yzy-tab-content-title">付款单基本信息</h2>
                                 <Row>
                                     <Col span={8}>
-                                        <FormItem {...formItemLayout} label="菜单">
-                                            {getFieldDecorator('menuId', {
-                                                initialValue: paymentRecordMst.menuId ? paymentRecordMst.menuId : '',
+                                        <FormItem {...formItemLayout} label="单据编号">
+                                            {getFieldDecorator('serialNumber', {
+                                                initialValue: paymentRecordMst.serialNumber ? paymentRecordMst.serialNumber : '',
                                                 //rules: [{ required: true, message: '必填!' },
-                                                //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                                // ],
+                                                // pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
+                                                //],
                                             })(
-                                                <Input placeholder="菜单" />
+                                                <Input placeholder="单据编号" disabled={true} />
                                                 )}
                                         </FormItem>
                                     </Col>
+                                    <Col span={8}>
+                                        <FormItem {...formItemLayout} label="单据状态">
+                                            {getFieldDecorator('theState', {
+                                                initialValue: paymentRecordMst.theState,
+                                                //rules: [{ required: true, message: '必填!' },
+                                                // pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
+                                                //],
+                                            })(
+                                                <Input placeholder="审核情况" disabled={true} />
+                                                )}
+                                        </FormItem>
+                                    </Col>
+                                    <Col span={8}>
+                                        <FormItem {...formItemLayout} label="创建日期">
+                                            {getFieldDecorator('createDatetime', {
+                                                initialValue: moment(paymentRecordMst.createDatetime || new Date(), 'YYYY-MM-DD'),
+                                                //rules: [{ required: true, message: '必填!' },
+                                                // pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
+                                                //],
+                                            })(
+                                                <DatePicker disabled={true} />
+                                                )}
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                                <Row>
                                     <Col span={8}>
                                         <FormItem {...formItemLayout} label="备注">
                                             {getFieldDecorator('theRemarks', {
@@ -549,62 +518,24 @@ class PaymentsEdit extends React.Component {
                                         </FormItem>
                                     </Col>
                                 </Row>
-                                {
-                                    getLocQueryByLabel('paymentId') ?
-                                        <Row>
-                                            {/* <Col span={8}>
-                                        <FormItem {...formItemLayout} label="创建人">
-                                            {getFieldDecorator('storageInMemberId', {
-                                                initialValue: paymentRecordMst.editor ? paymentRecordMst.editor.realName + '' : '',
-                                                //rules: [{ required: true, message: '必填!' },
-                                                //{ pattern: /^[0-9]*$/ } 
-                                                //],
-                                            })(
-                                                <Select placeholder="创建人">
-                                                    {
-                                                        this.state.memberList.map(item => {
-                                                            return <Option key={item.value} value={item.value.toString()}>{item.label}</Option>
-                                                        })
-                                                    }
-                                                </Select>
-                                                )}
-                                        </FormItem>
-                                    </Col> */}
-                                            <Col span={8}>
-                                                <FormItem {...formItemLayout} label="单据编号">
-                                                    {paymentRecordMst.serialNumber}
-                                                </FormItem>
-                                            </Col>
-                                            <Col span={8}>
-                                                <FormItem {...formItemLayout} label="审核情况">
-                                                    {paymentRecordMst.isPass ? '完成' : '未完成'}
-                                                </FormItem>
-                                            </Col>
-                                            <Col span={8}>
-                                                <FormItem {...formItemLayout} label="创建日期">
-                                                    {paymentRecordMst.createDatetime}
-                                                </FormItem>
-                                            </Col>
-                                        </Row>
-                                        : null}
-                                <div className="yzy-block-center">
-                                    <Button type="primary" style={{ padding: '0 30px' }} onClick={this.onCheck.bind(this)}>审核通过</Button>
-                                    <Button type="primary" style={{ padding: '0 40px', marginLeft: 8 }} htmlType="submit">保存</Button>
-                                </div>
                             </div>
                             {this.state.tableId ?
                                 <div>
                                     <div className="baseinfo-section">
                                         <h2 className="yzy-tab-content-title">付款单明细</h2>
-                                        <Button type="primary" style={{ marginLeft: 8, float: 'right' }} onClick={this.warehousingAddBtn.bind(this)}>新增</Button>
-                                        <EditableTableSection
+                                        <Button type="primary" style={{ marginLeft: 8, marginBottom: 10 }} onClick={this.warehousingAddBtn.bind(this)}>新增</Button>
+                                        <Table
                                             columns={columns}
+                                            rowSelection={paymentRecordDataRowSelection}
                                             dataSource={this.state.paymentDtlList}
-                                            onDelete={this.deletePayment.bind(this)}
-                                            //onSaveAdd={this.addBtnPayment.bind(this)}
-                                            onSaveUpdate={this.updatePayment.bind(this)}
-                                            //itemDataModel={getPaymentRecord}
+                                            rowKey="tableId"
                                             loading={this.state.loading}
+                                            pagination={false}
+                                            rowClassName={(record, index) => {
+                                                if (index % 2 !== 0) {
+                                                    return 'active'
+                                                }
+                                            }}
                                         />
                                     </div>
                                     <div className="baseinfo-section">
@@ -623,33 +554,30 @@ class PaymentsEdit extends React.Component {
                                     </div>
                                 </div>
                                 : null}
-                            {/* 明细新增------采购单选择 */}
-                            <DraggableModal
-                                title="明细新增，选择采购单"
-                                width='90%'
-                                visible={this.state.warehousingsListModalVisible}
-                                onCancel={() => this.setState({ warehousingsListModalVisible: false })}
-                                className='modal'
-                            >
-                                <RcSearchForm {...rcsearchformData}
-                                    handleSearch={this.handleFormSearch.bind(this)} />
-                                <Table
-                                    style={{ marginTop: 20 }}
-                                    rowSelection={warehousingsDataRowSelection}
-                                    columns={warehousingsColumns}
-                                    dataSource={this.state.paymentRecordDtlList}
-                                    rowKey="tableId"
-                                    rowClassName={(record, index) => {
-                                        if (index % 2 !== 0) {
-                                            return 'active'
-                                        }
-                                    }}
-                                />
-                                <div className="yzy-block-center">
-                                    <Button type="primary" style={{ padding: '0 40px', margin: '20px 0' }} onClick={this.purordListModalOk.bind(this)}>确定</Button>
-                                </div>
-                            </DraggableModal>
                         </Form>
+                        {/* 明细新增------采购单选择 */}
+                        <DraggableModal
+                            title="明细新增，选择采购单"
+                            width='90%'
+                            visible={this.state.warehousingsListModalVisible}
+                            onCancel={this.onCancelModal.bind(this)}
+                            className='modal'
+                        >
+                            <PaymentRecordModal _getPaymentRecordList={this._getPaymentRecordList.bind(this)} onCancelModal={this.onCancelModal.bind(this)} tableId={this.state.tableId} />
+                        </DraggableModal>
+                        {/* 审核意见 */}
+                        <DraggableModal
+                            title="审核意见"
+                            width='70%'
+                            visible={this.state.suggestModalVisible}
+                            onCancel={this.onCancelSuggestModal.bind(this)}
+                            className='modal'
+                        >
+                            <TextArea onChange={this.suggestTextChange.bind(this)} />
+                            <div className="yzy-block-center" style={{ marginTop: 10 }}>
+                                <Button type="primary" onClick={this.onSuggestModalOk.bind(this)} style={{ padding: '0 20', }}>确定</Button>
+                            </div>
+                        </DraggableModal>
                     </div>
                 </div>
             </div>

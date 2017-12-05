@@ -11,6 +11,8 @@ import {
   getFunctionalAreaTypeList,
   getNoiseSourcePropertyList,
 } from '../../common/api/api.customer.plus.js';
+const downloadUrl = BaseConfig.qiniuPath;
+
 
 import {
   MyToast,
@@ -41,6 +43,9 @@ const columns = [{
   title: '功能区类型',
   dataIndex: 'functionalAreaTypeId',
 }, {
+  title: '检测报告',
+  dataIndex: 'examiningReportURL',
+}, {
   title: '操作',
   dataIndex: 'operation',
   width: 120
@@ -56,6 +61,10 @@ const itemDataModel = {
   noiseSourceName: '',
   noiseSourcePropertyId: '',
   functionalAreaTypeId: '',
+  examiningReportURL: {
+    cellType: 'fileUpload',
+    fileList: []
+  },
 };
 
 const BoundaryNoise = connectEditableSectionApi({
@@ -87,6 +96,9 @@ const BoundaryNoise = connectEditableSectionApi({
         itemDataModel.functionalAreaTypeId = areaData;  //功能区类型
         //重新拼接数据
         noiseData = noiseData.map(item => {
+          //文件上传
+          var fileList = item.examiningReportURL ? [{ uid: -1, name: '文件', url: item.examiningReportURL }] : [];
+
           return {
             ...item,
             functionalAreaTypeId: {
@@ -97,6 +109,10 @@ const BoundaryNoise = connectEditableSectionApi({
               value: item.noiseSourceProperty.tableId + '',
               options: convertObjectLabel(noiseSourcePropertyList),
             },
+            examiningReportURL: {
+              cellType: 'fileUpload',
+              fileList,
+            }
           }
         });
         //渲染页面
@@ -108,14 +124,30 @@ const BoundaryNoise = connectEditableSectionApi({
     })
   },
   apiSave: function (record) {
-    // 新增
-    // record.noiseSourcePropertyId = record.noiseSourcePropertyId.value;
-    // record.functionalAreaTypeId = record.functionalAreaTypeId.value;
+    var file = record.examiningReportURL.fileList[0];
+    var filePath = '';
+
+    if (file && file.url) {
+      filePath = file.url
+    }
+
+    if (file && file.response) {
+      filePath = downloadUrl + file.response.filePath;
+    }
+
+    /**
+     * fix bug 
+     * 文件上传后，新增项带有文件
+     */
+    itemDataModel.examiningReportURL.fileList = [];
+
     const _record_for_save = {
       ...record,
-      noiseSourcePropertyId : record.noiseSourcePropertyId.value,
-      functionalAreaTypeId : record.functionalAreaTypeId.value,
+      noiseSourcePropertyId: record.noiseSourcePropertyId.value,
+      functionalAreaTypeId: record.functionalAreaTypeId.value,
+      examiningReportURL: filePath,
     }
+    console.log('-------------',_record_for_save)
     if (record.tableId === '') {
       return new Promise((resolve, reject) => {
         // 新增

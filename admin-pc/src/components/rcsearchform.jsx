@@ -6,8 +6,8 @@ import React, { Component } from 'react';
 import {
   Button,
   Icon,
-  Row, 
-  Col, 
+  Row,
+  Col,
   Input,
   Select,
   DatePicker,
@@ -43,7 +43,7 @@ class SearchForm extends Component {
 
   render() {
     const {
-      colspan=2,
+      colspan = 2,
       fields,
       handleSearch,
       form,
@@ -55,7 +55,7 @@ class SearchForm extends Component {
     } = form;
 
     let labelColWidth = 24 / (colspan * 2);
-    const formItemLayout =  {
+    const formItemLayout = {
       labelCol: { span: labelColWidth },
       wrapperCol: { span: (24 - labelColWidth) },
     };
@@ -83,12 +83,12 @@ class SearchForm extends Component {
               })(
                 <Select>
                   {
-                    item.options.map((opt, i) => (
+                    item.options && item.options.map((opt, i) => (
                       <Option key={i} value={opt.value}>{opt.label}</Option>
                     ))
                   }
                 </Select>
-              )}
+                )}
             </FormItem>
           </Col>
         )
@@ -99,13 +99,13 @@ class SearchForm extends Component {
           <Col span={itemWidth} key={i}>
             <FormItem label={item.label} {...formItemLayout}>
               {getFieldDecorator(item.name)(
-                <DatePicker style={{width: '100%'}}/>
+                <DatePicker style={{ width: '100%' }} />
               )}
             </FormItem>
           </Col>
         )
       }
-      
+
     });
 
 
@@ -113,7 +113,7 @@ class SearchForm extends Component {
       <Form
         className="ant-advanced-search-form"
         onSubmit={this.onFormSubmit.bind(this)}>
-        <Row gutter={40} style={{textAlign: 'right'}}>{items}</Row>
+        <Row gutter={40} style={{ textAlign: 'right' }}>{items}</Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
             <Button type="primary" htmlType="submit">搜索</Button>

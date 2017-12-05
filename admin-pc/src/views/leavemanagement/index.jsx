@@ -13,7 +13,6 @@ import {
 
 import RcSearchForm from '../../components/rcsearchform';
 import DraggableModal from '../../components/modal.draggable';
-import LeaveManagementSubDetail from './index.detail'
 
 import './index.less';
 
@@ -51,6 +50,9 @@ const columns = [{
 }, {
     title: '请假时长(/h)',
     dataIndex: 'theHoure',
+}, {
+    title: '状态',
+    dataIndex: 'theState',
 }, {
     title: '操作',
     dataIndex: 'operation',
@@ -101,11 +103,11 @@ class LeaveManagement extends Component {
             }
 
             var departmentList = res.data.departmentList;
-            departmentList.length ? 
-            departmentList.map((item) =>{
-                item.label = item.theName;
-                item.value = JSON.stringify(item.tableId);
-            }) : '';
+            departmentList.length ?
+                departmentList.map((item) => {
+                    item.label = item.theName;
+                    item.value = JSON.stringify(item.tableId);
+                }) : '';
             var fields = [
                 {
                     type: 'input',
@@ -128,10 +130,10 @@ class LeaveManagement extends Component {
             });
         }).catch(err => MyToast(err));
 
-        columns[6].render = (text, record, index) => {
+        columns[7].render = (text, record, index) => {
             return (
                 <div>
-                    <a title="编辑" onClick={() => this.showTestModal(record, 'edit')}><Icon type="edit" style={{ marginRight: '10px' }} className="yzy-icon" /></a>
+                    <a title="编辑" onClick={() => this.showTestModal(record)}><Icon type="edit" style={{ marginRight: '10px' }} className="yzy-icon" /></a>
                     <Popconfirm title="确定删除么?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
                         <a title="删除" className="delete" href="#" style={{ marginLeft: 8 }}><Icon type="delete" className="yzy-icon" /></a>
                     </Popconfirm>
@@ -142,31 +144,19 @@ class LeaveManagement extends Component {
     }
 
     handleFormSearch(values) {
-        console.log('handleSearch ---------', values);
 
         this.getData({
             keyword: values.keyword,
             departmentId: values.departmentId
         });
     }
-    //编辑|| 新增Modal------隐藏
-    TestCancel() {
-        this.setState({ editModalVisible: false });
-    }
-    //编辑|| 新增Modal-----显示
-    showTestModal(recordEdit, type) {
-        console.log(recordEdit)
-        if (type) {
-            //
-            this.setState({
-                modalType: type
-            });
-        }
-        recordEdit.modalType = type;
-        this.setState({
-            recordEdit: recordEdit,
-            editModalVisible: true,
+    //编辑||新增跳页面-----
+    showTestModal(record) {
+        parent.window.iframeHook.changePage({
+            url: '/leaveEdit.html?tableId=' + record.tableId,
+            breadIncrement: '请假单编辑'
         });
+        return;
     }
     // 删除操作
     onEditDelete(text, record, index) {
@@ -196,9 +186,20 @@ class LeaveManagement extends Component {
             data = data.map(item => {
                 item.realName = item.member.realName;
                 item.phoneNumber = item.member.phoneNumber;
+                var theState = '';
+                if (item.isPass) {
+                    theState = '已审核';
+                } else {
+                    if (item.theState == 0) {
+                        theState = '审核中';
+                    } else if (item.theState == 1) {
+                        theState = '已作废';
+                    }
+                }
                 return {
                     ...item,
-                    sex: item.sex === 1 ? '男' : '女'
+                    sex: item.member.sex === 1 ? '男' : '女',
+                    theState
                 }
             });
 
@@ -215,14 +216,14 @@ class LeaveManagement extends Component {
         return (
             <div className="yzy-page">
                 <div className="yzy-search-form-wrap">
-                    <RcSearchForm fields={this.state.fields} colspan = {this.state.colspan}
+                    <RcSearchForm fields={this.state.fields} colspan={this.state.colspan}
                         handleSearch={this.handleFormSearch.bind(this)} />
                 </div>
                 <div className="yzy-list-wrap">
-                    <div className="yzy-list-btns-wrap">
+                    {/* <div className="yzy-list-btns-wrap">
                         <Button type="primary" style={{ marginLeft: 8 }}
-                            onClick={() => this.showTestModal({}, 'add')}>新增</Button>
-                    </div>
+                            onClick={() => this.showTestModal()}>新增</Button>
+                    </div> */}
                     <Table
                         columns={columns}
                         dataSource={this.state.staffList}
@@ -234,19 +235,6 @@ class LeaveManagement extends Component {
                             }
                         }} />
                 </div>
-                <DraggableModal
-                    visible={this.state.editModalVisible}
-                    title={this.state.modalType == 'add' ? '新增请假单' : '请假单编辑'}
-                    width='70%'
-                    okText=''
-                    footer={null}
-                    onCancel={this.TestCancel.bind(this)}
-                    className='modal editModal'
-                >
-                    {
-                        this.state.editModalVisible && <LeaveManagementSubDetail recordEdit={this.state.recordEdit} getData={this.getData.bind(this)} TestCancel={this.TestCancel.bind(this)} />
-                    }
-                </DraggableModal>
             </div>
         )
     }

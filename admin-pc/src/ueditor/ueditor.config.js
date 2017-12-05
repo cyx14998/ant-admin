@@ -27,17 +27,15 @@
         window.UEDITOR_CONFIG = {
     
             //为编辑器实例添加一个路径，这个不能被注释
-            UEDITOR_HOME_URL: URL
+            UEDITOR_HOME_URL: URL,
     
             // 服务器统一请求接口路径
-            ,
-            serverUrl: '/api/ue'
+            // serverUrl: '/api/ue',
     
             //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
     
             // , toolbars: [["fullscreen","source","undo","redo","insertunorderedlist","insertorderedlist","link","unlink","help","simpleupload","insertimage","emotion","removeformat","date","bold","italic","fontborder","strikethrough","underline","backcolor","autotypeset","forecolor","justifyleft","justifycenter","justifyright","justifyjustify","paragraph",'fontfamily','fontsize',"lineheight","horizontal","insertcode"]]
     
-            ,
             toolbars: [
                 [
                     'fullscreen', 'source', '|', 'undo', 'redo', '|',

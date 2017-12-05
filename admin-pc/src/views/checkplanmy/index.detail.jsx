@@ -27,9 +27,7 @@ import {
 } from '../../common/utils';
 
 import QiniuUploadFile from '../../components/upload.file';
-
 const downloadUrl = BaseConfig.qiniuPath; // BaseConfig.qiniuPath;
-
 const uploadUrl = 'http://up.qiniu.com/';
 
 const formItemLayout = {

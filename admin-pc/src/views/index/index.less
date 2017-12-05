@@ -12,6 +12,10 @@
 }
 .ant-layout-sider {
   background-color: @primary-color-dark;
+  .ant-layout-sider-children{
+    padding-bottom: 48px;
+    overflow-y: auto;
+  }
 }
 
 
@@ -67,6 +71,10 @@
       display: none;
     }
   }
+  .ant-layout-sider-children{
+    padding-bottom: 48px;
+    overflow: visible;
+  }
 }
 
 
@@ -85,14 +93,15 @@
     width: 100%;
     display: flex;
     justify-content: start;
-    padding: 20px;
+    padding: 15px;
     .avatar {
       width: 64px;
       height: 64px;
       border-radius: 50%;
+      cursor: pointer;
     }
     .avatar-info {
-      margin-left: 20px;
+      margin-left: 15px;
       color: #fff;
       font-size: 12px;
       line-height: 1.8;

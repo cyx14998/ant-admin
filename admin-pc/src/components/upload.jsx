@@ -48,27 +48,27 @@ class QiniuUpload extends React.Component {
 
   componentDidMount() {
     getQiNiuToken({}).then(res => {
-        if (!res.data || !res.data.uptoken) {
-            MyToast('getqiniuyun uptoken error');
-            return;
-        }
+      if (!res.data || !res.data.uptoken) {
+        console.log('getqiniuyun uptoken error');
+        return;
+      }
 
-        uploadData.token = res.data.uptoken;
+      uploadData.token = res.data.uptoken;
     }).catch(err => console.log(err));
   }
 
   /**
    * 通过key 设置文件路径和名称
-   * 路径规则：filetype/2017/11/11/timestamp.ext
+   * 路径规则：filetype/2017/11/11/timestamp__0.3654236554.ext
    */
   getFileKey(fileType, fileName) {
     var type = fileType.split('/')[0];
     var ext = fileName.split('.')[1] || '';
     var date = new Date();
     var y = date.getFullYear(),
-        m = date.getMonth() + 1,
-        d = date.getDate(),
-        timestamp = date.getTime();
+      m = date.getMonth() + 1,
+      d = date.getDate(),
+      timestamp = date.getTime();
 
     m = m < 10 ? ('0' + m) : m;
     d = d < 10 ? ('0' + d) : d;
@@ -99,8 +99,8 @@ class QiniuUpload extends React.Component {
     return isLt2M;
   }
 
-  handleUploadChange({file, fileList}) {
-    this.props.handleUploadedFileList({fileList})
+  handleUploadChange({ file, fileList }) {
+    this.props.handleUploadedFileList({ fileList })
 
     return;
 
@@ -129,38 +129,39 @@ class QiniuUpload extends React.Component {
   render() {
     let {
       uploadedFileList,
-      uploadTitle='上传',
-      acceptType='image/*',
-      maxLength=1
+      uploadTitle = '上传',
+      acceptType = 'image/*',
+      maxLength = 1,
+      multiple = false
     } = this.props;
 
     return (
       <div>
         <Upload
-            action='http://up.qiniup.com'
-            container="container"
-            listType="picture-card"
-            multiple={false}
-            accept={acceptType}
-            beforeUpload={this.beforeUpload.bind(this)}
-            onChange={this.handleUploadChange.bind(this)}
-            fileList={uploadedFileList}
-            onPreview={this.handlePreview.bind(this)}
-            data={uploadData}>
-            {
-              uploadedFileList.length === maxLength ? null : 
+          action='http://up.qiniup.com'
+          container="container"
+          listType="picture-card"
+          multiple={multiple}
+          accept={acceptType}
+          beforeUpload={this.beforeUpload.bind(this)}
+          onChange={this.handleUploadChange.bind(this)}
+          fileList={uploadedFileList}
+          onPreview={this.handlePreview.bind(this)}
+          data={uploadData}>
+          {
+            uploadedFileList.length === maxLength ? null :
               (
                 <div>
-                    <Icon type="plus" />
-                    <div className="ant-upload-text">{uploadTitle}</div>
+                  <Icon type="plus" />
+                  <div className="ant-upload-text">{uploadTitle}</div>
                 </div>
               )
-            }
+          }
         </Upload>
-        <Modal 
+        <Modal
           width="90%"
-          visible={this.state.previewVisible} 
-          footer={null} 
+          visible={this.state.previewVisible}
+          footer={null}
           onCancel={this.handleCancel.bind(this)}>
           <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
         </Modal>

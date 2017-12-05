@@ -1,3 +1,4 @@
+//库存
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
@@ -12,60 +13,13 @@ import {
 
 import RcSearchForm from '../../components/rcsearchform';
 
-// 头部搜索
-const rcsearchformData = {
-    colspan: 2,
-    fields: [
-        //   {
-        //   type: 'input',
-        //   label: '单据编号',
-        //   name: 'serialNumber',
-        // }, {
-        //   type: 'input',
-        //   label: '厂商名称',
-        //   name: 'manufacturerName',
-        // },
-        // {
-        //   type: 'select',
-        //   label: '审核情况',
-        //   name: 'isPass',
-        //   defaultValue: '0',
-        //   options: [{
-        //     value: '0',
-        //     label: '全部'
-        //   }, {
-        //     value: '1',
-        //     label: '审核完成'
-        //   }, {
-        //     value: '2',
-        //     label: '未审核'
-        //   }]
-        // }, {
-        //   type: 'select',
-        //   label: '库存状态',
-        //   name: 'theState',
-        //   defaultValue: '0',
-        //   options: [{
-        //     value: '0',
-        //     label: '全部'
-        //   }, {
-        //     value: '1',
-        //     label: '正常'
-        //   }, {
-        //     value: '2',
-        //     label: '作废'
-        //   }]
-        // },
-    ]
-}
-
 import {
     getStockList,
-    getWarehousingDelete,
+    getStockDelete,
 } from '../../common/api/api.stock.js';
 
 import {
-    gethousingList, //获取仓库列表
+    getHousingList, //获取仓库列表
     getMemberList, //获取入库人列表 （员工列表）
 } from '../../common/api/api.purchaseorderswarehousing.js'
 
@@ -75,11 +29,7 @@ import {
 } from '../../common/utils';
 
 //库存列表头部
-const columns = [
-    {
-        title: '单据编号',
-        dataIndex: 'serialNumber',
-    }, {
+const columns = [ {
         title: '仓库',
         dataIndex: 'warehouse.theName',
     }, {
@@ -92,27 +42,11 @@ const columns = [
         title: '数量',
         dataIndex: 'theQuantity',
     }, 
-    // {
-    //     title: '出库中数量',
-    //     dataIndex: 'manufacturerName',
-    // },
      {
         title: '创建时间',
         dataIndex: 'createDatetime',
-    }, {
-        title: '操作',
-        dataIndex: 'operation',
-        width: 120,
-    }
+    },
 ];
-
-// function changeIframeToEdit(id) {
-//   console.log('chanageiframe', parent.window.iframeHook)
-//   parent.window.iframeHook.changePage({
-//     url: '/purchaseorderspaymentEdit.html?warehousingId=' + id + '#' + Math.random(),
-//     breadIncrement: '库存编辑'
-//   })
-// }
 //列表页面
 class PurchaseordersstockList extends React.Component {
     constructor(props) {
@@ -130,16 +64,6 @@ class PurchaseordersstockList extends React.Component {
     componentDidMount() {
         this.getData({});
         this._getMemberList();
-        columns[6].render = (text, record) => {
-            return (
-                <div>
-                    {/* <a title="编辑" style={{ marginRight: '10px' }} onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a> */}
-                    <Popconfirm title="确定要删除吗？" onConfirm={() => this.deletePurchaseorder(record.tableId)}>
-                        <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
-                    </Popconfirm>
-                </div>
-            )
-        };
     }
     //获取库存列表
     getData(params) {
@@ -213,8 +137,8 @@ class PurchaseordersstockList extends React.Component {
     }
 
     // 库存删除
-    deletePurchaseorder(id) {
-        getWarehousingDelete({ tableId: id }).then(res => {
+    onEditDelete(id) {
+        getStockDelete({ tableId: id }).then(res => {
             if (res.data.result !== 'success') {
                 MyToast(res.data.info || '删除库存失败')
             }
@@ -281,15 +205,6 @@ class PurchaseordersstockList extends React.Component {
                         handleSearch={this.handleFormSearch.bind(this)} />
                 </div>
                 <div className="yzy-list-wrap">
-                    <div className="yzy-list-btns-wrap">
-                        {/* <Button type="primary"  style={{marginRight: 8}}>导出excel</Button> */}
-                        <Button type="primary"
-                            onClick={() => {
-                                localStorage.removeItem('yt-customerId');
-
-                                return changeIframeToEdit('');
-                            }}>新增</Button>
-                    </div>
                     <Table
                         columns={columns}
                         dataSource={this.state.storageItemList}

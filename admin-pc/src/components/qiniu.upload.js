@@ -20,6 +20,10 @@ import {
 const qiniuHost = 'http://up.qiniup.com';
 const uploadData = {};
 
+import {
+  getQiNiuToken
+} from '../common/api/api.customer';
+
 /**
  * @props uploadTitle
  * @props acceptType
@@ -47,18 +51,19 @@ class QiniuUpload extends React.Component {
 
   componentDidMount() {
     getQiNiuToken({}).then(res => {
-        if (!res.data || !res.data.uptoken) {
-            MyToast('getqiniuyun uptoken error');
-            return;
-        }
+      if (!res.data || !res.data.uptoken) {
+        MyToast('getqiniuyun uptoken error');
+        return;
+      }
 
-        this.setState({
-          uptoken: res.data.uptoken
-        });
+      this.setState({
+        uptoken: res.data.uptoken
+      });
+      uploadData.token = res.data.uptoken;
+
     }).catch(err => console.log(err));
 
     // get qiniu uptoken
-    uploadData.token = uptoken;
   }
 
   /**
@@ -70,9 +75,9 @@ class QiniuUpload extends React.Component {
     var ext = fileName.split('.')[1] || '';
     var date = new Date();
     var y = date.getFullYear(),
-        m = date.getMonth() + 1,
-        d = date.getDate(),
-        timestamp = date.getTime();
+      m = date.getMonth() + 1,
+      d = date.getDate(),
+      timestamp = date.getTime();
 
     m = m < 10 ? ('0' + m) : m;
     d = d < 10 ? ('0' + d) : d;
@@ -83,7 +88,7 @@ class QiniuUpload extends React.Component {
   }
 
   beforeUpload(file) {
-    console.log(file)
+    // console.log(file)
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
       MyToast('请选择图片小于2MB!');
@@ -97,8 +102,8 @@ class QiniuUpload extends React.Component {
     return isLt2M;
   }
 
-  handleUploadChange({file, fileList}) {
-    this.props.handleUploadedFileList({fileList})
+  handleUploadChange({ file, fileList }) {
+    this.props.handleUploadedFileList({ fileList })
 
     return;
 
@@ -127,9 +132,10 @@ class QiniuUpload extends React.Component {
   render() {
     let {
       uploadedFileList,
-      uploadTitle='上传',
+      uploadTitle = '上传',
       acceptType,
-      maxLength=1
+      maxLength = 1,
+      multiple=false
     } = this.props;
 
 
@@ -137,20 +143,20 @@ class QiniuUpload extends React.Component {
       return (
         <div>
           <Upload
-              action={qiniuHost}
-              container="container"
-              multiple={false}
-              accept={acceptType}
-              beforeUpload={this.beforeUpload.bind(this)}
-              onChange={this.handleUploadChange.bind(this)}
-              fileList={uploadedFileList}
-              data={uploadData}>
-              {
-                uploadedFileList.length === maxLength ? null : 
+            action={qiniuHost}
+            container="container"
+            multiple={multiple}
+            accept={acceptType}
+            beforeUpload={this.beforeUpload.bind(this)}
+            onChange={this.handleUploadChange.bind(this)}
+            fileList={uploadedFileList}
+            data={uploadData}>
+            {
+              uploadedFileList.length === maxLength ? null :
                 (
-                  <Button><Icon type="upload" /> Click to Upload </Button>
+                  <Button><Icon type="upload" /> 点击上传 </Button>
                 )
-              }
+            }
           </Upload>
         </div>
       )
@@ -159,30 +165,30 @@ class QiniuUpload extends React.Component {
     return (
       <div>
         <Upload
-            action={qiniuHost}
-            container="container"
-            listType="picture-card"
-            multiple={false}
-            accept={acceptType}
-            beforeUpload={this.beforeUpload.bind(this)}
-            onChange={this.handleUploadChange.bind(this)}
-            fileList={uploadedFileList}
-            onPreview={this.handlePreview.bind(this)}
-            data={uploadData}>
-            {
-              uploadedFileList.length === maxLength ? null : 
+          action={qiniuHost}
+          container="container"
+          listType="picture-card"
+          multiple={multiple}
+          accept={acceptType}
+          beforeUpload={this.beforeUpload.bind(this)}
+          onChange={this.handleUploadChange.bind(this)}
+          fileList={uploadedFileList}
+          onPreview={this.handlePreview.bind(this)}
+          data={uploadData}>
+          {
+            uploadedFileList.length === maxLength ? null :
               (
                 <div>
-                    <Icon type="plus" />
-                    <div className="ant-upload-text">{uploadTitle}</div>
+                  <Icon type="plus" />
+                  <div className="ant-upload-text">{uploadTitle}</div>
                 </div>
               )
-            }
+          }
         </Upload>
-        <Modal 
+        <Modal
           width="90%"
-          visible={this.state.previewVisible} 
-          footer={null} 
+          visible={this.state.previewVisible}
+          footer={null}
           onCancel={this.handleCancel.bind(this)}>
           <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
         </Modal>

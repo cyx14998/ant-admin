@@ -3,6 +3,7 @@
  */
 import axios, {
   getToken,
+  getMenuId,
   getCustomerId,
   apiVer
 } from './index';
@@ -51,16 +52,17 @@ export function uLeaveApplicationAdd({
   theReason, // 请假事由
   beginDatetime, // 开始时间
   endDatetime, // 结束时间
-  theHoure // 请假时长
+  theHoure, // 请假时长
 }) {
   return axios.get('/uLeaveApplicationAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      menuId: getMenuId(),
       theType,
       theReason,
       beginDatetime,
       endDatetime,
-      theHoure
+      theHoure,
     }
   })
 }
@@ -114,6 +116,40 @@ export function uLeaveApplicationCancel({
     params: {
       token: getToken(),
       tableId
+    }
+  })
+}
+
+/**
+* 二百八十三．	请假单送审/审核
+*/
+export function uLeaveApplicationPass({
+  tableId,     // Id
+  theContent,  // 审核意见
+}) {
+  return axios.get('/uLeaveApplicationPass.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      menuId: getMenuId(),
+      tableId,
+      theContent,
+    }
+  })
+}
+
+/**
+* 二百八十四．	请假单退回
+*/
+export function uLeaveApplicationReject({
+  tableId,     // Id
+  theContent,  // 审核意见
+}) {
+  return axios.get('/uLeaveApplicationReject.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      menuId: getMenuId(),
+      tableId,
+      theContent,
     }
   })
 }

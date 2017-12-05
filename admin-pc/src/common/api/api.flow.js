@@ -30,15 +30,11 @@ export function uFlowMstList({
 */
 export function uFlowMstAdd({
   theName = '',  // 流程模块名称
-  sourceLink = '', // 关联页面
-  tableName = '' // 关联表
 }) {
   return axios.get('/uFlowMstAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       theName,
-      sourceLink,
-      tableName
     }
   })
 }
@@ -49,16 +45,12 @@ export function uFlowMstAdd({
 export function uFlowMstUpdate({
   tableId = '', // 流程模块ID
   theName = '',  // 流程模块名称
-  sourceLink = '', // 关联页面
-  tableName = '' // 关联表
 }) {
   return axios.get('/uFlowMstUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
       theName,
-      sourceLink,
-      tableName
     }
   })
 }
@@ -245,6 +237,57 @@ export function uFlowRoleDelete({
     tableId   // 步骤角色ID
 }) {
   return axios.get('/uFlowRoleDelete.uhtm?InterfaceVersion=' + apiVer, {
+      params: {
+          token: getToken(),
+          tableId
+      }
+  })
+}
+
+
+/**
+* 二百二十六．	步骤人员列表
+*/
+export function uFlowMemberList({
+  pageNumber = 1,
+  countPerPage = 1000,
+  keyword = '',
+  flowDtlId = '', // 流程子表ID
+}) {
+  return axios.get('/uFlowMemberList.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      pageNumber,
+      countPerPage,
+      keyword,
+      flowDtlId,
+    }
+  })
+}
+
+/**
+* 二百二十四．	步骤人员新增
+*/
+export function uFlowMemberAdd({
+  flowDtlId = '', // 流程子表ID
+  inspectorId = '', // 人员ID
+}) {
+  return axios.get('/uFlowMemberAdd.uhtm?InterfaceVersion=' + apiVer, {
+      params: {
+          token: getToken(),
+          flowDtlId,
+          inspectorId
+      }
+  })
+}
+
+/**
+* 二百二十五．	步骤人员删除
+*/
+export function uFlowMemberDelete({
+    tableId   // 步骤人员ID
+}) {
+  return axios.get('/uFlowMemberDelete.uhtm?InterfaceVersion=' + apiVer, {
       params: {
           token: getToken(),
           tableId

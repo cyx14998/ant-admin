@@ -65,7 +65,7 @@ import {
 } from '../../common/api/api.purchaseordersoutbound.js';
 
 import {
-  gethousingList, //获取仓库列表
+  getHousingList, //获取仓库列表
   getMemberList, //获取出库人列表 （员工列表）
 } from '../../common/api/api.purchaseorderswarehousing.js'
 
@@ -89,9 +89,6 @@ const columns = [
     title: '出库日期',
     dataIndex: 'storageOutDatetime',
   }, {
-    title: '是否审核完成',
-    dataIndex: 'isPass',
-  }, {
     title: '单据状态',
     dataIndex: 'theState',
   }, {
@@ -107,7 +104,7 @@ const columns = [
 function changeIframeToEdit(id) {
   console.log('chanageiframe', parent.window.iframeHook)
   parent.window.iframeHook.changePage({
-    url: '/purchaseordersoutboundEdit.html?outboundId=' + id + '#' + Math.random(),
+    url: '/purchaseordersoutboundEdit.html?tableId=' + id + '#' + Math.random(),
     breadIncrement: '出库单编辑'
   })
 }
@@ -123,15 +120,15 @@ class PurchaseordersoutboundList extends React.Component {
     }
 
     this.getData = this.getData.bind(this);
-    this._gethousingList = this._gethousingList.bind(this);
+    this._getHousingList = this._getHousingList.bind(this);
     this._getMemberList = this._getMemberList.bind(this);
   }
 
   componentDidMount() {
     this.getData({});
-    this._gethousingList();
+    this._getHousingList();
     this._getMemberList();
-    columns[7].render = (text, record) => {
+    columns[6].render = (text, record) => {
       return (
         <div>
           <a title="编辑" style={{ marginRight: '10px' }} onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
@@ -156,11 +153,20 @@ class PurchaseordersoutboundList extends React.Component {
       var data = res.data.storageOutRecordMstList;
       data = data.map(item => {
 
+        var state = '';
+        if (item.isPass) {
+          state = '已审核';
+        } else {
+          if (item.theState == 0) {
+            state = '审核中';
+          } else if (item.theState == 1) {
+            state = '已作废';
+          }
+        }
 
         return {
           ...item,
-          isPass: item.isPass == 'true' ? '是' : '否',
-          theState: item.theState == '0' ? '正常' : '作废',
+          theState: state,
         }
       });
       this.setState({
@@ -175,9 +181,9 @@ class PurchaseordersoutboundList extends React.Component {
     })
   }
   //获取仓库列表
-  _gethousingList() {
-    gethousingList({}).then(res => {
-      console.log('gethousingList res', res)
+  _getHousingList() {
+    getHousingList({}).then(res => {
+      console.log('getHousingList res', res)
 
       if (res.data.result !== 'success') {
         MyToast(res.data.info || '获取仓库列表失败');
@@ -317,12 +323,10 @@ class PurchaseordersoutboundList extends React.Component {
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
             {/* <Button type="primary"  style={{marginRight: 8}}>导出excel</Button> */}
-            <Button type="primary"
+            {/* <Button type="primary"
               onClick={() => {
-                localStorage.removeItem('yt-customerId');
-
                 return changeIframeToEdit('');
-              }}>新增</Button>
+              }}>新增</Button> */}
           </div>
           <Table
             columns={columns}

@@ -1,0 +1,125 @@
+@import '~eui-mobile/lib/eui-mobile.less';
+// #282828 #656565 #989898
+html,
+body {
+    width: 100%;
+    height: 100%;
+    /*清除移动端默认的 点击高亮效果*/
+	-webkit-tap-highlight-color: transparent;
+	/*设置所有的都是以边框开始计算宽度 “百分比”*/
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+li {
+    list-style: none;
+}
+input {
+	border: none;
+	outline: none;
+	/*清除移动端默认的表单式*/
+	-webkit-appearance: none;
+}
+.f_left {
+	float: left;
+}
+.f_right {
+	float: right;
+}
+// .clear {
+// 	content: "";
+// 	height: 0;
+// 	line-height: 0;
+// 	display: block;
+// 	visibility: hidden;
+// }
+//clearfix 清楚浮动
+.clear {
+	zoom: 1;
+}
+.clear:after {
+    display: block;
+    clear: both;
+    content: "";
+    visibility: hidden;
+    height: 0;
+}
+a {
+	text-decoration: none;
+	color: #fff;
+}
+.red {
+	color: #ff8095;
+}
+.red_B {
+	color: #ff8095;
+	border: @unit solid #ff8095;
+}
+
+.margin_T {
+	margin-top: @unit * 10;
+}
+.margin_L {
+	margin-left: @unit *15;
+	border-top: 1px solid #ddd;
+}
+
+//antd-mobile
+.am-navbar-light {
+	color: #000;
+}
+.none{
+	display: none;
+}
+.hidden{
+	visibility: hidden;
+}
+//1px线处理
+.onePxTopLine{
+	position: relative;
+	&:before {
+		display: block;
+		position: absolute;
+		content: '';
+		width: 100%;
+		border-bottom: 1px solid #ddd;
+	}
+}
+//1px线处理
+.onePxBotLine{
+	position: relative;
+	&:after {
+		display: block;
+		position: absolute;
+		content: '';
+		width: 100%;
+		border-bottom: 1px solid #ddd;
+	}
+}
+//超出2行省略
+.overTwoLineHid{
+	overflow:hidden; 
+	text-overflow:ellipsis;
+	display:-webkit-box; 
+	-webkit-box-orient:vertical;
+	-webkit-line-clamp:2; 
+}
+
+.am-search-input .am-search-clear{
+	padding: 26 * @unit;
+}
+.yzy-search .header .am-search .am-search-input .am-search-synthetic-ph{
+	width: auto!important;
+}
+
+.am-navbar-light{
+	border-bottom: 1px solid #ddd;
+}
+
+.am-navbar-left{
+	padding-left: 3px;
+}

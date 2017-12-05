@@ -2,7 +2,8 @@
 import axios, {
   getToken,
   getCustomerId,
-  apiVer
+  apiVer,
+  getMenuId,
 } from './index';
 
 
@@ -10,12 +11,16 @@ import axios, {
 export function getPurchaseOrderList({
   countPerPage = 1000,
   keyword,
+  serialNumber,
+  manufacturerName,
 }) {
   return axios.get('/uPurchaseRecordMstList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       countPerPage,
       keyword,
+      serialNumber,
+      manufacturerName,
     }
   })
 }
@@ -34,7 +39,6 @@ export function getPurchaseOrderDetail({
 // 采购单主表新增
 export function getPurchaseOrderAdd({
   departmentId,
-  menuId,
   theType,
   orderTime,
   manufacturerName,
@@ -43,8 +47,8 @@ export function getPurchaseOrderAdd({
   return axios.get('/uPurchaseRecordMstAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      menuId: getMenuId(),
       departmentId,
-      menuId,
       theType,
       orderTime,
       manufacturerName,
@@ -57,7 +61,6 @@ export function getPurchaseOrderAdd({
 export function getPurchaseOrderEdit({
   tableId,
   departmentId,
-  menuId,
   theType,
   orderTime,
   manufacturerName,
@@ -66,9 +69,9 @@ export function getPurchaseOrderEdit({
   return axios.get('/uPurchaseRecordMstUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      menuId: getMenuId(),
       tableId,
       departmentId,
-      menuId,
       theType,
       orderTime,
       manufacturerName,
@@ -85,6 +88,46 @@ export function getPurchaseOrderDelete({
     params: {
       token: getToken(),
       tableId,
+    }
+  })
+}
+/**-----------------------采购单状态更改---------------------------- */
+// 采购单作废
+export function getPurchaseOrderCancel({
+  tableId,
+}) {
+  return axios.get('/uPurchaseRecordMstCancel.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+    }
+  })
+}
+// 采购单送审/审核
+export function getPurchaseOrderPass({
+  tableId,
+  theContent,
+}) {
+  return axios.get('/uPurchaseRecordMstPass.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      menuId: getMenuId(),
+      tableId,
+      theContent,
+    }
+  })
+}
+// 采购单退回
+export function getPurchaseOrderReject({
+  tableId,
+  theContent,
+}) {
+  return axios.get('/uPurchaseRecordMstReject.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      menuId: getMenuId(),
+      tableId,
+      theContent,
     }
   })
 }
@@ -159,24 +202,6 @@ export function getPurchaseOrderRecordnDelete({
     params: {
       token: getToken(),
       tableId,
-    }
-  })
-}
-/**-----------------------采购单审核记录---------------------------- */
-//采购单审核记录列表
-export function getCheckRecordList({
-  pageNumber = 1,
-  countPerPage = 1000,
-  keyword,
-  purchaseRecordMstId,
-}) {
-  return axios.get('/uPurchaseRecordDtlList.uhtm?InterfaceVersion=' + apiVer, {
-    params: {
-      token: getToken(),
-      pageNumber,
-      countPerPage,
-      keyword,
-      purchaseRecordMstId
     }
   })
 }

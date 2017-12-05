@@ -266,7 +266,7 @@ class RoleManagement extends Component {
                 <DraggableModal
                     visible={this.state.editModalVisible}
                     title='角色菜单编辑'
-                    width='70%'
+                    width='40%'
                     okText=''
                     footer={null}
                     onCancel={this.TestCancel.bind(this)}

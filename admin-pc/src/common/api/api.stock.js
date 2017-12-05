@@ -21,3 +21,14 @@ export function getStockList({
     }
   })
 }
+//库存列表删除
+export function getStockDelete({
+  tableId,
+}) {
+  return axios.get('/uStorageInRecordDtlDelete.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+    }
+  })
+}

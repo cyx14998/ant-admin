@@ -145,7 +145,7 @@ const SiteInspection = connectUneditableSectionApi({
     });
   },
   // 弹窗组件
-  modalTitle: '监管记录基本情况',
+  modalTitle: '监管记录',
   modalComponent: InnerComponent
 })
 

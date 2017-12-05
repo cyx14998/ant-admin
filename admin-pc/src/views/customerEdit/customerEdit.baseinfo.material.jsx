@@ -15,7 +15,7 @@ import {
  * table head
  */
 const columns = [{
-  title: '原辅材料名称',
+  title: '材料名称',
   dataIndex: 'theName',
 }, {
   title: '计量单位',
@@ -51,7 +51,7 @@ const dataSource = [{
 }];
 
 export const CustomerEditBaseinfoProd = connectEditableSectionApi({
-  secTitle: '原辅材料基本信息',
+  secTitle: '材料基本信息',
   columns: columns,
   apiLoader: function () {
     return new Promise((resolve, reject) => {

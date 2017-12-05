@@ -3,6 +3,7 @@
  */
 import axios, {
   getToken,
+  getMenuId,
   getCustomerId,
   apiVer
 } from './index';
@@ -46,26 +47,28 @@ export function uProclamationDetail({
 export function uProclamationAdd({
   menuId,     // 菜单ID
   fileName,   // 文件名称
-  theName,    // 公告名称
+  // theName,    // 公告名称
   theTitle,   // 主题
   theContent, // 内容
   publishCompany,   // 公司
   publishDepart,    // 部门
-  publishDatetime,  // 发布时间
-  theDatetime       // 公告日期
+  // publishDatetime,  // 发布时间
+  theDatetime,       // 公告日期
+  data
 }) {
   return axios.get('/uProclamationAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      menuId,
+      menuId: getMenuId(),
       fileName,
-      theName,
+      // theName,
       theTitle,
       theContent,
       publishCompany,
       publishDepart,
-      publishDatetime,
-      theDatetime
+      // publishDatetime,
+      theDatetime,
+      data: JSON.stringify(data)
     }
   })
 }
@@ -77,26 +80,27 @@ export function uProclamationAdd({
 export function uProclamationUpdate({
   tableId,    // 公告ID
   fileName,   // 文件名称
-  theName,    // 公告名称
   theTitle,   // 主题
   theContent, // 内容
   publishCompany,   // 公司
   publishDepart,    // 部门
-  publishDatetime,  // 发布时间
-  theDatetime       // 公告日期
+  // publishDatetime,  // 发布时间
+  theDatetime,       // 公告日期
+  data
 }) {
   return axios.get('/uProclamationUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       tableId,
       fileName,
-      theName,
+      // theName,
       theTitle,
       theContent,
       publishCompany,
       publishDepart,
-      publishDatetime,
-      theDatetime
+      // publishDatetime,
+      theDatetime,
+      data: JSON.stringify(data)
     }
   })
 }
@@ -135,14 +139,13 @@ export function uProclamationCancel({
 */
 export function uProclamationPass({
   tableId,    // 公告ID
-  menuId,     // 菜单ID
   theContent  // 审核意见
 }) {
   return axios.get('/uProclamationPass.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      menuId: getMenuId(),
       tableId,
-      menuId,
       theContent
     }
   })
@@ -153,14 +156,13 @@ export function uProclamationPass({
 */
 export function uProclamationReject({
   tableId,    // 公告ID
-  menuId,     // 菜单ID
   theContent  // 审核意见
 }) {
   return axios.get('/uProclamationReject.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
+      menuId: getMenuId(),
       tableId,
-      menuId,
       theContent
     }
   })

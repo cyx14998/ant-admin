@@ -120,6 +120,10 @@ class AuthorityManagement extends Component {
 
             var data = res.data.menuList;
 
+            if (res.data.fatherMenu) {
+                data.unshift(res.data.fatherMenu);
+            }
+
             this.setState({
                 loading: false,
                 menuList: data
@@ -217,6 +221,7 @@ class AuthorityManagement extends Component {
             this.setState({
                 menuList: this.state.menuList
             });
+            this.getTreeData();
         }).catch(err => MyToast('删除失败'));
     }
 

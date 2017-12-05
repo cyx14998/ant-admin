@@ -106,7 +106,9 @@ class LoginForm extends React.Component {
             localStorage.setItem("token", res.data.token);
             window.location = '/index.html';
             localStorage.setItem('userName', res.data.realName);
+            localStorage.setItem('roleName', res.data.roleName);
             localStorage.setItem('headImagePath', res.data.headImagePath);
+            localStorage.setItem('menuList', JSON.stringify(res.data.menuList));
         }).catch(err => {
             MyToast('服务器繁忙')
             console.log(err)

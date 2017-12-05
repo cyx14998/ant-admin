@@ -211,7 +211,7 @@ class WasteWaterDischargeDetail extends React.Component {
                     ],
                   })(
                     <Select>
-                      <Option value="1">园区约谈情况</Option>
+                      <Option value="1">约谈、处罚信息</Option>
                       <Option value="2">监察支队处理情况</Option>
                       <Option value="3">行政处罚情况</Option>
                       <Option value="4">信访记录</Option>

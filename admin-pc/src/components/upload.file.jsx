@@ -107,7 +107,8 @@ class QiniuUploadFile extends React.Component {
       uploadedFileList,
       uploadTitle = '上传',
       acceptType = '*/*',
-      maxLength = 1
+      maxLength = 1,
+      multiple=false
     } = this.props;
 
     return (
@@ -115,7 +116,7 @@ class QiniuUploadFile extends React.Component {
         <Upload
           action='http://up.qiniup.com'
           container="container"
-          multiple={false}
+          multiple={multiple}
           accept={acceptType}
           beforeUpload={this.beforeUpload.bind(this)}
           onChange={this.handleUploadChange.bind(this)}

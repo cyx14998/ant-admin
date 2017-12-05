@@ -48,7 +48,8 @@ export function getWastewaterDischargeAdd({
   longitude,
   outletLocation,
   serialNumber,
-  theName
+  theName,
+  examiningReportURL
 }){
   return axios.get('/uWasteWaterDischargePortAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -62,7 +63,8 @@ export function getWastewaterDischargeAdd({
       longitude,
       outletLocation,
       serialNumber,
-      theName
+      theName,
+      examiningReportURL
     }
   })
 }
@@ -80,7 +82,8 @@ export function getWastewaterDischargeUpdate({
   functionalAreaCategory,
   emissionDestination,
   dischargeLaw,
-  nameOfWaterBody
+  nameOfWaterBody,
+  examiningReportURL
 }){
   return axios.get('/uWasteWaterDischargePortUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -94,7 +97,8 @@ export function getWastewaterDischargeUpdate({
       functionalAreaCategory,
       emissionDestination,
       dischargeLaw,
-      nameOfWaterBody
+      nameOfWaterBody,
+      examiningReportURL
     }
   })
 }
@@ -421,6 +425,7 @@ export function getWasteGasDischargeAdd({
   dischargePortType,
   dischargeLaw,
   functionalAreaCategory,
+  examiningReportURL
 }){
   return axios.get('/uWasteGasDischargePortAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -435,6 +440,7 @@ export function getWasteGasDischargeAdd({
       dischargePortType,
       dischargeLaw,
       functionalAreaCategory,
+      examiningReportURL
     }
   })
 }
@@ -453,6 +459,7 @@ export function getWasteGasDischargeUpdate({
   dischargePortType,
   dischargeLaw,
   functionalAreaCategory,
+  examiningReportURL
 }){
   return axios.get('/uWasteGasDischargePortUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -467,6 +474,7 @@ export function getWasteGasDischargeUpdate({
       dischargePortType,
       dischargeLaw,
       functionalAreaCategory,
+      examiningReportURL
     }
   })
 }
@@ -693,7 +701,6 @@ export function getWastesolidAdd({
   hazardousWasteName,
   disposalMethod,
   theName,
-  processing,
   dangerCode,
   generatingLinks,
   annualProduction,
@@ -713,7 +720,6 @@ export function getWastesolidAdd({
       hazardousWasteName,
       disposalMethod,
       theName,
-      processing,
       dangerCode,
       generatingLinks,
       annualProduction,
@@ -737,7 +743,6 @@ export function getWastesolidUpdate({
   hazardousWasteName,
   disposalMethod,
   theName,
-  processing,
   dangerCode,
   generatingLinks,
   annualProduction,
@@ -757,7 +762,6 @@ export function getWastesolidUpdate({
       hazardousWasteName,
       disposalMethod,
       theName,
-      processing,
       dangerCode,
       generatingLinks,
       annualProduction,
@@ -852,6 +856,7 @@ export function getBoundaryNoiseAdd({
   noiseSourceName,
   noiseSourcePropertyId,
   functionalAreaTypeId,
+  examiningReportURL
 }){
   return axios.get('/uBoundaryNoiseAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -863,6 +868,7 @@ export function getBoundaryNoiseAdd({
       noiseSourceName,
       noiseSourcePropertyId,
       functionalAreaTypeId,
+      examiningReportURL
     }
   })
 }
@@ -876,8 +882,9 @@ export function getBoundaryNoiseUpdate({
   measuringPointName,
   measuringPointPosition,
   noiseSourceName,
-  noiseSourcePropertyId=2,
-  functionalAreaTypeId=2,
+  noiseSourcePropertyId,
+  functionalAreaTypeId,
+  examiningReportURL
 }){
   return axios.get('/uBoundaryNoiseUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -889,6 +896,7 @@ export function getBoundaryNoiseUpdate({
       noiseSourceName,
       noiseSourcePropertyId,
       functionalAreaTypeId,
+      examiningReportURL
     }
   })
 }
@@ -953,8 +961,6 @@ export function getEIADetail({
 export function getEIAAdd({
   theName,
   theLevel,
-  editDatetime,
-  documentNumberTPA,
   approvalTimeTPA,
   documentNumberEIA,
   approvalTimeEIA,
@@ -968,8 +974,6 @@ export function getEIAAdd({
       customerId: getCustomerId(),
       theName,
       theLevel,
-      editDatetime,
-      documentNumberTPA,
       approvalTimeTPA,
       documentNumberEIA,
       approvalTimeEIA,
@@ -987,8 +991,6 @@ export function getEIAUpdate({
   tableId,
   theName,
   theLevel,
-  editDatetime,
-  documentNumberTPA,
   approvalTimeTPA,
   documentNumberEIA,
   approvalTimeEIA,
@@ -1002,8 +1004,6 @@ export function getEIAUpdate({
       tableId,
       theName,
       theLevel,
-      editDatetime,
-      documentNumberTPA,
       approvalTimeTPA,
       documentNumberEIA,
       approvalTimeEIA,

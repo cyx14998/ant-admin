@@ -15,6 +15,12 @@ const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 
 import './index.less';
+import {
+    setMenuId,
+    getMenuList
+} from '../../common/api/index';
+
+import SiderMenu from './sidermenu';
 
 /**
  * iframe 调用钩子
@@ -22,15 +28,22 @@ import './index.less';
 window.iframeHook = {};
 const imgCircleUrl = localStorage.getItem('headImagePath');
 
+function gotoAvatar() {
+    window.iframeHook.changePage({
+        url: '/staffmanagementEdit.html?staffId=' + '1',
+        breadIncrement: '员工信息编辑'
+    });
+}
+
 const MenuTop = ({
     logout
 }) => (
         <div className="yzy-avatar-wrap">
-            <img id="userHeadImg" src={imgCircleUrl ? imgCircleUrl : imgCircle} alt="" className="avatar" />
+            <img id="userHeadImg" src={imgCircleUrl ? imgCircleUrl : imgCircle} alt="" className="avatar" onClick={gotoAvatar} />
             <div className="avatar-info">
                 <span id="userName">{localStorage.getItem('userName') ? localStorage.getItem('userName') : '友通管理员'}</span>
                 <div className="controls">
-                    <span className="username">游客</span>
+                    <span className="username">{localStorage.getItem('roleName') ? localStorage.getItem('roleName') : '游客'}</span>
                     <span className="split">|</span>
                     <a className="logout" onClick={logout}>退出</a>
                 </div>
@@ -76,7 +89,7 @@ class BreadcrumbMap extends React.Component {
     }
 }
 
-import SiderMenu from './sidermenu';
+
 
 
 
@@ -87,8 +100,8 @@ class Page extends React.Component {
         this.state = {
             forceUpdate: '',   // 通过设置时间戳触发re-render
             collapsed: false,
-            url: "/customer.html",
-            breads: ['客户管理|/customer.html']
+            url: "",
+            breads: []
         }
     }
 
@@ -148,10 +161,49 @@ class Page extends React.Component {
             window.location.replace('/login.html');
         }
 
+        window.iframeHook.backPage = function ({ url }) {
+            if (!url) return;
+
+            self.setState(prev => {
+                prev.breads.pop();
+
+                return {
+                    url,
+                    breads: prev.breads
+                }
+            });
+
+            return;
+        }
+
         /**
          * fix issues for iframe bug
          */
         window.document.getElementById('root').style.height = '100%';
+
+        // 获取菜单后设置第一个默认选中
+        var menuList = getMenuList();
+        if (!menuList.length) {
+            return;
+        }
+
+        var breads = [];
+        if (menuList[0].menuList && menuList[0].menuList.length) {
+            breads.push(menuList[0].theName);
+            breads.push(menuList[0].menuList[0].theName + '|' + menuList[0].menuList[0].theLink + '||' + menuList[0].menuList[0].tableId);
+            setMenuId(menuList[0].menuList[0].menuId);  // 初始化menuId----------------------
+            this.setState({
+                url: menuList[0].menuList[0].theLink,
+                breads
+            })
+        } else {
+            breads.push(menuList[0].theName + '|' + menuList[0].theLink + '||' + menuList[0].tableId);
+            setMenuId(menuList[0].menuId);              // 初始化menuId----------------------
+            this.setState({
+                url: menuList[0].theLink,
+                breads
+            })
+        }
     }
 
     onCollapse(collapsed) {
@@ -162,7 +214,11 @@ class Page extends React.Component {
      */
     onMenuChange(menu) {
         var url = menu.key.split('|')[1],
-            path = menu.keyPath.reverse();
+            path = menu.keyPath.reverse(),
+            menuId = menu.key.split('||')[1];
+
+        // 点击菜单后 设置menuId.----------------------
+        setMenuId(menuId);
 
         if (url === this.state.url) {
             this.setState({

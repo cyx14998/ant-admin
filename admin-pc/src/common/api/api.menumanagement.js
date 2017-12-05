@@ -49,8 +49,9 @@ export function uMenuAdd({
     theLink = '',  // 菜单路径
     fatherMenuId = '',//父菜单ID（没有则不传）
     theSort = '',  // 排序
-    flowMstId='', // 流程主表ID
-    tableName='', // 数据库表名
+    flowMstId = '', // 流程主表ID
+    tableName = '', // 数据库表名
+    icon          // 菜单要显示的icon
 }) {
     return axios.get('/uMenuAdd.uhtm?InterfaceVersion=' + apiVer, {
         params: {
@@ -61,6 +62,7 @@ export function uMenuAdd({
             theSort,
             flowMstId,
             tableName,
+            icon
         }
     })
 }
@@ -73,8 +75,9 @@ export function uMenuUpdate({
     theName = '',  // 角色名称
     theLink = '',  // 菜单路径
     theSort = '',  // 排序
-    flowMstId='', // 流程主表ID
-    tableName='', // 数据库表名
+    flowMstId = '', // 流程主表ID
+    tableName = '', // 数据库表名
+    icon          // 菜单要显示的icon
 }) {
     return axios.get('/uMenuUpdate.uhtm?InterfaceVersion=' + apiVer, {
         params: {
@@ -85,6 +88,7 @@ export function uMenuUpdate({
             theSort,
             flowMstId,
             tableName,
+            icon
         }
     })
 }

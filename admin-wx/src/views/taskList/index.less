@@ -1,0 +1,93 @@
+@import '../../style/base.less';
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+    background-color: #f2f2f2;
+}
+
+@fontColor: #656565;
+.container {
+    .task-section{
+        background: #fff;
+        height: 76 * @unit;
+        line-height: 72 * @unit;
+        border-bottom: 1px solid #ddd;
+        .task-type{
+            width: 50%;
+            float: left;
+            text-align: center;
+            .task-title{
+                width: 200 * @unit;
+                margin: 0 auto;
+            }
+            &.active{
+                .task-title{
+                    color: #619a2c;
+                    border-bottom: 2px solid #619a2c;
+                }
+            }
+        }
+    }
+    .result-list {
+        .am-list-body {
+            background-color: #f2f2f2;
+            .list-view-section-body {
+                .task-item {
+                    background-color: #fff;
+                    margin-top: 16 * @unit;
+                    position: relative;
+                    .task-icon {
+                        float: left;
+                        padding-top: 22 *@unit;
+                        padding-left: 22 *@unit;
+                        img {
+                            width: 36 * @unit;
+                        }
+                    }
+                    .task-intro {
+                        margin-left: 90 * @unit;
+                        .task-header {
+                            font-size: 30 * @unit;
+                            padding-top: 22 *@unit;
+                            color: @fontColor;
+                            overflow: hidden;
+                        }
+                        .task-body {
+                            padding: 22 * @unit 0;
+                            .item {
+                                float: left;
+                                position: relative;
+                                .pItem {
+                                    font-size: 28 * @unit;
+                                    color: @fontColor;
+                                }
+                            }
+                            .task-name {
+                                padding-right: 48* @unit;
+                            }
+                        }
+                    }
+                    .task-status {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        width: 91 * @unit;
+                        height: 91 * @unit;
+                        background: url('../../assets/task-todo.png') no-repeat;
+                        background-size: cover;
+                        &.done {
+                            background: url('../../assets/task-over.png') no-repeat;
+                            background-size: cover;
+                        }
+                    }
+                }
+            }
+            &::before,
+            &::after {
+                display: none;
+            }
+        }
+    }
+}

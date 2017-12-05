@@ -9,13 +9,13 @@ import {
 
 import connectUneditableSectionApi from '../../components/hoc.uneditable.section';
 
-//废水排放基本信息详情
+//废气排放基本信息详情
 import WasteGasDischargeDetail from './customerEdit.wastegas.dischargedetail';
-//废水治理基本情况
+//废气治理基本情况
 import WasteGasTreatment from './customerEdit.wastegas.treatment';
-// //废水因子基本情况
+// //废气因子基本情况
 import WasteGasDischargeFactor from './customerEdit.wastegas.dischargefactor';
-// //废水排放检测记录
+// //废气排放检测记录
 import WasteGasMonitoringRecord from './customerEdit.wastegas.monitoringrecord';
 
 import { 

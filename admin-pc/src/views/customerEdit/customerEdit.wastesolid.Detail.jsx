@@ -164,7 +164,7 @@ class WasteWaterDischargeDetail extends React.Component {
             if (err) return;
             //台账
             var prodFileUrl = self.state.prodFileList[0];
-            console.log('----------------',prodFileUrl)
+            console.log('----------------', prodFileUrl)
             if (!prodFileUrl) {
                 prodFileUrl = "";
             } else {
@@ -291,7 +291,7 @@ class WasteWaterDischargeDetail extends React.Component {
                                     {getFieldDecorator('serialNumber', {
                                         initialValue: this.state.data.serialNumber,
                                         rules: [{ required: true, message: '请输入编号' },
-                                        //{ pattern: /^[0-9]*$/, message: '请输入数值' }
+                                            //{ pattern: /^[0-9]*$/, message: '请输入数值' }
                                         ],
                                     })(
                                         <Input placeholder="编号" />
@@ -352,20 +352,17 @@ class WasteWaterDischargeDetail extends React.Component {
                                 </FormItem>
                             </Col>
 
-                            <Col span={8}>
+                            {/* <Col span={8}>
                                 <FormItem {...formItemLayout} label="废物产生工艺">
                                     {getFieldDecorator('processing', {
                                         initialValue: this.state.data.processing,
                                         rules: [{ message: '请输入废物产生工艺' },
-                                        {/* { pattern: /^[0-9]*$/ } */ }
                                         ],
                                     })(
                                         <Input placeholder="废物产生工艺" />
                                         )}
                                 </FormItem>
-                            </Col>
-                        </Row>
-                        <Row>
+                            </Col> */}
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="危险代码">
                                     {getFieldDecorator('dangerCode', {
@@ -378,6 +375,9 @@ class WasteWaterDischargeDetail extends React.Component {
                                         )}
                                 </FormItem>
                             </Col>
+                        </Row>
+                        <Row>
+
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="危险废物产生环节">
                                     {getFieldDecorator('generatingLinks', {
@@ -402,8 +402,6 @@ class WasteWaterDischargeDetail extends React.Component {
                                         )}
                                 </FormItem>
                             </Col>
-                        </Row>
-                        <Row>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="贮存场所位置">
                                     {getFieldDecorator('storagePlaceAddress', {
@@ -416,6 +414,8 @@ class WasteWaterDischargeDetail extends React.Component {
                                         )}
                                 </FormItem>
                             </Col>
+                        </Row>
+                        <Row>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="处置单位名称">
                                     {getFieldDecorator('disposeUnitName', {

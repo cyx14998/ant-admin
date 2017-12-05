@@ -162,7 +162,8 @@ export function getProductBaseInfoList({
 export function getProductBaseInfoAdd({
   theName,
   unitOfMeasurement,
-  designAnnualOutput
+  designAnnualOutput,
+  realAnnualOutput
 }) {
   return axios.get('/uMainProductBaseInfoAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -171,6 +172,7 @@ export function getProductBaseInfoAdd({
       theName,
       unitOfMeasurement,
       designAnnualOutput,
+      realAnnualOutput
     }
   });
 }
@@ -180,7 +182,8 @@ export function getProductBaseInfoEdit({
   tableId,
   theName,
   unitOfMeasurement,
-  designAnnualOutput
+  designAnnualOutput,
+  realAnnualOutput
 }) {
   return axios.get('/uMainProductBaseInfoUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -190,6 +193,7 @@ export function getProductBaseInfoEdit({
       theName,
       unitOfMeasurement,
       designAnnualOutput,
+      realAnnualOutput
     }
   });
 }

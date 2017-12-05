@@ -117,16 +117,14 @@ class AuthoritySubDetail extends React.Component {
         form.validateFields((err, values) => {
             console.log(values);
             if (err) return;
+            var params = { ...values };
+
+            // 流程可以设置为空
+            if(params.flowMstId == 'false'){
+                delete params.flowMstId;
+            }
 
             if (recordEdit.modalType == 'add') {
-                var params = {
-                    theName: values.theName,
-                    theLink: values.theLink,
-                    fatherMenuId: values.fatherMenuId,
-                    theSort: values.theSort,
-                    flowMstId: values.flowMstId,
-                    tableName: values.tableName,
-                }
                 uMenuAdd(params).then(res => {
                     if (res.data.result !== 'success') {
                         MyToast(res.data.info || '接口失败')
@@ -143,14 +141,7 @@ class AuthoritySubDetail extends React.Component {
                     MyToast(err || '接口失败')
                 });
             } else {
-                var params = {
-                    tableId: recordEdit.tableId,
-                    theName: values.theName,
-                    theLink: values.theLink,
-                    theSort: values.theSort,
-                    flowMstId: values.flowMstId,
-                    tableName: values.tableName,
-                }
+                params.tableId = recordEdit.tableId;
                 uMenuUpdate(params).then(res => {
                     if (res.data.result !== 'success') {
                         MyToast(res.data.info || '接口失败')
@@ -178,9 +169,9 @@ class AuthoritySubDetail extends React.Component {
         if (recordEdit.modalType == 'add') {
             fatherMenuId = recordEdit.fatherMenuId;
         } else {
-            if(data.fatherMenu){
+            if (data.fatherMenu) {
                 fatherMenuId = data.fatherMenu.tableId;
-            }else{
+            } else {
                 fatherMenuId = '';
             }
         }
@@ -243,9 +234,9 @@ class AuthoritySubDetail extends React.Component {
                                     {
                                         getFieldDecorator('flowMstId', {
                                             initialValue: data && data.flowMst ? data.flowMst.tableId + '' : '',
-                                            rules: [{ required: true }],
                                         })(
                                             <Select>
+                                                <Option value='false'>无</Option>
                                                 {
                                                     this.state.flowMsList.length ?
                                                         this.state.flowMsList.map((item, index) => {
@@ -265,6 +256,19 @@ class AuthoritySubDetail extends React.Component {
                                             rules: [{ required: true }],
                                         })(
                                             <Input />
+                                            )
+                                    }
+                                </FormItem>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="icon：">
+                                    {
+                                        getFieldDecorator('icon', {
+                                            initialValue: data ? data.icon : '',
+                                        })(
+                                            <Input placeholder="主菜单需要设置"/>
                                             )
                                     }
                                 </FormItem>

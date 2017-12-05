@@ -25,6 +25,10 @@ const columns = [{
   dataIndex: 'designAnnualOutput',
   validateType: 'number',
 }, {
+  title: '实际产量',
+  dataIndex: 'realAnnualOutput',
+  validateType: 'number',
+},{
   title: '操作',
   dataIndex: 'operation',
   width: 120
@@ -37,7 +41,8 @@ const itemDataModel = {
   tableId: '',
   theName: '',
   unitOfMeasurement: '',
-  designAnnualOutput: ''
+  designAnnualOutput: '',
+  realAnnualOutput:'',
 };
 
 /**
@@ -48,6 +53,7 @@ const dataSource = [{
   theName: '本地名称',
   unitOfMeasurement: 'kg',
   designAnnualOutput: '22.33',
+  realAnnualOutput:'123'
 
 }];
 

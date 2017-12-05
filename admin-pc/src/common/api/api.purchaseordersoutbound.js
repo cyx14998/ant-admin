@@ -2,7 +2,8 @@
 import axios, {
   getToken,
   getCustomerId,
-  apiVer
+  apiVer,
+  getMenuId,
 } from './index';
 
 
@@ -61,7 +62,6 @@ export function getOutboundAdd({
   storageOutMemberId,
   storageOutDatetime,
   theRemarks,
-  menuId,
 }) {
   return axios.get('/uStorageOutRecordMstAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -70,7 +70,7 @@ export function getOutboundAdd({
       storageOutMemberId,
       storageOutDatetime,
       theRemarks,
-      menuId,
+      menuId: getMenuId(),
     }
   })
 }
@@ -82,7 +82,6 @@ export function getOutboundEdit({
   storageOutMemberId,
   storageOutDatetime,
   theRemarks,
-  menuId,
 }) {
   return axios.get('/uStorageOutRecordMstUpdate.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -92,7 +91,7 @@ export function getOutboundEdit({
       storageOutMemberId,
       storageOutDatetime,
       theRemarks,
-      menuId,
+      menuId: getMenuId(),
     }
   })
 }
@@ -105,6 +104,46 @@ export function getOutboundDelete({
     params: {
       token: getToken(),
       tableId,
+    }
+  })
+}
+/**-----------------------出库单状态更改---------------------------- */
+// 出库单作废
+export function getOutboundCancel({
+  tableId,
+}) {
+  return axios.get('/uStorageOutRecordMstCancel.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      tableId,
+    }
+  })
+}
+// 出库单送审/审核
+export function getOutboundPass({
+  tableId,
+  theContent,
+}) {
+  return axios.get('/uStorageOutRecordMstPass.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      menuId: getMenuId(),
+      tableId,
+      theContent,
+    }
+  })
+}
+// 出库单退回
+export function getOutboundReject({
+  tableId,
+  theContent,
+}) {
+  return axios.get('/uStorageOutRecordMstReject.uhtm?InterfaceVersion=' + apiVer, {
+    params: {
+      token: getToken(),
+      menuId: getMenuId(),
+      tableId,
+      theContent,
     }
   })
 }
@@ -130,13 +169,13 @@ export function getOutboundRecordList({
 // 出库单明细新增
 export function getOutboundRecordnAdd({
   storageOutRecordMstId,
-  tableIdArr,
+  data,
 }) {
-  return axios.get('/uStorageOutRecordMstAdd.uhtm?InterfaceVersion=' + apiVer, {
+  return axios.get('/uStorageOutRecordDtlAdd.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       storageOutRecordMstId,
-      tableIdArr,
+      data: JSON.stringify(data)
     }
   })
 }
@@ -180,24 +219,6 @@ export function getOutboundRecordnDelete({
     params: {
       token: getToken(),
       tableId,
-    }
-  })
-}
-/**-----------------------出库单审核记录---------------------------- */
-//出库单审核记录列表
-export function getCheckRecordList({
-  pageNumber = 1,
-  countPerPage = 1000,
-  keyword,
-  storageOutRecordMstId,
-}) {
-  return axios.get('/uPurchaseRecordDtlList.uhtm?InterfaceVersion=' + apiVer, {
-    params: {
-      token: getToken(),
-      pageNumber,
-      countPerPage,
-      keyword,
-      storageOutRecordMstId
     }
   })
 }
