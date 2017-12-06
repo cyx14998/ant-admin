@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { TabBar } from 'eui-mobile';
 import IndexTabBar1 from '../home/index';
+import IndexTabBar2 from '../eApprovalList/index';
 import MyInfoTabBar3 from '../myInfo/index';
 
 //图片
@@ -13,7 +14,7 @@ import checkImgActive from '../../assets/index_check_active.png';
 import myInfo from '../../assets/index_myInfo.png';
 import myInfoActive from '../../assets/index_myInfo_active.png';
 
-class TabBarExample extends React.Component {
+class IndexTabBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -86,7 +87,7 @@ class TabBarExample extends React.Component {
                         data-seed="logId1"
                     >
                         {
-                            this.state.selectedTab == 'eApprovalTab' && <div>电子审批</div>
+                            this.state.selectedTab == 'eApprovalTab' && <IndexTabBar2 />
                         }
                     </TabBar.Item>
                     <TabBar.Item
@@ -125,6 +126,6 @@ class TabBarExample extends React.Component {
     }
 }
 
-ReactDOM.render(<TabBarExample />,
+ReactDOM.render(<IndexTabBar />,
     document.getElementById('root')
 )

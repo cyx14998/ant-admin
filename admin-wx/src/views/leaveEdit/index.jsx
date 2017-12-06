@@ -28,6 +28,8 @@ import {
     leavePassApi,
     leaveRejectApi,
 } from '../../common/api/api.flow.js';
+import {  getLocQueryByLabel, } from '../../common/utils/index';
+
 const leaveType = ['事假', '病假', '年假', '调休', '其他'];
 
 class LeaveInfo extends Component {
@@ -35,9 +37,9 @@ class LeaveInfo extends Component {
         super(props);
         this.state = {
             title: '请假单详情',
-            tableId: '1', //id
+            tableId: getLocQueryByLabel('tableId') || '', //id
 
-            flowOrderStateId: '1',
+            flowOrderStateId: '',
             theContent: '',
             dataMs: {},
             // dataDt: [],

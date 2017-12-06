@@ -55,7 +55,7 @@ export function tuCustomerList({
  * **/
 export function tuInspectionPlanDtlForMeList({
     pageNumber = 1,
-    countPerPage = 10,
+    countPerPage = 20,
     keyword = '',
     theState = '',
 }) {
@@ -82,17 +82,33 @@ export function tuFlowMstList() {
 }
 
 /**
- * 十二．	待办事项（待审核单据）列表tuMemberWaitTodoList.tuhtm
+ * 十四．	待办事项（待审核单据）列表
  * **/
 export function tuMemberWaitTodoList({
     flowMstId = '',
-    isBegin = '',
 }) {
     return axios.get('/tuMemberWaitTodoList.tuhtm?InterfaceVersion=' + apiVer, {
         params: {
             token: getToken(),
             flowMstId,
-            isBegin,
+        }
+    })
+}
+
+/**
+ * 十五．	待办事项（已审批单据）列表
+ * **/
+export function tuMemberOrderFlowHistoryList({
+    pageNumber = 1,
+    countPerPage = 20,
+    flowMstId = '',
+}) {
+    return axios.get('/tuMemberOrderFlowHistoryList.tuhtm?InterfaceVersion=' + apiVer, {
+        params: {
+            token: getToken(),
+            pageNumber,
+            countPerPage,
+            flowMstId,
         }
     })
 }

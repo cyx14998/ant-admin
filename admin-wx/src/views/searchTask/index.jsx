@@ -60,7 +60,7 @@ class Demo extends React.Component {
                 index = 0;
             }
             return (
-                <div key={rowID} className="task-item clear">
+                <div key={rowID} className="task-item clear" onClick={this.goDetails.bind(this, obj)}>
                     <div className="task-icon">
                         <img src={taskIcon} />
                     </div>
@@ -98,7 +98,9 @@ class Demo extends React.Component {
                         dataSource={this.state.dataSource}
                         renderFooter={() => (
                             <div style={{ padding: 10, textAlign: 'center' }}>
-                                {this.state.hasMore ? '加载中...' : '加载完成'}
+                                {
+                                    this.state.data.length == 0 ? '暂无数据' : this.state.hasMore ? '加载中...' : '加载完成'
+                                }
                             </div>
                         )}
                         renderRow={row}
@@ -146,6 +148,7 @@ class Demo extends React.Component {
             if (length == 0) {
                 Toast.info('没有查询到任务信息', 1);
                 this.setState({
+                    data: [],
                     dataSource: this.state.dataSource.cloneWithRows({}, []),
                     isLoading: false,
                     hasMore: false,
@@ -258,6 +261,11 @@ class Demo extends React.Component {
     //取消
     onCancel() {
         history.back();
+    }
+
+    // 去任务详情页
+    goDetails(obj) {
+        window.location.href = '/taskEdit.html?tableId=' + obj.tableId;
     }
 }
 

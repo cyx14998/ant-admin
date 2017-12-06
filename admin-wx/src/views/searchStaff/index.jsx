@@ -58,7 +58,7 @@ class SearchStaff extends React.Component {
                 index = 0;
             }
             return (
-                <div key={rowID} className="staff-item clear">
+                <div key={rowID} className="staff-item clear" onClick={this.goDetails.bind(this, obj)}>
                     <div className="staff-icon">
                         <img src={obj.headImagePath} />
                     </div>
@@ -101,7 +101,9 @@ class SearchStaff extends React.Component {
                         dataSource={this.state.dataSource}
                         renderFooter={() => (
                             <div style={{ padding: 10, textAlign: 'center' }}>
-                                {this.state.hasMore ? '加载中...' : '加载完成'}
+                                {
+                                    this.state.data.length == 0 ? '暂无数据' : this.state.hasMore ? '加载中...' : '加载完成'
+                                }
                             </div>
                         )}
                         renderRow={row}
@@ -149,6 +151,7 @@ class SearchStaff extends React.Component {
             if (length == 0) {
                 Toast.info('没有查询到该员工数据', 1);
                 this.setState({
+                    data: [],
                     dataSource: this.state.dataSource.cloneWithRows({}, []),
                     isLoading: false,
                     hasMore: false,
@@ -202,7 +205,7 @@ class SearchStaff extends React.Component {
 
     // input submit事件
     searchSubmit() {
-        if(!this.state.value){
+        if (!this.state.value) {
             return;
         }
         this.statusClear({
@@ -234,7 +237,7 @@ class SearchStaff extends React.Component {
             hasMore: true,
         })
 
-        if(!value){
+        if (!value) {
             this.statusClear({
                 height: 0
             });
@@ -261,6 +264,11 @@ class SearchStaff extends React.Component {
     //取消
     onCancel() {
         history.back();
+    }
+
+    // 去员工详情页
+    goDetails(obj) {
+        window.location.href = '/staffEdit.html?tableId=' + obj.tableId;
     }
 }
 

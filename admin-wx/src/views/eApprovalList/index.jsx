@@ -5,6 +5,7 @@ import { Page, NavBar, Icon, Menu, ListView, PullToRefresh, Toast } from 'eui-mo
 import {
     tuMemberWaitTodoList,
     tuFlowMstList,
+    tuMemberOrderFlowHistoryList
 } from '../../common/api/api.allList';
 import './index.less';
 
@@ -12,6 +13,7 @@ var NUM_SECTIONS = 20;
 
 const dataBlobs = {};
 let sectionIDs = [];
+let pageNumber = 1;
 
 function genData(pIndex = 0) {
     for (let i = 0; i < NUM_SECTIONS; i++) {
@@ -27,7 +29,7 @@ function dateFormat(date) {
     return new Date(date).format("yyyy-MM-dd");
 }
 
-class Demo extends React.Component {
+class EApprovalList extends React.Component {
     constructor(props) {
         super(props);
 
@@ -57,6 +59,15 @@ class Demo extends React.Component {
         };
     }
 
+    componentWillUnmount() {
+        this.statusClear({
+            dataSource: this.state.dataSource.cloneWithRows({}, []),
+            isLoading: false,
+            refreshing: true,
+            hasMore: true,
+        });
+    }
+
     render() {
 
         let index = 0;
@@ -64,6 +75,16 @@ class Demo extends React.Component {
             const obj = this.state.data[index++];
             if (index > this.state.data.length - 1) {
                 index = 0;
+            }
+            var status = '';
+            if (this.state.isBegin == 0) {
+                status = <div className='eApproval-status'>待审批</div>;
+            } else {
+                if (obj.theOrderState == 1) {
+                    status = <div className='eApproval-status cancel'>已作废</div>;
+                } else {
+                    status = <div className='eApproval-status'>已审批</div>;
+                }
             }
             return (
                 <div key={rowID} className="eApproval-item clear" onClick={this.goDetails.bind(this, obj)}>
@@ -78,7 +99,7 @@ class Demo extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className='eApproval-status'>待审批</div>
+                    {status}
                 </div>
             );
         };
@@ -116,6 +137,7 @@ class Demo extends React.Component {
                 <div className="eApproval-menu">
                     <div className='eApproval-title' onClick={this.handleClick.bind(this)}>
                         {choseMenuTheName ? choseMenuTheName : '全部'}
+                        <span className="e-icon"></span>
                     </div>
                 </div>
                 {show ? menuData ? menuEl : loadingEl : null}
@@ -126,7 +148,9 @@ class Demo extends React.Component {
                         dataSource={this.state.dataSource}
                         renderFooter={() => (
                             <div style={{ padding: 10, textAlign: 'center' }}>
-                                {this.state.hasMore ? '加载中...' : '加载完成'}
+                                {
+                                    this.state.data.length == 0 ? '暂无数据' : this.state.hasMore ? '加载中...' : '加载完成'
+                                }
                             </div>
                         )}
                         renderRow={row}
@@ -180,42 +204,88 @@ class Demo extends React.Component {
     getData(status, flowMstId) {
 
         Toast.loading('loading...', 0);
+        var isBegin = status != undefined ? status : this.state.isBegin;
         var params = {
             flowMstId: flowMstId ? flowMstId : this.state.flowMstId,
-            isBegin: status != undefined ? status : this.state.isBegin
         }
 
-        tuMemberWaitTodoList(params).then(res => {
-            Toast.hide();
-            if (res.data.result !== 'success') {
-                Toast.info(res.data.info || '获取审批列表失败', 1);
-                return;
-            }
-            var data = res.data.waitTodoList;
-            var length = res.data.waitTodoList.length;
-            NUM_SECTIONS = length < 200 ? length : 200;
+        if (isBegin == 0) {
+            tuMemberWaitTodoList(params).then(res => {
+                Toast.hide();
+                if (res.data.result !== 'success') {
+                    Toast.info(res.data.info || '获取审批列表失败', 1);
+                    return;
+                }
+                var data = res.data.waitTodoList;
+                var length = res.data.waitTodoList.length;
+                NUM_SECTIONS = length < 200 ? length : 200;
 
-            // 没有数据直接return
-            if (length == 0) {
+                // 没有数据直接return
+                if (length == 0) {
+                    this.setState({
+                        isLoading: false,
+                        refreshing: false,
+                        hasMore: false,
+                    });
+                    return;
+                }
+                const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop - 50;
+                genData();
+
                 this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(dataBlobs, sectionIDs),
+                    data,
                     isLoading: false,
                     refreshing: false,
                     hasMore: false,
+                    height: hei,
                 });
-                return;
-            }
-            const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop;
-            genData();
+            }).catch(err => Toast.info('获取审批列表失败', 1));
+        } else {
+            params.pageNumber = pageNumber;
+            tuMemberOrderFlowHistoryList(params).then(res => {
+                Toast.hide();
+                if (res.data.result !== 'success') {
+                    Toast.info(res.data.info || '获取审批列表失败', 1);
+                    return;
+                }
+                var data = res.data.memberOrderFlowHistoryList;
+                var length = res.data.memberOrderFlowHistoryList.length;
+                NUM_SECTIONS = length < 200 ? length : 200;
 
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(dataBlobs, sectionIDs),
-                data,
-                isLoading: false,
-                refreshing: false,
-                hasMore: false,
-                height: hei,
-            });
-        }).catch(err => Toast.info('获取审批列表失败', 1));
+                // 没有数据直接return
+                if (length == 0) {
+                    this.setState({
+                        data: [],
+                        isLoading: false,
+                        refreshing: false,
+                        hasMore: false,
+                    });
+                    return;
+                }
+                const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop - 50;
+                if (res.data.totalPage == pageNumber) {
+                    this.setState({
+                        hasMore: false,
+                    });
+                } else {
+                    this.setState({
+                        hasMore: true,
+                    });
+                }
+                genData(pageNumber++);
+
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(dataBlobs, sectionIDs),
+                    data,
+                    isLoading: false,
+                    refreshing: false,
+                    hasMore: false,
+                    height: hei,
+                });
+            }).catch(err => Toast.info('获取审批列表失败', 1));
+        }
+
     }
 
     // 切换菜单选择 电子审批类型切换
@@ -303,6 +373,7 @@ class Demo extends React.Component {
     statusClear(params) {
         this.setState(params);
         sectionIDs = [];
+        pageNumber = 1;
     }
 
     // 去各个详情页
@@ -311,7 +382,4 @@ class Demo extends React.Component {
     }
 }
 
-ReactDOM.render(
-    <Demo></Demo>,
-    document.getElementById('root')
-);
+export default EApprovalList

@@ -62,7 +62,7 @@ class Demo extends React.Component {
                 index = 0;
             }
             return (
-                <div key={rowID} className="task-item clear">
+                <div key={rowID} className="task-item clear" onClick={this.goDetails.bind(this, obj)}>
                     <div className="task-icon">
                         <img src={taskIcon} />
                     </div>
@@ -104,7 +104,9 @@ class Demo extends React.Component {
                         dataSource={this.state.dataSource}
                         renderFooter={() => (
                             <div style={{ padding: 10, textAlign: 'center' }}>
-                                {this.state.hasMore ? '加载中...' : '加载完成'}
+                                {
+                                    this.state.data.length == 0 ? '暂无数据' : this.state.hasMore ? '加载中...' : '加载完成'
+                                }
                             </div>
                         )}
                         renderRow={row}
@@ -155,8 +157,9 @@ class Demo extends React.Component {
             var length = res.data.inspectionPlanDtlList.length;
             NUM_SECTIONS = length < 20 ? length : 20;
 
-            if(length == 0){
+            if (length == 0) {
                 this.setState({
+                    data: [],
                     isLoading: false,
                     refreshing: false,
                     hasMore: false,
@@ -229,6 +232,12 @@ class Demo extends React.Component {
         this.setState(params);
         sectionIDs = [];
         pageNumber = 1;
+    }
+
+
+    // 去任务详情页
+    goDetails(obj) {
+        window.location.href = '/taskEdit.html?tableId=' + obj.tableId;
     }
 }
 

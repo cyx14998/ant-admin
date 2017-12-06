@@ -28,6 +28,32 @@
                 color: #989898;                
             }
         }
+        .loadItem {
+                background-color: #fff;
+                height: 88 * @unit;
+                line-height: 88 * @unit;
+                text-align: center;
+                s {
+                    display: inline-block;
+                    background: url('../../assets/task_iconh.png') no-repeat;
+                    width: 30 * @unit;
+                    height: 26 * @unit;
+                    background-size: cover;
+                    margin-right: 10 * @unit;
+                }
+                .fontCol {
+                    display: inline-block;
+                    color: @mainColor;
+                }
+                .fontColNo {
+                    display: inline-block;
+                    color: #656565;
+                }
+            }
+            .loadItem.borderLR {
+                border-left: @unit solid #f2f2f2;
+                border-right: @unit solid #f2f2f2;                
+        }
         .am-textarea-control {
             textarea {
                 font-size: 28 * @unit;

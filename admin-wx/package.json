@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.17.1",
-    "eui-mobile": "0.0.9",
+    "eui-mobile": "^0.1.0",
     "koa": "^2.4.1",
     "koa-router": "^7.3.0",
     "koa-session": "^5.5.1",

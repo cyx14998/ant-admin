@@ -8,7 +8,7 @@ const qiniuHost = 'http://up.qiniup.com';
 /**------------------------------------QiNiu上传------------------------------**/
 
 //获取七牛uptoken
-export function getQiNiuTokenApi({ }) {
+export function getQiNiuTokenApi({}) {
     return axios.get('/uQiNiuTokenGet.uhtm?InterfaceVersion=' + apiVer, {
         params: {
             token: getToken(),
@@ -21,12 +21,14 @@ export function qiNiuUploadApi({
     files,
     uptoken,
     key,
+    callback
 }) {
     return qiNiuUpload(
         qiniuHost,
         files,
         uptoken,
         key,
+        callback
     );
 }
 
@@ -91,7 +93,7 @@ export function getCustomerInfoApi({
 
 /**------------------------------------任务详情页面------------------------------**/
 
-//获取任务
+//获取任务列表
 export function getTaskInfoApi({
     tableId,
 }) {
@@ -99,6 +101,55 @@ export function getTaskInfoApi({
         params: {
             token: getToken(),
             tableId,
+        }
+    })
+}
+//获取任务详情
+export function getTaskInfoDtApi({
+    tableId,
+}) {
+    return axios.get('/tuInspectionPlanDtlDetail.tuhtm?InterfaceVersion=' + apiVer, {
+        params: {
+            token: getToken(),
+            tableId,
+        }
+    })
+}
+//获取任务详情
+export function saveTaskDtApi({
+    tableId,
+    fileArr,
+}) {
+    return axios.get('/tuInspectionPlanDtlDetail.tuhtm?InterfaceVersion=' + apiVer, {
+        params: {
+            token: getToken(),
+            tableId,
+            fileArr,
+        }
+    })
+}
+
+/**------------------------------------员工详情页面------------------------------**/
+
+//获取员工信息
+export function getStaffInfoApi({
+    tableId,
+}) {
+    return axios.get('/uMemberDetail.uhtm?InterfaceVersion=' + apiVer, {
+        params: {
+            token: getToken(),
+            tableId,
+        }
+    })
+}
+//获取员工证照
+export function getStaffCerApi({
+    staffId,
+}) {
+    return axios.get('/uMemberCertificationList.uhtm?InterfaceVersion=' + apiVer, {
+        params: {
+            token: getToken(),
+            staffId,
         }
     })
 }
