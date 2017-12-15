@@ -9,32 +9,31 @@ import axios, {
 //付款单主表列表
 export function getPaymentList({
   countPerPage = 1000,
-  keyword,
-  isPass,
-  theState,
-  storageInMemberId,
+  // keyword,
+  // isPass,
+  // theState,
+  // storageInMemberId,
+  ...params
 }) {
-  var params = {};
-  // 审核情况        
-  if (isPass === '1') {
-    params.isPass = true;
-  } else if (isPass === '2') {
-    params.isPass = false;
-  }
-  //付款单状态
-  if (theState && theState !== '0') {
-    params.theState = theState - 1;
-  }
-  //入库人选择
-  if (storageInMemberId && storageInMemberId !== '全部') {
-    params.storageInMemberId = storageInMemberId;
-  }
-
+  // var params = {};
+  // // 审核情况        
+  // if (isPass === '1') {
+  //   params.isPass = true;
+  // } else if (isPass === '2') {
+  //   params.isPass = false;
+  // }
+  // //付款单状态
+  // if (theState && theState !== '0') {
+  //   params.theState = theState - 1;
+  // }
+  // //入库人选择
+  // if (storageInMemberId && storageInMemberId !== '全部') {
+  //   params.storageInMemberId = storageInMemberId;
+  // }
   return axios.get('/uPaymentRecordMstList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       countPerPage,
-      keyword,
       ...params,
     }
   })
@@ -156,7 +155,7 @@ export function getPaymentRecordnAdd({
     params: {
       token: getToken(),
       paymentRecordMstId,
-            data: JSON.stringify(data)
+      data: JSON.stringify(data)
     }
   })
 }
@@ -165,7 +164,7 @@ export function getPaymentRecordnAdd({
 export function getPurchaseRecordMstListUnStockList({
   pageNumber = 1,
   countPerPage = 1000,
-  keyword,
+  keyword = '',
   // serialNumber
 }) {
   return axios.get('/uPurchaseRecordMstListUnPayment.uhtm?InterfaceVersion=' + apiVer, {

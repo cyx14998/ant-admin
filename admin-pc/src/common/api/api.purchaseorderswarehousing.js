@@ -10,37 +10,37 @@ import axios, {
 //入库单主表列表
 export function getWarehousingList({
   countPerPage = 1000,
-  keyword,
-  isPass,
-  theState,
-  warehouseId,
-  storageInMemberId,
+  // keyword,
+  // isPass,
+  // theState,
+  // warehouseId,
+  // storageInMemberId,
+  ...params
 }) {
-  var params = {};
-  // 审核情况        
-  if (isPass === '1') {
-    params.isPass = true;
-  } else if (isPass === '2') {
-    params.isPass = false;
-  }
-  //入库单状态
-  if (theState && theState !== '0') {
-    params.theState = theState - 1;
-  }
-  //仓库选择
-  if (warehouseId && warehouseId !== '全部') {
-    params.warehouseId = warehouseId;
-  }
-  //入库人选择
-  if (storageInMemberId && storageInMemberId !== '全部') {
-    params.storageInMemberId = storageInMemberId;
-  }
+  // var params = {};
+  // // 审核情况        
+  // if (isPass === '1') {
+  //   params.isPass = true;
+  // } else if (isPass === '2') {
+  //   params.isPass = false;
+  // }
+  // //入库单状态
+  // if (theState && theState !== '0') {
+  //   params.theState = theState - 1;
+  // }
+  // //仓库选择
+  // if (warehouseId && warehouseId !== '全部') {
+  //   params.warehouseId = warehouseId;
+  // }
+  // //入库人选择
+  // if (storageInMemberId && storageInMemberId !== '全部') {
+  //   params.storageInMemberId = storageInMemberId;
+  // }
 
   return axios.get('/uStorageInRecordMstList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       countPerPage,
-      keyword,
       ...params,
     }
   })

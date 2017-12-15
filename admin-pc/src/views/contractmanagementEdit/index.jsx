@@ -69,7 +69,7 @@ const checkRecordColumns = [
         title: '审核结果',
         dataIndex: 'theFlowResult',
         render: (record) => <span>
-            {record.theFlowResult ? '审核通过' : '审核不通过'}
+            {record ? '审核通过' : '审核不通过'}
         </span>
     }
 ];
@@ -125,7 +125,7 @@ class ContractEdit extends React.Component {
             }
             data.theState = state;
             var flowOrderStateId = data.flowOrderState ? data.flowOrderState.tableId : '';
-            
+
             this.setState({
                 loading: false,
                 contract: data,
@@ -302,9 +302,11 @@ class ContractEdit extends React.Component {
                         tableId: res.data.tableId,
                         flowOrderStateId: res.data.flowOrderStateId,
                     });
-                }).catch(err =>
-                    MyToast(err)
-                    )
+
+                    self._getContractDetail({
+                        tableId: res.data.tableId,
+                    });
+                }).catch(err => MyToast(err))
             } else {
                 getContractEdit({ ...data, tableId: tableId }).then(res => {
                     console.log('saveContract res', res);
@@ -314,9 +316,7 @@ class ContractEdit extends React.Component {
                         return
                     }
                     MyToast('编辑成功');
-                }).catch(err =>
-                    MyToast(err)
-                    )
+                }).catch(err => MyToast(err))
             }
         })
     }

@@ -56,6 +56,7 @@ const changeObjectEditable = (data, rowKey, key, editable) => {
  * @props loading
  * @props pagination
  * @props onThirdEye  查看按钮
+ * @props CancelBtn   自定义作废按钮
  * @props CustomerBtn 自定义按钮
  */
 class EditableTable extends React.Component {
@@ -89,18 +90,19 @@ class EditableTable extends React.Component {
   componentDidMount() {
     let {
       columns,
-      rowKey='tableId',
+      rowKey = 'tableId',
       onThirdEye,
+      CancelBtn,
       CustomerBtn,
     } = this.props;
 
     var validateTypes = this.getValidateTypes(columns);
 
-    var formatedColumns = this.getColumns({columns, rowKey, onThirdEye, CustomerBtn});
+    var formatedColumns = this.getColumns({ columns, rowKey, onThirdEye, CancelBtn, CustomerBtn });
 
     this.setState({
       columns: formatedColumns,
-      validateTypes: validateTypes 
+      validateTypes: validateTypes
     });
   }
 
@@ -116,12 +118,12 @@ class EditableTable extends React.Component {
   }
 
   // 通过动态渲染数据来控制可编辑性
-  getColumns({columns, rowKey, onThirdEye, CustomerBtn}) {
-    for (let i=0, len=columns.length; i<len; i++) {
+  getColumns({ columns, rowKey, onThirdEye, CancelBtn, CustomerBtn }) {
+    for (let i = 0, len = columns.length; i < len; i++) {
       columns[i].render = (text, record) => {
         // 操作栏
         if (columns[i].dataIndex === 'operation') {
-          
+
           // 新添加行
           if (record.tableId === '') {
             return (
@@ -141,6 +143,9 @@ class EditableTable extends React.Component {
                   <a title="查看" onClick={() => onThirdEye(record)}><Icon type="eye-o" /></a>
                 }
                 <a title="编辑" onClick={() => this.changeRecordEditableStatus(record, true)}><Icon type="edit" /></a>
+                {
+                  typeof CancelBtn === 'function' && <CancelBtn record={record} />
+                }
                 <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteItem(record[rowKey])}>
                   <a title="删除"><Icon type="delete" /></a>
                 </Popconfirm>
@@ -167,7 +172,7 @@ class EditableTable extends React.Component {
         // 防御性检查，数据中没有 dataIndex 字段
         if (text === undefined) {
           return (
-            <EditableCell 
+            <EditableCell
               editable={record.editable}
               tableId={record.tableId}
               dataIndex={columns[i].dataIndex}
@@ -180,7 +185,7 @@ class EditableTable extends React.Component {
 
         // input datepicker select file
         return (
-          <EditableCell 
+          <EditableCell
             editable={record.editable}
             tableId={record.tableId}
             dataIndex={columns[i].dataIndex}
@@ -218,7 +223,7 @@ class EditableTable extends React.Component {
   }
 
   // 取消保存
-  changeRecordEditableStatus(record, status=true, rowKey='tableId') {
+  changeRecordEditableStatus(record, status = true, rowKey = 'tableId') {
     if (record[rowKey] === '') return;
 
     // 为取消时做数据备份处理
@@ -249,7 +254,7 @@ class EditableTable extends React.Component {
       }, () => {
         this.backupData[record[rowKey]] = null;
       });
-    }    
+    }
   }
 
   getValidateTypes(columns) {
@@ -275,7 +280,7 @@ class EditableTable extends React.Component {
    */
   checkRecordFile(record) {
     let keys = Object.keys(record);
-    for (let i=0, len=keys.length; i<len; i++) {
+    for (let i = 0, len = keys.length; i < len; i++) {
       if (record[keys[i]].cellType === 'file' && typeof record[keys[i]].value[0] === 'object') {
         if (record[keys[i]].value[0].response) {
           if (record[keys[i]].value[0].response.status === 'done') {
@@ -302,7 +307,7 @@ class EditableTable extends React.Component {
     var validateMsg = '';
 
     if (_validateItems.length !== 0) {
-      for(let i=0, len=_validateItems.length; i<len; i++) {
+      for (let i = 0, len = _validateItems.length; i < len; i++) {
         let validateKey = _validateItems[i];
         let validateType = validateTypes[validateKey].type;
         let validateTitle = validateTypes[validateKey].title;
@@ -314,7 +319,7 @@ class EditableTable extends React.Component {
         if (!RULES[validateType].reg.test(record[validateKey].value)) {
           validatePass = false;
           // 字段名称 + 校验失败信息
-          validateMsg = validateTitle + '，' +  RULES[validateType].msg;
+          validateMsg = validateTitle + '，' + RULES[validateType].msg;
 
           break;
         }
@@ -328,7 +333,7 @@ class EditableTable extends React.Component {
   }
 
   saveUpdate(record, validateTypes) {
-    
+
     var isValid = this.validate(record, validateTypes);
 
     if (isValid.valid === false) {
@@ -338,7 +343,7 @@ class EditableTable extends React.Component {
 
     let {
       onSaveUpdate,
-      rowKey='tableId'
+      rowKey = 'tableId'
     } = this.props;
 
     this.checkRecordFile(record);
@@ -356,7 +361,7 @@ class EditableTable extends React.Component {
       } else {
         MyToast(res.msg);
       }
-    }).catch(err => MyToast(err));    
+    }).catch(err => MyToast(err));
   }
 
   /**
@@ -365,7 +370,7 @@ class EditableTable extends React.Component {
    */
   addItem() {
     let {
-      rowKey='tableId',
+      rowKey = 'tableId',
       itemDataModel
     } = this.props;
 
@@ -378,7 +383,7 @@ class EditableTable extends React.Component {
 
       return {
         dataSource: [_itemDataModel, ...prev.dataSource]
-      } 
+      }
     })
   }
 
@@ -392,7 +397,7 @@ class EditableTable extends React.Component {
 
     let {
       onSaveAdd,
-      rowKey='tableId'
+      rowKey = 'tableId'
     } = this.props;
 
     this.checkRecordFile(record);
@@ -414,17 +419,17 @@ class EditableTable extends React.Component {
       } else {
         MyToast(res.msg);
       }
-    }).catch(err => MyToast(err));  
+    }).catch(err => MyToast(err));
   }
 
-  deleteItem(tableId, rowKey='tableId') {
+  deleteItem(tableId, rowKey = 'tableId') {
     // 删除新增项
     if (tableId === '') {
       this.setState(prev => {
         return {
           dataSource: prev.dataSource.slice(1)
         }
-      });      
+      });
       return;
     }
 
@@ -448,9 +453,9 @@ class EditableTable extends React.Component {
 
   render() {
     let {
-      loading=false,
-      pagination=false,
-      rowKey='tableId',
+      loading = false,
+      pagination = false,
+      rowKey = 'tableId',
       onSaveAdd,
       itemDataModel
     } = this.props;
@@ -472,7 +477,7 @@ class EditableTable extends React.Component {
               if (index % 2 !== 0) {
                 return 'active'
               }
-            }} /> 
+            }} />
         </div>
       )
     }
@@ -488,7 +493,7 @@ class EditableTable extends React.Component {
           if (index % 2 !== 0) {
             return 'active'
           }
-        }}  /> 
+        }} />
     )
   }
 }

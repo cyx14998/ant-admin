@@ -50,7 +50,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
         var customer = this.state.customer;
         return (
             <div className="yzy-tab-content-item-wrap" style={{paddingBottom: 50}}>
-                <CustomerEditDynamicinfoProd />
+                <CustomerEditDynamicinfoProd tableId = {this.props.tableId}/>
                 <CustomerEditDynamicinfoMaterial />
                 <CustomerEditDynamicinfoWater />
                 <CustomerEditDynamicinfoFuel />

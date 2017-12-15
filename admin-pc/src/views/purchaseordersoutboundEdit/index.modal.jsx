@@ -18,14 +18,7 @@ import {
 import {
     getHousingList, //获取仓库列表
 } from '../../common/api/api.purchaseorderswarehousing.js'
-/**
- * @props columns
- *     配置数据校验
- * @props dataSource
- *     在接口与组件之间要进行数据转换，只维护columns相关数据
- * @desc
- *     只关心增删改查的接口调用与数据转换
- */
+
 import { MyToast, getLocQueryByLabel, } from '../../common/utils';
 
 //库存明细头部-----（用于新增出库明细）
@@ -33,6 +26,9 @@ const stockColumns = [
     {
         title: '仓库名称',
         dataIndex: 'warehouse.theName',
+    }, {
+        title: '厂商',
+        dataIndex: 'manufacturerName',
     }, {
         title: '品名',
         dataIndex: 'theName',
@@ -54,7 +50,9 @@ const stockColumns = [
     // },
     {
         title: '可出库数量',
-        dataIndex: 'allowQuantity',
+    }, {
+        title: '入库时间',
+        dataIndex: 'createDatetime'
     }, {
         title: '本次出库数量',
         dataIndex: 'willOutStorageQuantity'
@@ -83,38 +81,38 @@ class OutBoundRecordModal extends React.Component {
         this._getStockList({
             warehouseId: this.state.warehouseId,
         });
-        stockColumns[3].render = (text, record, index) => {
-            return (<span>{record.theQuantity - record.outingQuantity - record.hasOutQuantity}</span>)
-        }
         stockColumns[4].render = (text, record, index) => {
+            return (<span>{record.theQuantity - record.outingQuantity}</span>)
+        }
+        stockColumns[6].render = (text, record, index) => {
             return (<Input onChange={this.selectQuantity.bind(this, record, text, index)} />)
         }
     }
     //获取仓库列表
     _getHousingList() {
-        getHousingList({}).then(res => {
-            console.log('getHousingList res', res)
+        // getHousingList({}).then(res => {
+        //     console.log('getHousingList res', res)
 
-            if (res.data.result !== 'success') {
-                MyToast(res.data.info || '获取仓库列表失败');
-                return;
-            }
+        //     if (res.data.result !== 'success') {
+        //         MyToast(res.data.info || '获取仓库列表失败');
+        //         return;
+        //     }
 
-            var houseList = res.data.warehouseList.map(item => {
-                let house = {
-                    value: item.tableId + '',
-                    label: item.theName
-                };
+        //     var houseList = res.data.warehouseList.map(item => {
+        //         let house = {
+        //             value: item.tableId + '',
+        //             label: item.theName
+        //         };
 
-                return house;
-            });
+        //         return house;
+        //     });
 
-            this.setState({
-                houseList: houseList
-            });
-        }).catch(err => {
-            MyToast('获取仓库列表失败')
-        });
+        //     this.setState({
+        //         houseList: houseList
+        //     });
+        // }).catch(err => {
+        //     MyToast('获取仓库列表失败')
+        // });
     }
     //获取库存列表
     _getStockList(params) {
@@ -150,7 +148,7 @@ class OutBoundRecordModal extends React.Component {
     //采购单数量Input
     selectQuantity(record, text, index, e) {
 
-          if (!(/^[0-9]+\.{0,1}[0-9]{0,6}$/).test(e.target.value.trim())) {
+        if (!(/^[0-9]+\.{0,1}[0-9]{0,6}$/).test(e.target.value.trim())) {
             MyToast("请输入数字");
             return;
         }
@@ -187,17 +185,15 @@ class OutBoundRecordModal extends React.Component {
         console.log(stockSelectedRowKeysArr, '1111111111', stockSelectedRowArrQuarity)
 
         stockSelectedRowKeysArr.map((aItem) => {
-            aItem.willOutStorageQuantity = aItem.theQuantity - aItem.manufacturerName;
+            aItem.willOutStorageQuantity = aItem.theQuantity - aItem.outingQuantity;
             if (stockSelectedRowArrQuarity.length) {
                 stockSelectedRowArrQuarity.map((qItem) => {
                     if (qItem.tableId == aItem.tableId) {
-                        aItem.willOutStorageQuantity = qItem.willOutStorageQuantity;
-                        // temp.push({ tableId: aItem.tableId, willOutStorageQuantity: qItem.willOutStorageQuantity });
+                        if (qItem.willOutStorageQuantity) {
+                            aItem.willOutStorageQuantity = qItem.willOutStorageQuantity;
+                        }
                     }
                 });
-            } else {
-                aItem.willOutStorageQuantity = aItem.theQuantity - aItem.manufacturerName;
-                // temp.push({ tableId: aItem.tableId, willOutStorageQuantity: aItem.theQuantity - aItem.manufacturerName });
             }
         })
 
@@ -246,7 +242,7 @@ class OutBoundRecordModal extends React.Component {
             //     //     stockSelectedRowKeysArr: stockSelectedRowKeysArr,
             //     // })
             // },
-            onSelect: (record, selected, stockSelectedRowKeysArr) => {
+            onChange: (selected, stockSelectedRowKeysArr) => {
                 console.log('-----------', stockSelectedRowKeysArr)
                 self.setState({
                     stockSelectedRowKeysArr: stockSelectedRowKeysArr,
@@ -254,22 +250,8 @@ class OutBoundRecordModal extends React.Component {
             },
 
         }
-        // Modal头部搜索
-        const rcsearchformData = {
-            colspan: 2,
-            fields: [
-                {
-                    type: 'select',
-                    label: '仓库',
-                    name: 'warehouseId',
-                    defaultValue: '全部',
-                    options: this.state.houseList,
-                },]
-        }
         return (
             <div>
-                <RcSearchForm {...rcsearchformData}
-                    handleSearch={this.handleFormSearch.bind(this)} />
                 <Table
                     style={{ marginTop: 20 }}
                     rowSelection={outboundDataRowSelection}

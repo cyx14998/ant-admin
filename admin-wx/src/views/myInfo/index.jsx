@@ -22,20 +22,30 @@ import './index.less';
 
 import userImg from '../../assets/index_customer.png';
 
-import { getUserInfoApi } from '../../common/api/api.wx.js'
+import {
+    getUserInfoApi,
+    // exitOutApi,
+} from '../../common/api/api.wx.js';
+import { getLocQueryByLabel, } from '../../common/utils/index';
+
 class MyInfoTabBar3 extends Component {
     constructor(props) {
         super(props);
         this.state = {
             title: '我的信息',
+            tableId: getLocQueryByLabel('tableId') || '',
+
             data: {
-                userName: '徐晓丽',
-                userImg: userImg,
-                department: '企划部',
-                identityCard: '320123000000001222',
-                phone: '13600000000',
-                email: '13600000000@qq.com',
-                address: '江苏省苏州市工业园区星湖街',
+                realName: '',
+                headImagePath: userImg,
+                department: {
+                    tableId: '',
+                    theName: '',
+                },
+                idCard: '',
+                phoneNumber: '',
+                email: '',
+                address: '',
             }
         };
         this.getUserInfo = this.getUserInfo.bind(this);
@@ -44,23 +54,38 @@ class MyInfoTabBar3 extends Component {
     componentDidMount() {
         this.getUserInfo({});
     }
-    //获取用户信息--无
+    //获取用户信息
     getUserInfo() {
-        var data = {};
+        var data = { openId_WeiXin: '' };
         getUserInfoApi(data).then(res => {
             console.log('getUserInfoApi res', res)
             if (res.data.result !== 'success') {
-                Toast.info(res.data.info || '接口失败',2);
+                Toast.info(res.data.info || '接口失败', 2, null, false);
                 return;
             }
             this.setState({
-                data: res.data.UserInfo
+                data: res.data.member
             });
         }).catch(err => {
-            Toast.info('服务器繁忙',2);
+            Toast.info('服务器繁忙', 2, null, false);
             console.log(err)
         })
     }
+    //退出Btn --无
+    // onExitBtn() {
+    //     var data = {};
+    //     exitOutApi(data).then(res => {
+    //         console.log('exitOutApi res', res)
+    //         if (res.data.result !== 'success') {
+    //             Toast.info(res.data.info || '接口失败', 2, null, false);
+    //             return;
+    //         }
+
+    //     }).catch(err => {
+    //         Toast.info('服务器繁忙', 2, null, false);
+    //         console.log(err)
+    //     })
+    // }
     render() {
         var data = this.state.data;
         return (
@@ -70,16 +95,16 @@ class MyInfoTabBar3 extends Component {
                 <WhiteSpace />
                 <List>
                     <Item className="userImgBox"
-                        thumb={data.userImg}
+                        thumb={data.headImagePath}
                         multipleLine>
-                        {data.userName} <Brief>{data.department}</Brief>
+                        {data.realName} <Brief>{data.department ? data.department.theName:'暂无部门信息'}</Brief>
                     </Item>
                 </List>
 
                 <WhiteSpace />
                 <List>
-                    <Item extra={data.identityCard}>身份证</Item>
-                    <Item extra={data.phone}>手机号</Item>
+                    <Item extra={data.idCard}>身份证</Item>
+                    <Item extra={data.phoneNumber}>手机号</Item>
                     <Item extra={data.email}>邮箱</Item>
                 </List>
 
@@ -87,10 +112,10 @@ class MyInfoTabBar3 extends Component {
                 <List>
                     <Item extra={data.address}>地址</Item>
                 </List>
-                
-                <WingBlank>
-                    <Button className="exitBtn" type="primary">退出登录</Button>
-                </WingBlank>
+
+                {/* <WingBlank>
+                    <Button className="exitBtn" type="primary" onClick={this.onExitBtn.bind(this)}>退出登录</Button>
+                </WingBlank> */}
             </div>
         )
     }

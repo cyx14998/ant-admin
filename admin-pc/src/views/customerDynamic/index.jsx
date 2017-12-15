@@ -16,10 +16,17 @@ import {
   Icon,
   Popconfirm,
   Modal,
-  DatePicker
+  DatePicker,
+  Row,
+  Col,
+  Tree,
+  Affix
 } from 'antd';
+const TreeNode = Tree.TreeNode;
 
 import DraggableModal from '../../components/modal.draggable';
+import DynamicinfoForm from '../customerDynamicEdit/index';
+
 
 import {
   getCustomerDynamicList,
@@ -34,16 +41,17 @@ import {
 
 const MonthPicker = DatePicker.MonthPicker;
 const monthFormat = 'YYYY-MM';
+const id = getLocQueryByLabel('id');
 
-function changeParentState({
-  dynamicId,
-}) {
-  var cusId = getLocQueryByLabel('id');
-  parent.window.iframeHook.changePage({
-    url: `/customerDynamicEdit.html?id=${cusId}&dynamicId=${dynamicId}#${Math.random()}`,
-    breadIncrement: `客户动态信息编辑`,
-  })
-}
+// function changeParentState({
+//   dynamicId,
+// }) {
+//   var cusId = getLocQueryByLabel('id');
+//   parent.window.iframeHook.changePage({
+//     url: `customerDynamicEdit.html?id=${cusId}&dynamicId=${dynamicId}#${Math.random()}`,
+//     breadIncrement: `客户动态信息编辑`,
+//   })
+// }
 
 const columns = [
   {
@@ -70,6 +78,7 @@ class CustomerDynamicList extends Component {
     this.state = {
       loading: true,
       customerDynamicList: [],
+      tableId: getLocQueryByLabel('dynamicId'), // tableId
 
       modalVisible: false,
       selectedMonth: moment(new Date()).format(monthFormat),
@@ -78,18 +87,18 @@ class CustomerDynamicList extends Component {
     this.getData = this.getData.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
 
-    columns[2].render = (text, record) => {
-      return (
-        <div>
-          <a style={{ marginRight: '10px' }} title="编辑" onClick={() => changeParentState({
-            dynamicId: record.tableId
-          })}><Icon type="edit" className="yzy-icon" /></a>
-          <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteItem(record.tableId)}>
-            <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
-          </Popconfirm>
-        </div>
-      )
-    }
+    // columns[2].render = (text, record) => {
+    //   return (
+    //     <div>
+    //       <a style={{ marginRight: '10px' }} title="编辑" onClick={() => changeParentState({
+    //         dynamicId: record.tableId
+    //       })}><Icon type="edit" className="yzy-icon" /></a>
+    //       <Popconfirm title="确定要删除吗？" onConfirm={() => this.deleteItem(record.tableId)}>
+    //         <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
+    //       </Popconfirm>
+    //     </div>
+    //   )
+    // }
   }
 
   componentDidMount() {
@@ -106,20 +115,23 @@ class CustomerDynamicList extends Component {
         return;
       }
 
+      var customerMonthDclarationList = res.data.customerMonthDclarationList;
       this.setState({
         loading: false,
-        customerDynamicList: res.data.customerMonthDclarationList.map((item, i) => {
-
-          item.key = i;
+        tabId: customerMonthDclarationList.length > 0 ? customerMonthDclarationList[0].tableId : '',
+        customerDynamicList: customerMonthDclarationList.length > 0 ? res.data.customerMonthDclarationList.map((item, i) => {
+          item.title = item.theYear + '-' + item.theMonth;
+          item.key = item.tableId;
           return item;
-        })
+        }) : []
       })
     }).catch(err => {
       MyToast(err || '获取动态列表失败')
     })
   }
 
-  deleteItem(tableId) {
+  deleteItem() {
+    var tableId = this.state.tableId;
     getCustomerDynamicListDelete({
       tableId
     }).then(res => {
@@ -129,8 +141,9 @@ class CustomerDynamicList extends Component {
       }
 
       MyToast('删除成功');
-
-      this.getData({});
+      setTimeout(() => {
+        window.location.search = `id=${id}`;
+      }, 800);
     }).catch(err => MyToast(err))
   }
 
@@ -174,15 +187,63 @@ class CustomerDynamicList extends Component {
     }).catch(err => MyToast('添加动态列表失败'))
   }
 
+  onSelect(selectedKeys, info) {
+    console.log('onSelect', selectedKeys);
+    var tableId = selectedKeys[0] ? selectedKeys[0] : '';
+    var params = {
+      tableId
+    };
+    window.location.search = `id=${id}&dynamicId=${tableId}`;
+  }
+
+  renderTreeNodes(data) {
+    return data.map((item) => {
+      if (item.children) {
+        return (
+          <TreeNode title={item.title} key={item.key} dataRef={item}>
+            {this.renderTreeNodes(item.children)}
+          </TreeNode>
+        );
+      }
+      return <TreeNode {...item} />;
+    });
+  }
+
   render() {
     return (
       <div className="yzy-page">
         <div className="yzy-list-wrap">
           <div className="yzy-list-btns-wrap">
-            <Button type="primary" style={{ marginLeft: 8 }}
-              onClick={this.showModal.bind(this)}>新增</Button>
+            <Col span={2}>
+              <Button type="primary" style={{ marginLeft: 8 }}
+                onClick={this.showModal.bind(this)}>新增</Button>
+              <Affix>
+                <div className="tree-area">
+                  <Tree
+                    showLine
+                    onSelect={this.onSelect.bind(this)}
+                    selectedKeys={this.state.tableId ? [this.state.tableId.toString()] : ['']}
+                  >
+                    {this.renderTreeNodes(this.state.customerDynamicList)}
+                  </Tree>
+                </div>
+              </Affix>
+            </Col>
+            <Col span={22}>
+              {
+                this.state.tableId &&
+                <div>
+                  <Popconfirm placement="bottom" title={'确定删除吗？'} onConfirm={this.deleteItem.bind(this)} okText="确定" cancelText="取消">
+                    <Button type="primary" className="delNowDate" style={{ marginLeft: 8 }}>删除本月动态数据</Button>
+                  </Popconfirm>
+                  <DynamicinfoForm />
+                </div>
+
+              }
+
+            </Col>
           </div>
-          <Table
+          {/* <Table
             columns={columns}
             dataSource={this.state.customerDynamicList}
             loading={this.state.loading}
@@ -191,10 +252,12 @@ class CustomerDynamicList extends Component {
                 return 'active'
               }
             }}
-          />
+          /> */}
         </div>
 
-        <DraggableModal visible={this.state.modalVisible} footer={null} onCancel={this.closeModal.bind(this)}>
+        <DraggableModal
+          width={'40%'}
+          visible={this.state.modalVisible} footer={null} onCancel={this.closeModal.bind(this)}>
           <div>
             <span style={{ marginRight: '10px', fontSize: 12 }}>请选择动态数据区间：</span>
             <MonthPicker

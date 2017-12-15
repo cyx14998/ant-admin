@@ -136,6 +136,7 @@ const webpackConfig = {
 					options: {
 						limit: 10000,
 						name: 'assets/media/[name].[ext]',
+						publicPath: '../../'
 					}
 				}
 			}

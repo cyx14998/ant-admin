@@ -10,14 +10,15 @@ import axios, {
 //用印主表列表
 export function getPrintingList({
     countPerPage = 1000,
-    keyword,
+    // keyword,
+    ...params
 }) {
 
     return axios.get('/uOfficialSealList.uhtm?InterfaceVersion=' + apiVer, {
         params: {
             token: getToken(),
             countPerPage,
-            keyword,
+            ...params
         }
     })
 }

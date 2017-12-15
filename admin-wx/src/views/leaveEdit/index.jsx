@@ -15,9 +15,11 @@ import {
     WhiteSpace,
     Button,
     TextareaItem,
-    MobileHistory
+    MobileHistory,
+    Modal
 } from 'eui-mobile';
 const Item = List.Item;
+const alert = Modal.alert;
 
 import './index.less';
 import userImg from '../../assets/index_customer.png';
@@ -28,7 +30,7 @@ import {
     leavePassApi,
     leaveRejectApi,
 } from '../../common/api/api.flow.js';
-import {  getLocQueryByLabel, } from '../../common/utils/index';
+import { getLocQueryByLabel, } from '../../common/utils/index';
 
 const leaveType = ['事假', '病假', '年假', '调休', '其他'];
 
@@ -42,18 +44,7 @@ class LeaveInfo extends Component {
             flowOrderStateId: '',
             theContent: '',
             dataMs: {},
-            // dataDt: [],
-            // data: {
-            //     flowOrderStateId: '', //id---获取审核记录
-            //     isPass: false,
-
-            //     member: '请假人',
-            //     phoneNumber: '电话号码',
-            //     theType: '请假单类型',
-            //     beginDatetime: '开始时间',
-            //     endDatetime: '结束时间',
-            //     theHoure: '时长(h)'
-            // },
+            
             checkList: [], //审核记录
         };
         this._getLeaveInfo = this._getLeaveInfo.bind(this);
@@ -109,8 +100,10 @@ class LeaveInfo extends Component {
                 Toast.info(res.data.info || '接口失败', 2);
                 return;
             }
-            Toast.info('审核已通过'), 2;;
-            _checkRecordList({ flowOrderStateId: this.state.flowOrderStateId });
+            Toast.info('审核已通过', 2);
+
+            this._getLeaveInfo({ tableId: this.state.tableId });
+            this._checkRecordList({ flowOrderStateId: this.state.flowOrderStateId });
 
         }).catch(err => {
             Toast.info('服务器繁忙', 2);
@@ -129,8 +122,10 @@ class LeaveInfo extends Component {
                 Toast.info(res.data.info || '接口失败', 2);
                 return;
             }
-            Toast.info('审核已驳回'), 2;;
-            _checkRecordList({ flowOrderStateId: this.state.flowOrderStateId });
+            Toast.info('审核已驳回', 2);
+
+            this._getLeaveInfo({ tableId: this.state.tableId });
+            this._checkRecordList({ flowOrderStateId: this.state.flowOrderStateId });
 
         }).catch(err => {
             Toast.info('服务器繁忙', 2);
@@ -145,8 +140,19 @@ class LeaveInfo extends Component {
                 Toast.info(res.data.info || '接口失败', 2);
                 return;
             }
+            var data = res.data.flowHistoryList;
+            var temp = [];
+            data && data.length > 0 && data.map((item, index) => {
+                var tp = {};
+                tp.realName = item.member && item.member.realName;
+                tp.userImg = item.member && item.member.userImg;
+                tp.time = item.createDatetime;
+                tp.theContent = item.theContent;
+                tp.status = item.theFlowResult ? '1' : '0';
+                return temp.push(tp);
+            });
             this.setState({
-                checkList: res.data.flowHistoryList
+                checkList: temp,
             });
         }).catch(err => {
             Toast.info('服务器繁忙', 2);
@@ -157,24 +163,19 @@ class LeaveInfo extends Component {
     render() {
         var dataMs = this.state.dataMs;
         // var dataDt = this.state.dataDt;
-        var checkList = [{
-            realName: '123',
-            time: '2017-10-10',
-            status: '1',
-            userImg: userImg,
-        }];
+        var checkList = this.state.checkList;
 
         return (
             <div className="content" >
                 <NavBar
                     mode="light"
                     icon={<Icon type="left" size="lg" style={{ color: '#619a2c' }} />}
-                    onLeftClick={() => window.history.back(-1)}
+                    onLeftClick={() => history.back()}
                 >{this.state.title}</NavBar>
                 <WhiteSpace />
                 <List>
                     <Item extra={dataMs.member && dataMs.member.realName}>请假人</Item>
-                    <Item extra={dataMs.phoneNumber}>电话号码</Item>
+                    <Item extra={dataMs.member && dataMs.member.phoneNumber}>电话号码</Item>
                     <Item extra={dataMs.theType}>请假单类型</Item>
                     <Item extra={dataMs.beginDatetime}>开始时间</Item>
                     <Item extra={dataMs.endDatetime}>结束时间</Item>
@@ -182,16 +183,26 @@ class LeaveInfo extends Component {
 
                 </List>
 
-                <WhiteSpace />
-                <TextareaItem className={!dataMs.isPass ? 'textAreaInput textAreaBd' : 'textAreaInput'} editable={!dataMs.isPass} placeholder="说点审核意见吧" rows={5} onChange={this.onOpinionText.bind(this)} />
-                <WhiteSpace />
-
-                {!dataMs.isPass && <WingBlank>
-                    <WhiteSpace />
-                    <Button className="checkBtn btnColor" type="primary" onClick={this.checkPassBtn.bind(this)}>通过</Button>
-                    <WhiteSpace />
-                    <Button className="checkBtn" type="warning" onClick={this.checkReject.bind(this)}>驳回</Button>
-                </WingBlank>}
+                {dataMs.couldEditFLow &&
+                    <div>
+                        <WhiteSpace />
+                        <TextareaItem className="textAreaInput textAreaBd" placeholder="说点审核意见吧" rows={5} onChange={this.onOpinionText.bind(this)} />
+                        <WhiteSpace />
+                        <WingBlank>
+                            <WhiteSpace />
+                            <Button className="checkBtn btnColor" type="primary"
+                                onClick={() => alert('', '确定审核通过？', [
+                                    { text: 'Cancel', onPress: () => console.log('cancel') },
+                                    { text: 'Ok', onPress: this.checkPassBtn.bind(this) },
+                                ])}>通过</Button>
+                            <WhiteSpace />
+                            <Button className="checkBtn" type="warning" onClick={() => alert('', '确定审核驳回？', [
+                                { text: 'Cancel', onPress: () => console.log('cancel') },
+                                { text: 'Ok', onPress: this.checkReject.bind(this) },
+                            ])}>驳回</Button>
+                        </WingBlank>
+                    </div>
+                }
                 <div className="checkFlow">
                     <MobileHistory datasource={checkList} />
                 </div>

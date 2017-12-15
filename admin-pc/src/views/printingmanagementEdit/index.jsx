@@ -47,7 +47,7 @@ const checkRecordColumns = [
         title: '审核结果',
         dataIndex: 'theFlowResult',
         render: (record) => <span>
-            {record.theFlowResult ? '审核通过' : '审核不通过'}
+            {record ? '审核通过' : '审核不通过'}
         </span>
     }
 ];
@@ -149,7 +149,7 @@ class PrintingEdit extends React.Component {
                 MyToast(res.data.info || '接口失败')
                 return;
             }
-             var data = res.data.officialSeal;
+            var data = res.data.officialSeal;
             var state = '';
             if (data.isPass) {
                 state = '已审核';
@@ -161,7 +161,7 @@ class PrintingEdit extends React.Component {
                 }
             }
             data.theState = state;
-                        var flowOrderStateId = data.flowOrderState ? data.flowOrderState.tableId : '';
+            var flowOrderStateId = data.flowOrderState ? data.flowOrderState.tableId : '';
 
             this.setState({
                 loading: false,
@@ -256,9 +256,7 @@ class PrintingEdit extends React.Component {
             MyToast('用印已作废');
             this._getPrintingDetail({ tableId: this.state.tableId });
             this._getCheckRecordList({ flowOrderStateId: this.state.flowOrderStateId });
-        }).catch(err =>
-            MyToast('接口失败')
-            );
+        }).catch(err => MyToast('接口失败'));
     }
     //用印退回
     onCheckReject() {
@@ -361,9 +359,11 @@ class PrintingEdit extends React.Component {
                         tableId: res.data.tableId,
                         flowOrderStateId: res.data.flowOrderStateId
                     });
-                }).catch(err =>
-                    MyToast(err)
-                    )
+
+                    self._getPrintingDetail({
+                        tableId: res.data.tableId,
+                    });
+                }).catch(err => MyToast(err))
             } else {
                 getPrintingEdit({ ...data, tableId: tableId }).then(res => {
                     console.log('savePurOrder res', res);
@@ -373,9 +373,7 @@ class PrintingEdit extends React.Component {
                         return
                     }
                     MyToast('编辑成功');
-                }).catch(err =>
-                    MyToast(err)
-                    )
+                }).catch(err => MyToast(err))
             }
         })
     }
@@ -413,7 +411,7 @@ class PrintingEdit extends React.Component {
                                 <Col span={8}>
                                     <FormItem {...formItemLayout} label="单据状态">
                                         {getFieldDecorator('theState', {
-                                            initialValue: !officialSeal.theState ? '正常' : '作废',
+                                            initialValue: officialSeal.theState,
                                         })(
                                             <Input placeholder="单据状态" disabled={true} />
                                             )}
@@ -427,7 +425,7 @@ class PrintingEdit extends React.Component {
                                             //{ pattern: /^[0-9]*$/ } 
                                             //],
                                         })(
-                                            <DatePicker disabled/>
+                                            <DatePicker disabled />
                                             )}
                                     </FormItem>
                                 </Col>

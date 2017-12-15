@@ -21,42 +21,63 @@ import EIADetail from './customerEdit.EIADetail';
 /**
  * table head
  */
-const columns = [{
-  title: '环评建设项目名称',
-  dataIndex: 'theName',
-}, {
-  title: '环评等级',
-  dataIndex: 'theLevel',
-}, {
-  title: '编制日期',
-  dataIndex: 'editDatetime',
-}, {
-  title: '试生产批复-环保部门审批文号',
-  dataIndex: 'documentNumberTPA',
-}, {
-  title: '试生产批复-审批时间',
-  dataIndex: 'approvalTimeTPA',
-}, {
-  title: '环评批复-环保部门审批文号',
-  dataIndex: 'documentNumberEIA',
-}, {
-  title: '环评批复-审批时间',
-  dataIndex: 'approvalTimeEIA',
-}, {
-  title: '竣工验收批复-环保部门审批文号',
-  dataIndex: 'documentNumberFAA',
-}, {
-  title: '竣工验收批复-审批时间',
-  dataIndex: 'approvalTimeFAA',
-}, {
-  title: '自主验收文件',
-  dataIndex: 'selfAcceptanceURL',
-  type: 'downloadfile'
-}, {
-  title: '操作',
-  dataIndex: 'operation',
-  width: 120
-}];
+const columns = [
+  {
+    title: '环评建设项目名称',
+    dataIndex: 'theName',
+  }, {
+    title: '环评等级',
+    dataIndex: 'theLevel',
+  }, {
+    title: '编制日期',
+    dataIndex: 'editDatetime',
+  }, {
+    title: '试生产批复',
+    children: [
+      {
+        title: '审批文号',
+        dataIndex: 'documentNumberTPA',
+      },
+      {
+        title: '审批时间',
+        dataIndex: 'approvalTimeTPA',
+      }
+    ]
+  }, {
+    title: '环评批复',
+    children: [
+      {
+        title: '审批文号',
+        dataIndex: 'documentNumberEIA',
+      },
+      {
+        title: '审批时间',
+        dataIndex: 'approvalTimeEIA',
+      }
+    ]
+  }, {
+    title: '竣工验收批复',
+    dataIndex: 'documentNumberFAA',
+    children: [
+      {
+        title: '审批文号',
+        dataIndex: 'documentNumberFAA',
+      },
+      {
+        title: '审批时间',
+        dataIndex: 'approvalTimeFAA',
+      }
+    ]
+  }, {
+    title: '自主验收文件',
+    dataIndex: 'selfAcceptanceURL',
+    type: 'downloadfile'
+  }, {
+    title: '操作',
+    dataIndex: 'operation',
+    width: 120
+  }
+];
 
 /**
  * 可选项

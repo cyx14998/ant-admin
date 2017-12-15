@@ -50,7 +50,7 @@ class Dynamicinfo extends React.Component {
         this.customerId = getLocQueryByLabel('id') || '';
         this.defaultDynamicId = getLocQueryByLabel('dynamicId') || '';
 
-        this.getDynamicListOptions = this.getDynamicListOptions.bind(this);
+        // this.getDynamicListOptions = this.getDynamicListOptions.bind(this);
     }
 
     componentDidMount() {        
@@ -61,36 +61,36 @@ class Dynamicinfo extends React.Component {
             })
         };
 
-        this.getDynamicListOptions();
+        // this.getDynamicListOptions();
     }
 
-    getDynamicListOptions() {
+    //getDynamicListOptions() {
       //查询传参时，接口没有返回对应数据，单位类别暂时写死，应该是写死的，行业类别是访问接口，接口未完成。
-      getCustomerDynamicList({}).then(res => {
-        console.log('getCustomerDynamicList ---', res)
-        if (res.data.result !== 'success') {
-          MyToast(res.data.info || '获取动态列表失败')
-          return;
-        }
+    //   getCustomerDynamicList({}).then(res => {
+    //     console.log('getCustomerDynamicList ---', res)
+    //     if (res.data.result !== 'success') {
+    //       MyToast(res.data.info || '获取动态列表失败')
+    //       return;
+    //     }
 
-        var dynamicList = res.data.customerMonthDclarationList;
+    //     var dynamicList = res.data.customerMonthDclarationList;
 
-        var dynamicOptions = dynamicList.map(item => {
-            return {
-                key: item.tableId.toString(),
-                value: item.tableId.toString(),
-                label: item.theYear + '-' + item.theMonth
-            }
-        });
+    //     var dynamicOptions = dynamicList.map(item => {
+    //         return {
+    //             key: item.tableId.toString(),
+    //             value: item.tableId.toString(),
+    //             label: item.theYear + '-' + item.theMonth
+    //         }
+    //     });
 
-        this.setState({
-            dynamicOptions,
-            selectedDynamicId: this.defaultDynamicId
-        });
-      }).catch(err => {
-        MyToast(err || '获取动态列表失败')
-      })
-    }
+    //     this.setState({
+    //         dynamicOptions,
+    //         selectedDynamicId: this.defaultDynamicId
+    //     });
+    //   }).catch(err => {
+    //     MyToast(err || '获取动态列表失败')
+    //   })
+    //}
 
     setTabPaneActive() {
         this.setState({
@@ -98,26 +98,32 @@ class Dynamicinfo extends React.Component {
         })
     }
 
-    onSeletChange(dynamicId) {
-        this.setState({
-            selectedDynamicId: dynamicId
-        })
-    }
+    // onSeletChange(dynamicId) {
+    //     this.setState({
+    //         selectedDynamicId: dynamicId
+    //     })
+    // }
 
-    refreshDynamicId() {
-        // 根据动态id，重新请求数据
-        if (this.defaultDynamicId === this.state.selectedDynamicId) return;
+    // refreshDynamicId(tableId) {
+    //     // 根据动态id，重新请求数据
+    //     if (this.defaultDynamicId === this.state.selectedDynamicId) return;
 
-        window.location.search = `id=${this.customerId}&dynamicId=${this.state.selectedDynamicId}`;
-    }
+    //     if(tableId){
+    //         window.location.search = `id=${this.customerId}&dynamicId=${tableId}`;
+    //     }else{
+
+    //     }
+
+    //     // window.location.search = `id=${this.customerId}&dynamicId=${this.state.selectedDynamicId}`;
+    // }
     
     render() {
         
         return (
-            <div className="yzy-page">
-                <div className="yzy-tab-content-item-wrap" 
+            <div className="yzy-customerDynamicEdit">
+                {/* <div className="yzy-tab-content-item-wrap" 
                     style={{padding: 20, backgroundColor: '#fff', marginBottom: 20}}>
-                  <h2 className="yzy-tab-content-title">选择动态月份</h2>
+                   <h2 className="yzy-tab-content-title">选择动态月份</h2>
                   <div style={{padding: '20px'}}>
                     <Select 
                         style={{width: '200px'}} 
@@ -132,7 +138,7 @@ class Dynamicinfo extends React.Component {
                     </Select>
                     <Button style={{marginLeft: '20px'}} type="primary" onClick={this.refreshDynamicId.bind(this)}>确定</Button>
                   </div>
-                </div>
+                </div> */}
                 <div style={{padding: 20, backgroundColor: '#fff'}}>
                     <Tabs defaultActiveKey="1">
                         <TabPane tab="生产信息" key="1">
@@ -160,6 +166,5 @@ class Dynamicinfo extends React.Component {
     }
 }
 
-const DynamicinfoForm = Form.create()(Dynamicinfo);
 
-ReactDOM.render(<DynamicinfoForm />, document.getElementById('root'));
+export default Dynamicinfo;

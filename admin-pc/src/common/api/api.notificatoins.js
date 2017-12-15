@@ -40,3 +40,21 @@ export function uMemberWaitTodoList({
         }
     })
 }
+
+/**
+* 三百二十四．	参与记录（已审批单据）列表
+*/
+export function uMemberOrderFlowHistoryList({
+    pageNumber = 1,
+    countPerPage = 1000,
+    flowMstId = ''
+    }) {
+    return axios.get('/uMemberOrderFlowHistoryList.uhtm?InterfaceVersion=' + apiVer, {
+        params: {
+            token: getToken(),
+            pageNumber,
+            countPerPage,
+            flowMstId
+        }
+    })
+}

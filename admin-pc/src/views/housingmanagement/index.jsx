@@ -242,7 +242,7 @@ class HousingListEdit extends React.Component {
             theState: values.theState,
         });
     }
-    
+
     //获取入库人列表
     _getMemberList() {
         getMemberList({}).then(res => {

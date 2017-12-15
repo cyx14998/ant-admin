@@ -11,7 +11,7 @@ import './index.less';
 
 var NUM_SECTIONS = 20;
 
-const dataBlobs = {};
+var dataBlobs = {};
 let sectionIDs = [];
 let pageNumber = 1;
 
@@ -183,7 +183,7 @@ class EApprovalList extends React.Component {
     getMenuData() {
         tuFlowMstList().then(res => {
             if (res.data.result !== 'success') {
-                Toast.info(res.data.info || '获取任务类型列表失败', 1);
+                Toast.info(res.data.info || '获取任务类型列表失败', 1, null ,false);
                 return;
             }
             var data = res.data.flowMstList;
@@ -197,13 +197,13 @@ class EApprovalList extends React.Component {
             this.setState({
                 menuData: data
             });
-        }).catch(err => Toast.info('获取任务类型列表失败', 1));
+        }).catch(err => Toast.info('获取任务类型列表失败', 1, null ,false));
     }
 
     // 获取数据
     getData(status, flowMstId) {
 
-        Toast.loading('loading...', 0);
+        Toast.loading('loading...', 0, null, false);
         var isBegin = status != undefined ? status : this.state.isBegin;
         var params = {
             flowMstId: flowMstId ? flowMstId : this.state.flowMstId,
@@ -213,7 +213,7 @@ class EApprovalList extends React.Component {
             tuMemberWaitTodoList(params).then(res => {
                 Toast.hide();
                 if (res.data.result !== 'success') {
-                    Toast.info(res.data.info || '获取审批列表失败', 1);
+                    Toast.info(res.data.info || '获取审批列表失败', 1, null ,false);
                     return;
                 }
                 var data = res.data.waitTodoList;
@@ -240,13 +240,13 @@ class EApprovalList extends React.Component {
                     hasMore: false,
                     height: hei,
                 });
-            }).catch(err => Toast.info('获取审批列表失败', 1));
+            }).catch(err => Toast.info('获取审批列表失败', 1, null ,false));
         } else {
             params.pageNumber = pageNumber;
             tuMemberOrderFlowHistoryList(params).then(res => {
                 Toast.hide();
                 if (res.data.result !== 'success') {
-                    Toast.info(res.data.info || '获取审批列表失败', 1);
+                    Toast.info(res.data.info || '获取审批列表失败', 1, null ,false);
                     return;
                 }
                 var data = res.data.memberOrderFlowHistoryList;
@@ -283,7 +283,7 @@ class EApprovalList extends React.Component {
                     hasMore: false,
                     height: hei,
                 });
-            }).catch(err => Toast.info('获取审批列表失败', 1));
+            }).catch(err => Toast.info('获取审批列表失败', 1, null ,false));
         }
 
     }
@@ -372,12 +372,16 @@ class EApprovalList extends React.Component {
     // 状态清除
     statusClear(params) {
         this.setState(params);
+        dataBlobs = {};
         sectionIDs = [];
         pageNumber = 1;
     }
 
     // 去各个详情页
     goDetails(obj) {
+        if(obj.theLink.indexOf('/') == 0){
+            obj.theLink = obj.theLink.substring(1, obj.theLink.length);
+        }
         window.location.href = obj.theLink + '?tableId=' + obj.sourceId;
     }
 }

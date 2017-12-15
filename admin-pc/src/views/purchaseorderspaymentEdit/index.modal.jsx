@@ -18,19 +18,12 @@ import {
 import {
     getHousingList, //获取仓库列表
 } from '../../common/api/api.purchaseorderswarehousing.js'
-/**
- * @props columns
- *     配置数据校验
- * @props dataSource
- *     在接口与组件之间要进行数据转换，只维护columns相关数据
- * @desc
- *     只关心增删改查的接口调用与数据转换
- */
+
 import { MyToast, getLocQueryByLabel, } from '../../common/utils';
 //采购单明细头部-----（用于新增付款明细）
 const paymentColumns = [
     {
-        title: '单据编号',
+        title: '采购单编号',
         dataIndex: 'serialNumber',
     }, {
         title: '总金额',
@@ -40,7 +33,9 @@ const paymentColumns = [
         dataIndex: 'hasPaymentAmount',
     }, {
         title: '待付款金额',
-        dataIndex: 'paymentQuantity1'
+        render: (record) => {
+            return (record.totalAmount - record.inPaymentAmount - record.hasPaymentAmount).toFixed(2)
+        }
     }, {
         title: '本次付款金额',
         dataIndex: 'paymentQuantity'
@@ -51,8 +46,9 @@ class PaymentRecordModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            selectedRowKeys: [], // 选中的tableId  Arr
             purchaseRecordMstList: [], //可付款列表
-            purOrdSelectedRowKeysArr: [], // 选择的Id Arr
+            purOrdSelectedRowKeysArr: [], // 选择的数据 Arr
 
             stockSelectedRowArrQuarity: [],  //输入数量 Arr     
 
@@ -64,13 +60,15 @@ class PaymentRecordModal extends React.Component {
         this._getPurchaseRecordMstListUnStockList({});
 
         paymentColumns[4].render = (text, record, index) => {
-            return (<Input onChange={this.selectQuantity.bind(this, record, text, index)} />)
+            // 输入后，翻页返回时传进去默认值
+            return (<Input defaultValue={record.nowPayAcount} onChange={this.selectQuantity.bind(this, record, text, index)} />)
         }
     }
     //付款单明细新增----获取采购单(可付款)列表
     _getPurchaseRecordMstListUnStockList(params) {
-        console.log('params', params)
-
+        this.setState({
+            purchaseRecordMstList: []
+        });
         getPurchaseRecordMstListUnStockList(params).then(res => {
             console.log('getPurchaseRecordMstList ------------', res)
             if (res.data.result !== 'success') {
@@ -79,7 +77,10 @@ class PaymentRecordModal extends React.Component {
             }
             this.setState({
                 loading: false,
-                purchaseRecordMstList: res.data.purchaseRecordMstList
+                purchaseRecordMstList: res.data.purchaseRecordMstList,
+                selectedRowKeys: [],
+                stockSelectedRowArrQuarity: [],
+                purOrdSelectedRowKeysArr: [],
             })
         })
     }
@@ -87,29 +88,31 @@ class PaymentRecordModal extends React.Component {
     //头部搜索
     handleFormSearch(values) {
         this._getPurchaseRecordMstListUnStockList({
-            serialNumber: values.serialNumber || '',
+            keyword: values.serialNumber || '',
             // theName: values.theName || '',
         });
     }
     //付款单明细新增----采购单数量Input
     selectQuantity(record, text, index, e) {
-        if (!(/^[0-9]+\.{0,1}[0-9]{0,6}$/).test(e.target.value.trim())) {
+        var inputVal = e.target.value.trim();
+        if (!(/^[0-9]+\.{0,1}[0-9]{0,6}$/).test(inputVal)) {
             MyToast("请输入数字");
             return;
         }
         var stockSelectedRowArrQuarity = this.state.stockSelectedRowArrQuarity;
         var tableIdDouble = 0;
+        record.nowPayAcount = inputVal; // 设置当前输入的值，翻页后返回时放进input默认值
         //当tableId已经存在
         stockSelectedRowArrQuarity.map((item, index) => {
             if (item.tableId === record.tableId) {
-                stockSelectedRowArrQuarity[index].willPayment = e.target.value;
+                stockSelectedRowArrQuarity[index].willPayment = inputVal;
                 tableIdDouble = 1;
             }
         });
         if (!stockSelectedRowArrQuarity.length || tableIdDouble == 0) {
             var selectQuantityObj = {
                 tableId: record.tableId,
-                willPayment: e.target.value,
+                willPayment: inputVal,
             };
             stockSelectedRowArrQuarity.push(selectQuantityObj);
             this.setState({
@@ -129,17 +132,15 @@ class PaymentRecordModal extends React.Component {
         var stockSelectedRowArrQuarity = this.state.stockSelectedRowArrQuarity;
 
         purOrdSelectedRowKeysArr.map((aItem) => {
-            aItem.willPayment = aItem.theQuantity - aItem.manufacturerName;
+            aItem.willPayment = aItem.totalAmount - aItem.hasPaymentAmount - aItem.inPaymentAmount;
             if (stockSelectedRowArrQuarity.length) {
                 stockSelectedRowArrQuarity.map((qItem) => {
                     if (qItem.tableId == aItem.tableId) {
-                        aItem.willPayment = qItem.willPayment;
-                        // temp.push({ tableId: aItem.tableId, willPayment: qItem.willPayment });
+                        if (qItem.willPayment) {
+                            aItem.willPayment = qItem.willPayment;
+                        }
                     }
                 });
-            } else {
-                aItem.willPayment = aItem.theQuantity - aItem.manufacturerName;
-                // temp.push({ tableId: aItem.tableId, willPayment: aItem.theQuantity - aItem.manufacturerName });
             }
         })
 
@@ -169,6 +170,7 @@ class PaymentRecordModal extends React.Component {
             this.setState({
                 stockSelectedRowArrQuarity: [],
                 purOrdSelectedRowKeysArr: [],
+                selectedRowKeys: [],
             });
             this.props.onCancelModal();
             this.props._getPaymentRecordList({ paymentRecordMstId: this.props.tableId });
@@ -180,20 +182,24 @@ class PaymentRecordModal extends React.Component {
     }
     render() {
         var self = this;
-        var purOrdSelectedRowKeysArr = self.state.purOrdSelectedRowKeysArr;
+        let {
+            selectedRowKeys,
+            purOrdSelectedRowKeysArr
+        } = this.state;
         //付款单Modal的行标选择        
         const paymentDataRowSelection = {
-            purOrdSelectedRowKeysArr,
+            selectedRowKeys,
             // onChange(purOrdSelectedRowKeysArr) {
             //     console.log(`purOrdSelectedRowKeys changed: ${purOrdSelectedRowKeysArr}`);
             //     // self.setState({
             //     //     purOrdSelectedRowKeysArr: purOrdSelectedRowKeysArr,
             //     // })
             // },
-            onSelect: (record, selected, purOrdSelectedRowKeysArr) => {
-                console.log('-----------', purOrdSelectedRowKeysArr)
+            onChange: (selectedRowKeys, selected) => {
+                console.log('-----------', selected)
                 self.setState({
-                    purOrdSelectedRowKeysArr: purOrdSelectedRowKeysArr,
+                    selectedRowKeys,
+                    purOrdSelectedRowKeysArr: selected,
                 })
             },
 
@@ -204,7 +210,7 @@ class PaymentRecordModal extends React.Component {
             fields: [
                 {
                     type: 'input',
-                    label: '单据编号',
+                    label: '采购单编号',
                     name: 'serialNumber',
                 },
                 //  {

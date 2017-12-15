@@ -14,14 +14,14 @@ const TabPane = Tabs.TabPane;
 import CustomerEditBaseinfo from './customerEdit.baseinfo';
 
 import CustomerEditBaseinfoDetailProd from './customerEdit.baseinfo.detail.prodInfo';
-//废水排放基本情况
+//废水排放
 import CustomerEditWasteWater from './customerEdit.wastewater';
 // import CustomerEditWasteWater from './customerEdit.wastewater.dischargedetail';
-//废气排放基本情况
+//废气排放
 import CustomerEditWasteGas from './customerEdit.wastegas';
-//固体污染物基本情况
+//固体污染物
 import CustomerEditWasteSolid from './customerEdit.wastesolid';
-//边界噪声基本情况
+//边界噪声
 import CustomerEditBoundaryNoise from './customerEdit.boundarynoise';
 //企业遵守法律法规情况
 import CustomerEditEIA from './customerEdit.EIA';
@@ -68,38 +68,41 @@ class Customerinfo extends React.Component {
             tabPaneDisabled: false
         })
     }
-    
+
     render() {
-        
+
         return (
             <div className="yzy-page">
-                <div style={{padding: 20, backgroundColor: '#fff'}}>
-                    <Tabs defaultActiveKey="1">
+                <div style={{ padding: 20, backgroundColor: '#fff' }}>
+                    <Tabs
+                        defaultActiveKey="1"
+                        tabPosition="left"
+                    >
                         <TabPane tab="企业概况" key="1">
                             <CustomerEditBaseinfo onBaseinfoSave={this.setTabPaneActive.bind(this)} />
                         </TabPane>
-                         <TabPane tab="排污单位基本情况" disabled={this.state.tabPaneDisabled} key="2">
+                        <TabPane tab="排污单位" disabled={this.state.tabPaneDisabled} key="2">
                             <CustomerEditBaseinfoDetailProd />
                         </TabPane>
-                        <TabPane tab="废水污染物基本情况" disabled={this.state.tabPaneDisabled} key="3">
+                        <TabPane tab="废水污染物" disabled={this.state.tabPaneDisabled} key="3">
                             <CustomerEditWasteWater />
                         </TabPane>
-                        <TabPane tab="废气污染物基本情况" disabled={this.state.tabPaneDisabled} key="4">
+                        <TabPane tab="废气污染物" disabled={this.state.tabPaneDisabled} key="4">
                             <CustomerEditWasteGas />
                         </TabPane>
-                        <TabPane tab="固体废物基本情况" disabled={this.state.tabPaneDisabled} key="5">
+                        <TabPane tab="固体废物" disabled={this.state.tabPaneDisabled} key="5">
                             <CustomerEditWasteSolid />
                         </TabPane>
-                        <TabPane tab="边界噪声基本情况" disabled={this.state.tabPaneDisabled} key="6">
+                        <TabPane tab="边界噪声" disabled={this.state.tabPaneDisabled} key="6">
                             <CustomerEditBoundaryNoise />
                         </TabPane>
-                        <TabPane tab="企业遵守法律法规情况" disabled={this.state.tabPaneDisabled} key="7">
+                        <TabPane tab="遵守法律法规" disabled={this.state.tabPaneDisabled} key="7" className="customer-law">
                             <CustomerEditEIA />
                         </TabPane>
-                        <TabPane tab="企业证照材料" disabled={this.state.tabPaneDisabled} key="8">
+                        <TabPane tab="证照材料" disabled={this.state.tabPaneDisabled} key="8">
                             <CustomerEditCertification />
                         </TabPane>
-                        <TabPane tab="企业内部环保管理制度" disabled={this.state.tabPaneDisabled} key="9">
+                        <TabPane tab="内部环保管理制度" disabled={this.state.tabPaneDisabled} key="9">
                             <CustomerIEPS />
                         </TabPane>
                         <TabPane tab="现场检查" disabled={this.state.tabPaneDisabled} key="10">

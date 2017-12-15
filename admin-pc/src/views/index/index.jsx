@@ -30,7 +30,7 @@ const imgCircleUrl = localStorage.getItem('headImagePath');
 
 function gotoAvatar() {
     window.iframeHook.changePage({
-        url: '/staffmanagementEdit.html?staffId=' + '1',
+        url: 'staffmanagementEdit.html?staffId=' + '1',
         breadIncrement: '员工信息编辑'
     });
 }
@@ -117,6 +117,10 @@ class Page extends React.Component {
         window.iframeHook.changePage = function ({ url, breadIncrement, incrementType = 'add' }) {
             if (!url) return;
 
+            if (url.indexOf('/') == 0) {
+                url = url.substring(1, url.length);
+            }
+
             let breadIncrementHadin = self.state.breads.indexOf(breadIncrement) !== -1;
 
             if (!breadIncrement || breadIncrementHadin) {
@@ -158,7 +162,7 @@ class Page extends React.Component {
         }
 
         window.iframeHook.backToLogin = function () {
-            window.location.replace('/login.html');
+            window.location.replace('login.html');
         }
 
         window.iframeHook.backPage = function ({ url }) {
@@ -261,7 +265,7 @@ class Page extends React.Component {
     logout() {
         localStorage.removeItem('token');
         // localStorage.clear();
-        window.location.replace('/login.html');
+        window.location.replace('login.html');
     }
 
     render() {

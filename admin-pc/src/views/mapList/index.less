@@ -1,0 +1,76 @@
+@import '../../theme/index.less';
+.yzy-page {
+    .map {
+        width: 100%;
+        height: 600px;
+    }
+    .mapList {
+        position: relative;
+        .customerList {
+            position: absolute;
+            top: 0;
+            z-index: 9999;
+            background: #fff;
+            width: 350px;
+            .search {
+                .search-input {
+                    width: 100%;
+                }
+            }
+            .list {
+                max-height: 500px;
+                overflow: hidden;
+                overflow-y: auto;
+                .item {
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    padding: 10px 5px;
+                    font-size: 12px;
+                    .superviseLevel {
+                        span {
+                            display: inline-block;
+                            width: 150px;
+                            height: 12px;
+                            &.orange {
+                                background: orange;
+                            }
+                            &.yellow {
+                                background: yellow;
+                            }
+                            &.blue {
+                                background: rgb(62, 196, 236);
+                            }
+                            &.green {
+                                background: rgb(158, 235, 106);
+                            }
+                        }
+                    }
+                    .top {
+                        margin-top: 10px;
+                        .gridNum {
+                            float: left;
+                        }
+                        .name {
+                            word-break: break-all;
+                            margin-left: 100px;
+                        }
+                    }
+                    .mid {
+                        margin-top: 10px;
+                    }
+                    .bot {
+                        margin-top: 10px;
+                        .contack {
+                            float: left;
+                            word-break: break-all;
+                        }
+                        .phone {
+                            word-break: break-all;
+                            margin-left: 150px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

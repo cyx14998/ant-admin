@@ -69,7 +69,7 @@ const columns = [{
 
 function changeParentState(staffId) {
   parent.window.iframeHook.changePage({
-    url: '/approvalProcessEdit.html?staffId='+ staffId,
+    url: 'approvalProcessEdit.html?staffId='+ staffId,
     breadIncrement: '员工信息编辑'
   })
 }

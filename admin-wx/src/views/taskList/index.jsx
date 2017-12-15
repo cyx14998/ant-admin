@@ -202,7 +202,7 @@ class Demo extends React.Component {
     }
 
     goSearch() {
-        window.location.href = '/searchTask.html';
+        window.location.href = 'searchTask.html';
     }
 
     onEndReached(event) {
@@ -237,7 +237,7 @@ class Demo extends React.Component {
 
     // 去任务详情页
     goDetails(obj) {
-        window.location.href = '/taskEdit.html?tableId=' + obj.tableId;
+        window.location.href = 'taskEdit.html?tableId=' + obj.tableId;
     }
 }
 

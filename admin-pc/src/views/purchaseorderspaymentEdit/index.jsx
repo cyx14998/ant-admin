@@ -90,7 +90,7 @@ const checkRecordColumns = [
         title: '审核结果',
         dataIndex: 'theFlowResult',
         render: (record) => <span>
-            {record.theFlowResult ? '审核通过' : '审核不通过'}
+            {record ? '审核通过' : '审核不通过'}
         </span>
     }
 ];
@@ -326,7 +326,7 @@ class PaymentsEdit extends React.Component {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
-                        MyToast(res.data.info);
+                        MyToast(res.data.info || '接口失败');
                         return
                     }
                     MyToast('新增成功');
@@ -334,20 +334,23 @@ class PaymentsEdit extends React.Component {
                         tableId: res.data.tableId,
                         flowOrderStateId: res.data.flowOrderStateId,
                     });
+                    self._getPaymentDetail({
+                        tableId: res.data.tableId
+                    });
                 }).catch(err =>
-                    MyToast(err)
+                    MyToast(err || '接口失败')
                     )
             } else {
                 getPaymentEdit({ ...data, tableId: tableId }).then(res => {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
-                        MyToast(res.data.info);
+                        MyToast(res.data.info || '接口失败');
                         return
                     }
                     MyToast('编辑成功');
                 }).catch(err =>
-                    MyToast(err)
+                    MyToast(err || '接口失败')
                     )
             }
         })

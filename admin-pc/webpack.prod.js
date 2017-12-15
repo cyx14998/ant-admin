@@ -26,6 +26,19 @@ function getEntries(globPath) {
 const entries = getEntries('src/views/**/index.jsx');
 
 const htmlPlugins = Object.keys(entries).map(function (name) {
+	// 需要用百度地图的页面
+	if (name == 'mapList' || name == 'customerEdit') {
+		return new HtmlWebpackPlugin({
+			// 生成出来的html文件名
+			filename: name + '.html',
+			// 每个html的模版，这里多个页面使用同一个模版
+			template: './src/mapTemplate.html',
+			// 自动将引用插入html
+			inject: true,
+			// 每个html引用的js模块，也可以在这里加上vendor等公用模块
+			chunks: ['vendors', name]
+		});
+	}
 	return new HtmlWebpackPlugin({
 		// 生成出来的html文件名
 		filename: name + '.html',
@@ -58,7 +71,7 @@ const webpackConfig = {
 	output: {
 		path: path.resolve(__dirname, 'public'),
 		filename: 'assets/js/[name].js',
-		publicPath: '/' // fetch resource base on localhost
+		publicPath: './' // fetch resource base on localhost
 	},
 	module: {
 		rules: [
@@ -126,6 +139,7 @@ const webpackConfig = {
 					options: {
 						limit: 10000,
 						name: 'assets/media/[name].[ext]',
+						publicPath: '../../'
 					}
 				}
 			}

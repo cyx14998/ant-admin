@@ -118,6 +118,7 @@ class AuthoritySubDetail extends React.Component {
             console.log(values);
             if (err) return;
             var params = { ...values };
+            params.fatherMenuId = recordEdit.fatherMenuId;
 
             // 流程可以设置为空
             if(params.flowMstId == 'false'){
@@ -205,12 +206,12 @@ class AuthoritySubDetail extends React.Component {
                                 </FormItem>
                             </Col>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="父菜单ID：">
+                                <FormItem {...formItemLayout} label="icon：">
                                     {
-                                        getFieldDecorator('fatherMenuId', {
-                                            initialValue: fatherMenuId,
+                                        getFieldDecorator('icon', {
+                                            initialValue: data ? data.icon : '',
                                         })(
-                                            <Input />
+                                            <Input placeholder="主菜单需要设置"/>
                                             )
                                     }
                                 </FormItem>
@@ -230,7 +231,7 @@ class AuthoritySubDetail extends React.Component {
                                 </FormItem>
                             </Col>
                             <Col span={8}>
-                                <FormItem {...formItemLayout} label="流程主表ID：">
+                                <FormItem {...formItemLayout} label="流程ID：">
                                     {
                                         getFieldDecorator('flowMstId', {
                                             initialValue: data && data.flowMst ? data.flowMst.tableId + '' : '',
@@ -256,19 +257,6 @@ class AuthoritySubDetail extends React.Component {
                                             rules: [{ required: true }],
                                         })(
                                             <Input />
-                                            )
-                                    }
-                                </FormItem>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label="icon：">
-                                    {
-                                        getFieldDecorator('icon', {
-                                            initialValue: data ? data.icon : '',
-                                        })(
-                                            <Input placeholder="主菜单需要设置"/>
                                             )
                                     }
                                 </FormItem>

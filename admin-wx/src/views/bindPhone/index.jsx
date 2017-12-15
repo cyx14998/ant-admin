@@ -18,6 +18,10 @@ const alert = Modal.alert;
 import './index.less';
 
 import {
+    getLocQueryByLabel
+} from '../../common/utils/index';
+
+import {
     getPhoneCodeApi,
     bindPhoneApi,
 } from '../../common/api/api.wx.js';
@@ -139,14 +143,16 @@ class BindPhone extends Component {
                     bindPhoneApi({
                         phoneNumber: phone,
                         iCode: code,
-                        openId_WeiXin: '123',
+                        openId_WeiXin: getLocQueryByLabel('openId'),
                     }).then(res => {
                         console.log('bindPhoneApi res', res)
                         if (res.data.result !== 'success') {
                             Toast.info(res.data.info || '接口失败', 2);
                             return;
                         }
-                        window.location.replace("/index.html");
+                        
+                        localStorage.setItem('token', res.data.token);
+                        window.location.replace("index.html");
 
                     }).catch(err => {
 

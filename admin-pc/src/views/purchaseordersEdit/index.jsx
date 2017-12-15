@@ -63,8 +63,8 @@ import { MyToast, getLocQueryByLabel, } from '../../common/utils';
 //采购单明细头部
 const columns = [
     {
-        title: '单据编号',
-        dataIndex: 'serialNumber',
+        title: '序号',
+        dataIndex: 'index',
     }, {
         title: '品名',
         dataIndex: 'theName',
@@ -100,7 +100,7 @@ const columns = [
 const getPurchaseOrderRecord = {
     tableId: '',
     editable: true,
-    serialNumber: {
+    index: {
         value: '',
         disabled: true,
     },
@@ -144,7 +144,7 @@ const checkRecordColumns = [
         title: '审核结果',
         dataIndex: 'theFlowResult',
         render: (record) => <span>
-            {record.theFlowResult ? '审核通过' : '审核不通过'}
+            {record ? '审核通过' : '审核不通过'}
         </span>
     }
 ];
@@ -373,7 +373,7 @@ class PurchaseordersEdit extends React.Component {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
-                        MyToast(res.data.info);
+                        MyToast(res.data.info || '新增失败');
                         return
                     }
                     MyToast('新增成功');
@@ -381,20 +381,23 @@ class PurchaseordersEdit extends React.Component {
                         tableId: res.data.tableId,
                         flowOrderStateId: res.data.flowOrderStateId,
                     });
+                    self._getPurchaseOrderDetail({
+                        tableId: res.data.tableId
+                    });
                 }).catch(err =>
-                    MyToast(err)
+                    MyToast(err || '新增失败')
                     )
             } else {
                 getPurchaseOrderEdit({ ...data, tableId: tableId }).then(res => {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
-                        MyToast(res.data.info);
+                        MyToast(res.data.info || '编辑保存失败');
                         return
                     }
                     MyToast('编辑成功');
                 }).catch(err =>
-                    MyToast(err)
+                    MyToast(err || '编辑保存失败')
                     )
             }
         })
@@ -402,12 +405,12 @@ class PurchaseordersEdit extends React.Component {
     /** ----------------------------------------采购单明细------------------------------------- */
     //数据列表格式化
     formatDatasource(dataSource) {
-        var data = dataSource.map(data => {
+        var data = dataSource.map((data, i) => {
             // theSpecifications
             return {
                 tableId: data.tableId,
-                serialNumber: {
-                    value: data.serialNumber,
+                index: {
+                    value: i + 1,
                     disabled: true,
                 },
                 theName: {
@@ -442,7 +445,6 @@ class PurchaseordersEdit extends React.Component {
         //file
         return {
             tableId: record.tableId,
-            serialNumber: record.serialNumber.value,
             theName: record.theName.value,
             theSpecifications: record.theSpecifications.value,
             theQuantity: record.theQuantity.value,
@@ -491,7 +493,7 @@ class PurchaseordersEdit extends React.Component {
                 if (res.data.result != 'success') {
                     resolve({
                         code: -1,
-                        msg: res.data.info
+                        msg: res.data.info || '接口失败'
                     });
                     return;
                 }
@@ -503,6 +505,10 @@ class PurchaseordersEdit extends React.Component {
                 });
                 self._getPurchaseOrderRecordList({
                     purchaseRecordMstId: self.state.tableId
+                });
+                
+                self._getPurchaseOrderDetail({
+                    tableId: self.state.tableId
                 });
             }).catch(err => resolve({ code: -1, msg: err }))
         });
@@ -518,7 +524,7 @@ class PurchaseordersEdit extends React.Component {
                 if (res.data.result != 'success') {
                     resolve({
                         code: -1,
-                        msg: res.data.info
+                        msg: res.data.info || '接口失败'
                     });
                     return;
                 }
@@ -531,11 +537,15 @@ class PurchaseordersEdit extends React.Component {
                 self._getPurchaseOrderRecordList({
                     purchaseRecordMstId: this.state.tableId
                 });
+                self._getPurchaseOrderDetail({
+                    tableId: self.state.tableId
+                });
             }).catch(err => resolve({ code: -1, msg: err }))
         })
     }
     // 采购单明细删除
     deletePurchaseorder(id) {
+        var self = this;
         return new Promise((resolve, reject) => {
             getPurchaseOrderRecordnDelete({ tableId: id }).then(res => {
                 if (res.data.result != 'success') {
@@ -549,6 +559,9 @@ class PurchaseordersEdit extends React.Component {
                 resolve({
                     code: 0,
                     msg: '删除成功'
+                });
+                self._getPurchaseOrderDetail({
+                    tableId: self.state.tableId
                 });
             }).catch(err => resolve({ code: -1, msg: err }))
         })
@@ -624,7 +637,7 @@ class PurchaseordersEdit extends React.Component {
                                     <Col span={8}>
                                         <FormItem {...formItemLayout} label="已付款金额">
                                             {getFieldDecorator('hasPaymentAmount', {
-                                                initialValue: purchaseRecordMst.hasPaymentAmount ? purchaseRecordMst.hasPaymentAmount : '',
+                                                initialValue: purchaseRecordMst.hasPaymentAmount ? purchaseRecordMst.hasPaymentAmount : 0,
                                             })(
                                                 <Input placeholder="已付款金额" disabled={true} />
                                                 )}
@@ -634,9 +647,13 @@ class PurchaseordersEdit extends React.Component {
                                         <FormItem {...formItemLayout} label="厂商名称">
                                             {getFieldDecorator('manufacturerName', {
                                                 initialValue: purchaseRecordMst.manufacturerName ? purchaseRecordMst.manufacturerName : '',
-                                                //rules: [{ required: true, message: '必填!' },
-                                                //{ pattern: /^[0-9]*$/, message: '编号为纯数字!' } 
-                                                //],
+                                                rules: [
+                                                    {
+                                                        required: true,
+                                                        message: '请正确填写厂商名称',
+                                                        whitespace: true
+                                                    },
+                                                ],
                                             })(
                                                 <Input placeholder="厂商名称" />
                                                 )}

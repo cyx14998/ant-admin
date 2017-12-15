@@ -1,0 +1,94 @@
+@import '../../style/base.less';
+
+
+@mainColor: #619a2c;
+@fontColor: #656565;
+
+.root-container {
+    width: 100%;
+    height: 100%;
+    .content {
+        width: 100%;
+        height: 100%;
+        font-size: 30 * @unit;  
+        background-color: #f2f2f2;
+        .am-navbar-light .am-navbar-title {
+            font-size: 34 * @unit;
+            color: #282828;                         
+        }
+        .top {
+            width: 100%;
+            height: 333 * @unit;
+            background: url('../../assets//customerInfo_top.png') no-repeat;
+            background-size: 100% 100%;
+            padding-top: 64 * @unit;
+            
+            font-size: 30 * @unit;
+            color: #fff;
+            position: relative;
+            .textBoxCenter {
+                padding: 0 156 * @unit;                
+                font-size: 32 * @unit;
+                letter-spacing: 2 * @unit;  
+                .customerNameBox {
+                    font-weight: bold;
+                    overflow: hidden;
+                }                                    
+                .addressBox {
+                    margin-top: 24 * @unit;
+                    height: 80 * @unit;
+                    line-height: 40 * @unit;
+                    font-size: 24 * @unit;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    
+                    display: flex;
+                    span {
+                        flex: 2;
+                    }
+                    div {
+                        flex: 8;
+                    }
+                }
+            }
+            .tabsBox {
+                width: 100%;
+                height: 80 * @unit;
+                line-height:  80 * @unit;
+                background-color: rgba(97,154,44,0.25) ;
+                text-align: center;
+                font-size: 28 * @unit;  
+
+                position: absolute;
+                bottom: 0;
+                .baseInfoTab, .extraInfoTab{
+                    padding: 22 * @unit 70 * @unit;
+                    // background-color: @mainColor;
+                }
+                .activeTab {
+                    background-color: @mainColor;                    
+                }
+            }
+        }
+        .infoList {
+            .am-list-item .am-list-line {
+                .am-list-content{
+                    font-size: 30 * @unit;
+                    color: #656565;
+                }
+                .am-list-extra{
+                    flex-basis: 60%;
+                    font-size: 28 * @unit; 
+                    color: #989898;                
+                }
+             }
+            .am-list-item img {
+                width: 58 * @unit;
+                height: 58 * @unit;
+            }
+             .blockTitleBox {
+                height: 112 * @unit;
+            }
+        }
+    }  
+}

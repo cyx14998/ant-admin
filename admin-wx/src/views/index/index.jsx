@@ -6,6 +6,10 @@ import IndexTabBar1 from '../home/index';
 import IndexTabBar2 from '../eApprovalList/index';
 import MyInfoTabBar3 from '../myInfo/index';
 
+import {
+    getLocQueryByLabel
+} from '../../common/utils/index';
+
 //图片
 import indexImg from '../../assets/index_index.png';
 import indexImgActive from '../../assets/index_index_active.png';
@@ -20,6 +24,21 @@ class IndexTabBar extends React.Component {
         this.state = {
             selectedTab: 'homeTab',
         };
+    }
+
+    componentWillMount() {
+        var redirect = getLocQueryByLabel('redirect');
+        if (redirect) {
+            if (redirect == 'eApprovalList') {
+                this.setState({
+                    selectedTab: 'eApprovalTab'
+                })
+            } else if (redirect == 'myInfo') {
+                this.setState({
+                    selectedTab: 'myInfoTab'
+                })
+            }
+        }
     }
 
     render() {

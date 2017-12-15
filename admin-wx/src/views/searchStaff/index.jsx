@@ -142,14 +142,14 @@ class SearchStaff extends React.Component {
         tuMemberList(params).then(res => {
             Toast.hide();
             if (res.data.result !== 'success') {
-                Toast.info(res.data.info || '获取员工列表失败');
+                Toast.info(res.data.info || '获取员工列表失败', 1, null, false);
                 return;
             }
             var data = res.data.memberList;
             var length = res.data.memberList.length;
             NUM_SECTIONS = length < 20 ? length : 20;
             if (length == 0) {
-                Toast.info('没有查询到该员工数据', 1);
+                Toast.info('没有查询到该员工数据', 1, null, false);
                 this.setState({
                     data: [],
                     dataSource: this.state.dataSource.cloneWithRows({}, []),
@@ -176,7 +176,7 @@ class SearchStaff extends React.Component {
                 refreshing: false,
                 height: hei,
             });
-        }).catch(err => Toast.info('获取员工列表失败'));
+        }).catch(err => Toast.info('获取员工列表失败', 1, null, false));
     }
 
     onEndReached(event) {
@@ -268,7 +268,7 @@ class SearchStaff extends React.Component {
 
     // 去员工详情页
     goDetails(obj) {
-        window.location.href = '/staffEdit.html?tableId=' + obj.tableId;
+        window.location.href = 'staffEdit.html?tableId=' + obj.tableId;
     }
 }
 

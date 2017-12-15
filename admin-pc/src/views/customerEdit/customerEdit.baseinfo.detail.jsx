@@ -68,6 +68,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
 			uptoken: '',
 			onBaseinfoSave: this.props.onBaseinfoSave || '',
 			tableId: '', //控制新增or编辑
+
+			superviseLevelClass: '', // 监管等级className
 		});
 
 		this.initMap = this.initMap.bind(this);
@@ -112,7 +114,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
 			}
 			this.setState({
 				customer: res.data.customer
-			})
+			});
+			// 初始化监管等级
+			this.superviseLevelChange(res.data.customer.superviseLevel);
 			//图片初始化
 			if (res.data.customer.productionFlowChartURL) {
 				var proFlowArr = res.data.customer.productionFlowChartURL.split(',');
@@ -222,7 +226,6 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
 	// 详细地址keyDown事件
 	onKeyDown(e) {
-		e.preventDefault();
 		if (e.keyCode === 13) {
 			this.mapSearch();
 		}
@@ -389,7 +392,8 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
 			var data = { ...values };
 			// 地址处理-----------------
-			var provinceName = self.state.provinceId ? self.state.provinceList[data.provinceId - 1].theName : '';
+			var provinceName = self.state.provinceId && self.state.provinceList && self.state.provinceList.length && self.state.provinceList[data.provinceId - 1] ?
+				self.state.provinceList[data.provinceId - 1].theName : '';
 			var cityName = '';
 			self.state.cityId ?
 				self.state.cityList.map((item) => {
@@ -460,7 +464,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
 					console.log('saveCustomerInfoById res', res);
 
 					if (res.data.result !== 'success') {
-						MyToast(res.data.info);
+						MyToast(res.data.info || '接口出错');
 						return
 					}
 					MyToast('新增成功');
@@ -469,19 +473,44 @@ class CustomerEditBaseinfoDetail extends React.Component {
 					self.setState({
 						tableId: res.data.tableId,
 					});
-				}).catch(err => MyToast(err))
+				}).catch(err => MyToast(err || '接口出错'))
 			} else {
 				saveEditCustomerInfoById(data).then(res => {
 					console.log('saveCustomerInfoById res', res);
 
 					if (res.data.result !== 'success') {
-						MyToast(res.data.info);
+						MyToast(res.data.info || '接口出错');
 						return
 					}
 					MyToast('编辑成功');
-				}).catch(err => MyToast(err))
+				}).catch(err => MyToast(err || '接口出错'))
 			}
 		})
+	}
+
+	// 切换监管等级 更改颜色等级
+	superviseLevelChange(val) {
+		if (val == 0) {
+			this.setState({
+				superviseLevelClass: 'orange'
+			});
+		} else if (val == 1) {
+			this.setState({
+				superviseLevelClass: 'yellow'
+			});
+		} else if (val == 2) {
+			this.setState({
+				superviseLevelClass: 'blue'
+			});
+		} else if (val == 3) {
+			this.setState({
+				superviseLevelClass: 'green'
+			});
+		} else {
+			this.setState({
+				superviseLevelClass: 'orange'
+			});
+		}
 	}
 	render() {
 		let { getFieldDecorator } = this.props.form;
@@ -509,9 +538,40 @@ class CustomerEditBaseinfoDetail extends React.Component {
 
 		return (
 			<div className="yzy-tab-content-item-wrap" >
-				<Form onSubmit={this.saveDetail.bind(this)}>
+				<Form>
 					<div className="baseinfo-section">
 						<h2 className="yzy-tab-content-title">基本信息</h2>
+						<Row>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="网格号">
+									{getFieldDecorator('gridNumber', {
+										initialValue: customer.gridNumber ? customer.gridNumber : '',
+										rules: [
+											{ required: true, message: '请填写网格号' },
+										],
+									})(
+										<Input placeholder="网格号" />
+										)}
+								</FormItem>
+							</Col>
+							<Col span={8}>
+								<FormItem {...formItemLayout} label="监管等级" className="superviseLevel">
+									{getFieldDecorator('superviseLevel', {
+										initialValue: customer.superviseLevel ? customer.superviseLevel.toString() : '',
+										rules: [
+											{ required: true, message: '请选择监管等级' },
+										],
+									})(
+										<Select onChange={this.superviseLevelChange.bind(this)} className={this.state.superviseLevelClass}>
+											<Option value="0" style={{ 'backgroundColor': 'orange' }}> &nbsp;</Option>
+											<Option value="1" style={{ 'backgroundColor': 'yellow' }}> &nbsp;</Option>
+											<Option value="2" style={{ 'backgroundColor': 'rgb(62, 196, 236)' }}> &nbsp;</Option>
+											<Option value="3" style={{ 'backgroundColor': 'rgb(158, 235, 106)' }}> &nbsp;</Option>
+										</Select>
+										)}
+								</FormItem>
+							</Col>
+						</Row>
 						<Row>
 							<Col span={8}>
 								<FormItem {...formItemLayout} label="企业名称">
@@ -613,8 +673,9 @@ class CustomerEditBaseinfoDetail extends React.Component {
 								<FormItem {...formItemLayout} label="电话">
 									{getFieldDecorator('phoneNumber', {
 										initialValue: customer.phoneNumber ? customer.phoneNumber : '',
-										rules: [{ required: true, message: '必填' },
-										{ pattern: /^[0-9]*$/, message: '请输入正确的电话号码!' }
+										rules: [
+											{ required: true, message: '请填写电话号码' },
+											{ pattern: /^[0-9]*$/, message: '请输入正确的电话号码!' }
 										],
 									})(
 										<Input placeholder="电话" />
@@ -695,17 +756,6 @@ class CustomerEditBaseinfoDetail extends React.Component {
 										//],
 									})(
 										<Input placeholder="行业类别" />
-										)}
-								</FormItem>
-							</Col>
-						</Row>
-						<Row>
-							<Col span={8}>
-								<FormItem {...formItemLayout} label="网格号">
-									{getFieldDecorator('gridNumber', {
-										initialValue: customer.gridNumber ? customer.gridNumber : '',
-									})(
-										<Input placeholder="网格号" />
 										)}
 								</FormItem>
 							</Col>
@@ -825,7 +875,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
 										initialValue: moment(customer.openingDate || new Date(), 'YYYY-MM-DD'),
 									})(
 										//<DatePicker value={customer.openingDate ? moment(customer.openingDate, 'YYYY/MM/DD') : moment(new Date(), 'YYYY/MM/DD')} onChange={this.onChange.bind(this)} />
-										<DatePicker />
+										<DatePicker style={{ width: '100%' }} />
 										)}
 								</FormItem>
 							</Col>
@@ -1051,7 +1101,7 @@ class CustomerEditBaseinfoDetail extends React.Component {
 						</Col>
 					</Row>
 					<div className="yzy-block-center">
-						<Button type="primary" style={{ padding: '0 40px' }} htmlType="submit">保存</Button>
+						<Button type="primary" style={{ padding: '0 40px' }} onClick={this.saveDetail.bind(this)}>保存</Button>
 					</div>
 				</Form>
 			</div>

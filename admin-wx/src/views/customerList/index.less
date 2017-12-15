@@ -1,0 +1,113 @@
+@import '../../style/base.less';
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+    background-color: #f2f2f2;
+}
+
+@fontColor: #656565;
+.container {
+    .com-navbar {
+        background: #fff;
+        border-bottom: 1px solid #ddd;
+        .am-icon {
+            float: left;
+            height: 44px;
+        }
+        .goSearch {
+            .am-search {
+                background: #fff;
+                .am-search-input {
+                    background: #f2f2f2;
+                    border-radius: 40 * @unit;
+                    .am-search-synthetic-ph{
+                        text-align: left;
+                        padding-left: 28 * @unit;
+                    }
+                }
+            }
+        }
+    }
+    .result-list {
+        .am-list-body {
+            background-color: #f2f2f2;
+            .list-view-section-body {
+                .company-item {
+                    padding: 28* @unit;
+                    background-color: #fff;
+                    margin-bottom: 16 * @unit;
+                    .company-icon {
+                        float: left;
+                        img {
+                            width: 31 * @unit;
+                        }
+                    }
+                    .company-intro {
+                        padding-left: 55 * @unit;
+                        .company-header {
+                            font-size: 30 * @unit;
+                            color: @fontColor;
+                        }
+                        .company-body {
+                            margin-top: 20 * @unit;
+                            .item {
+                                float: left;
+                                position: relative;
+                                label {
+                                    font-size: 20 * @unit;
+                                    color: #989898;
+                                }
+                                .pItem {
+                                    font-size: 22 * @unit;
+                                    color: @fontColor;
+                                    margin-top: 8 * @unit;
+                                }
+                            }
+                            .contacts {
+                                width: 20%;
+                                padding-right: 5* @unit;
+                                &::after {
+                                    content: ' ';
+                                    width: 1px;
+                                    height: 50* @unit;
+                                    background-color: #ddd;
+                                    position: absolute;
+                                    right: 0;
+                                    top: 50%;
+                                    margin-top: -25 * @unit;
+                                }
+                            }
+                            .link-phone {
+                                width: 30%;
+                                text-align: center;
+                                &::after {
+                                    content: ' ';
+                                    width: 1px;
+                                    height: 50* @unit;
+                                    background-color: #ddd;
+                                    position: absolute;
+                                    right: 0;
+                                    top: 50%;
+                                    margin-top: -25 * @unit;
+                                }
+                            }
+                            .company-code {
+                                width: 50%;
+                                text-align: center;
+                            }
+                        }
+                    }
+                }
+                & .company-item:last-child {
+                    margin-bottom: 0;
+                }
+            }
+            &::before,
+            &::after {
+                display: none;
+            }
+        }
+    }
+}

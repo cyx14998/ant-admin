@@ -22,6 +22,7 @@ export function getCustomerList({
   countPerPage = 1000,
   customerName = '',
   uniformSocialCreditCode = '',
+  gridNumber = '',
 }) {
   return axios.get('/uCustomerList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
@@ -30,12 +31,13 @@ export function getCustomerList({
       countPerPage,
       customerName,
       uniformSocialCreditCode,
+      gridNumber
     }
   })
 }
 
 //获取七牛uptoken
-export function getQiNiuToken({}) {
+export function getQiNiuToken({ }) {
   return axios.get('/uQiNiuTokenGet.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
@@ -43,7 +45,7 @@ export function getQiNiuToken({}) {
   });
 }
 //获取省份列表
-export function getProvinceList({}) {
+export function getProvinceList({ }) {
   return axios.get('/uProvinceList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),

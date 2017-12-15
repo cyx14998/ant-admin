@@ -70,7 +70,7 @@ export function getToken() {
     // alert('登陆过期，请登陆后再来查看');
 
     if (window.innerFrame) {
-      window.location.replace('/login.html');
+      window.location.replace('login.html');
       return;
     }
 
@@ -105,7 +105,7 @@ export function getMenuList() {
   var menuList = localStorage.getItem('menuList');
 
   if (!menuList) {
-    window.location.replace('/login.html');
+    window.location.replace('login.html');
   }
   menuList = JSON.parse(menuList);
   return menuList;

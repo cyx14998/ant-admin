@@ -18,6 +18,7 @@ import './index.less';
 
 import {
     uLeaveApplicationList,
+    uLeaveApplicationCancel,
     uLeaveApplicationDelete
 } from '../../common/api/api.LeaveManagement';
 
@@ -32,32 +33,101 @@ import {
 /**
  * table head
  */
-const columns = [{
-    title: '姓名',
-    dataIndex: 'realName',
-}, {
-    title: '性别',
-    dataIndex: 'sex',
-}, {
-    title: '手机号码',
-    dataIndex: 'phoneNumber',
-}, {
-    title: '开始时间',
-    dataIndex: 'beginDatetime',
-}, {
-    title: '结束时间',
-    dataIndex: 'endDatetime',
-}, {
-    title: '请假时长(/h)',
-    dataIndex: 'theHoure',
-}, {
-    title: '状态',
-    dataIndex: 'theState',
-}, {
-    title: '操作',
-    dataIndex: 'operation',
-    width: '100px',
-}];
+const columns = [
+    {
+        title: '单据编号',
+        dataIndex: 'serialNumber',
+    },
+    {
+        title: '姓名',
+        dataIndex: 'realName',
+    }, {
+        title: '性别',
+        dataIndex: 'sex',
+    }, {
+        title: '手机号码',
+        dataIndex: 'phoneNumber',
+    }, {
+        title: '开始时间',
+        dataIndex: 'beginDatetime',
+    }, {
+        title: '结束时间',
+        dataIndex: 'endDatetime',
+    }, {
+        title: '请假时长(/h)',
+        dataIndex: 'theHoure',
+    }, {
+        title: '状态',
+        dataIndex: 'theState',
+    }, {
+        title: '操作',
+        dataIndex: 'operation',
+        width: '100px',
+    }
+];
+
+
+const rcsearchformData = {
+    colspan: 2,
+    fields: [
+        {
+            type: 'input',
+            label: '单据编号',
+            name: 'keyword',
+            placeholder: '请输入单据编号',
+        },
+        // {
+        //     type: 'select',
+        //     label: '部门',
+        //     name: 'departmentId',
+        //     placeholder: '请输入部门',
+        //     options: departmentList
+        // }
+        {
+            type: 'input',
+            label: '申请人',
+            name: 'editerKeyword',
+            placeholder: '请输入申请人',
+        },
+        {
+            type: 'picker',
+            label: '开始时间',
+            name: 'startDate',
+            placeholder: '请选择开始时间',
+        },
+        {
+            type: 'picker',
+            label: '结束时间',
+            name: 'endDate',
+            placeholder: '请选择结束时间',
+        },
+        {
+            type: 'select',
+            label: '单据状态',
+            name: 'theState',
+            placeholder: '请选中单据状态',
+            defaultValue: '-1',
+            options: [
+                {
+                    label: '全部',
+                    value: '-1'
+                },
+                {
+                    label: '已审核',
+                    value: '2'
+                },
+                {
+                    label: '审核中',
+                    value: '0'
+                },
+                {
+                    label: '已作废',
+                    value: '1'
+                },
+            ]
+        },
+    ]
+}
 
 
 class LeaveManagement extends Component {
@@ -68,26 +138,11 @@ class LeaveManagement extends Component {
             loading: true,
             staffList: [],
             departmentList: [], // 部门列表
-            editModalVisible: false,
-            recordEdit: {},
-            modalType: 'add', // 弹窗类型 add 新增  edit 编辑
-            colspan: 2, // 搜索处参数
-            fields: [ // 搜索处参数
-                {
-                    type: 'input',
-                    label: '关键字',
-                    name: 'keyword',
-                    placeholder: '请输入姓名/手机号',
-                },
-                {
-                    type: 'select',
-                    label: '部门',
-                    name: 'departmentId',
-                    placeholder: '请输入部门',
-                    options: [
-                    ]
-                }
-            ]
+            keyword: '',       // 搜索字段 单据编号
+            editerKeyword: '', // 搜索字段 申请人
+            theState: '-1',    // 搜索字段 单据状态
+            startDate: '',     // 搜索字段 开始时间
+            endDate: '',       // 搜索字段 结束时间
         }
 
         this.getData = this.getData.bind(this);
@@ -108,34 +163,21 @@ class LeaveManagement extends Component {
                     item.label = item.theName;
                     item.value = JSON.stringify(item.tableId);
                 }) : '';
-            var fields = [
-                {
-                    type: 'input',
-                    label: '关键字',
-                    name: 'keyword',
-                    placeholder: '请输入姓名/手机号',
-                },
-                {
-                    type: 'select',
-                    label: '部门',
-                    name: 'departmentId',
-                    placeholder: '请输入部门',
-                    options: departmentList
-                }
-            ]
 
             this.setState({
                 loading: false,
-                fields
             });
         }).catch(err => MyToast(err));
 
-        columns[7].render = (text, record, index) => {
+        columns[8].render = (text, record, index) => {
             return (
                 <div>
-                    <a title="编辑" onClick={() => this.showTestModal(record)}><Icon type="edit" style={{ marginRight: '10px' }} className="yzy-icon" /></a>
-                    <Popconfirm title="确定删除么?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
-                        <a title="删除" className="delete" href="#" style={{ marginLeft: 8 }}><Icon type="delete" className="yzy-icon" /></a>
+                    <a title="编辑" onClick={() => this.showTestModal(record)}><Icon type="edit" className="yzy-icon" /></a>
+                    <Popconfirm title="确定要作废吗？" onConfirm={() => this.cancelLeavemanagerment(record.tableId)}>
+                        <a title="作废"><Icon type="close" className="yzy-icon" /></a>
+                    </Popconfirm>
+                    <Popconfirm title="确定删除么?" onConfirm={this.deleteLeavemanagerment.bind(this, record)}>
+                        <a title="删除" className="delete" href="#" ><Icon type="delete" className="yzy-icon" /></a>
                     </Popconfirm>
                 </div>
             )
@@ -145,29 +187,81 @@ class LeaveManagement extends Component {
 
     handleFormSearch(values) {
 
+        // 单据状态
+        var theState = values.theState;
+        if (theState == '-1') {        // 全部
+            theState = null;
+        }
+        var startDate = values.startDate ? values.startDate.format('YYYY-MM-DD') : null;
+        var endDate = values.endDate ? values.endDate.format('YYYY-MM-DD') : null;
+        // 搜索
         this.getData({
             keyword: values.keyword,
-            departmentId: values.departmentId
+            editerKeyword: values.editerKeyword,
+            theState,
+            startDate,
+            endDate,
+        });
+
+        // 设置状态
+        this.setState({
+            keyword: values.keyword,
+            editerKeyword: values.editerKeyword,
+            theState,
+            startDate,
+            endDate,
         });
     }
     //编辑||新增跳页面-----
     showTestModal(record) {
         parent.window.iframeHook.changePage({
-            url: '/leaveEdit.html?tableId=' + record.tableId,
+            url: 'leaveEdit.html?tableId=' + record.tableId,
             breadIncrement: '请假单编辑'
         });
         return;
     }
-    // 删除操作
-    onEditDelete(text, record, index) {
+
+    // 请假单作废
+    cancelLeavemanagerment(id) {
+        var self = this;
+        uLeaveApplicationCancel({ tableId: id }).then(res => {
+            if (res.data.result !== 'success') {
+                MyToast(res.data.info || '作废失败');
+                return;
+            }
+
+            MyToast('作废成功')
+            setTimeout(() => {
+                self.getData({
+                    keyword: self.state.keyword,
+                    editerKeyword: self.state.editerKeyword,
+                    theState: self.state.theState,
+                    startDate: self.state.startDate,
+                    endDate: self.state.endDate,
+                });
+            }, 500);
+        }).catch(err => MyToast('作废失败'));
+    }
+
+    // 请假单删除
+    deleteLeavemanagerment(record) {
         // console.log(text, record, index);
         var self = this;
         uLeaveApplicationDelete({ tableId: record.tableId }).then(res => {
             if (res.data.result !== 'success') {
                 MyToast(res.data.info || '删除失败');
+                return;
             }
+
+            MyToast('删除成功');
             setTimeout(() => {
-                self.getData({});
+                self.getData({
+                    keyword: self.state.keyword,
+                    editerKeyword: self.state.editerKeyword,
+                    theState: self.state.theState,
+                    startDate: self.state.startDate,
+                    endDate: self.state.endDate,
+                });
             }, 500);
         }).catch(err => MyToast('删除失败'));
     }
@@ -216,8 +310,10 @@ class LeaveManagement extends Component {
         return (
             <div className="yzy-page">
                 <div className="yzy-search-form-wrap">
-                    <RcSearchForm fields={this.state.fields} colspan={this.state.colspan}
-                        handleSearch={this.handleFormSearch.bind(this)} />
+                    <RcSearchForm
+                        {...rcsearchformData}
+                        handleSearch={this.handleFormSearch.bind(this)}
+                    />
                 </div>
                 <div className="yzy-list-wrap">
                     {/* <div className="yzy-list-btns-wrap">

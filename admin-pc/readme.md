@@ -107,3 +107,7 @@
 * section
 * table
 * cell
+
+## mapTemplate
+  - 新增百度地图模板。
+  - 页面需要用百度地图时，需要配置下webpack.dev和webpack.prod

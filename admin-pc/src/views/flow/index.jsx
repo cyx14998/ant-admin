@@ -216,7 +216,6 @@ class Flow extends Component {
 
   handleFormSearch(values) {
     console.log('handleSearch ---------', values);
-    if (!values.keyword) return;
 
     this.getData({
       keyword: values.keyword
@@ -226,7 +225,7 @@ class Flow extends Component {
   // 审批流程子表编辑
   uFlowDtlDetail(record) {
     parent.window.iframeHook.changePage({
-      url: '/flowEdit.html?flowMstId=' + record.tableId,
+      url: 'flowEdit.html?flowMstId=' + record.tableId,
       breadIncrement: '审批流程编辑'
     });
   }

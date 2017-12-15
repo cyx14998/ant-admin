@@ -31,6 +31,9 @@ const columns = [
         title: '名称',
         dataIndex: 'theName',
     }, {
+        title: '创建人',
+        dataIndex: 'realName',
+    }, {
         title: '创建时间',
         dataIndex: 'createDatetime',
     }, {
@@ -67,7 +70,7 @@ class NoticeManagement extends Component {
     componentDidMount() {
         this._getuMemberWaitTodoList({});
 
-        columns[2].render = (text, record, index) => {
+        columns[3].render = (text, record, index) => {
             return (
                 <div>
                     <a title="查看" onClick={() => this.waitTodoClick(record)}><Icon type="eye" style={{ marginRight: '10px' }} className="yzy-icon" /></a>
@@ -78,6 +81,9 @@ class NoticeManagement extends Component {
     }
 
     waitTodoClick(record) {
+        if (record.theLink.indexOf('/') == 0) {
+            record.theLink = record.theLink.substring(1, record.theLink.length);
+        }
         parent.window.iframeHook.changePage({
             url: record.theLink + '?tableId=' + record.sourceId,
             breadIncrement: record.theName
@@ -122,7 +128,7 @@ class NoticeManagement extends Component {
                     <Table
                         columns={columns}
                         dataSource={this.state.proclamationList}
-                        rowKey="sourceId"
+                        rowKey="createDatetime"
                         loading={this.state.loading}
                         rowClassName={(record, index) => {
                             if (index % 2 !== 0) {

@@ -69,7 +69,7 @@ const columns = [{
 
 function changeParentState(staffId) {
   parent.window.iframeHook.changePage({
-    url: '/staffmanagementEdit.html?staffId='+ staffId,
+    url: 'staffmanagementEdit.html?staffId='+ staffId,
     breadIncrement: '员工信息编辑'
   })
 }
@@ -102,7 +102,6 @@ class StaffManagement extends Component {
 
   handleFormSearch(values) {
     console.log('handleSearch ---------', values);
-    if (!values.keyword) return;
 
     this.getData({
       keyword: values.keyword

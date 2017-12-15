@@ -245,6 +245,9 @@ class LeaveManagementSubDetail extends React.Component {
                         flowOrderStateId: res.data.flowOrderStateId
                     });
                     MyToast('成功');
+                    self.getData({
+                        tableId: res.data.tableId
+                    });
                 }).catch(err => MyToast('新增失败'))
             }
         });
@@ -263,6 +266,9 @@ class LeaveManagementSubDetail extends React.Component {
                 return;
             }
             MyToast('成功');
+            self.getData({
+                tableId: this.state.tableId
+            });
         }).catch(err => MyToast('作废失败'));
     }
 
@@ -282,6 +288,9 @@ class LeaveManagementSubDetail extends React.Component {
             }
             MyToast('成功');
             this.suggestModalCancel();
+            self.getData({
+                tableId: this.state.tableId
+            });
         }).catch(err => MyToast('退回失败'));
     }
 
@@ -303,6 +312,9 @@ class LeaveManagementSubDetail extends React.Component {
             this.suggestModalCancel();
             this._getCheckRecordList({
                 flowOrderStateId: self.state.flowOrderStateId
+            });
+            self.getData({
+                tableId: this.state.tableId
             });
         }).catch(err => MyToast('审核失败'));
     }
@@ -380,12 +392,12 @@ class LeaveManagementSubDetail extends React.Component {
                             </Col>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="姓名：">
-                                    <Input placeholder="姓名" value={leaveEditData.realName} disabled />
+                                    <Input placeholder="姓名" value={leaveEditData.realName ? leaveEditData.realName : localStorage.getItem('userName')} disabled />
                                 </FormItem>
                             </Col>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label="性别：">
-                                    <Input placeholder="性别" value={leaveEditData.sex} disabled />
+                                    <Input placeholder="性别" value={leaveEditData.sex ? leaveEditData.sex : localStorage.getItem('sex') == 1 ? '男' : '女' } disabled />
                                 </FormItem>
                             </Col>
                         </Row>
@@ -430,7 +442,10 @@ class LeaveManagementSubDetail extends React.Component {
                                     {getFieldDecorator('theReason', {
                                         initialValue: leaveEditData.theReason,
                                         rules: [
-                                            { required: true }
+                                            {
+                                                required: true,
+                                                whitespace: true
+                                            }
                                         ],
                                     })(
                                         <Input placeholder="请假事由" />

@@ -8,7 +8,7 @@ const qiniuHost = 'http://up.qiniup.com';
 /**------------------------------------QiNiu上传------------------------------**/
 
 //获取七牛uptoken
-export function getQiNiuTokenApi({}) {
+export function getQiNiuTokenApi({ }) {
     return axios.get('/uQiNiuTokenGet.uhtm?InterfaceVersion=' + apiVer, {
         params: {
             token: getToken(),
@@ -61,21 +61,27 @@ export function bindPhoneApi({
     })
 }
 
-/**------------------------------------管理员用户信息页面------------------------------**/
+/**------------------------------------用户个人信息页面------------------------------**/
 
-//获取企业信息
-export function getUserInfoApi({
-    account,
-    businessType,
-}) {
-    return axios.get('/tIdentifyingCodeGet.thtm?InterfaceVersion=' + apiVer, {
+//获取用户个人信息
+export function getUserInfoApi({}) {
+    return axios.get('/tuMyInfo.tuhtm?InterfaceVersion=' + apiVer, {
         params: {
-            // token: getToken(),
-            account,
-            businessType,
+            token: getToken(),
         }
     })
 }
+
+//退出登录 -- 无
+// export function exitOutApi({
+//     openId_WeiXin,
+// }) {
+//     return axios.get('/tMemberLoginByWx.thtm?InterfaceVersion=' + apiVer, {
+//         params: {
+//             openId_WeiXin,
+//         }
+//     })
+// }
 
 /**------------------------------------企业信息详情页面------------------------------**/
 
@@ -115,12 +121,12 @@ export function getTaskInfoDtApi({
         }
     })
 }
-//获取任务详情
+//任务更新
 export function saveTaskDtApi({
     tableId,
     fileArr,
 }) {
-    return axios.get('/tuInspectionPlanDtlDetail.tuhtm?InterfaceVersion=' + apiVer, {
+    return axios.get('/tuInspectionPlanDtlUpdate.tuhtm?InterfaceVersion=' + apiVer, {
         params: {
             token: getToken(),
             tableId,
@@ -152,4 +158,13 @@ export function getStaffCerApi({
             staffId,
         }
     })
+}
+
+export function login({ phoneNumber, password }) {
+    return axios.get('/MemberLogin.htm?InterfaceVersion=' + apiVer, {
+        params: {
+            phoneNumber,
+            password
+        }
+    });
 }

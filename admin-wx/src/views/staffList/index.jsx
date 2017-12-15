@@ -26,7 +26,7 @@ function genData(pIndex = 0) {
     sectionIDs = [...sectionIDs];
 }
 
-class Demo extends React.Component {
+class StaffList extends React.Component {
     constructor(props) {
         super(props);
 
@@ -146,7 +146,7 @@ class Demo extends React.Component {
         tuMemberList(params).then(res => {
             Toast.hide();
             if (res.data.result !== 'success') {
-                Toast.info(res.data.info || '获取员工列表失败', 1);
+                Toast.info(res.data.info || '获取员工列表失败', 1, null, false);
                 return;
             }
             var data = res.data.memberList;
@@ -180,11 +180,11 @@ class Demo extends React.Component {
                 refreshing: false,
                 height: hei,
             });
-        }).catch(err => Toast.info('获取员工列表失败', 1));
+        }).catch(err => Toast.info('获取员工列表失败', 1, null, false));
     }
 
     goSearch() {
-        window.location.href = '/searchStaff.html';
+        window.location.href = 'searchStaff.html';
     }
 
     onEndReached(event) {
@@ -218,11 +218,11 @@ class Demo extends React.Component {
 
     // 去各个详情页
     goDetails(obj) {
-        window.location.href = '/staffEdit.html?tableId=' + obj.tableId;
+        window.location.href = 'staffEdit.html?tableId=' + obj.tableId;
     }
 }
 
 ReactDOM.render(
-    <Demo></Demo>,
+    <StaffList></StaffList>,
     document.getElementById('root')
 );

@@ -38,7 +38,7 @@ class StaffManagementEdit extends Component {
   }
 
   onStaffDetailsSave(values) {
-    console.log('onStaffDetailsSave---------------', values)
+    values.dateOfBirth = values.dateOfBirth.format('YYYY-MM-DD');
     if (this.state.staffId === '') {
       // add
       getStaffListAdd(values).then(res => {

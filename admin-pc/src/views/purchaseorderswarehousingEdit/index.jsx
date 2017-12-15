@@ -94,7 +94,7 @@ const checkRecordColumns = [
         title: '审核结果',
         dataIndex: 'theFlowResult',
         render: (record) => <span>
-            {record.theFlowResult ? '审核通过' : '审核不通过'}
+            {record ? '审核通过' : '审核不通过'}
         </span>
     }
 ];
@@ -271,9 +271,7 @@ class WarehousingsEdit extends React.Component {
             this._getWarehousingDetail({ tableId: this.state.tableId });
             // this.props.onCancel();            
             this._getCheckRecordList({ flowOrderStateId: this.state.flowOrderStateId });
-        }).catch(err =>
-            MyToast('接口失败')
-            );
+        }).catch(err => MyToast('接口失败'));
     }
     //入库单退回
     onCheckReject() {
@@ -292,9 +290,7 @@ class WarehousingsEdit extends React.Component {
             });
             this._getWarehousingDetail({ tableId: this.state.tableId });
             this._getCheckRecordList({ flowOrderStateId: this.state.flowOrderStateId });
-        }).catch(err =>
-            MyToast('接口失败')
-            );
+        }).catch(err => MyToast(err || '接口失败'));
     }
     //入库单送审
     onCheckPass() {
@@ -313,9 +309,7 @@ class WarehousingsEdit extends React.Component {
             });
             this._getWarehousingDetail({ tableId: this.state.tableId });
             this._getCheckRecordList({ flowOrderStateId: this.state.flowOrderStateId });
-        }).catch(err =>
-            MyToast('接口失败')
-            );
+        }).catch(err => MyToast(err || '接口失败'));
     }
     //基本信息保存
     saveDetail(e) {
@@ -342,7 +336,7 @@ class WarehousingsEdit extends React.Component {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
-                        MyToast(res.data.info);
+                        MyToast(res.data.info || '新增失败');
                         return
                     }
                     MyToast('新增成功');
@@ -350,21 +344,20 @@ class WarehousingsEdit extends React.Component {
                         tableId: res.data.tableId,
                         flowOrderStateId: res.data.flowOrderStateId,
                     });
-                }).catch(err =>
-                    MyToast(err)
-                    )
+
+                    self._getWarehousingDetail({
+                        tableId: res.data.tableId,
+                    });
+                }).catch(err => MyToast(err || '新增失败'))
             } else {
                 getWarehousingEdit({ ...data, tableId: tableId }).then(res => {
-                    console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
-                        MyToast(res.data.info);
+                        MyToast(res.data.info || '编辑保存失败');
                         return
                     }
                     MyToast('编辑成功');
-                }).catch(err =>
-                    MyToast(err)
-                    )
+                }).catch(err => MyToast(err || '编辑保存失败'))
             }
         })
     }
@@ -489,7 +482,7 @@ class WarehousingsEdit extends React.Component {
                                     <Col span={8}>
                                         <FormItem {...formItemLayout} label="创建人">
                                             {getFieldDecorator('editor.realName', {
-                                                initialValue: storageInRecordMst.editor ? storageInRecordMst.editor.realName : '',
+                                                initialValue: storageInRecordMst.editor ? storageInRecordMst.editor.realName : localStorage.getItem('userName'),
                                             })(
                                                 <Input placeholder="创建人" disabled={true} />
                                                 )}
@@ -518,7 +511,7 @@ class WarehousingsEdit extends React.Component {
                                     <Col span={8}>
                                         <FormItem {...formItemLayout} label="入库人">
                                             {getFieldDecorator('storageInMemberId', {
-                                                initialValue: storageInRecordMst.storageInMember ? storageInRecordMst.storageInMember.memberId + '' : '',
+                                                initialValue: storageInRecordMst.storageInMember ? storageInRecordMst.storageInMember.memberId + '' : localStorage.getItem('memberId'),
                                                 //rules: [{ required: true, message: '必填!' },
                                                 //{ pattern: /^[0-9]*$/ } 
                                                 //],

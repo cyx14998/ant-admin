@@ -104,9 +104,11 @@ class LoginForm extends React.Component {
             }
             // set token
             localStorage.setItem("token", res.data.token);
-            window.location = '/index.html';
+            window.location = 'index.html';
             localStorage.setItem('userName', res.data.realName);
             localStorage.setItem('roleName', res.data.roleName);
+            localStorage.setItem('memberId', res.data.memberId);
+            localStorage.setItem('sex', res.data.sex);
             localStorage.setItem('headImagePath', res.data.headImagePath);
             localStorage.setItem('menuList', JSON.stringify(res.data.menuList));
         }).catch(err => {

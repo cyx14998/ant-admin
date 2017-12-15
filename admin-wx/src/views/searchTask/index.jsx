@@ -28,7 +28,7 @@ function dateFormat(date) {
     return new Date(date).format("yyyy-MM-dd");
 }
 
-class Demo extends React.Component {
+class SearchTask extends React.Component {
     constructor(props) {
         super(props);
 
@@ -139,7 +139,7 @@ class Demo extends React.Component {
         tuInspectionPlanDtlForMeList(params).then(res => {
             Toast.hide();
             if (res.data.result !== 'success') {
-                Toast.info(res.data.info || '没有查询到任务信息');
+                Toast.info(res.data.info || '没有查询到任务信息', 1, null, false);
                 return;
             }
             var data = res.data.inspectionPlanDtlList;
@@ -173,7 +173,7 @@ class Demo extends React.Component {
                 refreshing: false,
                 height: hei,
             });
-        }).catch(err => Toast.info('没有查询到任务信息'));
+        }).catch(err => Toast.info('没有查询到任务信息', 1, null, false));
     }
 
     onEndReached(event) {
@@ -265,11 +265,11 @@ class Demo extends React.Component {
 
     // 去任务详情页
     goDetails(obj) {
-        window.location.href = '/taskEdit.html?tableId=' + obj.tableId;
+        window.location.href = 'taskEdit.html?tableId=' + obj.tableId;
     }
 }
 
 ReactDOM.render(
-    <Demo></Demo>,
+    <SearchTask></SearchTask>,
     document.getElementById('root')
 );

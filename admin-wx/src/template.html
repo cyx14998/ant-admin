@@ -6,6 +6,8 @@
     <!-- set `maximum-scale` for some compatibility issues -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
     <meta name="theme-color" content="#000000">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="x-rim-auto-match" content="none">
     <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
     <script>
         if ('addEventListener' in document) {
@@ -14,7 +16,9 @@
             }, false);
         }
         if (!window.Promise) {
-            document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"' + '>' + '<' + '/' + 'script>');
+            document.writeln(
+                '<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"' + '>' +
+                '<' + '/' + 'script>');
         }
     </script>
     <!--
@@ -32,7 +36,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>友通环保</title>
-    <script src="/config/config.js"></script>
+    <script src="./config/config.js"></script>
     <style>
         #loading {
             background-color: #fff;

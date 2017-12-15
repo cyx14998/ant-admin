@@ -22,6 +22,10 @@ const rcsearchformData = {
     type: 'input',
     label: '统一社会信用代码',
     name: 'uniformSocialCreditCode',
+  }, {
+    type: 'input',
+    label: '网格号',
+    name: 'gridNumber',
   }]
 }
 
@@ -35,9 +39,9 @@ import {
 
 const columns = [
   {
-    title: '统一社会信用代码',
-    dataIndex: 'uniformSocialCreditCode',
-    key: 'uniformSocialCreditCode',
+    title: '网格号',
+    dataIndex: 'gridNumber',
+    key: 'gridNumber',
   }, {
     title: '企业名称',
     dataIndex: 'customerName',
@@ -78,14 +82,14 @@ const columns = [
 function changeIframeToEdit(id) {
   console.log('chanageiframe', parent.window.iframeHook)
   parent.window.iframeHook.changePage({
-    url: '/customerEdit.html?id=' + id + '#' + Math.random(),
+    url: 'customerEdit.html?id=' + id + '#' + Math.random(),
     breadIncrement: '客户信息编辑'
   })
 }
 
 function changeIframeToDynamic(id) {
   parent.window.iframeHook.changePage({
-    url: '/customerDynamic.html?id=' + id,
+    url: 'customerDynamic.html?id=' + id,
     breadIncrement: '客户动态信息|/customerDynamic.html?id=' + id,
   })
 }
@@ -134,6 +138,7 @@ class CustomerList extends React.Component {
     this.getData({
       customerName: values.customerName,
       uniformSocialCreditCode: values.uniformSocialCreditCode,
+      gridNumber: values.gridNumber
     });
   }
 

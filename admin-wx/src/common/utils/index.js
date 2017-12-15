@@ -3,20 +3,12 @@
  */
 
 export function getLocQueryByLabel(label) {
-  var searchstr = window.location.search.slice(1);
-  var qsArr = searchstr.split('&');
-  var qsJson = {};
-
-  var len = qsArr.length,
-    i = 0,
-    item = [];
-
-  for (i; i < len; i++) {
-    item = qsArr[i].split('=');
-    qsJson[item[0]] = item[1];
+  var reg = new RegExp('(^|&)' + label + '=([^&]*)(&|$)', 'i');
+  var r = window.location.search.substr(1).match(reg);
+  if (r != null) {
+    return unescape(r[2]);
   }
-
-  return qsJson[label];
+  return null;
 }
 
 /**

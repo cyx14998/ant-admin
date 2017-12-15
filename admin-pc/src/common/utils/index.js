@@ -2,27 +2,19 @@
  * utils for app
  */
 
-export function getLocQueryByLabel (label) {
-  var searchstr = window.location.search.slice(1);
-  var qsArr = searchstr.split('&');
-  var qsJson = {};
-
-  var len = qsArr.length,
-      i = 0,
-      item = [];
-
-  for (i; i<len; i++) {
-    item = qsArr[i].split('=');
-    qsJson[item[0]] = item[1]; 
+export function getLocQueryByLabel(label) {
+  var reg = new RegExp('(^|&)' + label + '=([^&]*)(&|$)', 'i');
+  var r = window.location.search.substr(1).match(reg);
+  if (r != null) {
+    return unescape(r[2]);
   }
-
-  return qsJson[label];
+  return null;
 }
 
 /**
  * Toast
  */
-export function MyToast (info, timeout=1000) {
+export function MyToast(info, timeout = 1000) {
   var toast = document.createElement('div');
   toast.setAttribute('class', 'yzy-toast');
 
@@ -50,7 +42,7 @@ export function MyToast (info, timeout=1000) {
  *     theName  =>  label
  * @return [object Array]
  */
-export function convertObjectLabel(source, valueProp='tableId', labelProp='theName') {
+export function convertObjectLabel(source, valueProp = 'tableId', labelProp = 'theName') {
   var dest = [];
 
   if (!source || source.length === 0) {
@@ -58,8 +50,8 @@ export function convertObjectLabel(source, valueProp='tableId', labelProp='theNa
   }
 
   var len = source.length,
-      i;
-  for (i=0; i<len; i++) {
+    i;
+  for (i = 0; i < len; i++) {
     let newItem = {
       value: source[i][valueProp] + '',
       label: source[i][labelProp] + ''
@@ -79,14 +71,14 @@ export function convertObjectLabel(source, valueProp='tableId', labelProp='theNa
 export function getLabelFromOptions(value, options) {
   var label = '';
 
-  for (var i=0, len=options.length; i<len; i++) {
+  for (var i = 0, len = options.length; i < len; i++) {
     if (options[i].value === value) {
       label = options[i].label;
       break;
     }
   }
 
-  return label;  
+  return label;
 }
 
 /**

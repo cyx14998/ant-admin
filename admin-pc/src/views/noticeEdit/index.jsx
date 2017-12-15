@@ -268,14 +268,14 @@ class NoticeManagementSubDetail extends React.Component {
                 prodFile.map(item => {
                     var fileObj = {};
                     var url = '';
-                    
+
                     if (!item.url) {
-						url = item.response.filePath;
-					}
-					if (url.indexOf(downloadUrl) === -1) {
-						url = downloadUrl + url;
+                        url = item.response.filePath;
                     }
-                    
+                    if (url.indexOf(downloadUrl) === -1) {
+                        url = downloadUrl + url;
+                    }
+
                     fileObj = {
                         filePath: url,
                         theName: item.name,
@@ -299,7 +299,7 @@ class NoticeManagementSubDetail extends React.Component {
                         MyToast(res.data.info || '更新失败');
                         return;
                     }
-                    MyToast('成功');
+                    MyToast('更新成功');
                     // setTimeout(() => {
                     //     parent.window.iframeHook.backPage({
                     //         url: '/noticemanagement.html',
@@ -313,10 +313,14 @@ class NoticeManagementSubDetail extends React.Component {
                         MyToast(res.data.info || '新增失败');
                         return;
                     }
-                    MyToast('成功');
+                    MyToast('新增成功');
                     self.setState({
                         tableId: res.data.tableId,
                         flowOrderStateId: res.data.flowOrderStateId
+                    });
+
+                    self.getData({
+                        tableId: res.data.tableId,
                     });
                     // setTimeout(() => {
                     //     parent.window.iframeHook.backPage({
@@ -339,6 +343,10 @@ class NoticeManagementSubDetail extends React.Component {
                 return;
             }
             MyToast('成功');
+
+            this.getData({
+                tableId
+            });
             // setTimeout(() => {
             //     parent.window.iframeHook.backPage({
             //         url: '/noticemanagement.html',
@@ -361,6 +369,10 @@ class NoticeManagementSubDetail extends React.Component {
             }
             MyToast('成功');
             this.suggestModalCancel();
+
+            this.getData({
+                tableId
+            });
             // setTimeout(() => {
             //     parent.window.iframeHook.backPage({
             //         url: '/noticemanagement.html',
@@ -385,6 +397,9 @@ class NoticeManagementSubDetail extends React.Component {
             this.suggestModalCancel();
             this._getCheckRecordList({
                 flowOrderStateId: this.state.flowOrderStateId
+            });
+            this.getData({
+                tableId
             });
         }).catch(err => MyToast('审核失败'));
     }
@@ -476,7 +491,10 @@ class NoticeManagementSubDetail extends React.Component {
                                     {getFieldDecorator('theTitle', {
                                         initialValue: noticeData.theTitle,
                                         rules: [
-                                            { required: true }
+                                            {
+                                                required: true,
+                                                whitespace: true
+                                            }
                                         ],
                                     })(
                                         <Input placeholder="主题" />

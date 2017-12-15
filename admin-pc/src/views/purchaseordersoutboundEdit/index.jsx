@@ -69,6 +69,10 @@ const columns = [
     //     dataIndex: 'warehouse.theName',
     // }, 
     {
+        title: '厂商',
+        dataIndex: 'manufacturerName',
+    },
+    {
         title: '品名',
         dataIndex: 'theName',
     }, {
@@ -77,7 +81,9 @@ const columns = [
     }, {
         title: '已出库数量',
         dataIndex: 'theQuantity',
-        validateType: 'number',
+    }, {
+        title: '入库时间',
+        dataIndex: 'createDatetime',
     }, {
         title: '操作',
         dataIndex: 'operation',
@@ -100,7 +106,7 @@ const checkRecordColumns = [
         title: '审核结果',
         dataIndex: 'theFlowResult',
         render: (record) => <span>
-            {record.theFlowResult ? '审核通过' : '审核不通过'}
+            {record ? '审核通过' : '审核不通过'}
         </span>
     }
 ];
@@ -157,7 +163,7 @@ class OutboundEdit extends React.Component {
         this._getMemberList();
         this._getOutboundDetail({ tableId: this.state.tableId });
         this._getOutboundRecordList({ storageOutRecordMstId: this.state.tableId });
-        columns[4].render = (text, record, index) => {
+        columns[6].render = (text, record, index) => {
             return (<Popconfirm title="确定删除么?" onConfirm={this.onEditDelete.bind(this, text, record, index)}>
                 <a title="删除" className="delete" href="#" ><Icon type="delete" className="yzy-icon" /></a>
             </Popconfirm>)
@@ -368,7 +374,7 @@ class OutboundEdit extends React.Component {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
-                        MyToast(res.data.info);
+                        MyToast(res.data.info || '新增失败');
                         return
                     }
                     MyToast('新增成功');
@@ -376,21 +382,21 @@ class OutboundEdit extends React.Component {
                         tableId: res.data.tableId,
                         flowOrderStateId: res.data.flowOrderStateId,
                     });
-                }).catch(err =>
-                    MyToast(err)
-                    )
+
+                    self._getOutboundDetail({
+                        tableId: res.data.tableId,
+                    });
+                }).catch(err => MyToast(err || '新增失败'))
             } else {
                 getOutboundEdit({ ...data, tableId: tableId }).then(res => {
                     console.log('savePurOrder res', res);
 
                     if (res.data.result !== 'success') {
-                        MyToast(res.data.info);
+                        MyToast(res.data.info || '编辑保存失败');
                         return
                     }
                     MyToast('编辑成功');
-                }).catch(err =>
-                    MyToast(err)
-                    )
+                }).catch(err => MyToast(err || '编辑保存失败'))
             }
         })
     }
@@ -541,7 +547,7 @@ class OutboundEdit extends React.Component {
                                     <Col span={8}>
                                         <FormItem {...formItemLayout} label="创建人">
                                             {getFieldDecorator('editor.realName', {
-                                                initialValue: storageOutRecordMst.editor ? storageOutRecordMst.editor.realName : '',
+                                                initialValue: storageOutRecordMst.editor ? storageOutRecordMst.editor.realName : localStorage.getItem('userName'),
                                             })(
                                                 <Input placeholder="创建人" disabled={true} />
                                                 )}
@@ -570,7 +576,7 @@ class OutboundEdit extends React.Component {
                                     <Col span={8}>
                                         <FormItem {...formItemLayout} label="出库人">
                                             {getFieldDecorator('storageOutMemberId', {
-                                                initialValue: storageOutRecordMst.storageOutMember ? storageOutRecordMst.storageOutMember.tableId + '' : '',
+                                                initialValue: storageOutRecordMst.storageOutMember ? storageOutRecordMst.storageOutMember.tableId + '' : localStorage.getItem('memberId'),
                                                 //rules: [{ required: true, message: '必填!' },
                                                 //{ pattern: /^[0-9]*$/ } 
                                                 //],

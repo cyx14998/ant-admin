@@ -12,22 +12,10 @@ import {
 
 import RcSearchForm from '../../components/rcsearchform';
 
-// RcSearchForm datablob
-const rcsearchformData = {
-  colspan: 2,
-  fields: [{
-    type: 'input',
-    label: '单据编号',
-    name: 'serialNumber',
-  }, {
-    type: 'input',
-    label: '厂商名称',
-    name: 'manufacturerName',
-  }]
-}
 
 import {
   getPurchaseOrderList,
+  getPurchaseOrderCancel,
   getPurchaseOrderDelete
 } from '../../common/api/api.purchaseorders.js';
 
@@ -95,10 +83,66 @@ const columns = [
   }
 ];
 
+// RcSearchForm datablob
+const rcsearchformData = {
+  colspan: 2,
+  fields: [
+    {
+      type: 'input',
+      label: '单据编号',
+      name: 'keyword',
+      placeholder: '请输入单据编号',
+    },
+    {
+      type: 'input',
+      label: '申请人',
+      name: 'editerKeyword',
+      placeholder: '请输入申请人',
+    },
+    {
+      type: 'picker',
+      label: '开始时间',
+      name: 'startDate',
+      placeholder: '请选择开始时间',
+    },
+    {
+      type: 'picker',
+      label: '结束时间',
+      name: 'endDate',
+      placeholder: '请选择结束时间',
+    },
+    {
+      type: 'select',
+      label: '单据状态',
+      name: 'theState',
+      placeholder: '请选中单据状态',
+      defaultValue: '-1',
+      options: [
+        {
+          label: '全部',
+          value: '-1'
+        },
+        {
+          label: '已审核',
+          value: '2'
+        },
+        {
+          label: '审核中',
+          value: '0'
+        },
+        {
+          label: '已作废',
+          value: '1'
+        },
+      ]
+    },
+  ]
+}
+
 function changeIframeToEdit(id) {
   console.log('chanageiframe', parent.window.iframeHook)
   parent.window.iframeHook.changePage({
-    url: '/purchaseordersEdit.html?tableId=' + id + '#' + Math.random(),
+    url: 'purchaseordersEdit.html?tableId=' + id + '#' + Math.random(),
     breadIncrement: '采购单编辑'
   })
 }
@@ -110,6 +154,11 @@ class PurchaseordersList extends React.Component {
     this.state = {
       loading: true,
       purchaseRecordMstList: [],
+      keyword: '',       // 搜索字段 单据编号
+      editerKeyword: '', // 搜索字段 申请人
+      theState: null,    // 搜索字段 单据状态
+      startDate: '',     // 搜索字段 开始时间
+      endDate: '',       // 搜索字段 结束时间
     }
 
     this.getData = this.getData.bind(this);
@@ -120,7 +169,10 @@ class PurchaseordersList extends React.Component {
     columns[8].render = (text, record) => {
       return (
         <div>
-          <a title="编辑" style={{ marginRight: '10px' }} onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
+          <a title="编辑" onClick={() => changeIframeToEdit(record.tableId)}><Icon type="edit" className="yzy-icon" /></a>
+          <Popconfirm title="确定要作废吗？" onConfirm={() => this.cancelPurchaseorder(record.tableId)}>
+            <a title="作废"><Icon type="close" className="yzy-icon" /></a>
+          </Popconfirm>
           <Popconfirm title="确定要删除吗？" onConfirm={() => this.deletePurchaseorder(record.tableId)}>
             <a title="删除"><Icon type="delete" className="yzy-icon" /></a>
           </Popconfirm>
@@ -141,7 +193,7 @@ class PurchaseordersList extends React.Component {
       }
       var data = res.data.purchaseRecordMstList;
       data = data.map(item => {
-          var state = '';
+        var state = '';
         if (item.isPass) {
           state = '已审核';
         } else {
@@ -176,10 +228,48 @@ class PurchaseordersList extends React.Component {
   }
   //头部搜索
   handleFormSearch(values) {
+    // 单据状态
+    var theState = values.theState;
+    if (theState == '-1') {        // 全部
+      theState = null;
+    }
+    var startDate = values.startDate ? values.startDate.format('YYYY-MM-DD') : null;
+    var endDate = values.endDate ? values.endDate.format('YYYY-MM-DD') : null;
+    // 搜索
     this.getData({
-      serialNumber: values.serialNumber,
-      manufacturerName: values.manufacturerName,
+      keyword: values.keyword,
+      editerKeyword: values.editerKeyword,
+      theState,
+      startDate,
+      endDate,
     });
+
+    // 设置状态
+    this.setState({
+      keyword: values.keyword,
+      editerKeyword: values.editerKeyword,
+      theState,
+      startDate,
+      endDate,
+    });
+  }
+
+  // 采购单作废
+  cancelPurchaseorder(id) {
+    getPurchaseOrderCancel({ tableId: id }).then(res => {
+      if (res.data.result !== 'success') {
+        MyToast(res.data.info || '作废失败');
+        return;
+      }
+      MyToast('作废成功');
+      setTimeout(this.getData({
+        keyword: this.state.keyword,
+        editerKeyword: this.state.editerKeyword,
+        theState: this.state.theState,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
+      }), 500);
+    }).catch(err => MyToast(err));
   }
   // 采购单删除
   deletePurchaseorder(id) {
@@ -188,7 +278,14 @@ class PurchaseordersList extends React.Component {
         MyToast(res.data.info || '删除采购单失败');
         return;
       }
-      setTimeout(this.getData({}), 500);
+      MyToast('删除成功');
+      setTimeout(this.getData({
+        keyword: this.state.keyword,
+        editerKeyword: this.state.editerKeyword,
+        theState: this.state.theState,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
+      }), 500);
     }).catch(err => MyToast(err));
   }
 

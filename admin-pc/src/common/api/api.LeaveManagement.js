@@ -14,16 +14,14 @@ import axios, {
 export function uLeaveApplicationList({
   pageNumber = 1,
   countPerPage = 1000,
-  keyword = '',
-  departmentId = '',
-  }) {
+  ...params
+  // departmentId = '',
+}) {
   return axios.get('/uLeaveApplicationList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      pageNumber,
-      countPerPage,
-      keyword,
-      departmentId
+      ...params
+      // departmentId
     }
   })
 }

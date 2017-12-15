@@ -31,11 +31,14 @@ const columns = [
         title: '主题',
         dataIndex: 'theTitle',
     }, {
+        title: '公司',
+        dataIndex: 'publishCompany',
+    }, {
         title: '部门',
         dataIndex: 'publishDepart',
     }, {
-        title: '发布时间',
-        dataIndex: 'publishDatetime',
+        title: '公告时间',
+        dataIndex: 'theDatetime',
     }, {
         title: '操作',
         dataIndex: 'operation',
@@ -70,7 +73,7 @@ class NoticeManagement extends Component {
     componentDidMount() {
         this._getuProclamationListForDashboard({});
 
-        columns[3].render = (text, record, index) => {
+        columns[4].render = (text, record, index) => {
             return (
                 <div>
                     <a title="查看" onClick={() => this.dashClick(record)}><Icon type="eye" style={{ marginRight: '10px' }} className="yzy-icon" /></a>
@@ -82,7 +85,7 @@ class NoticeManagement extends Component {
 
     dashClick(record) {
         parent.window.iframeHook.changePage({
-            url: '/dashboardDetail.html?tableId=' + record.tableId,
+            url: 'dashboardDetail.html?tableId=' + record.tableId,
             breadIncrement: '公告详情'
         });
     }

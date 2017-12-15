@@ -52,7 +52,7 @@ class QiniuUpload extends React.Component {
   componentDidMount() {
     getQiNiuToken({}).then(res => {
       if (!res.data || !res.data.uptoken) {
-        MyToast('getqiniuyun uptoken error');
+        MyToast('七牛获取token出错');
         return;
       }
 

@@ -13,9 +13,12 @@ import {
   Button,
   Upload,
   Modal,
+  DatePicker
 } from 'antd';
+import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
+const dateFormat = 'YYYY-MM-DD';
 
 import md5 from 'crypto-js/md5';
 
@@ -267,14 +270,17 @@ class StaffDetails extends React.Component {
                 </FormItem>
               </Col>
               <Col span={8}>
-                <FormItem {...formItemLayout} label="年龄">
-                  {getFieldDecorator('age', {
-                    initialValue: this.state.data.age.toString(),
-                    rules: [{ required: true },
-                    {/* { pattern: /^[0-9]*$/ } */ }
+                <FormItem {...formItemLayout} label="出生年月日">
+                  {getFieldDecorator('dateOfBirth', {
+                    initialValue: this.state.data.dateOfBirth ? moment(this.state.data.dateOfBirth, dateFormat) : moment(new Date(), dateFormat),
+                    rules: [
+                      {
+                        type: 'object',
+                        required: true
+                      },
                     ],
                   })(
-                    <Input placeholder="年龄" />
+                    <DatePicker placeholder="出生年月日" style={{ 'width': '100%' }} />
                     )}
                 </FormItem>
               </Col>

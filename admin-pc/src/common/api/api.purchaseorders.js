@@ -10,17 +10,12 @@ import axios, {
 //采购单主表列表
 export function getPurchaseOrderList({
   countPerPage = 1000,
-  keyword,
-  serialNumber,
-  manufacturerName,
+  ...params
 }) {
   return axios.get('/uPurchaseRecordMstList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
-      countPerPage,
-      keyword,
-      serialNumber,
-      manufacturerName,
+      ...params
     }
   })
 }

@@ -13,6 +13,10 @@ axios.defaults.baseURL = BaseConfig.apiPath;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+var token = getLocQueryByLabel('token');
+if(token){
+  localStorage.setItem('token', token);
+}
 
 export const apiVer = '20171018'; // '20171018';
 
@@ -22,41 +26,12 @@ export function getToken() {
   if (!token) {
     // alert('登陆过期，请登陆后再来查看');
 
-    window.location.replace('/bindPhone.html');
+    window.location.replace('login.html');
   }
 
   return token;
 }
 
-export function getCustomerId() {
-  var cusId = getLocQueryByLabel('id');
-
-  if (cusId) return cusId;
-
-  cusId = localStorage.getItem('yt-customerId');
-
-  return cusId;
-}
-
-// 获取menuId
-export function getMenuId() {
-  return localStorage.getItem('uMenuId');
-}
-
-// 存入menuId
-export function setMenuId(menuId) {
-  return localStorage.setItem('uMenuId', menuId);
-}
-
-export function getMenuList() {
-  var menuList = localStorage.getItem('menuList');
-
-  if (!menuList) {
-    window.location.replace('/login.html');
-  }
-  menuList = JSON.parse(menuList);
-  return menuList;
-}
 
 // Date.format
 Date.prototype.format = function (fmt) {

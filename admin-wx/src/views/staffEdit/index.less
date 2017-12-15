@@ -1,0 +1,72 @@
+@import '../../style/base.less';
+
+@mainColor: #619a2c;
+
+.root-container {
+    width: 100%;
+    height: 100%;
+    .content {
+        width: 100%;
+        height: 100%;
+        font-size: 30 * @unit; 
+        background-color: #f2f2f2;
+        .am-navbar-light .am-navbar-title {
+            font-size: 34 * @unit;
+            color: #282828;                         
+        }
+        .listBox {
+            background-color: #f2f2f2;            
+        }
+        .am-list{
+            .am-list-item.userImgBox {
+                height: 128 * @unit;
+                .am-list-line-multiple {
+                    padding: 20 * @unit 20 * @unit 20 * @unit 0;
+                    .am-list-content {
+                        color: #656565;                        
+                        font-size: 30 * @unit;
+                        .am-list-brief {  
+                            font-size: 28 * @unit;                 
+                        }
+                    }
+                }
+                .am-list-thumb {
+                    img {
+                        width: 63 * @unit;
+                        height: 63 * @unit;
+                    }
+                }
+            }
+        }
+        .am-list-item .am-list-line .am-list-extra {
+            flex-basis: 46%;
+        }
+        .contentList {
+            .am-list-item .am-list-line {
+                .am-list-content{
+                    font-size: 30 * @unit;
+                    color: #656565;
+                }
+                .am-list-extra{
+                    flex-basis: 60%;
+                    font-size: 28 * @unit; 
+                    color: #989898;
+                }
+            }
+            .am-list-item img {
+                width: 34 * @unit;
+                height: 34 * @unit;
+            }
+        }
+        .callBtn {
+            display: inline-block;
+            width: 100%;
+            height: 88 * @unit;
+            line-height: 88 * @unit;
+            border-radius: 10 * @unit;
+            text-align: center;
+            margin:  40 * @unit 0 50 * @unit 0;
+            background-color: @mainColor;            
+        }
+    }  
+}

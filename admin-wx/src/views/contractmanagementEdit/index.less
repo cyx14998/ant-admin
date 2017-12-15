@@ -1,0 +1,78 @@
+@import '../../style/base.less';
+
+@mainColor: #619a2c;
+
+.root-container {
+    width: 100%;
+    height: 100%;
+    .content {
+        width: 100%;
+        height: 100%;
+        font-size: 30 * @unit; 
+        background-color: #f2f2f2;
+        .am-navbar-light .am-navbar-title {
+            font-size: 34 * @unit;
+            color: #282828;                         
+        }
+        .listBox {
+            background-color: #f2f2f2;            
+        }
+        .am-list-item .am-list-line {
+            .am-list-content{
+                font-size: 30 * @unit;
+                color: #656565;
+            }
+            .am-list-extra{
+                flex-basis: 65%;
+                font-size: 28 * @unit; 
+                color: #989898;                
+            }
+        }
+         .loadItem {
+                background-color: #fff;
+                height: 88 * @unit;
+                line-height: 88 * @unit;
+                text-align: center;
+                s {
+                    display: inline-block;
+                    background: url('../../assets/task_iconh.png') no-repeat;
+                    width: 30 * @unit;
+                    height: 26 * @unit;
+                    background-size: cover;
+                    margin-right: 10 * @unit;
+                }
+                .fontCol {
+                    display: inline-block;
+                    color: @mainColor;
+                }
+                .fontColNo {
+                    display: inline-block;
+                    color: #656565;
+                }
+            }
+            .loadItem.borderLR {
+                border-left: @unit solid #f2f2f2;
+                border-right: @unit solid #f2f2f2;                
+        }
+        .am-textarea-control, .textAreaInput {
+            textarea {
+                height: 152 * @unit;
+                font-size: 28 * @unit;
+                color: #989898;                
+            }
+        }
+        .textAreaBd {
+            padding: 0 28 * @unit;            
+            textarea {
+                padding: 14 * @unit;                
+                border: 1 * @unit solid #ddd;                
+            }
+        }
+        .btnColor {
+            background-color: @mainColor;
+        }
+        .checkBtn {
+            height: 88 * @unit;
+        }
+    }  
+}

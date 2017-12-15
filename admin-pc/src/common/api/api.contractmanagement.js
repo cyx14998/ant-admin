@@ -10,14 +10,14 @@ import axios, {
 //合同主表列表
 export function getContractList({
   countPerPage = 1000,
-  keyword,
+  ...params
 }) {
 
   return axios.get('/uContractList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       countPerPage,
-      keyword,
+      ...params
     }
   })
 }

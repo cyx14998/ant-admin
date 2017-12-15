@@ -14,14 +14,15 @@ import axios, {
 export function uProclamationList({
   pageNumber = 1,
   countPerPage = 1000,
-  keyword = '',
+  // keyword = '',
+  ...params
 }) {
   return axios.get('/uProclamationList.uhtm?InterfaceVersion=' + apiVer, {
     params: {
       token: getToken(),
       pageNumber,
       countPerPage,
-      keyword,
+      ...params
     }
   })
 }

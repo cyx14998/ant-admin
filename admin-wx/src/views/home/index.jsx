@@ -33,13 +33,13 @@ class IndexTabBar1 extends Component {
     //item 点击
     itemClick(el) {
         if (el.text == '客户') {
-            window.location.href = '/customerList.html';
+            window.location.href = 'customerList.html';
             console.log('跳转到客户列表');
         } else if (el.text == '任务') {
-            window.location.href = '/taskList.html';
+            window.location.href = 'taskList.html';
             console.log('跳转到任务列表');
         } else if (el.text == '员工') {
-            window.location.href = '/staffList.html';
+            window.location.href = 'staffList.html';
             console.log('跳转到员工列表');
         }
     }

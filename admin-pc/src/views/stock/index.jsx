@@ -20,7 +20,6 @@ import {
 
 import {
     getHousingList, //获取仓库列表
-    getMemberList, //获取入库人列表 （员工列表）
 } from '../../common/api/api.purchaseorderswarehousing.js'
 
 import {
@@ -29,23 +28,37 @@ import {
 } from '../../common/utils';
 
 //库存列表头部
-const columns = [ {
-        title: '仓库',
-        dataIndex: 'warehouse.theName',
-    }, {
-        title: '厂商',
-        dataIndex: 'manufacturerName',
-    }, {
-        title: '品名',
-        dataIndex: 'theName',
-    }, {
-        title: '数量',
-        dataIndex: 'theQuantity',
-    }, 
-     {
-        title: '创建时间',
-        dataIndex: 'createDatetime',
-    },
+const columns = [{
+    title: '仓库',
+    dataIndex: 'warehouse.theName',
+}, {
+    title: '厂商',
+    dataIndex: 'manufacturerName',
+}, {
+    title: '品名',
+    dataIndex: 'theName',
+}, {
+    title: '规格',
+    dataIndex: 'theSpecifications',
+}, {
+    title: '库存数量',
+    dataIndex: 'theQuantity',
+}, {
+    title: '可出库数量',
+    render: (record) => {
+        return record.theQuantity - record.outingQuantity
+    }
+}, {
+    title: '出库中数量',
+    dataIndex: 'outingQuantity',
+}, {
+    title: '已出库数量',
+    dataIndex: 'hasOutQuantity',
+},
+{
+    title: '创建时间',
+    dataIndex: 'createDatetime',
+},
 ];
 //列表页面
 class PurchaseordersstockList extends React.Component {
@@ -54,7 +67,7 @@ class PurchaseordersstockList extends React.Component {
         this.state = {
             loading: true,
             storageItemList: [],
-            memberList: [], //入库人列表
+            houseList: [], //仓库列表
         }
 
         this.getData = this.getData.bind(this);
@@ -99,29 +112,25 @@ class PurchaseordersstockList extends React.Component {
     }
     //获取入库人列表
     _getMemberList() {
-        getMemberList({}).then(res => {
-            console.log('getMemberList res', res)
+        getHousingList({}).then(res => {
+            console.log('getHousingList res', res)
 
             if (res.data.result !== 'success') {
-                MyToast(res.data.info || '获取入库人列表失败');
+                MyToast(res.data.info || '获取仓库列表失败');
                 return;
             }
-            console.log('-------------', res.data.memberList)
-            var memberList = res.data.memberList.map(item => {
-                let member = {
-                    value: item.tableId + '',
-                    label: item.realName
+
+            var houseList = res.data.warehouseList.map(item => {
+                let house = {
+                    value: item.tableId.toString(),
+                    label: item.theName.toString()
                 };
 
-                return member;
+                return house;
             });
-            memberList.unshift({
-                value: '全部',
-                label: '全部'
-            })
 
             this.setState({
-                memberList: memberList
+                houseList: houseList
             });
         }).catch(err => {
             MyToast('获取入库人列表失败')
@@ -130,9 +139,8 @@ class PurchaseordersstockList extends React.Component {
     //头部搜索
     handleFormSearch(values) {
         this.getData({
-            storageInMemberId: values.storageInMemberId,
-            isPass: values.isPass,
-            theState: values.theState,
+            warehouseId: values.warehouseId,
+            keyword: values.keyword
         });
     }
 
@@ -158,43 +166,12 @@ class PurchaseordersstockList extends React.Component {
                     type: 'select',
                     label: '仓库',
                     name: 'warehouseId',
-                    options: []
-                }, {
-                    type: 'select',
-                    label: '入库人',
-                    name: 'storageInMemberId',
-                    options: this.state.memberList
+                    options: this.state.houseList
                 },
                 {
-                    type: 'select',
-                    label: '审核情况',
-                    name: 'isPass',
-                    defaultValue: '0',
-                    options: [{
-                        value: '0',
-                        label: '全部'
-                    }, {
-                        value: '1',
-                        label: '审核完成'
-                    }, {
-                        value: '2',
-                        label: '未审核'
-                    }]
-                }, {
-                    type: 'select',
-                    label: '库存状态',
-                    name: 'theState',
-                    defaultValue: '0',
-                    options: [{
-                        value: '0',
-                        label: '全部'
-                    }, {
-                        value: '1',
-                        label: '正常'
-                    }, {
-                        value: '2',
-                        label: '作废'
-                    }]
+                    type: 'input',
+                    label: '关键词',
+                    name: 'keyword',
                 },
             ]
         }
